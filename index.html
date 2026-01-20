@@ -126,6 +126,10 @@
             color: #ef4444;
         }
 
+        .kpi-change.neutral {
+            color: #f59e0b;
+        }
+
         .kpi-budget {
             font-size: 13px;
             color: #64748b;
@@ -283,7 +287,7 @@
                 <h2 class="section-title">Customer Acquisition & CAC Analysis</h2>
                 <p class="section-subtitle">Acquisition efficiency improved significantly throughout the year, with CAC declining 38.7% from peak. Q4 delivered 26,955 new subscribers (37.7% of annual total) at industry-leading $20.86 CAC.</p>
 
-                <div class="chart-grid">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px;">
                     <div class="chart-container">
                         <div class="chart-title">Customer Acquisition Cost (CAC)</div>
                         <canvas id="cacChart"></canvas>
@@ -291,6 +295,10 @@
                     <div class="chart-container">
                         <div class="chart-title">New Subscribers by Month</div>
                         <canvas id="subsChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">Average Revenue Per User (ARPU) by Month</div>
+                        <canvas id="arpuChart"></canvas>
                     </div>
                 </div>
 
@@ -314,15 +322,10 @@
                 </div>
             </div>
 
-            <!-- ARPU Analysis -->
+            <!-- Unit Economics Analysis -->
             <div class="section">
-                <h2 class="section-title">ARPU & Unit Economics Deep Dive</h2>
+                <h2 class="section-title">Unit Economics Deep Dive</h2>
                 <p class="section-subtitle">Revenue per user metrics show volatility reflecting subscriber mix, billing cycles, and seasonal patterns. The persistent ARPU gap vs budget represents immediate monetization opportunity.</p>
-
-                <div class="chart-container" style="max-width: 100%;">
-                    <div class="chart-title">Average Revenue Per User (ARPU) by Month</div>
-                    <canvas id="arpuChart"></canvas>
-                </div>
 
                 <div class="insight-box positive-box">
                     <h3>📊 Unit Economics Analysis</h3>
@@ -357,7 +360,7 @@
                 <h2 class="section-title">Cash Flow & Runway Analysis</h2>
                 <p class="section-subtitle">Total FY 2025 cash burn of $915K with improving quarterly trend. Q4 monthly burn of $54K represents 42% improvement from Q1's $93K average, demonstrating operational leverage as revenue scales.</p>
 
-                <div class="chart-container" style="max-width: 100%;">
+                <div class="chart-container" style="max-width: 60%; margin: 0 auto;">
                     <div class="chart-title">Monthly Cash Flow 2025</div>
                     <canvas id="cashFlowChart"></canvas>
                 </div>
@@ -371,6 +374,94 @@
                         <li><strong>Q4 AVG BURN:</strong> $54K/mo</li>
                         <li><strong>FY TOTAL BURN:</strong> $915K</li>
                         <li><strong>BURN IMPROVEMENT:</strong> -42% (Q1→Q4)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Cost Analysis -->
+            <div class="section">
+                <h2 class="section-title">Cost Analysis: Budget vs Actual</h2>
+                <p class="section-subtitle">Operating expense analysis comparing budgeted vs actual spending across major cost categories for FY 2025. Green indicates under-budget performance, red indicates over-budget spending.</p>
+
+                <div class="chart-container" style="max-width: 80%; margin: 0 auto 32px;">
+                    <div class="chart-title">Operating Expenses: Budget vs Actual FY 2025</div>
+                    <canvas id="costComparisonChart"></canvas>
+                </div>
+
+                <div class="insight-box">
+                    <h3>💰 Cost Variance Analysis</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #e2e8f0;">
+                                <th style="text-align: left; padding: 12px; color: #64748b; font-size: 13px; text-transform: uppercase;">Cost Category</th>
+                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Budget</th>
+                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Actual</th>
+                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Variance</th>
+                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">% Var</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px; font-weight: 600;">Salaries & Wages</td>
+                                <td style="padding: 12px; text-align: right;">$977,872</td>
+                                <td style="padding: 12px; text-align: right;">$1,036,747</td>
+                                <td style="padding: 12px; text-align: right; color: #dc2626; font-weight: 600;">+$58,875</td>
+                                <td style="padding: 12px; text-align: right; color: #dc2626;">+6.0%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px; font-weight: 600;">External Services</td>
+                                <td style="padding: 12px; text-align: right;">$370,313</td>
+                                <td style="padding: 12px; text-align: right;">$300,927</td>
+                                <td style="padding: 12px; text-align: right; color: #059669; font-weight: 600;">-$69,386</td>
+                                <td style="padding: 12px; text-align: right; color: #059669;">-18.7%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px; font-weight: 600;">Travel</td>
+                                <td style="padding: 12px; text-align: right;">$0</td>
+                                <td style="padding: 12px; text-align: right;">$765</td>
+                                <td style="padding: 12px; text-align: right; color: #dc2626; font-weight: 600;">+$765</td>
+                                <td style="padding: 12px; text-align: right; color: #dc2626;">N/A</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px; font-weight: 600;">Services</td>
+                                <td style="padding: 12px; text-align: right;">$143,341</td>
+                                <td style="padding: 12px; text-align: right;">$181,265</td>
+                                <td style="padding: 12px; text-align: right; color: #dc2626; font-weight: 600;">+$37,924</td>
+                                <td style="padding: 12px; text-align: right; color: #dc2626;">+26.5%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #f1f5f9;">
+                                <td style="padding: 12px; font-weight: 600;">Marketing Spend</td>
+                                <td style="padding: 12px; text-align: right;">$2,175,591</td>
+                                <td style="padding: 12px; text-align: right;">$1,897,822</td>
+                                <td style="padding: 12px; text-align: right; color: #059669; font-weight: 600;">-$277,769</td>
+                                <td style="padding: 12px; text-align: right; color: #059669;">-12.8%</td>
+                            </tr>
+                            <tr style="border-top: 2px solid #e2e8f0; background: #f8fafc; font-weight: 700;">
+                                <td style="padding: 12px;">Total Operating Costs</td>
+                                <td style="padding: 12px; text-align: right;">$3,667,117</td>
+                                <td style="padding: 12px; text-align: right;">$3,417,526</td>
+                                <td style="padding: 12px; text-align: right; color: #059669; font-weight: 600;">-$249,591</td>
+                                <td style="padding: 12px; text-align: right; color: #059669;">-6.8%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="insight-box positive-box">
+                    <h3>✅ Cost Management Highlights</h3>
+                    <ul>
+                        <li><strong>Marketing Efficiency:</strong> Spent $1.90M vs $2.18M budget (-12.8%), demonstrating disciplined spending while maintaining strong CAC performance at $29.03 actual vs $26.51 budgeted</li>
+                        <li><strong>External Services Savings:</strong> Achieved 18.7% savings ($69K under budget) in external services, likely through vendor optimization and operational efficiency</li>
+                        <li><strong>Overall Cost Control:</strong> Total operating costs came in 6.8% under budget despite revenue shortfall, showing expense discipline</li>
+                    </ul>
+                </div>
+
+                <div class="insight-box negative-box">
+                    <h3>⚠️ Areas of Concern</h3>
+                    <ul>
+                        <li><strong>Salary Overrun:</strong> Payroll exceeded budget by 6.0% ($59K), suggesting either unplanned hires, compensation adjustments, or contractor conversions that should be reviewed</li>
+                        <li><strong>Services Cost Spike:</strong> Services category ran 26.5% over budget (+$38K), representing potential scope creep or unplanned project costs requiring investigation</li>
+                        <li><strong>Marketing Under-deployment:</strong> While under-budget appears positive, the $278K underspend in marketing directly correlates with the 29K subscriber volume deficit</li>
                     </ul>
                 </div>
             </div>
@@ -493,6 +584,14 @@
                     </div>
                     <div class="kpi-budget">Budget: $${(budget.spend / 1000).toFixed(0)}K</div>
                 </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">LTR/CAC Ratio</div>
+                    <div class="kpi-value">${yearLTRCAC.toFixed(2)}x</div>
+                    <div class="kpi-change ${q4LTRCAC > 3 ? 'positive' : q4LTRCAC > 2 ? 'neutral' : 'negative'}">
+                        Q4: ${q4LTRCAC.toFixed(2)}x ${q4LTRCAC > q1LTRCAC ? '↑' : '↓'} vs Q1
+                    </div>
+                    <div class="kpi-budget">Q1: ${q1LTRCAC.toFixed(2)}x | ${q4LTRCAC > 3 ? '✓ Excellent' : q4LTRCAC > 2 ? 'Healthy' : 'Below Target'}</div>
+                </div>
             `;
 
             // Update CAC Table
@@ -551,6 +650,18 @@
             });
         });
 
+        // LTR (Lifetime Revenue) data
+        const monthlyLTR = [67, 65, 68, 67, 69, 72, 76, 83, 85, 85, 84, 87];
+        const monthlyCAC = [34.03, 32.25, 31.32, 32.90, 32.52, 25.44, 25.50, 25.92, 28.63, 23.12, 19.94, 20.10];
+
+        // Calculate LTR/CAC ratios
+        const monthlyLTRCAC = monthlyLTR.map((ltr, i) => (ltr / monthlyCAC[i]).toFixed(2));
+
+        // Calculate quarterly and annual averages
+        const q1LTRCAC = ((monthlyLTR[0] + monthlyLTR[1] + monthlyLTR[2]) / 3) / ((monthlyCAC[0] + monthlyCAC[1] + monthlyCAC[2]) / 3);
+        const q4LTRCAC = ((monthlyLTR[9] + monthlyLTR[10] + monthlyLTR[11]) / 3) / ((monthlyCAC[9] + monthlyCAC[10] + monthlyCAC[11]) / 3);
+        const yearLTRCAC = (monthlyLTR.reduce((a, b) => a + b) / 12) / (monthlyCAC.reduce((a, b) => a + b) / 12);
+
         // Initialize
         updateKPIs(currentQuarter);
 
@@ -562,7 +673,7 @@
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
                     label: 'CAC',
-                    data: [34.03, 32.25, 31.32, 32.90, 32.52, 25.44, 25.50, 25.92, 28.63, 23.12, 19.94, 20.10],
+                    data: monthlyCAC,
                     borderColor: '#f97316',
                     backgroundColor: 'rgba(249, 115, 22, 0.1)',
                     tension: 0.4,
@@ -706,6 +817,115 @@
                     y: { ticks: { callback: v => '$' + v + 'K' } }
                 }
             }
+        });
+
+        // Cost Comparison Chart
+        const costChart = new Chart(document.getElementById('costComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Salaries & Wages', 'External Services', 'Travel', 'Services', 'Marketing'],
+                datasets: [
+                    {
+                        label: 'Budget',
+                        data: [977.9, 370.3, 0, 143.3, 2175.6],
+                        backgroundColor: '#94a3b8',
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'Actual',
+                        data: [1036.7, 300.9, 0.8, 181.3, 1897.8],
+                        backgroundColor: function(context) {
+                            const index = context.dataIndex;
+                            const budgets = [977.9, 370.3, 0, 143.3, 2175.6];
+                            const actuals = [1036.7, 300.9, 0.8, 181.3, 1897.8];
+                            return actuals[index] > budgets[index] ? '#dc2626' : '#059669';
+                        },
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += '$' + context.parsed.x.toFixed(1) + 'K';
+                                return label;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        formatter: function(value) {
+                            return '$' + value.toFixed(1) + 'K';
+                        },
+                        color: '#1a1a1a',
+                        font: {
+                            weight: 'bold',
+                            size: 11
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'K';
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Amount (in thousands)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            autoSkip: false,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                afterDatasetsDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach(function(dataset, i) {
+                        const meta = chart.getDatasetMeta(i);
+                        if (!meta.hidden) {
+                            meta.data.forEach(function(element, index) {
+                                ctx.fillStyle = '#1a1a1a';
+                                const fontSize = 11;
+                                const fontStyle = 'bold';
+                                const fontFamily = 'Arial';
+                                ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                const dataString = '$' + dataset.data[index].toFixed(1) + 'K';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+
+                                const padding = 5;
+                                const position = element.tooltipPosition();
+                                ctx.fillText(dataString, position.x + padding, position.y);
+                            });
+                        }
+                    });
+                }
+            }]
         });
     </script>
 </body>
