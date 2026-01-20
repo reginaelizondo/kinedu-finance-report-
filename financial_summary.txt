@@ -1,0 +1,51 @@
+RESUMEN FINANCIERO 2025 (DATOS REALES)
+======================================
+
+FULL YEAR 2025:
+--------------
+Gross Sales:            $3,530,078
+Gross Margin:           $2,646,090 (75.0%)
+Marketing Spend:        $1,901,822
+Contribution Margin:    $744,266 (21.1%)
+Total OpEx:             $1,568,457
+EBITDA:                 -$824,191 (-23.3%)
+Total Cash Burn:        -$897,220
+
+QUARTERLY BREAKDOWN:
+-------------------
+                Q1          Q2          Q3          Q4          
+Revenue:     $862K       $785K      $771K      $1,112K
+Gross Margin: $639K      $573K      $580K       $854K
+GM %:        74.1%       73.0%      75.2%       76.9%
+Marketing:   $493K       $418K      $428K       $562K
+Contrib M:   $146K       $155K      $152K       $292K
+Contrib %:   16.9%       19.7%      19.7%       26.3%
+OpEx:        $427K       $348K      $406K       $388K
+EBITDA:     -$281K      -$193K     -$254K      -$96K
+EBITDA %:   -32.6%      -24.6%     -33.0%      -8.6%
+Cash Flow:  -$281K      -$196K     -$273K     -$147K
+
+KEY INSIGHTS:
+------------
+✅ Q4 shows best EBITDA margin of year at -8.6%
+✅ Path to breakeven visible with improving unit economics
+✅ Contribution margin reached 26.3% in Q4 (vs 16.9% in Q1)
+⚠️  Still burning ~$75K/month average
+⚠️  Q4 burn of $147K needs to reduce further
+
+OPEX BREAKDOWN (FY 2025):
+-------------------------
+Salaries & Wages:       $1,037,747 (66% of OpEx)
+External Services:      $280,923 (18%)
+Services:               $208,225 (13%)
+Other:                  $32,031 (2%)
+Travel:                 $765 (0.05%)
+Revenue Share:          $70,165 (investor)
+CAPEX:                  $2,867
+
+MONTHLY BURN ANALYSIS:
+---------------------
+Worst: Feb -$172K
+Best:  Oct -$26K
+Q4 Avg: -$49K/month
+FY Avg: -$75K/month

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinedu 2025 Financial Report - Corrected</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            color: white;
+            padding: 48px 48px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.8px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            font-weight: 400;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        /* Quarter Selector */
+        .quarter-selector-wrapper {
+            margin-top: 32px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quarter-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            display: inline-flex;
+        }
+
+        .quarter-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quarter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .quarter-btn.active {
+            background: white;
+            color: #1e3a5f;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 40px 48px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 4px;
+        }
+
+        .kpi-change {
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .kpi-change.positive {
+            color: #22c55e;
+        }
+
+        .kpi-change.negative {
+            color: #ef4444;
+        }
+
+        .kpi-change.neutral {
+            color: #64748b;
+        }
+
+        /* Content Sections */
+        .content {
+            padding: 48px;
+        }
+
+        .section {
+            margin-bottom: 56px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #3b82f6;
+            display: inline-block;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 32px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        /* Insights */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 24px;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .insight-card h4 {
+            color: #1e3a5f;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .insight-card p {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Recommendations */
+        .recommendation {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .recommendation h3 {
+            color: #1e3a5f;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-icon {
+            width: 24px;
+            height: 24px;
+            background: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .recommendation p {
+            color: #475569;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .recommendation strong {
+            color: #1e3a5f;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e3a5f;
+            color: white;
+            padding: 32px 48px;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-title">Kinedu Financial Performance 2025</div>
+                <div class="hero-subtitle">Complete Year Performance Analysis</div>
+                <div class="badge">✓ Data Corrected - ARPU from New Subscriptions</div>
+
+                <div class="quarter-selector-wrapper">
+                    <div class="quarter-selector">
+                        <button class="quarter-btn" data-quarter="Q1">Q1 2025</button>
+                        <button class="quarter-btn" data-quarter="Q2">Q2 2025</button>
+                        <button class="quarter-btn" data-quarter="Q3">Q3 2025</button>
+                        <button class="quarter-btn active" data-quarter="Q4">Q4 2025</button>
+                        <button class="quarter-btn" data-quarter="YEAR">Full Year</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" id="kpiGrid">
+            <!-- KPIs will be populated by JavaScript -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Revenue Chart -->
+            <div class="section">
+                <h2 class="section-title">Revenue Performance</h2>
+                <div class="chart-container">
+                    <div class="chart-title">Quarterly Revenue Breakdown</div>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Customer Metrics -->
+            <div class="section">
+                <h2 class="section-title">Customer Acquisition Metrics</h2>
+                <div class="chart-container">
+                    <div class="chart-title">New Subscriptions & CAC Trend</div>
+                    <canvas id="customerChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ARPU Analysis -->
+            <div class="section">
+                <h2 class="section-title">ARPU Analysis</h2>
+                <div class="chart-container">
+                    <div class="chart-title">Average Revenue Per User (New Subscriptions)</div>
+                    <canvas id="arpuChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="section">
+                <h2 class="section-title">Key Performance Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h4>📈 Strong Q4 Performance</h4>
+                        <p>Q4 delivered 25,072 new subscriptions, the highest of the year, with efficient CAC of $24.21 showing improved marketing effectiveness.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>💰 Stable ARPU</h4>
+                        <p>ARPU from new subscriptions remained stable at $53.39 average for the year, with Q3 showing peak performance at $54.72.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>🎯 CAC Optimization</h4>
+                        <p>CAC improved from $32.86 in Q1 to $24.21 in Q4, representing a 26% improvement in customer acquisition efficiency.</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>📊 Conversion Growth</h4>
+                        <p>Conversion rate improved significantly from 4.73% in Q1 to 7.89% in Q4, demonstrating better funnel optimization.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategic Recommendations -->
+            <div class="section">
+                <h2 class="section-title">Strategic Recommendations</h2>
+
+                <div class="recommendation">
+                    <h3><span class="recommendation-icon">1</span> Scale Q4 Success</h3>
+                    <p><strong>Rationale:</strong> Q4 achieved the best performance metrics with 25,072 subscriptions at $24.21 CAC and 7.89% conversion rate.</p>
+                    <p><strong>Action:</strong> Analyze and replicate Q4 marketing strategies, channels, and campaigns in 2026 planning.</p>
+                </div>
+
+                <div class="recommendation">
+                    <h3><span class="recommendation-icon">2</span> Maintain ARPU Momentum</h3>
+                    <p><strong>Rationale:</strong> ARPU of $53.39 shows healthy monetization of new subscriptions with Q3 peak at $54.72.</p>
+                    <p><strong>Action:</strong> Implement pricing optimization and premium features to maintain or exceed $54+ ARPU in 2026.</p>
+                </div>
+
+                <div class="recommendation">
+                    <h3><span class="recommendation-icon">3</span> Continue CAC Optimization</h3>
+                    <p><strong>Rationale:</strong> 26% CAC reduction from Q1 to Q4 demonstrates improving marketing efficiency and channel optimization.</p>
+                    <p><strong>Action:</strong> Double down on high-performing channels and continue testing to drive CAC below $24.</p>
+                </div>
+
+                <div class="recommendation">
+                    <h3><span class="recommendation-icon">4</span> Enhance Retention Programs</h3>
+                    <p><strong>Rationale:</strong> Renewal numbers show opportunity for improvement to maximize customer lifetime value.</p>
+                    <p><strong>Action:</strong> Develop targeted retention campaigns, engagement programs, and renewal incentives.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Kinedu Financial Report 2025 • Generated on January 20, 2026</p>
+            <p style="margin-top: 8px; font-size: 12px;">Data source: KPIs 2025.xlsx • ARPU calculated from new subscriptions (corrected)</p>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const data = {
+            Q1: {
+                revenue: 772451,
+                newSubs: 14483,
+                renewals: 10184,
+                cac: 32.86,
+                arpu: 53.17,
+                spend: 477625,
+                conversionRate: 4.73,
+                newSubsRevenue: 768891,
+                renewalsRevenue: 127904
+            },
+            Q2: {
+                revenue: 644456,
+                newSubs: 11668,
+                renewals: 9538,
+                cac: 32.96,
+                arpu: 53.17,
+                spend: 384374,
+                conversionRate: 5.46,
+                newSubsRevenue: 621162,
+                renewalsRevenue: 123814
+            },
+            Q3: {
+                revenue: 1052952,
+                newSubs: 20199,
+                renewals: 8911,
+                cac: 26.08,
+                arpu: 54.72,
+                spend: 517923,
+                conversionRate: 6.73,
+                newSubsRevenue: 1102240,
+                renewalsRevenue: 122186
+            },
+            Q4: {
+                revenue: 1199730,
+                newSubs: 25072,
+                renewals: 8708,
+                cac: 24.21,
+                arpu: 52.52,
+                spend: 607299,
+                conversionRate: 7.89,
+                newSubsRevenue: 1316623,
+                renewalsRevenue: 121058
+            },
+            YEAR: {
+                revenue: 3669589,
+                newSubs: 71422,
+                renewals: 37341,
+                cac: 27.72,
+                arpu: 53.39,
+                spend: 1987221,
+                conversionRate: 6.20,
+                newSubsRevenue: 3808916,
+                renewalsRevenue: 494962
+            }
+        };
+
+        let currentQuarter = 'Q4';
+
+        // Update KPIs
+        function updateKPIs(quarter) {
+            const quarterData = data[quarter];
+            const kpiGrid = document.getElementById('kpiGrid');
+
+            kpiGrid.innerHTML = `
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Revenue</div>
+                    <div class="kpi-value">$${(quarterData.revenue / 1000).toFixed(0)}K</div>
+                    <div class="kpi-change positive">↑ ${quarter === 'YEAR' ? 'Annual Total' : 'Quarter'}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">New Subscriptions</div>
+                    <div class="kpi-value">${quarterData.newSubs.toLocaleString()}</div>
+                    <div class="kpi-change positive">↑ ${quarter === 'Q4' ? 'Best Quarter' : quarter === 'YEAR' ? 'Annual' : 'Growth'}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ARPU (New Subs)</div>
+                    <div class="kpi-value">$${quarterData.arpu.toFixed(2)}</div>
+                    <div class="kpi-change ${quarterData.arpu > 53 ? 'positive' : 'neutral'}">
+                        ${quarterData.arpu > 53 ? '↑' : '→'} Stable Monetization
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">CAC</div>
+                    <div class="kpi-value">$${quarterData.cac.toFixed(2)}</div>
+                    <div class="kpi-change ${quarterData.cac < 28 ? 'positive' : 'neutral'}">
+                        ${quarterData.cac < 28 ? '↓' : '→'} ${quarter === 'Q4' ? 'Lowest of Year' : 'Efficient'}
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Conversion Rate</div>
+                    <div class="kpi-value">${quarterData.conversionRate.toFixed(2)}%</div>
+                    <div class="kpi-change positive">↑ ${quarter === 'Q4' ? 'Record High' : 'Improving'}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Marketing Spend</div>
+                    <div class="kpi-value">$${(quarterData.spend / 1000).toFixed(0)}K</div>
+                    <div class="kpi-change neutral">→ Investment</div>
+                </div>
+            `;
+        }
+
+        // Quarter selector
+        document.querySelectorAll('.quarter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.quarter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentQuarter = btn.dataset.quarter;
+                updateKPIs(currentQuarter);
+            });
+        });
+
+        // Initialize
+        updateKPIs(currentQuarter);
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'New Subscriptions Revenue',
+                        data: [768891, 621162, 1102240, 1316623],
+                        backgroundColor: '#3b82f6'
+                    },
+                    {
+                        label: 'Renewals Revenue',
+                        data: [127904, 123814, 122186, 121058],
+                        backgroundColor: '#8b5cf6'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    x: { stacked: true },
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000).toFixed(0) + 'K';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Customer Chart
+        const customerCtx = document.getElementById('customerChart').getContext('2d');
+        new Chart(customerCtx, {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'New Subscriptions',
+                        data: [14483, 11668, 20199, 25072],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        yAxisID: 'y',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'CAC ($)',
+                        data: [32.86, 32.96, 26.08, 24.21],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        yAxisID: 'y1',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: 'New Subscriptions' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'CAC ($)' },
+                        grid: { drawOnChartArea: false }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+
+        // ARPU Chart
+        const arpuCtx = document.getElementById('arpuChart').getContext('2d');
+        new Chart(arpuCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'ARPU (New Subscriptions)',
+                    data: [53.17, 53.17, 54.72, 52.52],
+                    backgroundColor: '#22c55e',
+                    borderColor: '#16a34a',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 50,
+                        max: 56,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'ARPU: $' + context.parsed.y.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

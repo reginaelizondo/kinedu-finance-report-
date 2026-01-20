@@ -1,0 +1,170 @@
+═══════════════════════════════════════════════════════════════════════
+                    KINEDU - Q4 2025 INVESTOR REPORT
+                        EXECUTIVE SUMMARY (REAL DATA)
+═══════════════════════════════════════════════════════════════════════
+
+📊 FULL YEAR 2025 PERFORMANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Revenue:                 $3.67M      (Budget: $6.27M)    -41.5% 🔴
+New Subscriptions:       71,422      (Budget: 100,453)   -28.9% 🔴
+Average CAC:             $29.03      (Budget: $27.28)    +6.4% 🔴
+Marketing Spend:         $1.99M      (Budget: $2.74M)    -27.5% 🔴
+Gross Margin:            $2.65M      75.0%               ✅
+EBITDA:                  -$824K      -23.3% margin       🔴
+Cash Burn:               -$897K      -$75K/month avg     🔴
+
+
+📈 Q4 2025 HIGHLIGHTS (Best Quarter)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Revenue:                 $1.20M      +13.9% QoQ          ✅
+                                     (Budget: $1.96M)    -38.8%
+
+New Subscriptions:       25,072      +24.1% QoQ          ✅
+                                     (Budget: 31,761)    -21.1%
+
+CAC:                     $24.21      -7.1% QoQ           ✅
+                                     (Budget: $24.32)    -0.5% ✅
+
+ARPU:                    $52.52      (Budget: $57.58)    -8.8% 🔴
+
+Conversion Rate:         7.88%       +17.1% QoQ          ✅
+                                     (Budget: 4.77%)     +65.2% ✅✅
+
+Gross Margin:            76.9%       Stable              ✅
+Contribution Margin:     $292K       26.3% margin        ✅
+EBITDA:                  -$96K       -8.6% margin        ✅ (best)
+Cash Burn:               -$147K      -42% QoQ            ✅
+
+
+🎯 KEY ACHIEVEMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Conversion Excellence: Q4 conversion rate of 7.88% EXCEEDED budget by 65%
+   - Steady improvement throughout year (3.77% → 8.36%)
+   - Free trial conversion also strong at 3.01% (Q4 avg)
+
+✅ CAC Optimization: Q4 CAC of $24.21 nearly hit budget target ($24.32)
+   - 26% improvement from Q1 ($32.86)
+   - November achieved lowest CAC of year at $22.84
+
+✅ Path to Profitability Visible: EBITDA margin improved from -32.6% (Q1) to -8.6% (Q4)
+   - Contribution margin reached 26.3% in Q4 vs 16.9% in Q1
+   - Monthly burn reduced from $94K (Q1 avg) to $49K (Q4 avg)
+
+✅ Revenue Momentum: Q4 represents 32.7% of annual revenue
+   - December revenue hit $445K (best month)
+   - Strong finish entering 2026
+
+
+⚠️  CRITICAL CHALLENGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔴 VOLUME DEFICIT: Root cause of 41.5% revenue miss
+   - Acquired 29,031 fewer subscribers than budgeted
+   - Marketing underspent by $752K suggests capacity constraints
+   - Higher conversion couldn't overcome volume gap
+
+🔴 ARPU GAP: Consistently 7-9% below budget across all quarters
+   - Q4 ARPU: $52.52 vs $57.58 budget
+   - Indicates pricing pressure or product mix issues
+   - Each $1 ARPU improvement = ~$71K annual revenue
+
+🔴 STILL BURNING CASH: -$897K total cash burn in 2025
+   - Improving but not yet profitable
+   - Q4 burn of $147K still significant
+   - Runway concerns if trend doesn't continue improving
+
+
+📊 QUARTERLY TREND ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Quarter    Revenue    vs Budget    New Subs   CAC      EBITDA    Cash Burn
+─────────────────────────────────────────────────────────────────────────
+Q1 2025    $772K      -31.3%      14,483     $32.86   -$281K    -$281K
+Q2 2025    $644K      -53.9% 🔴   11,668     $32.96   -$193K    -$196K
+Q3 2025    $1,053K    -41.1%      20,199     $26.08   -$254K    -$273K
+Q4 2025    $1,200K    -38.8%      25,072     $24.21   -$96K ✅  -$147K ✅
+
+Trend:     ↗️ UP      Improving    ↗️ UP      ↘️ DOWN   ↗️ Better  ↗️ Better
+
+
+💡 STRATEGIC IMPLICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CONVERSION IS WORKING (65% above budget in Q4)
+   → Problem is not product-market fit or funnel optimization
+   → Problem is TOP-OF-FUNNEL VOLUME
+
+2. MARKETING CAPACITY CONSTRAINT
+   → Underspent by $752K suggests inability to deploy capital efficiently
+   → Need to scale acquisition channels or find new channels
+   → Q4 spent $607K (vs $773K budget) but couldn't scale further
+
+3. ARPU REQUIRES IMMEDIATE ATTENTION
+   → 7-9% gap compounds across 71K+ subscribers
+   → Root cause analysis needed: pricing? plan mix? churn?
+   → Fix options: price increase, annual plan push, upsells, retention
+
+4. PATH TO BREAKEVEN VISIBLE BUT NOT GUARANTEED
+   → Extrapolating Q4 trends: breakeven possible in Q2 2026
+   → But requires: (a) sustaining Q4 efficiency, (b) continuing volume growth
+   → Risk: seasonality (Dec strength may not repeat)
+
+
+🎯 RECOMMENDED ACTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IMMEDIATE (30 days):
+1. Deep-dive on ARPU decline vs budget
+   - Cohort analysis: which cohorts have lower ARPU?
+   - Plan mix analysis: annual vs monthly split
+   - Churn analysis: are we losing high-value customers?
+
+2. Marketing capacity diagnostic
+   - Why did we underspend by $752K?
+   - Channel saturation analysis
+   - New channel exploration
+
+3. December playbook documentation
+   - What drove best-month performance?
+   - Which channels/campaigns worked?
+   - Repeatability assessment
+
+NEAR-TERM (90 days):
+4. Pricing experiment
+   - Test 10-15% price increase on new cohorts
+   - Annual plan incentive program
+   - Feature-based upsell implementation
+
+5. Scale winning channels
+   - Double down on Nov/Dec learnings
+   - Geographic expansion if applicable
+   - Partner/affiliate program acceleration
+
+6. OpEx optimization
+   - Salaries represent 66% of costs ($1.04M)
+   - Right-size team for $3.5M revenue reality
+   - Target: 20% OpEx reduction (~$300K annually)
+
+
+📉 RUNWAY ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Current Burn Rate:   $49K/month (Q4 average)
+FY2025 Avg Burn:     $75K/month
+
+Runway Scenarios (assuming conservative cash position):
+• Optimistic ($500K cash, Q4 burn):     10.2 months → Nov 2026
+• Realistic ($400K cash, $60K burn):    6.7 months  → Aug 2026
+• Conservative ($300K cash, $75K burn): 4.0 months  → May 2026
+
+⚠️  CRITICAL: Need visibility on actual cash position for accurate runway
+⚠️  If <$400K cash, fundraising or path to breakeven URGENT
+
+
+═══════════════════════════════════════════════════════════════════════
+Report Generated: January 19, 2026
+Data Sources: KPIs 2025 (Real), P&L Cash 2025 (Real), KPIs Budget 2025
+═══════════════════════════════════════════════════════════════════════

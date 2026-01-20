@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinedu Q4 2025 Interactive Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            color: white;
+            padding: 48px 48px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .hero-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.8px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            font-weight: 400;
+        }
+
+        /* Quarter Selector */
+        .quarter-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .quarter-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quarter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .quarter-btn.active {
+            background: white;
+            color: #1e3a5f;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* AI Search Box */
+        .search-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            width: 400px;
+            max-width: calc(100vw - 48px);
+        }
+
+        .search-toggle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
+        }
+
+        .search-panel {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            padding: 24px;
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .search-panel.active {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .suggestion-item {
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .suggestion-item:hover {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+
+        .search-result {
+            margin-top: 16px;
+            padding: 16px;
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1e3a8a;
+            display: none;
+        }
+
+        .search-result.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 24px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-change {
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
+
+        .kpi-change.positive {
+            background: rgba(34, 197, 94, 0.25);
+            color: #86efac;
+        }
+
+        .kpi-change.negative {
+            background: rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+        }
+
+        .kpi-change.neutral {
+            background: rgba(148, 163, 184, 0.25);
+            color: #cbd5e1;
+        }
+
+        /* Content */
+        .content {
+            padding: 48px;
+        }
+
+        .section {
+            margin-bottom: 64px;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        /* Interactive Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .comparison-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .comparison-card.expanded {
+            grid-column: 1 / -1;
+            background: white;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .comparison-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .comparison-card:hover::before {
+            opacity: 1;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .comparison-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #64748b;
+        }
+
+        .comparison-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-badge.budget {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .comparison-badge.actual {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .comparison-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .comparison-variance {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .comparison-variance.negative {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .comparison-variance.positive {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .comparison-details {
+            display: none;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 2px solid #e2e8f0;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comparison-card.expanded .comparison-details {
+            display: grid;
+        }
+
+        .detail-item {
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        /* Chart Controls */
+        .chart-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .chart-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .chart-btn.active {
+            border-color: #3b82f6;
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 340px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 24px;
+            }
+
+            .content {
+                padding: 32px 24px;
+            }
+
+            .hero-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .quarter-selector {
+                width: 100%;
+            }
+
+            .search-container {
+                width: calc(100vw - 32px);
+                right: 16px;
+                bottom: 16px;
+            }
+
+            .comparison-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-header">
+                    <div>
+                        <div class="hero-title">Kinedu Interactive Report</div>
+                        <div class="hero-subtitle">Q4 2025 Financial Performance</div>
+                    </div>
+                    <div class="quarter-selector">
+                        <button class="quarter-btn" data-quarter="Q1">Q1</button>
+                        <button class="quarter-btn" data-quarter="Q2">Q2</button>
+                        <button class="quarter-btn" data-quarter="Q3">Q3</button>
+                        <button class="quarter-btn" data-quarter="Q4">Q4</button>
+                        <button class="quarter-btn active" data-quarter="FY">FY 2025</button>
+                    </div>
+                </div>
+
+                <div class="kpi-grid" id="kpiGrid">
+                    <!-- KPIs will be dynamically updated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Budget vs Actual -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Budget vs Actual Performance</h2>
+                </div>
+
+                <div class="comparison-grid" id="comparisonGrid">
+                    <!-- Comparison cards will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Revenue Performance -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Revenue Performance</h2>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Monthly Revenue 2025</div>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" data-view="total">Total Revenue</button>
+                        <button class="chart-btn" data-view="breakdown">Revenue Breakdown</button>
+                        <button class="chart-btn" data-view="budget">vs Budget</button>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAC Performance -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Customer Acquisition</h2>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Customer Acquisition Cost</div>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" data-cac-view="actual">Actual CAC</button>
+                        <button class="chart-btn" data-cac-view="budget">vs Budget</button>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="cacChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">New Subscribers</div>
+                    <div class="chart-wrapper">
+                        <canvas id="subsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Search Assistant -->
+        <div class="search-container">
+            <div class="search-panel" id="searchPanel">
+                <input type="text" class="search-input" id="searchInput" placeholder="Ask me anything about the data...">
+                <div class="search-suggestions">
+                    <div class="suggestion-item" data-query="revenue">What was total revenue in 2025?</div>
+                    <div class="suggestion-item" data-query="ebitda">What's the EBITDA situation?</div>
+                    <div class="suggestion-item" data-query="cac">How much is our CAC?</div>
+                    <div class="suggestion-item" data-query="subscribers">How many subscribers did we get?</div>
+                    <div class="suggestion-item" data-query="q4">What happened in Q4?</div>
+                    <div class="suggestion-item" data-query="budget">How did we perform vs budget?</div>
+                </div>
+                <div class="search-result" id="searchResult"></div>
+            </div>
+            <button class="search-toggle" id="searchToggle">💬</button>
+        </div>
+    </div>
+
+    <script>
+        // Data Store
+        const data = {
+            quarters: {
+                Q1: {
+                    revenue: 862302,
+                    ebitda: -280804,
+                    subscribers: 14483,
+                    cac: 34.03,
+                    arpu: 52.15,
+                    cashFlow: -280804
+                },
+                Q2: {
+                    revenue: 784588,
+                    ebitda: -196333,
+                    subscribers: 13835,
+                    cac: 30.25,
+                    arpu: 49.09,
+                    cashFlow: -199200
+                },
+                Q3: {
+                    revenue: 771480,
+                    ebitda: -252952,
+                    subscribers: 16149,
+                    cac: 26.52,
+                    arpu: 48.18,
+                    cashFlow: -271615
+                },
+                Q4: {
+                    revenue: 1111708,
+                    ebitda: -111980,
+                    subscribers: 26955,
+                    cac: 20.86,
+                    arpu: 44.52,
+                    cashFlow: -163482
+                },
+                FY: {
+                    revenue: 3530078,
+                    ebitda: -842069,
+                    subscribers: 71422,
+                    cac: 26.63,
+                    arpu: 48.24,
+                    cashFlow: -915101
+                }
+            },
+            budget: {
+                FY: {
+                    revenue: 6270000,
+                    ebitda: 2182,
+                    subscribers: 100453,
+                    cac: 26.92,
+                    arpu: 54.06
+                }
+            },
+            monthly: {
+                revenue: [288097, 236660, 247694, 219634, 227914, 284488, 167343, 207530, 324138, 303938, 362561, 445209],
+                revenueApp: [264558, 220660, 231694, 199634, 207914, 264488, 147343, 187530, 304138, 283938, 342561, 425209],
+                revenueOffApp: [16260, 11000, 10700, 14000, 13000, 14000, 14000, 14000, 14000, 14000, 14000, 14000],
+                revenuePartner: [7279, 5000, 5300, 6000, 7000, 6000, 6000, 6000, 6000, 6000, 6000, 6000],
+                cac: [34.55, 32.51, 31.52, 29.36, 32.20, 29.18, 25.29, 25.52, 28.74, 22.60, 20.05, 19.93],
+                cacBudget: [31.60, 31.60, 31.60, 28.90, 28.90, 28.90, 26.63, 26.63, 26.63, 24.32, 24.32, 24.32],
+                subscribers: [5520, 4485, 4478, 4590, 4379, 4866, 4477, 6117, 5555, 6776, 10180, 9999],
+                revenueBudget: [382889, 372938, 368966, 464044, 465915, 466982, 593546, 597845, 597547, 651525, 653999, 654702]
+            }
+        };
+
+        // Current state
+        let currentQuarter = 'FY';
+        let currentRevenueView = 'total';
+        let currentCACView = 'actual';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuarterSelector();
+            initializeSearch();
+            initializeCharts();
+            initializeComparisonCards();
+            updateKPIs('FY');
+        });
+
+        // Quarter Selector
+        function initializeQuarterSelector() {
+            const buttons = document.querySelectorAll('.quarter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentQuarter = this.dataset.quarter;
+                    updateKPIs(currentQuarter);
+                    updateComparisonCards(currentQuarter);
+                });
+            });
+        }
+
+        // Update KPIs
+        function updateKPIs(quarter) {
+            const quarterData = data.quarters[quarter];
+            const kpiGrid = document.getElementById('kpiGrid');
+
+            const revenueChange = quarter === 'Q4' ? '+13.9% QoQ' :
+                                 quarter === 'FY' ? '-41.5% vs Budget' : '';
+            const ebitdaMargin = ((quarterData.ebitda / quarterData.revenue) * 100).toFixed(1);
+
+            kpiGrid.innerHTML = `
+                <div class="kpi-card">
+                    <div class="kpi-label">${quarter} Revenue</div>
+                    <div class="kpi-value">$${(quarterData.revenue / 1000000).toFixed(2)}M</div>
+                    <div class="kpi-change ${revenueChange.includes('-') ? 'negative' : 'positive'}">${revenueChange || 'N/A'}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">${quarter} EBITDA</div>
+                    <div class="kpi-value">-$${Math.abs(quarterData.ebitda / 1000).toFixed(0)}K</div>
+                    <div class="kpi-change negative">${ebitdaMargin}% margin</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">New Subscribers</div>
+                    <div class="kpi-value">${quarterData.subscribers.toLocaleString()}</div>
+                    <div class="kpi-change ${quarter === 'FY' ? 'negative' : 'neutral'}">${quarter === 'FY' ? '-28.9% vs Budget' : ''}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Blended CAC</div>
+                    <div class="kpi-value">$${quarterData.cac.toFixed(2)}</div>
+                    <div class="kpi-change positive">Improving</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ARPU</div>
+                    <div class="kpi-value">$${quarterData.arpu.toFixed(2)}</div>
+                    <div class="kpi-change ${quarter === 'FY' ? 'negative' : 'neutral'}">${quarter === 'FY' ? '-10.8% vs Budget' : ''}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">LTV:CAC</div>
+                    <div class="kpi-value">${(quarterData.arpu * 3 / quarterData.cac).toFixed(2)}x</div>
+                    <div class="kpi-change positive">Healthy</div>
+                </div>
+            `;
+        }
+
+        // Comparison Cards
+        function initializeComparisonCards() {
+            const grid = document.getElementById('comparisonGrid');
+            const metrics = [
+                { label: 'Total Revenue', actual: 3670000, budget: 6270000, format: '$M' },
+                { label: 'EBITDA', actual: -824000, budget: 2182, format: '$K' },
+                { label: 'Marketing Spend', actual: 1900000, budget: 2650000, format: '$M' },
+                { label: 'New Subscribers', actual: 71422, budget: 100453, format: 'num' },
+                { label: 'Blended CAC', actual: 26.63, budget: 26.92, format: '$' },
+                { label: 'Average ARPU', actual: 48.24, budget: 54.06, format: '$' }
+            ];
+
+            metrics.forEach((metric, index) => {
+                const variance = metric.actual - metric.budget;
+                const variancePct = ((variance / metric.budget) * 100).toFixed(1);
+                const isPositive = (metric.label === 'Blended CAC' && variance < 0) ||
+                                  (metric.label !== 'Blended CAC' && variance > 0);
+
+                let actualDisplay = metric.actual;
+                let budgetDisplay = metric.budget;
+                let varianceDisplay = Math.abs(variance);
+
+                if (metric.format === '$M') {
+                    actualDisplay = '$' + (metric.actual / 1000000).toFixed(2) + 'M';
+                    budgetDisplay = '$' + (metric.budget / 1000000).toFixed(2) + 'M';
+                    varianceDisplay = '$' + (Math.abs(variance) / 1000000).toFixed(2) + 'M';
+                } else if (metric.format === '$K') {
+                    actualDisplay = (variance < 0 ? '-' : '') + '$' + Math.abs(metric.actual / 1000).toFixed(0) + 'K';
+                    budgetDisplay = (metric.budget < 0 ? '-' : '+') + '$' + Math.abs(metric.budget / 1000).toFixed(0) + 'K';
+                    varianceDisplay = '$' + Math.abs(variance / 1000).toFixed(0) + 'K';
+                } else if (metric.format === '$') {
+                    actualDisplay = '$' + metric.actual.toFixed(2);
+                    budgetDisplay = '$' + metric.budget.toFixed(2);
+                    varianceDisplay = '$' + Math.abs(variance).toFixed(2);
+                } else {
+                    actualDisplay = metric.actual.toLocaleString();
+                    budgetDisplay = metric.budget.toLocaleString();
+                    varianceDisplay = Math.abs(variance).toLocaleString();
+                }
+
+                const card = document.createElement('div');
+                card.className = 'comparison-card';
+                card.innerHTML = `
+                    <div class="comparison-header">
+                        <span class="comparison-label">${metric.label}</span>
+                        <span class="comparison-badge actual">Actual</span>
+                    </div>
+                    <div class="comparison-value">${actualDisplay}</div>
+                    <span class="comparison-variance ${isPositive ? 'positive' : 'negative'}">
+                        ${varianceDisplay} (${variancePct}%)
+                    </span>
+                    <div class="comparison-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Budget Target</div>
+                            <div class="detail-value">${budgetDisplay}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Variance</div>
+                            <div class="detail-value">${varianceDisplay}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Variance %</div>
+                            <div class="detail-value">${variancePct}%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value" style="font-size: 16px; color: ${isPositive ? '#059669' : '#dc2626'}">
+                                ${isPositive ? '✓ Above Target' : '✗ Below Target'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        function updateComparisonCards(quarter) {
+            // This would update cards based on quarter selection
+            // For now, showing FY data
+        }
+
+        // Charts
+        let revenueChart, cacChart, subsChart;
+
+        function initializeCharts() {
+            Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI"';
+            Chart.defaults.color = '#64748b';
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Total Revenue',
+                        data: data.monthly.revenue,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: '#3b82f6',
+                        pointBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value/1000).toFixed(0) + 'K';
+                                }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Revenue Chart Controls
+            document.querySelectorAll('[data-view]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentRevenueView = this.dataset.view;
+                    updateRevenueChart(currentRevenueView);
+                });
+            });
+
+            // CAC Chart
+            const cacCtx = document.getElementById('cacChart').getContext('2d');
+            cacChart = new Chart(cacCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Actual CAC',
+                        data: data.monthly.cac,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: '#f59e0b',
+                        pointBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(0);
+                                }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // CAC Chart Controls
+            document.querySelectorAll('[data-cac-view]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-cac-view]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCACView = this.dataset.cacView;
+                    updateCACChart(currentCACView);
+                });
+            });
+
+            // Subscribers Chart
+            const subsCtx = document.getElementById('subsChart').getContext('2d');
+            subsChart = new Chart(subsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'New Subscribers',
+                        data: data.monthly.subscribers,
+                        backgroundColor: '#10b981',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return (value/1000).toFixed(1) + 'K';
+                                }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function updateRevenueChart(view) {
+            if (view === 'total') {
+                revenueChart.data.datasets = [{
+                    label: 'Total Revenue',
+                    data: data.monthly.revenue,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: 'white',
+                    pointBorderColor: '#3b82f6',
+                    pointBorderWidth: 3
+                }];
+            } else if (view === 'breakdown') {
+                revenueChart.data.datasets = [
+                    {
+                        label: 'Subscription App',
+                        data: data.monthly.revenueApp,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderWidth: 0,
+                        fill: true
+                    },
+                    {
+                        label: 'Off App',
+                        data: data.monthly.revenueOffApp,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                        borderWidth: 0,
+                        fill: true
+                    },
+                    {
+                        label: 'Partnerships',
+                        data: data.monthly.revenuePartner,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.5)',
+                        borderWidth: 0,
+                        fill: true
+                    }
+                ];
+                revenueChart.options.scales.y.stacked = true;
+            } else if (view === 'budget') {
+                revenueChart.data.datasets = [
+                    {
+                        label: 'Budget',
+                        data: data.monthly.revenueBudget,
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    },
+                    {
+                        label: 'Actual',
+                        data: data.monthly.revenue,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: '#3b82f6',
+                        pointBorderWidth: 3
+                    }
+                ];
+                revenueChart.options.scales.y.stacked = false;
+            }
+            revenueChart.update();
+        }
+
+        function updateCACChart(view) {
+            if (view === 'actual') {
+                cacChart.data.datasets = [{
+                    label: 'Actual CAC',
+                    data: data.monthly.cac,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: 'white',
+                    pointBorderColor: '#f59e0b',
+                    pointBorderWidth: 3
+                }];
+            } else if (view === 'budget') {
+                cacChart.data.datasets = [
+                    {
+                        label: 'Budget CAC',
+                        data: data.monthly.cacBudget,
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    },
+                    {
+                        label: 'Actual CAC',
+                        data: data.monthly.cac,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: '#f59e0b',
+                        pointBorderWidth: 3
+                    }
+                ];
+            }
+            cacChart.update();
+        }
+
+        // Search Assistant
+        function initializeSearch() {
+            const toggle = document.getElementById('searchToggle');
+            const panel = document.getElementById('searchPanel');
+            const input = document.getElementById('searchInput');
+            const result = document.getElementById('searchResult');
+
+            toggle.addEventListener('click', function() {
+                panel.classList.toggle('active');
+                if (panel.classList.contains('active')) {
+                    input.focus();
+                }
+            });
+
+            // Suggestions
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const query = this.dataset.query;
+                    handleSearch(query);
+                });
+            });
+
+            // Input search
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch(input.value.toLowerCase());
+                }
+            });
+        }
+
+        function handleSearch(query) {
+            const result = document.getElementById('searchResult');
+            let answer = '';
+
+            if (query.includes('revenue') || query === 'revenue') {
+                answer = `<strong>Total FY 2025 Revenue:</strong> $3.67M<br><br>
+                         This is 41.5% below budget target of $6.27M, representing a $2.6M shortfall.
+                         Q4 was our strongest quarter with $1.11M (+13.9% QoQ growth).`;
+            } else if (query.includes('ebitda') || query === 'ebitda') {
+                answer = `<strong>FY 2025 EBITDA:</strong> -$824K (22.5% margin)<br><br>
+                         Budget projected +$2K breakeven, resulting in $826K negative variance.
+                         However, EBITDA improved from -32.6% margin (Q1) to -10.1% (Q4), showing clear path to profitability.`;
+            } else if (query.includes('cac') || query === 'cac') {
+                answer = `<strong>Blended CAC:</strong> $26.63<br><br>
+                         CAC improved 38.7% throughout the year, from $34.03 (Q1) to $20.86 (Q4).
+                         This is actually $0.29 BETTER than budget ($26.92), demonstrating excellent marketing efficiency.`;
+            } else if (query.includes('subscriber') || query === 'subscribers') {
+                answer = `<strong>Total New Subscribers:</strong> 71,422<br><br>
+                         This is 28.9% below budget (100,453), representing a deficit of 29,031 subscribers.
+                         This volume gap is the primary driver of revenue miss. Q4 delivered 26,955 subscribers (37.7% of annual total).`;
+            } else if (query.includes('q4')) {
+                answer = `<strong>Q4 2025 Performance:</strong><br><br>
+                         • Revenue: $1.11M (+44.1% vs Q3)<br>
+                         • EBITDA: -$112K (-10.1% margin)<br>
+                         • New Subs: 26,955<br>
+                         • CAC: $20.86 (best of year)<br>
+                         Q4 was our strongest quarter showing clear momentum heading into 2026.`;
+            } else if (query.includes('budget')) {
+                answer = `<strong>Budget Performance Summary:</strong><br><br>
+                         • Revenue: -41.5% ($2.6M gap)<br>
+                         • EBITDA: $826K worse than breakeven target<br>
+                         • Subscribers: -28.9% (29K gap)<br>
+                         • CAC: +1.1% BETTER than budget ✓<br>
+                         • ARPU: -10.8% below target<br><br>
+                         Root cause is volume constraint, not conversion efficiency.`;
+            } else {
+                answer = `I can help you understand:<br>
+                         • Revenue & financial performance<br>
+                         • EBITDA & profitability<br>
+                         • CAC & marketing efficiency<br>
+                         • Subscriber growth<br>
+                         • Quarterly performance<br>
+                         • Budget variance analysis<br><br>
+                         Try asking one of the suggested questions!`;
+            }
+
+            result.innerHTML = answer;
+            result.classList.add('active');
+        }
+    </script>
+</body>
+</html>

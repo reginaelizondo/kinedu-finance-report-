@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinedu – Q4 2025 Investor Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f5f7fa;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            color: white;
+            padding: 72px 56px 56px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.8px;
+        }
+
+        .hero-subtitle {
+            font-size: 17px;
+            color: #cbd5e1;
+            margin-bottom: 48px;
+            font-weight: 400;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 28px 24px;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .kpi-change {
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .kpi-change.positive {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .kpi-change.negative {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .kpi-variance {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 56px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 15px;
+            color: #64748b;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        /* Executive Summary */
+        .exec-summary {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 32px;
+            border-radius: 12px;
+            border-left: 5px solid #3b82f6;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .exec-summary p {
+            color: #1e293b;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 18px;
+        }
+
+        .insight-list {
+            list-style: none;
+            margin-top: 24px;
+        }
+
+        .insight-list li {
+            padding: 16px 0 16px 36px;
+            position: relative;
+            color: #334155;
+            font-size: 15px;
+            line-height: 1.7;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .insight-list li:last-child {
+            border-bottom: none;
+        }
+
+        .insight-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .lowlights-section {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left-color: #ef4444;
+        }
+
+        .lowlights-section .insight-list li:before {
+            content: "⚠";
+            font-size: 16px;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 28px 0;
+            font-size: 14px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .data-table thead {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+
+        .data-table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table th.number {
+            text-align: right;
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            background: white;
+        }
+
+        .data-table td.number {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+        }
+
+        .data-table td.metric {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .variance-positive {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .variance-negative {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .highlight-row {
+            background: #f8fafc !important;
+        }
+
+        .highlight-row td {
+            font-weight: 700;
+            color: #1e293b;
+            background: #f8fafc;
+        }
+
+        /* Insights */
+        .insight-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 24px 0;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .insight-box.warning {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left-color: #ef4444;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .insight-text {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Strategic Signals */
+        .signal-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .signal-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .signal-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 16px;
+            margin-right: 16px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .signal-title {
+            display: inline;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 16px;
+        }
+
+        .signal-content {
+            margin-top: 16px;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 52px;
+        }
+
+        /* Footer Note */
+        .footer-note {
+            padding: 40px 56px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid #e2e8f0;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 48px 32px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .section {
+                padding: 40px 32px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 12px 16px;
+            }
+        }
+
+        /* KPI Expandable Table - Clean Flexbox Layout */
+        .kpi-expandable-table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .kpi-expandable-table .metric-header {
+            width: 200px;
+        }
+
+        .kpi-expandable-table .quarter-header-cell {
+            width: 140px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+            padding: 16px 8px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .kpi-expandable-table .quarter-header-cell:hover {
+            background: #475569;
+        }
+
+        .kpi-expandable-table .quarter-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .kpi-expandable-table .chevron {
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .kpi-expandable-table .quarter-header-cell.expanded .chevron {
+            transform: rotate(90deg);
+        }
+
+        /* Month Subheader - Blue bar */
+        .kpi-expandable-table .month-subheader-container {
+            padding: 0;
+            height: 0;
+            overflow: hidden;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            background: #3b82f6;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-expandable-table .month-subheader-container.show {
+            height: 36px;
+            padding: 6px 4px;
+        }
+
+        .kpi-expandable-table .month-subheader-inner {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .kpi-expandable-table .month-subheader-container.show .month-subheader-inner {
+            display: flex;
+        }
+
+        .kpi-expandable-table .month-sub {
+            flex: 1;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: white;
+        }
+
+        .kpi-expandable-table .month-sub.avg-sub {
+            font-weight: 700;
+            background: rgba(30, 64, 175, 0.4);
+            border-radius: 3px;
+            padding: 2px 4px;
+        }
+
+        /* Quarter Cells */
+        .kpi-expandable-table .quarter-cell {
+            padding: 0 !important;
+            border-left: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        /* Collapsed State */
+        .kpi-expandable-table .quarter-collapsed {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 12px;
+            font-weight: 600;
+            min-height: 54px;
+        }
+
+        /* Expanded State - Flexbox */
+        .kpi-expandable-table .quarter-expanded {
+            display: none;
+            justify-content: space-between;
+            align-items: stretch;
+            padding: 2px;
+            background: #e2e8f0;
+            min-height: 54px;
+        }
+
+        .kpi-expandable-table .quarter-expanded.show {
+            display: flex;
+        }
+
+        .kpi-expandable-table .month-val {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            margin: 0 1px;
+            font-size: 13px;
+            color: #1e293b;
+            padding: 4px 2px;
+        }
+
+        .kpi-expandable-table .month-val:first-child {
+            margin-left: 0;
+        }
+
+        .kpi-expandable-table .month-val:last-child {
+            margin-right: 0;
+        }
+
+        .kpi-expandable-table .month-val.avg-val {
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: 700;
+            border-left: 2px solid #3b82f6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .kpi-expandable-table .quarter-header-cell {
+                width: 120px;
+            }
+
+            .kpi-expandable-table .month-val {
+                font-size: 12px;
+                padding: 4px 1px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-expandable-table .metric-header {
+                width: 140px;
+            }
+
+            .kpi-expandable-table .quarter-header-cell {
+                width: 100px;
+                padding: 12px 6px;
+            }
+
+            .kpi-expandable-table .month-sub {
+                font-size: 9px;
+            }
+
+            .kpi-expandable-table .month-val {
+                font-size: 11px;
+            }
+        }
+    </style>
+    <script>
+        // KPI Table - Nested Grid Expansion (FIXED - Strict Column Alignment)
+        document.addEventListener('DOMContentLoaded', function() {
+            const table = document.querySelector('.kpi-expandable-table');
+            if (!table) return;
+
+            let currentExpandedQuarter = null;
+
+            // Add click handlers to quarter headers
+            const quarterHeaders = table.querySelectorAll('.quarter-header-cell');
+            quarterHeaders.forEach(header => {
+                header.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const quarter = this.dataset.quarter;
+                    toggleQuarter(quarter);
+                });
+            });
+
+            function toggleQuarter(quarter) {
+                // If clicking the same quarter, collapse it
+                if (currentExpandedQuarter === quarter) {
+                    collapseQuarter(quarter);
+                    currentExpandedQuarter = null;
+                    return;
+                }
+
+                // Collapse previously expanded quarter
+                if (currentExpandedQuarter) {
+                    collapseQuarter(currentExpandedQuarter);
+                }
+
+                // Expand new quarter
+                expandQuarter(quarter);
+                currentExpandedQuarter = quarter;
+            }
+
+            function expandQuarter(quarter) {
+                // Mark header as expanded
+                const header = table.querySelector(`.quarter-header-cell[data-quarter="${quarter}"]`);
+                if (header) header.classList.add('expanded');
+
+                // Show month subheader for this quarter only
+                const subheader = table.querySelector(`.month-subheader-container[data-quarter="${quarter}"]`);
+                if (subheader) {
+                    const inner = subheader.querySelector('.month-subheader-inner');
+                    if (inner) inner.style.display = 'flex';
+                    setTimeout(() => subheader.classList.add('show'), 10);
+                }
+
+                // Show expanded view in all metric rows for this quarter only
+                const quarterCells = table.querySelectorAll(`.quarter-cell[data-quarter="${quarter}"]`);
+                quarterCells.forEach(cell => {
+                    cell.classList.add('expanded');
+                    const collapsed = cell.querySelector('.quarter-collapsed');
+                    const expanded = cell.querySelector('.quarter-expanded');
+
+                    if (collapsed) collapsed.style.display = 'none';
+                    if (expanded) {
+                        expanded.style.display = 'grid';
+                        setTimeout(() => expanded.classList.add('show'), 10);
+                    }
+                });
+            }
+
+            function collapseQuarter(quarter) {
+                // Remove expanded state from header
+                const header = table.querySelector(`.quarter-header-cell[data-quarter="${quarter}"]`);
+                if (header) header.classList.remove('expanded');
+
+                // Hide month subheader
+                const subheader = table.querySelector(`.month-subheader-container[data-quarter="${quarter}"]`);
+                if (subheader) {
+                    subheader.classList.remove('show');
+                    const inner = subheader.querySelector('.month-subheader-inner');
+                    setTimeout(() => {
+                        if (inner && !subheader.classList.contains('show')) {
+                            inner.style.display = 'none';
+                        }
+                    }, 300);
+                }
+
+                // Hide expanded view and show collapsed value
+                const quarterCells = table.querySelectorAll(`.quarter-cell[data-quarter="${quarter}"]`);
+                quarterCells.forEach(cell => {
+                    cell.classList.remove('expanded');
+                    const collapsed = cell.querySelector('.quarter-collapsed');
+                    const expanded = cell.querySelector('.quarter-expanded');
+
+                    if (expanded) {
+                        expanded.classList.remove('show');
+                        setTimeout(() => {
+                            if (!expanded.classList.contains('show')) {
+                                expanded.style.display = 'none';
+                            }
+                        }, 300);
+                    }
+                    if (collapsed) collapsed.style.display = 'flex';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER / HERO SECTION -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Kinedu – Q4 2025 Investor Report</h1>
+                <p class="hero-subtitle">Quarterly performance overview and strategic insights</p>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Q4 Revenue</div>
+                        <div class="kpi-value">$1.11M</div>
+                        <div class="kpi-change positive">+44.1% QoQ</div>
+                        <div class="kpi-variance">Budget: -46.0%</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-label">Gross Margin</div>
+                        <div class="kpi-value">76.9%</div>
+                        <div class="kpi-change negative">-0.4pp QoQ</div>
+                        <div class="kpi-variance">Stable vs budget</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-label">Q4 EBITDA</div>
+                        <div class="kpi-value">-$96K</div>
+                        <div class="kpi-change positive">+62.4% QoQ</div>
+                        <div class="kpi-variance">Budget: -126%</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-label">CAC Spend</div>
+                        <div class="kpi-value">$562K</div>
+                        <div class="kpi-change negative">+31.3% QoQ</div>
+                        <div class="kpi-variance">Budget: -27.0%</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-label">Cash Burn</div>
+                        <div class="kpi-value">$147K</div>
+                        <div class="kpi-change positive">-42.1% QoQ</div>
+                        <div class="kpi-variance">Runway critical</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="section">
+            <h2 class="section-title">Executive Summary</h2>
+
+            <div class="exec-summary">
+                <p>Q4 2025 showed significant sequential improvement with revenue up 44% QoQ to $1.11M, driven primarily by recovery in December ($445K, +23% MoM). However, the company remains significantly behind budget (-46% in Q4, -44% for full year) and generated a net loss of $96K EBITDA despite the revenue uptick. Full year 2025 closed at $3.53M revenue with -$824K EBITDA and -$897K cash burn, representing substantial underperformance against a $6.34M revenue budget and +$650K EBITDA target.</p>
+
+                <p style="margin-bottom: 0;"><strong>What drove Q4 performance:</strong></p>
+                <ul class="insight-list">
+                    <li>Strong December recovery boosted quarterly revenue 44% QoQ after weak Q2-Q3 performance ($771K-$785K range)</li>
+                    <li>Marketing spend increased 31% QoQ to $562K, suggesting volume-driven growth strategy rather than efficiency gains</li>
+                    <li>Contribution margin improved to $292K (26.3% margin) vs $152K in Q3, indicating better unit economics at higher volumes</li>
+                </ul>
+
+                <p style="margin-bottom: 0; margin-top: 20px;"><strong>Key risks and watch-outs:</strong></p>
+                <ul class="insight-list">
+                    <li>Structural revenue shortfall: 44% below budget for full year suggests fundamental issues with conversion, retention, or pricing assumptions</li>
+                    <li>Negative operating leverage: Increased marketing spend did not translate to profitability—higher volumes still produced losses</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- GROWTH & UNIT ECONOMICS -->
+        <div class="section">
+            <h2 class="section-title">Growth & Unit Economics</h2>
+            <p class="section-subtitle">Key performance indicators with actual vs budget comparison</p>
+
+            <table class="data-table kpi-expandable-table">
+                <thead>
+                    <tr class="quarter-header-row">
+                        <th rowspan="2" class="metric-header">Metric</th>
+                        <th class="number quarter-header-cell" data-quarter="q1">
+                            <div class="quarter-header-content">
+                                <span class="quarter-label">Q1 2025</span>
+                                <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </th>
+                        <th class="number quarter-header-cell" data-quarter="q2">
+                            <div class="quarter-header-content">
+                                <span class="quarter-label">Q2 2025</span>
+                                <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </th>
+                        <th class="number quarter-header-cell" data-quarter="q3">
+                            <div class="quarter-header-content">
+                                <span class="quarter-label">Q3 2025</span>
+                                <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </th>
+                        <th class="number quarter-header-cell" data-quarter="q4">
+                            <div class="quarter-header-content">
+                                <span class="quarter-label">Q4 2025</span>
+                                <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                    <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </th>
+                        <th class="number" rowspan="2">Q4 Budget</th>
+                        <th class="number" rowspan="2">Variance</th>
+                        <th class="number" rowspan="2">FY Avg</th>
+                    </tr>
+                    <tr class="month-subheader-row">
+                        <!-- Q1 subheader - only shows when Q1 is expanded -->
+                        <th class="number month-subheader-container" data-quarter="q1">
+                            <div class="month-subheader-inner" style="display: none;">
+                                <span class="month-sub">JAN</span>
+                                <span class="month-sub">FEB</span>
+                                <span class="month-sub">MAR</span>
+                                <span class="month-sub avg-sub">AVG</span>
+                            </div>
+                        </th>
+                        <!-- Q2 subheader -->
+                        <th class="number month-subheader-container" data-quarter="q2">
+                            <div class="month-subheader-inner" style="display: none;">
+                                <span class="month-sub">APR</span>
+                                <span class="month-sub">MAY</span>
+                                <span class="month-sub">JUN</span>
+                                <span class="month-sub avg-sub">AVG</span>
+                            </div>
+                        </th>
+                        <!-- Q3 subheader -->
+                        <th class="number month-subheader-container" data-quarter="q3">
+                            <div class="month-subheader-inner" style="display: none;">
+                                <span class="month-sub">JUL</span>
+                                <span class="month-sub">AUG</span>
+                                <span class="month-sub">SEP</span>
+                                <span class="month-sub avg-sub">AVG</span>
+                            </div>
+                        </th>
+                        <!-- Q4 subheader -->
+                        <th class="number month-subheader-container" data-quarter="q4">
+                            <div class="month-subheader-inner" style="display: none;">
+                                <span class="month-sub">OCT</span>
+                                <span class="month-sub">NOV</span>
+                                <span class="month-sub">DEC</span>
+                                <span class="month-sub avg-sub">AVG</span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- CAC Row -->
+                    <tr class="metric-row">
+                        <td class="metric">CAC ($)</td>
+                        <!-- Q1 cell with nested grid -->
+                        <td class="number quarter-cell" data-quarter="q1">
+                            <div class="quarter-collapsed" data-quarter="q1">$1.55</div>
+                            <div class="quarter-expanded" data-quarter="q1" style="display: none;">
+                                <span class="month-val">$1.32</span>
+                                <span class="month-val">$1.58</span>
+                                <span class="month-val">$1.76</span>
+                                <span class="month-val avg-val">$1.55</span>
+                            </div>
+                        </td>
+                        <!-- Q2 cell -->
+                        <td class="number quarter-cell" data-quarter="q2">
+                            <div class="quarter-collapsed" data-quarter="q2">$1.81</div>
+                            <div class="quarter-expanded" data-quarter="q2" style="display: none;">
+                                <span class="month-val">$1.90</span>
+                                <span class="month-val">$1.62</span>
+                                <span class="month-val">$1.90</span>
+                                <span class="month-val avg-val">$1.81</span>
+                            </div>
+                        </td>
+                        <!-- Q3 cell -->
+                        <td class="number quarter-cell" data-quarter="q3">
+                            <div class="quarter-collapsed" data-quarter="q3">$1.74</div>
+                            <div class="quarter-expanded" data-quarter="q3" style="display: none;">
+                                <span class="month-val">$1.91</span>
+                                <span class="month-val">$1.60</span>
+                                <span class="month-val">$1.71</span>
+                                <span class="month-val avg-val">$1.74</span>
+                            </div>
+                        </td>
+                        <!-- Q4 cell -->
+                        <td class="number quarter-cell" data-quarter="q4">
+                            <div class="quarter-collapsed" data-quarter="q4">$1.61</div>
+                            <div class="quarter-expanded" data-quarter="q4" style="display: none;">
+                                <span class="month-val">$1.82</span>
+                                <span class="month-val">$1.76</span>
+                                <span class="month-val">$1.26</span>
+                                <span class="month-val avg-val">$1.61</span>
+                            </div>
+                        </td>
+                        <td class="number">$1.26</td>
+                        <td class="number variance-negative">+28.0%</td>
+                        <td class="number">$1.68</td>
+                    </tr>
+
+                    <!-- ARPU Row -->
+                    <tr class="metric-row">
+                        <td class="metric">ARPU ($)</td>
+                        <td class="number quarter-cell" data-quarter="q1">
+                            <div class="quarter-collapsed" data-quarter="q1">$33.12</div>
+                            <div class="quarter-expanded" data-quarter="q1" style="display: none;">
+                                <span class="month-val">$35.07</span>
+                                <span class="month-val">$32.59</span>
+                                <span class="month-val">$31.69</span>
+                                <span class="month-val avg-val">$33.12</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q2">
+                            <div class="quarter-collapsed" data-quarter="q2">$33.31</div>
+                            <div class="quarter-expanded" data-quarter="q2" style="display: none;">
+                                <span class="month-val">$34.95</span>
+                                <span class="month-val">$32.34</span>
+                                <span class="month-val">$32.64</span>
+                                <span class="month-val avg-val">$33.31</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q3">
+                            <div class="quarter-collapsed" data-quarter="q3">$25.55</div>
+                            <div class="quarter-expanded" data-quarter="q3" style="display: none;">
+                                <span class="month-val">$30.44</span>
+                                <span class="month-val">$21.85</span>
+                                <span class="month-val">$24.37</span>
+                                <span class="month-val avg-val">$25.55</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q4">
+                            <div class="quarter-collapsed" data-quarter="q4">$26.01</div>
+                            <div class="quarter-expanded" data-quarter="q4" style="display: none;">
+                                <span class="month-val">$24.11</span>
+                                <span class="month-val">$25.91</span>
+                                <span class="month-val">$28.02</span>
+                                <span class="month-val avg-val">$26.01</span>
+                            </div>
+                        </td>
+                        <td class="number">$26.02</td>
+                        <td class="number variance-positive">-0.0%</td>
+                        <td class="number">$29.50</td>
+                    </tr>
+
+                    <!-- Conversion Row -->
+                    <tr class="metric-row">
+                        <td class="metric">Conversion (%)</td>
+                        <td class="number quarter-cell" data-quarter="q1">
+                            <div class="quarter-collapsed" data-quarter="q1">4.72%</div>
+                            <div class="quarter-expanded" data-quarter="q1" style="display: none;">
+                                <span class="month-val">3.76%</span>
+                                <span class="month-val">4.84%</span>
+                                <span class="month-val">5.55%</span>
+                                <span class="month-val avg-val">4.72%</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q2">
+                            <div class="quarter-collapsed" data-quarter="q2">5.42%</div>
+                            <div class="quarter-expanded" data-quarter="q2" style="display: none;">
+                                <span class="month-val">5.44%</span>
+                                <span class="month-val">5.01%</span>
+                                <span class="month-val">5.82%</span>
+                                <span class="month-val avg-val">5.42%</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q3">
+                            <div class="quarter-collapsed" data-quarter="q3">6.72%</div>
+                            <div class="quarter-expanded" data-quarter="q3" style="display: none;">
+                                <span class="month-val">6.26%</span>
+                                <span class="month-val">6.79%</span>
+                                <span class="month-val">7.10%</span>
+                                <span class="month-val avg-val">6.72%</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q4">
+                            <div class="quarter-collapsed" data-quarter="q4">7.87%</div>
+                            <div class="quarter-expanded" data-quarter="q4" style="display: none;">
+                                <span class="month-val">7.56%</span>
+                                <span class="month-val">7.70%</span>
+                                <span class="month-val">8.36%</span>
+                                <span class="month-val avg-val">7.87%</span>
+                            </div>
+                        </td>
+                        <td class="number">4.82%</td>
+                        <td class="number variance-positive">+63.3%</td>
+                        <td class="number">6.18%</td>
+                    </tr>
+
+                    <!-- Free Trial Conversion Row -->
+                    <tr class="metric-row">
+                        <td class="metric">Free Trial Conv. (%)</td>
+                        <td class="number quarter-cell" data-quarter="q1">
+                            <div class="quarter-collapsed" data-quarter="q1">12.02%</div>
+                            <div class="quarter-expanded" data-quarter="q1" style="display: none;">
+                                <span class="month-val">10.36%</span>
+                                <span class="month-val">12.28%</span>
+                                <span class="month-val">13.43%</span>
+                                <span class="month-val avg-val">12.02%</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q2">
+                            <div class="quarter-collapsed" data-quarter="q2">12.91%</div>
+                            <div class="quarter-expanded" data-quarter="q2" style="display: none;">
+                                <span class="month-val">12.05%</span>
+                                <span class="month-val">12.01%</span>
+                                <span class="month-val">14.67%</span>
+                                <span class="month-val avg-val">12.91%</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q3">
+                            <div class="quarter-collapsed" data-quarter="q3">14.22%</div>
+                            <div class="quarter-expanded" data-quarter="q3" style="display: none;">
+                                <span class="month-val">14.97%</span>
+                                <span class="month-val">14.83%</span>
+                                <span class="month-val">12.87%</span>
+                                <span class="month-val avg-val">14.22%</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q4">
+                            <div class="quarter-collapsed" data-quarter="q4">14.72%</div>
+                            <div class="quarter-expanded" data-quarter="q4" style="display: none;">
+                                <span class="month-val">13.11%</span>
+                                <span class="month-val">14.99%</span>
+                                <span class="month-val">16.05%</span>
+                                <span class="month-val avg-val">14.72%</span>
+                            </div>
+                        </td>
+                        <td class="number">—</td>
+                        <td class="number">—</td>
+                        <td class="number">13.47%</td>
+                    </tr>
+
+                    <!-- Avg Ticket Row -->
+                    <tr class="metric-row">
+                        <td class="metric">Avg Ticket ($)</td>
+                        <td class="number quarter-cell" data-quarter="q1">
+                            <div class="quarter-collapsed" data-quarter="q1">$53.38</div>
+                            <div class="quarter-expanded" data-quarter="q1" style="display: none;">
+                                <span class="month-val">$53.10</span>
+                                <span class="month-val">$53.00</span>
+                                <span class="month-val">$54.04</span>
+                                <span class="month-val avg-val">$53.38</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q2">
+                            <div class="quarter-collapsed" data-quarter="q2">$55.77</div>
+                            <div class="quarter-expanded" data-quarter="q2" style="display: none;">
+                                <span class="month-val">$54.80</span>
+                                <span class="month-val">$55.40</span>
+                                <span class="month-val">$57.10</span>
+                                <span class="month-val avg-val">$55.77</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q3">
+                            <div class="quarter-collapsed" data-quarter="q3">$54.33</div>
+                            <div class="quarter-expanded" data-quarter="q3" style="display: none;">
+                                <span class="month-val">$55.60</span>
+                                <span class="month-val">$53.10</span>
+                                <span class="month-val">$54.30</span>
+                                <span class="month-val avg-val">$54.33</span>
+                            </div>
+                        </td>
+                        <td class="number quarter-cell" data-quarter="q4">
+                            <div class="quarter-collapsed" data-quarter="q4">$52.53</div>
+                            <div class="quarter-expanded" data-quarter="q4" style="display: none;">
+                                <span class="month-val">$52.99</span>
+                                <span class="month-val">$53.80</span>
+                                <span class="month-val">$50.80</span>
+                                <span class="month-val avg-val">$52.53</span>
+                            </div>
+                        </td>
+                        <td class="number">$57.20</td>
+                        <td class="number variance-negative">-8.2%</td>
+                        <td class="number">$54.00</td>
+                    </tr>
+
+                    <!-- LTV:CAC Row (no monthly breakdown) -->
+                    <tr class="highlight-row metric-row">
+                        <td class="metric">LTV:CAC (estimated)</td>
+                        <td class="number">21.4x</td>
+                        <td class="number">18.4x</td>
+                        <td class="number">14.7x</td>
+                        <td class="number">16.2x</td>
+                        <td class="number">20.7x</td>
+                        <td class="number variance-negative">-21.7%</td>
+                        <td class="number">17.6x</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box">
+                <div class="insight-title">Analysis: Conversion strength offset by CAC deterioration and ARPU decline</div>
+                <div class="insight-text">
+                    Q4 showed strong conversion improvement (+63% vs budget at 7.87%), indicating the company is getting better at converting installs to paying customers. However, this was achieved at significantly higher CAC ($1.61 vs $1.26 budget, +28%) and lower ticket sizes ($52.53 vs $57.20, -8.2%). The net effect: estimated LTV:CAC of 16.2x in Q4 vs 20.7x budgeted—still healthy by industry standards, but trending downward. ARPU collapsed from $33 in Q1-Q2 to $26 in Q3-Q4, a 21% decline that suggests either pricing pressure, shift to monthly plans, or higher churn reducing lifetime value. The 44% revenue miss despite 63% better conversion indicates the volume opportunity was overestimated—fewer users reached the conversion funnel than modeled.
+                </div>
+            </div>
+
+            <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 48px 0 20px;">Monthly KPI Trends</h3>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th class="number">CAC</th>
+                        <th class="number">Budget</th>
+                        <th class="number">ARPU</th>
+                        <th class="number">Budget</th>
+                        <th class="number">Conversion</th>
+                        <th class="number">Budget</th>
+                        <th class="number">Ticket</th>
+                        <th class="number">Budget</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric">January</td>
+                        <td class="number">$1.32</td>
+                        <td class="number">$1.55</td>
+                        <td class="number">$35.07</td>
+                        <td class="number">$36.21</td>
+                        <td class="number">3.76%</td>
+                        <td class="number">4.53%</td>
+                        <td class="number">$53.10</td>
+                        <td class="number">$55.10</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">February</td>
+                        <td class="number">$1.58</td>
+                        <td class="number">$1.55</td>
+                        <td class="number">$32.59</td>
+                        <td class="number">$36.21</td>
+                        <td class="number">4.84%</td>
+                        <td class="number">4.53%</td>
+                        <td class="number">$53.00</td>
+                        <td class="number">$55.10</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">March</td>
+                        <td class="number">$1.76</td>
+                        <td class="number">$1.55</td>
+                        <td class="number">$31.69</td>
+                        <td class="number">$36.21</td>
+                        <td class="number">5.55%</td>
+                        <td class="number">4.53%</td>
+                        <td class="number">$54.04</td>
+                        <td class="number">$55.10</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">April</td>
+                        <td class="number">$1.90</td>
+                        <td class="number">$1.49</td>
+                        <td class="number">$34.95</td>
+                        <td class="number">$32.72</td>
+                        <td class="number">5.44%</td>
+                        <td class="number">4.55%</td>
+                        <td class="number">$54.80</td>
+                        <td class="number">$56.30</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">May</td>
+                        <td class="number">$1.62</td>
+                        <td class="number">$1.49</td>
+                        <td class="number">$32.34</td>
+                        <td class="number">$32.72</td>
+                        <td class="number">5.01%</td>
+                        <td class="number">4.55%</td>
+                        <td class="number">$55.40</td>
+                        <td class="number">$56.30</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">June</td>
+                        <td class="number">$1.90</td>
+                        <td class="number">$1.49</td>
+                        <td class="number">$32.64</td>
+                        <td class="number">$32.72</td>
+                        <td class="number">5.82%</td>
+                        <td class="number">4.55%</td>
+                        <td class="number">$57.10</td>
+                        <td class="number">$56.30</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">July</td>
+                        <td class="number">$1.91</td>
+                        <td class="number">$1.42</td>
+                        <td class="number">$30.44</td>
+                        <td class="number">$29.08</td>
+                        <td class="number">6.26%</td>
+                        <td class="number">4.88%</td>
+                        <td class="number">$55.60</td>
+                        <td class="number">$57.30</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">August</td>
+                        <td class="number">$1.60</td>
+                        <td class="number">$1.42</td>
+                        <td class="number">$21.85</td>
+                        <td class="number">$29.08</td>
+                        <td class="number">6.79%</td>
+                        <td class="number">4.88%</td>
+                        <td class="number">$53.10</td>
+                        <td class="number">$57.30</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">September</td>
+                        <td class="number">$1.71</td>
+                        <td class="number">$1.42</td>
+                        <td class="number">$24.37</td>
+                        <td class="number">$29.08</td>
+                        <td class="number">7.10%</td>
+                        <td class="number">4.88%</td>
+                        <td class="number">$54.30</td>
+                        <td class="number">$57.30</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">October</td>
+                        <td class="number">$1.82</td>
+                        <td class="number">$1.26</td>
+                        <td class="number">$24.11</td>
+                        <td class="number">$26.02</td>
+                        <td class="number">7.56%</td>
+                        <td class="number">4.82%</td>
+                        <td class="number">$52.99</td>
+                        <td class="number">$57.20</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">November</td>
+                        <td class="number">$1.76</td>
+                        <td class="number">$1.26</td>
+                        <td class="number">$25.91</td>
+                        <td class="number">$26.02</td>
+                        <td class="number">7.70%</td>
+                        <td class="number">4.82%</td>
+                        <td class="number">$53.80</td>
+                        <td class="number">$57.20</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">December</td>
+                        <td class="number">$1.26</td>
+                        <td class="number">$1.26</td>
+                        <td class="number">$28.02</td>
+                        <td class="number">$26.02</td>
+                        <td class="number">8.36%</td>
+                        <td class="number">4.82%</td>
+                        <td class="number">$50.80</td>
+                        <td class="number">$57.20</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box warning">
+                <div class="insight-title">Warning: ARPU collapsed in mid-year from $35 to $22-25 range</div>
+                <div class="insight-text">
+                    ARPU peaked in January at $35.07 and maintained above $32 through June, then dropped sharply to $21.85 in August—a 38% decline. This catastrophic drop partially recovered to $28 by December but never regained Q1-Q2 levels. The ARPU erosion directly explains the 44% revenue shortfall: even with improving conversion (3.76% → 8.36%), lower revenue per user means total revenue fell short. Potential causes: (1) shift from annual to monthly subscriptions reducing LTV captured in measurement period, (2) promotional pricing or discounting to drive volume, (3) higher churn reducing the lifetime captured, or (4) product mix shift toward lower-priced tiers. This is the single most critical metric to diagnose and fix.
+                </div>
+            </div>
+        </div>
+
+        <!-- FINANCIAL PERFORMANCE -->
+        <div class="section">
+            <h2 class="section-title">Financial Performance</h2>
+            <p class="section-subtitle">Quarterly P&L with budget comparison</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th class="number">Q1 2025</th>
+                        <th class="number">Q2 2025</th>
+                        <th class="number">Q3 2025</th>
+                        <th class="number">Q4 2025</th>
+                        <th class="number">Q4 Budget</th>
+                        <th class="number">Variance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric">Revenue</td>
+                        <td class="number">$862,301</td>
+                        <td class="number">$784,588</td>
+                        <td class="number">$771,480</td>
+                        <td class="number">$1,111,708</td>
+                        <td class="number">$2,060,303</td>
+                        <td class="number variance-negative">-46.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Gross Margin</td>
+                        <td class="number">$638,709</td>
+                        <td class="number">$573,032</td>
+                        <td class="number">$579,980</td>
+                        <td class="number">$854,368</td>
+                        <td class="number">$1,541,479</td>
+                        <td class="number variance-negative">-44.6%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Gross Margin %</td>
+                        <td class="number">74.1%</td>
+                        <td class="number">73.0%</td>
+                        <td class="number">75.2%</td>
+                        <td class="number">76.9%</td>
+                        <td class="number">74.8%</td>
+                        <td class="number variance-positive">+2.1pp</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Acquisition Spend</td>
+                        <td class="number">$492,946</td>
+                        <td class="number">$418,467</td>
+                        <td class="number">$428,203</td>
+                        <td class="number">$562,206</td>
+                        <td class="number">$770,100</td>
+                        <td class="number variance-positive">-27.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Contribution Margin</td>
+                        <td class="number">$145,763</td>
+                        <td class="number">$154,565</td>
+                        <td class="number">$151,777</td>
+                        <td class="number">$292,162</td>
+                        <td class="number">$771,379</td>
+                        <td class="number variance-negative">-62.1%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Contribution Margin %</td>
+                        <td class="number">16.9%</td>
+                        <td class="number">19.7%</td>
+                        <td class="number">19.7%</td>
+                        <td class="number">26.3%</td>
+                        <td class="number">37.4%</td>
+                        <td class="number variance-negative">-11.1pp</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">EBITDA</td>
+                        <td class="number">-$280,802</td>
+                        <td class="number">-$193,333</td>
+                        <td class="number">-$254,362</td>
+                        <td class="number">-$95,693</td>
+                        <td class="number">$371,103</td>
+                        <td class="number variance-negative">-125.8%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">EBITDA Margin</td>
+                        <td class="number">-32.6%</td>
+                        <td class="number">-24.6%</td>
+                        <td class="number">-33.0%</td>
+                        <td class="number">-8.6%</td>
+                        <td class="number">18.0%</td>
+                        <td class="number variance-negative">-26.6pp</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">Cash Flow</td>
+                        <td class="number">-$280,802</td>
+                        <td class="number">-$196,199</td>
+                        <td class="number">-$273,025</td>
+                        <td class="number">-$147,195</td>
+                        <td class="number">$370,150</td>
+                        <td class="number variance-negative">-139.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box">
+                <div class="insight-title">Analysis: Sequential improvement masking structural challenges</div>
+                <div class="insight-text">
+                    Q4 showed the strongest revenue performance of the year ($1.11M), but remained 46% below budget. The 44% QoQ revenue growth was accompanied by a 31% increase in CAC spend, suggesting volume was purchased rather than organically achieved. Contribution margin improved to 26.3% (vs 20% in Q3), indicating better unit economics at scale, but still fell 11pp short of the 37% budgeted. EBITDA losses narrowed significantly to -$96K (from -$254K in Q3), but the company remains structurally unprofitable with negative margins across all quarters.
+                </div>
+            </div>
+        </div>
+
+        <!-- MONTHLY TREND ANALYSIS -->
+        <div class="section">
+            <h2 class="section-title">Monthly Revenue Trend</h2>
+            <p class="section-subtitle">2025 monthly performance shows high volatility</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th class="number">Revenue</th>
+                        <th class="number">MoM Change</th>
+                        <th class="number">CAC Spend</th>
+                        <th class="number">EBITDA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric">January</td>
+                        <td class="number">$432,515</td>
+                        <td class="number">—</td>
+                        <td class="number">$154,272</td>
+                        <td class="number">-$85,994</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">February</td>
+                        <td class="number">$102,874</td>
+                        <td class="number variance-negative">-76.2%</td>
+                        <td class="number">$145,270</td>
+                        <td class="number">-$168,577</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">March</td>
+                        <td class="number">$326,913</td>
+                        <td class="number variance-positive">+217.8%</td>
+                        <td class="number">$193,404</td>
+                        <td class="number">-$26,231</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">April</td>
+                        <td class="number">$264,902</td>
+                        <td class="number variance-negative">-19.0%</td>
+                        <td class="number">$144,324</td>
+                        <td class="number">-$11,453</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">May</td>
+                        <td class="number">$243,906</td>
+                        <td class="number variance-negative">-7.9%</td>
+                        <td class="number">$141,155</td>
+                        <td class="number">-$57,965</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">June</td>
+                        <td class="number">$275,780</td>
+                        <td class="number variance-positive">+13.1%</td>
+                        <td class="number">$132,987</td>
+                        <td class="number">-$123,915</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">July</td>
+                        <td class="number">$201,068</td>
+                        <td class="number variance-negative">-27.1%</td>
+                        <td class="number">$130,493</td>
+                        <td class="number">-$70,691</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">August</td>
+                        <td class="number">$245,616</td>
+                        <td class="number variance-positive">+22.2%</td>
+                        <td class="number">$138,348</td>
+                        <td class="number">-$134,193</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">September</td>
+                        <td class="number">$324,796</td>
+                        <td class="number variance-positive">+32.2%</td>
+                        <td class="number">$159,362</td>
+                        <td class="number">-$49,477</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">October</td>
+                        <td class="number">$303,938</td>
+                        <td class="number variance-negative">-6.4%</td>
+                        <td class="number">$154,498</td>
+                        <td class="number">-$13,165</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">November</td>
+                        <td class="number">$362,561</td>
+                        <td class="number variance-positive">+19.3%</td>
+                        <td class="number">$202,864</td>
+                        <td class="number">-$41,264</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">December</td>
+                        <td class="number">$445,209</td>
+                        <td class="number variance-positive">+22.8%</td>
+                        <td class="number">$204,844</td>
+                        <td class="number">-$41,265</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box warning">
+                <div class="insight-title">Warning: Extreme revenue volatility indicates instability</div>
+                <div class="insight-text">
+                    Monthly revenue swung from $103K (Feb) to $445K (Dec)—a 333% range within a single year. February experienced a catastrophic -76% drop, while March rebounded +218%. This volatility suggests the business lacks predictable revenue drivers and may be heavily dependent on sporadic marketing campaigns or seasonal effects. No single month achieved breakeven EBITDA, with losses ranging from -$11K (April) to -$168K (February). The pattern indicates the company is not yet at steady-state operations.
+                </div>
+            </div>
+        </div>
+
+        <!-- FULL YEAR SUMMARY -->
+        <div class="section">
+            <h2 class="section-title">Full Year 2025 Performance</h2>
+            <p class="section-subtitle">Annual results vs budget</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th class="number">FY 2025 Actual</th>
+                        <th class="number">FY 2025 Budget</th>
+                        <th class="number">Variance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric">Total Revenue</td>
+                        <td class="number">$3,530,078</td>
+                        <td class="number">$6,335,410</td>
+                        <td class="number variance-negative">-44.3%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Gross Margin</td>
+                        <td class="number">$2,646,089</td>
+                        <td class="number">$4,660,871</td>
+                        <td class="number variance-negative">-43.2%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Gross Margin %</td>
+                        <td class="number">75.0%</td>
+                        <td class="number">73.6%</td>
+                        <td class="number variance-positive">+1.4pp</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Total Acquisition Spend</td>
+                        <td class="number">$1,901,822</td>
+                        <td class="number">$2,536,191</td>
+                        <td class="number variance-positive">-25.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Contribution Margin</td>
+                        <td class="number">$744,267</td>
+                        <td class="number">$2,124,680</td>
+                        <td class="number variance-negative">-65.0%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Operating Costs</td>
+                        <td class="number">$1,568,457</td>
+                        <td class="number">$1,474,742</td>
+                        <td class="number variance-negative">+6.4%</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">EBITDA</td>
+                        <td class="number">-$824,190</td>
+                        <td class="number">$649,938</td>
+                        <td class="number variance-negative">-226.8%</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">EBITDA Margin</td>
+                        <td class="number">-23.3%</td>
+                        <td class="number">10.3%</td>
+                        <td class="number variance-negative">-33.6pp</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">Total Cash Burn</td>
+                        <td class="number">$897,221</td>
+                        <td class="number">-$645,103</td>
+                        <td class="number variance-negative">+239.1%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box warning">
+                <div class="insight-title">Critical: $1.5M swing from budgeted profit to actual loss</div>
+                <div class="insight-text">
+                    The company expected to generate $650K in positive EBITDA but instead burned $824K—a $1.47M negative variance. This represents a 227% miss on profitability expectations. Despite spending 25% less on CAC than budgeted ($1.90M vs $2.54M), revenue fell 44% short due to underperformance in conversion, retention, or ARPU. Operating costs exceeded budget by 6.4%, suggesting insufficient cost discipline as revenue targets were missed. The company burned $897K in cash against a plan to generate $645K, putting 2026 runway at immediate risk.
+                </div>
+            </div>
+        </div>
+
+        <!-- CASH & RUNWAY -->
+        <div class="section">
+            <h2 class="section-title">Cash Flow & Runway</h2>
+            <p class="section-subtitle">Burn analysis and runway implications</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th class="number">Operating Cash Flow</th>
+                        <th class="number">CAPEX</th>
+                        <th class="number">Net Burn</th>
+                        <th class="number">Avg Monthly Burn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric">Q1 2025</td>
+                        <td class="number">-$280,802</td>
+                        <td class="number">$0</td>
+                        <td class="number">-$280,802</td>
+                        <td class="number">-$93,601</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Q2 2025</td>
+                        <td class="number">-$193,333</td>
+                        <td class="number">-$2,866</td>
+                        <td class="number">-$196,199</td>
+                        <td class="number">-$65,400</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Q3 2025</td>
+                        <td class="number">-$254,362</td>
+                        <td class="number">$0</td>
+                        <td class="number">-$273,025</td>
+                        <td class="number">-$91,008</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Q4 2025</td>
+                        <td class="number">-$95,693</td>
+                        <td class="number">$0</td>
+                        <td class="number">-$147,195</td>
+                        <td class="number">-$49,065</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">Full Year 2025</td>
+                        <td class="number">-$824,190</td>
+                        <td class="number">-$2,866</td>
+                        <td class="number">-$897,221</td>
+                        <td class="number">-$74,768</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box warning">
+                <div class="insight-title">Runway analysis: Critical cash position requires immediate action</div>
+                <div class="insight-text">
+                    At Q4's improved monthly burn rate of $49K, current cash position is unknown but the $897K annual burn against a -$645K budgeted positive cash flow represents a $1.54M funding gap. If December's burn rate ($41K-$49K range) holds, and assuming modest cash reserves, runway could be 6-12 months maximum. However, given the 44% revenue miss, any assumption of maintaining current burn without further revenue deterioration is optimistic. The company needs either: (1) immediate path to breakeven through cost reduction, (2) significant revenue acceleration beyond Q4 levels, or (3) additional funding to extend runway beyond Q3 2026.
+                </div>
+            </div>
+
+            <table class="data-table" style="margin-top: 32px;">
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th class="number">Assumed Cash (est.)</th>
+                        <th class="number">Monthly Burn</th>
+                        <th class="number">Runway</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric">Conservative (Q4 burn continues)</td>
+                        <td class="number">$450,000</td>
+                        <td class="number">-$49,065</td>
+                        <td class="number">9.2 months</td>
+                    </tr>
+                    <tr>
+                        <td class="metric">Realistic (average FY25 burn)</td>
+                        <td class="number">$450,000</td>
+                        <td class="number">-$74,768</td>
+                        <td class="number">6.0 months</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td class="metric">Optimistic (December burn rate)</td>
+                        <td class="number">$450,000</td>
+                        <td class="number">-$41,265</td>
+                        <td class="number">10.9 months</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 16px; color: #64748b; font-size: 14px; font-style: italic;">
+                Note: Cash balance assumptions are estimates based on typical early-stage company reserves. Actual runway depends on beginning cash position not available in P&L data.
+            </p>
+        </div>
+
+        <!-- LOWLIGHTS & RISKS -->
+        <div class="section">
+            <h2 class="section-title">Lowlights & Structural Risks</h2>
+            <p class="section-subtitle">Critical underperformance areas requiring immediate attention</p>
+
+            <div class="lowlights-section exec-summary">
+                <ul class="insight-list">
+                    <li>
+                        <strong>Revenue Shortfall (44% below budget):</strong> The company generated $3.53M against a $6.34M budget, missing by $2.81M. This is not a marginal variance—it represents a fundamental disconnect between the business model assumptions and reality. The gap widened throughout the year with Q4 at -46% vs budget despite being the strongest revenue quarter. Main lever: Conversion rate or ARPU must be structurally lower than modeled. Fix requires data-driven diagnosis of whether the issue is top-of-funnel (traffic/installs), mid-funnel (free-to-paid conversion), or retention (churn).
+                    </li>
+                    <li>
+                        <strong>Negative Operating Leverage (EBITDA -$824K vs +$650K budget):</strong> As the company scaled marketing spend and grew revenue, losses widened rather than narrowed. Q4 showed 44% revenue growth QoQ but EBITDA improved only 62% (still deeply negative at -$96K). This suggests high variable costs or that acquisition costs are not recovering within the measured period. Main lever: Unit economics (LTV:CAC ratio) appear broken. Fix requires either dramatic CAC reduction (50%+), ARPU improvement (pricing/upsells), or churn reduction to extend LTV.
+                    </li>
+                    <li>
+                        <strong>Extreme Revenue Volatility (3.3x range Jan-Dec):</strong> Monthly revenue ranged from $103K to $445K within 2025, with a catastrophic -76% drop in February and multiple 20-30% swings. This volatility indicates the business lacks reliable, recurring revenue drivers. Main lever: Predictability requires either subscription business stabilization or consistent marketing performance. Fix requires forensic analysis of what drove February collapse and March recovery, then systematizing whatever worked in high-performing months.
+                    </li>
+                    <li>
+                        <strong>Contribution Margin Below Viability (26% actual vs 37% budget in Q4):</strong> Even at peak Q4 performance, contribution margin was 26.3%, vs budgeted 37%. This 11pp gap compounds through the entire operation—every dollar of revenue generates 11 cents less than expected to cover fixed costs. Main lever: CAC efficiency is the primary driver. Actual CAC appears significantly higher than budgeted, or conversion rates significantly lower, producing fewer subscribers per dollar spent. Fix requires channel-by-channel CAC analysis and ruthless pruning of inefficient acquisition sources.
+                    </li>
+                    <li>
+                        <strong>Cost Creep Despite Revenue Miss (+6.4% over budget):</strong> While revenue fell 44% short, operating costs exceeded budget by 6.4% ($1.57M actual vs $1.47M budget). This suggests insufficient cost discipline as top-line targets were missed. Main lever: SG&A spending needs immediate review. Fix requires zero-based budgeting exercise to cut non-essential costs given the revenue reality. Salaries at $1.04M (6% over budget) need scrutiny given the current burn rate.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- STRATEGIC SIGNALS -->
+        <div class="section">
+            <h2 class="section-title">Strategic Signals & Implications</h2>
+            <p class="section-subtitle">Data-driven insights for decision-making</p>
+
+            <div class="signal-card">
+                <span class="signal-number">1</span>
+                <span class="signal-title">ARPU recovery is now the critical path—not CAC reduction</span>
+                <div class="signal-content">
+                    The KPI data reveals the core issue: ARPU collapsed from $35 (Jan) to $22-25 (Aug-Oct), a 29-38% decline that directly caused the revenue shortfall. While CAC is 28% above budget in Q4 ($1.61 vs $1.26), conversion improved dramatically (+63% vs budget), meaning the company is acquiring customers efficiently on a unit basis. The problem is each customer generates 15% less revenue than expected ($26 actual vs $30 budget ARPU). At current volumes, every $1 improvement in ARPU adds ~$350K in annual revenue with zero additional marketing spend. Root cause diagnosis required: Is ARPU down due to (a) shift from annual to monthly plans (check subscription mix), (b) promotional pricing to drive volume, (c) faster churn shortening LTV, or (d) lower-tier product mix? Fix levers: (1) limit monthly plan availability to force annual commitments, (2) implement price increases, (3) upsell existing customers to higher tiers, (4) reduce churn through retention campaigns.
+                </div>
+            </div>
+
+            <div class="signal-card">
+                <span class="signal-number">2</span>
+                <span class="signal-title">Conversion is working—volume assumptions were wrong</span>
+                <div class="signal-content">
+                    Conversion rates exceeded budget by 63% (7.87% actual vs 4.82% budget in Q4), climbing steadily from 3.76% in January to 8.36% in December. Free trial conversion also performed well at 14.72% in Q4. This means the company is extremely effective at converting users who enter the funnel—the problem is not enough users reached the funnel. The 44% revenue miss despite 63% better conversion indicates top-of-funnel volume (installs, traffic) was dramatically overestimated. Strategic implication: The business model works at converting users, but either (1) marketing spend doesn't generate expected install volumes, or (2) budgeted install volumes were unrealistic. The path forward isn't optimizing conversion (already strong)—it's either scaling top-of-funnel volume cost-effectively, or accepting the TAM is smaller than modeled and right-sizing the business accordingly. Key question: What were budgeted vs actual monthly install volumes? If installs matched budget, then lower ticket/ARPU is the issue. If installs fell short, then channel strategy needs fundamental rethink.
+                </div>
+            </div>
+
+            <div class="signal-card">
+                <span class="signal-number">3</span>
+                <span class="signal-title">December performance provides template but sustainability is unproven</span>
+                <div class="signal-content">
+                    December generated $445K revenue (best month of the year) with -$41K EBITDA (best month since April). If this is repeatable, the company could be on track to near-breakeven operations. However, December's strength could be seasonal (holiday gifting, New Year fitness resolutions for parents) or due to one-time marketing campaigns. The critical question is whether this represents a new baseline or a temporary spike. Early warning signal for Q1 2026: If January revenue falls back below $350K or burn exceeds $60K/month, December was likely an outlier. If January holds above $400K with sub-$50K burn, the inflection point may be real.
+                </div>
+            </div>
+
+            <div class="signal-card">
+                <span class="signal-number">4</span>
+                <span class="signal-title">Forecasting reliability is compromised—models need recalibration</span>
+                <div class="signal-content">
+                    A 44% revenue miss and 227% EBITDA miss indicate fundamental disconnects between financial models and operational reality. This level of variance suggests the models were built on incorrect assumptions about conversion rates, ARPU, churn, or CAC—not just off by normal estimation error. Strategic implication: Any 2026 forecasts built on the same model structure will be equally unreliable. The company needs a ground-up rebuild of its financial model using actual 2025 cohort data (not assumptions) for CAC by channel, conversion rates by source, monthly ARPU by plan type, and cohort retention curves. Until this is done, board and investors should treat all forward projections as directional only.
+                </div>
+            </div>
+
+            <div class="signal-card">
+                <span class="signal-number">5</span>
+                <span class="signal-title">Operating structure is built for a $6M+ company but only generating $3.5M</span>
+                <div class="signal-content">
+                    Operating costs of $1.57M annually (including $1.04M in salaries) represent a fixed cost base designed for the $6.3M revenue budget, not the $3.5M reality. At current revenue levels, OpEx is 44% of gross sales vs the budgeted 23%. This overhead structure will prevent profitability even if revenue grows 20-30% in 2026. Strategic decision required: Either (1) right-size the team and cost structure to match actual revenue (targeting $1.0-1.2M annual OpEx, requiring ~25-30% cost reduction), or (2) commit to aggressive revenue growth plan to "grow into" the current cost structure (would require reaching $5M+ revenue run rate by end of 2026). The current state—costs for a large company, revenue of a small company—is unsustainable beyond Q3 2026 runway.
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-note">
+            Report generated from Kinedu P&L data for FY 2025. All figures in USD unless otherwise noted.<br>
+            Analysis based on monthly P&L actuals through December 31, 2025 and dashboard budget comparisons.
+        </div>
+    </div>
+</body>
+</html>

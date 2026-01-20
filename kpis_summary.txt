@@ -1,0 +1,42 @@
+RESUMEN KPIs 2025 (Extraído del Excel)
+
+MÉTRICAS POR MES:
+=================
+
+Fila 0 (IDs): ene=39, feb=40, mar=41, abr=42, may=43, jun=44, jul=45, ago=46, sept=47, oct=48, nov=49, dic=50
+
+Fila 1 - Spend (Gasto de Marketing):
+Ene: $190,695    Feb: $145,796    Mar: $141,134    Abr: $132,684
+May: $109,575    Jun: $142,115    Jul: $159,674    Ago: $161,528
+Sept: $196,720   Oct: $207,847    Nov: $185,532    Dic: $213,921
+
+Fila 2 - CAC (row 9):
+Ene: $34.55      Feb: $32.51      Mar: $31.52      Abr: $34.80
+May: $32.06      Jun: $32.03      Jul: $30.34      Ago: $23.58
+Sept: $24.33     Oct: $24.19      Nov: $22.84      Dic: $25.60
+
+Fila 19 - ARPU (new subscriptions):
+Ene: $52.03      Feb: $52.94      Mar: $54.54      Abr: $53.80
+May: $52.02      Jun: $53.69      Jul: $56.53      Ago: $53.13
+Sept: $54.51     Oct: $52.98      Nov: $53.74      Dic: $50.84
+
+Fila 16 - Conversion Rate:
+Ene: 3.77%       Feb: 4.85%       Mar: 5.58%       Abr: 5.47%
+May: 5.06%       Jun: 5.86%       Jul: 6.28%       Ago: 6.80%
+Sept: 7.12%      Oct: 7.57%       Nov: 7.72%       Dic: 8.36%
+
+Fila 17 - FT Conversion Rate:
+Ene: 1.35%       Feb: 1.76%       Mar: 2.00%       Abr: 1.87%
+May: 1.62%       Jun: 2.20%       Jul: 2.59%       Ago: 2.78%
+Sept: 2.80%      Oct: 2.93%       Nov: 3.02%       Dic: 3.07%
+
+Fila 31 - Total Sales:
+Ene: $288,097    Feb: $236,660    Mar: $247,694    Abr: $211,982
+May: $190,414    Jun: $242,060    Jul: $301,765    Ago: $347,562
+Sept: $403,625   Oct: $411,574    Nov: $399,072    Dic: $389,084
+
+Fila 32 - Gross Margin:
+Ene: $193,221    Feb: $158,359    Mar: $165,874    Abr: $142,842
+May: $128,650    Jun: $161,283    Jul: $199,931    Ago: $229,153
+Sept: $266,207   Oct: $272,285    Nov: $264,658    Dic: $259,244
+
