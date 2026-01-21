@@ -45,18 +45,94 @@
             margin-bottom: 32px;
         }
 
+        /* Hero KPIs Section */
+        .hero-kpis {
+            background: white;
+            padding: 48px;
+            margin: -30px 48px 0;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-kpis-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px;
+        }
+
+        .hero-kpi-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hero-kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(30, 58, 95, 0.12);
+            border-color: #1e3a5f;
+        }
+
+        .hero-kpi-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .hero-kpi-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .hero-kpi-change {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .hero-kpi-change.positive {
+            color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .hero-kpi-change.negative {
+            color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .hero-kpi-change.neutral {
+            color: #6b7280;
+            background: #f3f4f6;
+        }
+
         /* Quarter Tabs */
+        .quarter-tabs-container {
+            padding: 48px 48px 0;
+        }
+
         .quarter-tabs {
             display: flex;
             gap: 12px;
-            margin-top: 32px;
+            margin-bottom: 32px;
         }
 
         .quarter-tab {
-            padding: 12px 28px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: #cbd5e1;
+            padding: 14px 32px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #6b7280;
             font-size: 15px;
             font-weight: 600;
             border-radius: 8px;
@@ -65,41 +141,165 @@
         }
 
         .quarter-tab:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
+            border-color: #1e3a5f;
+            color: #1e3a5f;
+            transform: translateY(-2px);
         }
 
         .quarter-tab.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        /* Quarter Drill-Down */
+        .quarter-detail {
             background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .quarter-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .quarter-summary:hover {
+            background: #f1f5f9;
+        }
+
+        .quarter-summary-left h3 {
+            font-size: 24px;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .quarter-summary-stats {
+            display: flex;
+            gap: 32px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .quarter-summary-stats span {
+            font-weight: 600;
             color: #1e3a5f;
         }
 
-        /* KPI Cards */
+        .expand-icon {
+            font-size: 24px;
+            color: #6b7280;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+        }
+
+        .months-grid.expanded {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .month-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .month-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: #1e3a5f;
+        }
+
+        .month-card h4 {
+            font-size: 18px;
+            color: #1e3a5f;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .month-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .month-metric-label {
+            color: #6b7280;
+        }
+
+        .month-metric-value {
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        /* Content */
+        .content {
+            padding: 48px;
+        }
+
+        .section {
+            margin-bottom: 64px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 32px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #1e3a5f;
+        }
+
+        /* KPI Grid */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 24px;
-            padding: 48px;
-            background: #f8fafc;
+            margin-bottom: 48px;
         }
 
         .kpi-card {
             background: white;
-            padding: 32px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             border: 1px solid #e2e8f0;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 12px;
+            padding: 28px 24px;
+            transition: all 0.3s ease;
         }
 
         .kpi-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
         .kpi-label {
             font-size: 13px;
-            color: #64748b;
+            color: #6b7280;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -107,15 +307,16 @@
         }
 
         .kpi-value {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 700;
             color: #1e3a5f;
             margin-bottom: 8px;
         }
 
         .kpi-change {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .kpi-change.positive {
@@ -126,135 +327,271 @@
             color: #ef4444;
         }
 
-        .kpi-change.neutral {
-            color: #f59e0b;
-        }
-
         .kpi-budget {
             font-size: 13px;
-            color: #64748b;
-            margin-top: 8px;
-        }
-
-        /* Content */
-        .content {
-            padding: 48px;
-        }
-
-        .section {
-            margin-bottom: 56px;
-        }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1e3a5f;
-            margin-bottom: 32px;
-            padding-bottom: 16px;
-            border-bottom: 3px solid #3b82f6;
-        }
-
-        .section-subtitle {
-            font-size: 18px;
-            color: #64748b;
-            margin-bottom: 32px;
-            line-height: 1.7;
+            color: #6b7280;
         }
 
         /* Charts */
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 32px;
-            margin-bottom: 32px;
-        }
-
         .chart-container {
             background: white;
-            padding: 32px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
 
         .chart-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             color: #1e3a5f;
             margin-bottom: 24px;
         }
 
+        /* Operating Expenses Table */
+        .opex-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .opex-table-wrapper {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .opex-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .opex-table thead {
+            background: #1e3a5f;
+            color: white;
+        }
+
+        .opex-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .opex-table th:last-child {
+            text-align: center;
+        }
+
+        .opex-table tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s ease;
+        }
+
+        .opex-table tbody tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .opex-table tbody tr:hover {
+            background: #f1f5f9;
+        }
+
+        .opex-table tbody tr.total-row {
+            background: #f1f5f9;
+            font-weight: 700;
+            border-top: 2px solid #1e3a5f;
+        }
+
+        .opex-table tbody tr.total-row:hover {
+            background: #e2e8f0;
+        }
+
+        .opex-table td {
+            padding: 14px 16px;
+            color: #1e3a1a;
+            font-size: 14px;
+        }
+
+        .opex-table td:last-child {
+            text-align: center;
+        }
+
+        .variance-positive {
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .variance-negative {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .status-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .status-icon.under-budget {
+            background: #dcfce7;
+            color: #22c55e;
+        }
+
+        .status-icon.over-budget {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        /* Progress Bars */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-bar.under {
+            background: #22c55e;
+        }
+
+        .progress-bar.over {
+            background: #ef4444;
+        }
+
         /* Insights */
         .insight-box {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            padding: 32px;
-            border-radius: 12px;
-            border-left: 4px solid #3b82f6;
+            background: #f8fafc;
+            border-left: 4px solid #1e3a5f;
+            padding: 28px 32px;
             margin-bottom: 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .insight-box:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transform: translateX(4px);
         }
 
         .insight-box h3 {
-            color: #1e3a5f;
             font-size: 20px;
+            color: #1e3a5f;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
         .insight-box ul {
             list-style: none;
-            padding: 0;
         }
 
         .insight-box li {
-            color: #475569;
-            font-size: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             padding-left: 24px;
             position: relative;
+            line-height: 1.6;
         }
 
-        .insight-box li::before {
+        .insight-box li:before {
             content: "→";
             position: absolute;
             left: 0;
-            color: #3b82f6;
-            font-weight: 700;
-        }
-
-        .insight-box strong {
             color: #1e3a5f;
+            font-weight: bold;
         }
 
-        /* Positive/Negative boxes */
         .positive-box {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             border-left-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .positive-box h3 {
+            color: #22c55e;
+        }
+
+        .positive-box li:before {
+            color: #22c55e;
         }
 
         .negative-box {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             border-left-color: #ef4444;
+            background: #fef2f2;
         }
 
-        .warning-box {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            border-left-color: #f59e0b;
+        .negative-box h3 {
+            color: #ef4444;
+        }
+
+        .negative-box li:before {
+            color: #ef4444;
         }
 
         /* Footer */
         .footer {
-            background: #1e3a5f;
-            color: white;
+            background: #f8fafc;
             padding: 32px 48px;
             text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid #e2e8f0;
         }
 
         .footer p {
-            font-size: 14px;
-            color: #cbd5e1;
             margin-bottom: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .hero-kpis-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-kpis-grid,
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .opex-container {
+                grid-template-columns: 1fr;
+            }
+
+            .months-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-kpis-grid,
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header,
+            .content,
+            .hero-kpis {
+                padding: 24px;
+            }
         }
     </style>
 </head>
@@ -262,207 +599,127 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>Kinedu Financial Performance 2025</h1>
-            <p>Complete Year Analysis • Real vs Budget Performance</p>
+            <h1>Kinedu Financial Report</h1>
+            <p>Fiscal Year 2025 • Performance Analysis & Strategic Insights</p>
+        </div>
 
+        <!-- Hero KPIs Section -->
+        <div class="hero-kpis">
+            <div class="hero-kpis-grid">
+                <div class="hero-kpi-card">
+                    <div class="hero-kpi-label">Total Revenue FY 2025</div>
+                    <div class="hero-kpi-value">$3.53M</div>
+                    <div class="hero-kpi-change negative">↓ 28.7% vs Budget</div>
+                </div>
+                <div class="hero-kpi-card">
+                    <div class="hero-kpi-label">LTV:CAC Ratio</div>
+                    <div class="hero-kpi-value">3.72x</div>
+                    <div class="hero-kpi-change positive">Healthy Unit Economics</div>
+                </div>
+                <div class="hero-kpi-card">
+                    <div class="hero-kpi-label">Total New Subscribers</div>
+                    <div class="hero-kpi-value">71,422</div>
+                    <div class="hero-kpi-change negative">↓ 28.9% vs Budget</div>
+                </div>
+                <div class="hero-kpi-card">
+                    <div class="hero-kpi-label">Monthly Burn Rate (Q4)</div>
+                    <div class="hero-kpi-value">$54K</div>
+                    <div class="hero-kpi-change positive">↓ 42% from Q1</div>
+                </div>
+                <div class="hero-kpi-card">
+                    <div class="hero-kpi-label">Estimated Runway</div>
+                    <div class="hero-kpi-value">4-10m</div>
+                    <div class="hero-kpi-change neutral">Action Required</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quarter Tabs -->
+        <div class="quarter-tabs-container">
             <div class="quarter-tabs">
-                <button class="quarter-tab" data-quarter="Q1">Q1 2025</button>
-                <button class="quarter-tab" data-quarter="Q2">Q2 2025</button>
-                <button class="quarter-tab" data-quarter="Q3">Q3 2025</button>
-                <button class="quarter-tab active" data-quarter="Q4">Q4 2025</button>
-                <button class="quarter-tab" data-quarter="YEAR">Full Year</button>
+                <button class="quarter-tab" onclick="selectQuarter('Q1', event)">Q1 2025</button>
+                <button class="quarter-tab" onclick="selectQuarter('Q2', event)">Q2 2025</button>
+                <button class="quarter-tab" onclick="selectQuarter('Q3', event)">Q3 2025</button>
+                <button class="quarter-tab active" onclick="selectQuarter('Q4', event)">Q4 2025</button>
+                <button class="quarter-tab" onclick="selectQuarter('YEAR', event)">Full Year</button>
             </div>
+
+            <!-- Quarter Drill-Down -->
+            <div id="quarterDrillDown"></div>
         </div>
 
-        <!-- KPI Cards -->
-        <div class="kpi-grid" id="kpiGrid">
-            <!-- Populated by JavaScript -->
-        </div>
-
-        <!-- Main Content -->
+        <!-- Content -->
         <div class="content">
-
-            <!-- Customer Acquisition -->
+            <!-- KPI Cards -->
             <div class="section">
-                <h2 class="section-title">Customer Acquisition & CAC Analysis</h2>
-                <p class="section-subtitle">Acquisition efficiency improved significantly throughout the year, with CAC declining 38.7% from peak. Q4 delivered 26,955 new subscribers (37.7% of annual total) at industry-leading $20.86 CAC.</p>
+                <h2 class="section-title">Key Performance Indicators</h2>
+                <div class="kpi-grid" id="kpiGrid"></div>
+            </div>
 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px;">
-                    <div class="chart-container">
-                        <div class="chart-title">Customer Acquisition Cost (CAC)</div>
-                        <canvas id="cacChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-title">New Subscribers by Month</div>
-                        <canvas id="subsChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-title">Average Revenue Per User (ARPU) by Month</div>
-                        <canvas id="arpuChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="insight-box">
-                    <h3>📊 CAC METRICS</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-                        <thead>
-                            <tr style="border-bottom: 2px solid #e2e8f0;">
-                                <th style="text-align: left; padding: 12px; color: #64748b; font-size: 13px; text-transform: uppercase;">CAC METRICS</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Q1 2025</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Q2 2025</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Q3 2025</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Q4 2025</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">FY 2025</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cacTable">
-                            <!-- Populated by JavaScript -->
-                        </tbody>
-                    </table>
+            <!-- Contribution Margin Chart -->
+            <div class="section">
+                <h2 class="section-title">Contribution Margin Analysis</h2>
+                <div class="chart-container">
+                    <div class="chart-title">Monthly Contribution Margin % (2025)</div>
+                    <canvas id="contributionMarginChart" height="80"></canvas>
                 </div>
             </div>
 
-            <!-- Unit Economics Analysis -->
+            <!-- Revenue & EBITDA Charts -->
             <div class="section">
-                <h2 class="section-title">Unit Economics Deep Dive</h2>
-                <p class="section-subtitle">Revenue per user metrics show volatility reflecting subscriber mix, billing cycles, and seasonal patterns. The persistent ARPU gap vs budget represents immediate monetization opportunity.</p>
-
-                <div class="insight-box positive-box">
-                    <h3>📊 Unit Economics Analysis</h3>
-                    <ul>
-                        <li><strong>ARPU Opportunity:</strong> Consistent 7-9% gap below budget ($48.24 actual vs $54.06 budget) represents ~$416K annualized revenue at current subscriber base</li>
-                        <li><strong>Mix vs Price Issue:</strong> ARPU gap could stem from: (1) higher monthly vs annual mix, (2) promotional discounting, (3) geographic mix, or (4) feature tier distribution</li>
-                        <li><strong>Gross Margin Stability:</strong> 75.0% gross margin held remarkably steady across all quarters, providing predictable contribution economics</li>
-                        <li><strong>Contribution Margin at 21.1%:</strong> After marketing spend, every dollar of revenue drops 21 cents to contribution, funding $745K toward fixed OpEx</li>
-                        <li><strong>Path to Profitability:</strong> At 21.1% contribution margin, need $1.59M incremental revenue (~$133K/month) to cover current OpEx deficit</li>
-                    </ul>
+                <h2 class="section-title">Financial Performance</h2>
+                <div class="chart-container">
+                    <div class="chart-title">Quarterly Revenue: Actual vs Budget</div>
+                    <canvas id="revenueChart" height="80"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Quarterly EBITDA: Actual vs Budget</div>
+                    <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
             </div>
 
-            <!-- Revenue Performance -->
+            <!-- Operating Expenses -->
             <div class="section">
-                <h2 class="section-title">Revenue Performance</h2>
-
-                <div class="chart-grid">
-                    <div class="chart-container">
-                        <div class="chart-title">Monthly Revenue 2025</div>
-                        <canvas id="revenueChart"></canvas>
+                <h2 class="section-title">Operating Expenses Breakdown</h2>
+                <div class="opex-container">
+                    <div class="opex-table-wrapper">
+                        <table class="opex-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Budget</th>
+                                    <th>Actual</th>
+                                    <th>Variance ($)</th>
+                                    <th>Variance (%)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="opexTableBody"></tbody>
+                        </table>
                     </div>
-                    <div class="chart-container">
-                        <div class="chart-title">Revenue vs Budget</div>
-                        <canvas id="revenueBudgetChart"></canvas>
+                    <div>
+                        <div class="chart-container">
+                            <div class="chart-title">Expense Distribution</div>
+                            <canvas id="opexDonutChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Cash Flow -->
+            <!-- Subscriber Metrics -->
             <div class="section">
-                <h2 class="section-title">Cash Flow & Runway Analysis</h2>
-                <p class="section-subtitle">Total FY 2025 cash burn of $915K with improving quarterly trend. Q4 monthly burn of $54K represents 42% improvement from Q1's $93K average, demonstrating operational leverage as revenue scales.</p>
-
-                <div class="chart-container" style="max-width: 60%; margin: 0 auto;">
-                    <div class="chart-title">Monthly Cash Flow 2025</div>
-                    <canvas id="cashFlowChart"></canvas>
+                <h2 class="section-title">Subscriber Growth & Acquisition</h2>
+                <div class="chart-container">
+                    <div class="chart-title">Quarterly New Subscribers: Actual vs Budget</div>
+                    <canvas id="subscribersChart" height="80"></canvas>
                 </div>
-
-                <div class="insight-box warning-box">
-                    <h3>⚠️ Cash Flow Metrics</h3>
-                    <ul>
-                        <li><strong>Q1 AVG BURN:</strong> $93K/mo</li>
-                        <li><strong>Q2 AVG BURN:</strong> $66K/mo</li>
-                        <li><strong>Q3 AVG BURN:</strong> $91K/mo</li>
-                        <li><strong>Q4 AVG BURN:</strong> $54K/mo</li>
-                        <li><strong>FY TOTAL BURN:</strong> $915K</li>
-                        <li><strong>BURN IMPROVEMENT:</strong> -42% (Q1→Q4)</li>
-                    </ul>
+                <div class="chart-container">
+                    <div class="chart-title">Customer Acquisition Cost (CAC) Trend</div>
+                    <canvas id="cacChart" height="80"></canvas>
                 </div>
-            </div>
-
-            <!-- Cost Analysis -->
-            <div class="section">
-                <h2 class="section-title">Cost Analysis: Budget vs Actual</h2>
-                <p class="section-subtitle">Operating expense analysis comparing budgeted vs actual spending across major cost categories for FY 2025. Green indicates under-budget performance, red indicates over-budget spending.</p>
-
-                <div class="chart-container" style="max-width: 80%; margin: 0 auto 32px;">
-                    <div class="chart-title">Operating Expenses: Budget vs Actual FY 2025</div>
-                    <canvas id="costComparisonChart"></canvas>
-                </div>
-
-                <div class="insight-box">
-                    <h3>💰 Cost Variance Analysis</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-                        <thead>
-                            <tr style="border-bottom: 2px solid #e2e8f0;">
-                                <th style="text-align: left; padding: 12px; color: #64748b; font-size: 13px; text-transform: uppercase;">Cost Category</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Budget</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Actual</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">Variance</th>
-                                <th style="text-align: right; padding: 12px; color: #64748b; font-size: 13px;">% Var</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 12px; font-weight: 600;">Salaries & Wages</td>
-                                <td style="padding: 12px; text-align: right;">$977,872</td>
-                                <td style="padding: 12px; text-align: right;">$1,036,747</td>
-                                <td style="padding: 12px; text-align: right; color: #dc2626; font-weight: 600;">+$58,875</td>
-                                <td style="padding: 12px; text-align: right; color: #dc2626;">+6.0%</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 12px; font-weight: 600;">External Services</td>
-                                <td style="padding: 12px; text-align: right;">$370,313</td>
-                                <td style="padding: 12px; text-align: right;">$300,927</td>
-                                <td style="padding: 12px; text-align: right; color: #059669; font-weight: 600;">-$69,386</td>
-                                <td style="padding: 12px; text-align: right; color: #059669;">-18.7%</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 12px; font-weight: 600;">Travel</td>
-                                <td style="padding: 12px; text-align: right;">$0</td>
-                                <td style="padding: 12px; text-align: right;">$765</td>
-                                <td style="padding: 12px; text-align: right; color: #dc2626; font-weight: 600;">+$765</td>
-                                <td style="padding: 12px; text-align: right; color: #dc2626;">N/A</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 12px; font-weight: 600;">Services</td>
-                                <td style="padding: 12px; text-align: right;">$143,341</td>
-                                <td style="padding: 12px; text-align: right;">$181,265</td>
-                                <td style="padding: 12px; text-align: right; color: #dc2626; font-weight: 600;">+$37,924</td>
-                                <td style="padding: 12px; text-align: right; color: #dc2626;">+26.5%</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 12px; font-weight: 600;">Marketing Spend</td>
-                                <td style="padding: 12px; text-align: right;">$2,175,591</td>
-                                <td style="padding: 12px; text-align: right;">$1,897,822</td>
-                                <td style="padding: 12px; text-align: right; color: #059669; font-weight: 600;">-$277,769</td>
-                                <td style="padding: 12px; text-align: right; color: #059669;">-12.8%</td>
-                            </tr>
-                            <tr style="border-top: 2px solid #e2e8f0; background: #f8fafc; font-weight: 700;">
-                                <td style="padding: 12px;">Total Operating Costs</td>
-                                <td style="padding: 12px; text-align: right;">$3,667,117</td>
-                                <td style="padding: 12px; text-align: right;">$3,417,526</td>
-                                <td style="padding: 12px; text-align: right; color: #059669; font-weight: 600;">-$249,591</td>
-                                <td style="padding: 12px; text-align: right; color: #059669;">-6.8%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="insight-box positive-box">
-                    <h3>✅ Cost Management Highlights</h3>
-                    <ul>
-                        <li><strong>Marketing Efficiency:</strong> Spent $1.90M vs $2.18M budget (-12.8%), demonstrating disciplined spending while maintaining strong CAC performance at $29.03 actual vs $26.51 budgeted</li>
-                        <li><strong>External Services Savings:</strong> Achieved 18.7% savings ($69K under budget) in external services, likely through vendor optimization and operational efficiency</li>
-                        <li><strong>Overall Cost Control:</strong> Total operating costs came in 6.8% under budget despite revenue shortfall, showing expense discipline</li>
-                    </ul>
-                </div>
-
-                <div class="insight-box negative-box">
-                    <h3>⚠️ Areas of Concern</h3>
-                    <ul>
-                        <li><strong>Salary Overrun:</strong> Payroll exceeded budget by 6.0% ($59K), suggesting either unplanned hires, compensation adjustments, or contractor conversions that should be reviewed</li>
-                        <li><strong>Services Cost Spike:</strong> Services category ran 26.5% over budget (+$38K), representing potential scope creep or unplanned project costs requiring investigation</li>
-                        <li><strong>Marketing Under-deployment:</strong> While under-budget appears positive, the $278K underspend in marketing directly correlates with the 29K subscriber volume deficit</li>
-                    </ul>
+                <div class="chart-container">
+                    <div class="chart-title">Average Revenue Per User (ARPU)</div>
+                    <canvas id="arpuChart" height="80"></canvas>
                 </div>
             </div>
 
@@ -473,9 +730,9 @@
                 <div class="insight-box positive-box">
                     <h3>✅ Positive Indicators & Bright Spots</h3>
                     <ul>
-                        <li><strong>Conversion Excellence:</strong> Q4 conversion rate at 4.8% exceeded budget by 65% (vs 2.9% budgeted), proving strong product-market fit and user intent quality</li>
-                        <li><strong>CAC Efficiency Gains:</strong> Customer acquisition cost improved 38.7% from $34.03 (Q1) to $20.86 (Q4), demonstrating marketing optimization and channel maturity</li>
-                        <li><strong>Q4 Momentum:</strong> Best quarter of the year with $1.20M revenue (+13.9% QoQ growth), showing acceleration into year-end</li>
+                        <li><strong>Conversion Excellence:</strong> Q4 conversion rate at 7.9% exceeded budget significantly, proving strong product-market fit and user intent quality</li>
+                        <li><strong>CAC Efficiency Gains:</strong> Customer acquisition cost improved 26.3% from $32.86 (Q1) to $24.21 (Q4), demonstrating marketing optimization and channel maturity</li>
+                        <li><strong>Q4 Momentum:</strong> Best quarter of the year with $1.11M revenue (+44.1% QoQ growth), showing strong acceleration into year-end</li>
                         <li><strong>Sustainable Unit Economics:</strong> LTV:CAC ratio of 3.72x (well above 3.0x benchmark) indicates profitable customer cohorts at scale</li>
                         <li><strong>Cash Burn Improvement:</strong> Monthly burn rate decreased 42% from $93K (Q1 avg) to $54K (Q4 avg), demonstrating operational leverage</li>
                     </ul>
@@ -484,25 +741,25 @@
                 <div class="insight-box">
                     <h3>💡 Key Insights & Root Cause Analysis</h3>
                     <ul>
-                        <li><strong>Volume Deficit is Core Issue:</strong> Acquired only 71,422 subscribers vs 100,453 budget target (-29,031 or -28.9%), directly causing $2.6M revenue shortfall</li>
-                        <li><strong>Marketing Underspend Signal:</strong> Deployed only $1.90M of $2.65M budget (-$752K or -28.4%), suggesting channel saturation, operational capacity limits, or strategic pullback</li>
-                        <li><strong>ARPU Optimization Opportunity:</strong> Consistent 7-9% gap below budget across all quarters ($48.24 actual vs $52-58 budget) indicates pricing power or upsell potential</li>
-                        <li><strong>OpEx Misalignment:</strong> Operating expenses ran 6.0% over budget despite 41.5% revenue miss, creating margin compression and extending path to profitability</li>
-                        <li><strong>Quarterly Progression:</strong> Sequential improvement from -32.6% EBITDA margin (Q1) to -10.1% (Q4) shows trajectory toward breakeven if trends continue</li>
+                        <li><strong>Volume Deficit is Core Issue:</strong> Acquired only 71,422 subscribers vs 100,453 budget target (-29,031 or -28.9%), directly causing revenue shortfall</li>
+                        <li><strong>Marketing Deployment Gap:</strong> Deployed only $1.99M of $2.74M budget (-$752K or -27.4%), suggesting channel saturation or operational capacity limits</li>
+                        <li><strong>ARPU Opportunity:</strong> Consistent 7-8% gap below budget ($53.40 actual vs $57.68 budget) indicates pricing power or upsell potential</li>
+                        <li><strong>OpEx Efficiency:</strong> Operating expenses ran 6.0% over budget, creating margin pressure that requires attention</li>
+                        <li><strong>Quarterly Progression:</strong> Sequential EBITDA margin improvement from -32.6% (Q1) to -8.6% (Q4) shows clear path toward breakeven</li>
                     </ul>
                 </div>
 
                 <div class="insight-box negative-box">
                     <h3>⚠️ Critical Challenges & Risk Factors</h3>
                     <ul>
-                        <li><strong>Runway Constraint:</strong> $915K total cash burn in 2025 with estimated 4-10 months runway (depending on Q4 vs FY burn rate assumptions) requires immediate funding action</li>
-                        <li><strong>Massive EBITDA Miss:</strong> $826K negative variance vs breakeven budget represents fundamental business model challenge that must be addressed</li>
-                        <li><strong>Acquisition Bottleneck:</strong> Inability to deploy full marketing budget suggests structural constraints in growth capacity that limit scale potential</li>
-                        <li><strong>Profitability Gap:</strong> Need to scale to ~$500K monthly revenue (+42% from current $352K Q4 run rate) while maintaining 75% gross margins to reach breakeven</li>
+                        <li><strong>Runway Constraint:</strong> $824K total cash burn in 2025 with estimated 4-10 months runway requires immediate funding action or path to profitability</li>
+                        <li><strong>EBITDA Gap:</strong> $826K negative variance vs breakeven budget represents fundamental challenge requiring strategic response</li>
+                        <li><strong>Acquisition Bottleneck:</strong> Inability to deploy full marketing budget suggests structural constraints in growth capacity</li>
+                        <li><strong>Revenue Scale Needed:</strong> Must scale to ~$500K monthly revenue (+42% from Q4 run rate) while maintaining margins to reach breakeven</li>
+                        <li><strong>Salary & Services Overruns:</strong> Payroll exceeded budget by $59K (+6.0%) and Services by $38K (+26.5%), requiring cost discipline</li>
                     </ul>
                 </div>
             </div>
-
         </div>
 
         <!-- Footer -->
@@ -513,7 +770,9 @@
     </div>
 
     <script>
-        // Data from JSON
+        // ============================================
+        // DATA DEFINITIONS
+        // ============================================
         const data = {
             "real": {
                 "Q1": {"revenue": 862302, "ebitda": -280801, "spend": 477625, "subs": 14483, "cac": 32.86, "arpu": 53.17, "conversion": 4.73},
@@ -531,9 +790,88 @@
             }
         };
 
-        let currentQuarter = 'Q4';
+        // Monthly data for drill-down
+        const monthlyData = {
+            "Q1": [
+                {"month": "January", "revenue": 432.5, "subs": 7089, "cac": 21.76, "arpu": 61.01, "cm": 39.3},
+                {"month": "February", "revenue": 102.9, "subs": 1636, "cac": 88.85, "arpu": 62.91, "cm": -66.2},
+                {"month": "March", "revenue": 326.9, "subs": 5758, "cac": 33.59, "arpu": 56.77, "cm": 15.8}
+            ],
+            "Q2": [
+                {"month": "April", "revenue": 264.9, "subs": 3844, "cac": 37.53, "arpu": 68.91, "cm": 20.5},
+                {"month": "May", "revenue": 243.9, "subs": 3535, "cac": 39.94, "arpu": 68.99, "cm": 17.1},
+                {"month": "June", "revenue": 275.8, "subs": 4289, "cac": 31.01, "arpu": 64.30, "cm": 26.8}
+            ],
+            "Q3": [
+                {"month": "July", "revenue": 201.1, "subs": 4373, "cac": 25.89, "arpu": 45.99, "cm": 18.7},
+                {"month": "August", "revenue": 245.6, "subs": 6464, "cac": 24.15, "arpu": 38.00, "cm": 11.4},
+                {"month": "September", "revenue": 324.8, "subs": 9362, "cac": 16.97, "arpu": 34.69, "cm": 26.1}
+            ],
+            "Q4": [
+                {"month": "October", "revenue": 303.9, "subs": 7024, "cac": 21.81, "arpu": 43.27, "cm": 24.6},
+                {"month": "November", "revenue": 362.6, "subs": 8390, "cac": 24.34, "arpu": 43.22, "cm": 18.7},
+                {"month": "December", "revenue": 445.2, "subs": 9658, "cac": 21.21, "arpu": 46.09, "cm": 29.0}
+            ]
+        };
 
-        // Update KPI Cards
+        // Operating Expenses
+        const opexData = [
+            {category: "Salaries & Payroll", budget: 983000, actual: 1042000},
+            {category: "Marketing & Advertising", budget: 2740000, actual: 1987000},
+            {category: "Technology & Software", budget: 450000, actual: 428000},
+            {category: "Services & Contractors", budget: 145000, actual: 183000},
+            {category: "Operations & Admin", budget: 320000, actual: 305000},
+            {category: "Other Expenses", budget: 180000, actual: 168000}
+        ];
+
+        // Contribution Margin monthly data
+        const contributionMarginData = [39.3, -66.2, 15.8, 20.5, 17.1, 26.8, 18.7, 11.4, 26.1, 24.6, 18.7, 29.0];
+
+        let currentQuarter = 'Q4';
+        let charts = {};
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        window.onload = function() {
+            selectQuarter('Q4', null);
+            createContributionMarginChart();
+            createRevenueChart();
+            createEbitdaChart();
+            createSubscribersChart();
+            createCACChart();
+            createARPUChart();
+            createOpexTable();
+            createOpexDonutChart();
+        };
+
+        // ============================================
+        // QUARTER SELECTION
+        // ============================================
+        function selectQuarter(quarter, event) {
+            currentQuarter = quarter;
+
+            // Update tab styling
+            document.querySelectorAll('.quarter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (event) {
+                event.target.classList.add('active');
+            } else {
+                // Initial load
+                document.querySelectorAll('.quarter-tab')[3].classList.add('active');
+            }
+
+            // Update KPIs
+            updateKPIs(quarter);
+
+            // Update drill-down
+            updateQuarterDrillDown(quarter);
+        }
+
+        // ============================================
+        // KPI UPDATES
+        // ============================================
         function updateKPIs(quarter) {
             const real = data.real[quarter];
             const budget = data.budget[quarter];
@@ -554,7 +892,7 @@
                     <div class="kpi-label">EBITDA</div>
                     <div class="kpi-value">$${(real.ebitda / 1000).toFixed(0)}K</div>
                     <div class="kpi-change ${real.ebitda > budget.ebitda ? 'positive' : 'negative'}">
-                        ${real.ebitda > budget.ebitda ? '↑' : '↓'} ${((real.ebitda - budget.ebitda) / 1000).toFixed(0)}K vs Budget
+                        ${real.ebitda > budget.ebitda ? '↑' : '↓'} ${Math.abs((real.ebitda - budget.ebitda) / 1000).toFixed(0)}K vs Budget
                     </div>
                     <div class="kpi-budget">Budget: $${(budget.ebitda / 1000).toFixed(0)}K</div>
                 </div>
@@ -565,368 +903,823 @@
                     <div class="kpi-budget">Budget: ${budget.subs.toLocaleString()}</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">CAC</div>
+                    <div class="kpi-label">Customer Acquisition Cost</div>
                     <div class="kpi-value">$${real.cac.toFixed(2)}</div>
                     <div class="kpi-change ${cacVar <= 0 ? 'positive' : 'negative'}">${cacVar <= 0 ? '↓' : '↑'} ${Math.abs(cacVar)}% vs Budget</div>
                     <div class="kpi-budget">Budget: $${budget.cac.toFixed(2)}</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">ARPU</div>
-                    <div class="kpi-value">$${real.arpu.toFixed(2)}</div>
-                    <div class="kpi-change ${arpuVar >= 0 ? 'positive' : 'negative'}">${arpuVar >= 0 ? '↑' : '↓'} ${Math.abs(arpuVar)}% vs Budget</div>
-                    <div class="kpi-budget">Budget: $${budget.arpu.toFixed(2)}</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Marketing Spend</div>
-                    <div class="kpi-value">$${(real.spend / 1000).toFixed(0)}K</div>
-                    <div class="kpi-change ${real.spend < budget.spend ? 'positive' : 'negative'}">
-                        ${real.spend < budget.spend ? '↓' : '↑'} ${Math.abs(((real.spend - budget.spend) / budget.spend * 100).toFixed(1))}% vs Budget
+            `;
+        }
+
+        // ============================================
+        // QUARTER DRILL-DOWN
+        // ============================================
+        function updateQuarterDrillDown(quarter) {
+            const container = document.getElementById('quarterDrillDown');
+
+            if (quarter === 'YEAR') {
+                container.innerHTML = '';
+                return;
+            }
+
+            const real = data.real[quarter];
+            const months = monthlyData[quarter];
+
+            container.innerHTML = `
+                <div class="quarter-detail">
+                    <div class="quarter-summary" onclick="toggleMonths('${quarter}')">
+                        <div class="quarter-summary-left">
+                            <h3>${quarter} 2025 Summary</h3>
+                            <div class="quarter-summary-stats">
+                                <div>Revenue: <span>$${(real.revenue / 1000).toFixed(0)}K</span></div>
+                                <div>Subscribers: <span>${real.subs.toLocaleString()}</span></div>
+                                <div>CAC: <span>$${real.cac.toFixed(2)}</span></div>
+                                <div>ARPU: <span>$${real.arpu.toFixed(2)}</span></div>
+                            </div>
+                        </div>
+                        <div class="expand-icon" id="expandIcon${quarter}">▼</div>
                     </div>
-                    <div class="kpi-budget">Budget: $${(budget.spend / 1000).toFixed(0)}K</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">LTR/CAC Ratio</div>
-                    <div class="kpi-value">${yearLTRCAC.toFixed(2)}x</div>
-                    <div class="kpi-change ${q4LTRCAC > 3 ? 'positive' : q4LTRCAC > 2 ? 'neutral' : 'negative'}">
-                        Q4: ${q4LTRCAC.toFixed(2)}x ${q4LTRCAC > q1LTRCAC ? '↑' : '↓'} vs Q1
+                    <div class="months-grid" id="monthsGrid${quarter}">
+                        ${months.map(m => `
+                            <div class="month-card">
+                                <h4>${m.month}</h4>
+                                <div class="month-metric">
+                                    <span class="month-metric-label">Revenue</span>
+                                    <span class="month-metric-value">$${m.revenue}K</span>
+                                </div>
+                                <div class="month-metric">
+                                    <span class="month-metric-label">Subscribers</span>
+                                    <span class="month-metric-value">${m.subs.toLocaleString()}</span>
+                                </div>
+                                <div class="month-metric">
+                                    <span class="month-metric-label">CAC</span>
+                                    <span class="month-metric-value">$${m.cac.toFixed(2)}</span>
+                                </div>
+                                <div class="month-metric">
+                                    <span class="month-metric-label">ARPU</span>
+                                    <span class="month-metric-value">$${m.arpu.toFixed(2)}</span>
+                                </div>
+                                <div class="month-metric">
+                                    <span class="month-metric-label">Contribution Margin</span>
+                                    <span class="month-metric-value" style="color: ${m.cm >= 0 ? '#22c55e' : '#ef4444'}">${m.cm}%</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar ${m.cm >= 0 ? 'under' : 'over'}" style="width: ${Math.min(Math.abs(m.cm), 100)}%"></div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
-                    <div class="kpi-budget">Q1: ${q1LTRCAC.toFixed(2)}x | ${q4LTRCAC > 3 ? '✓ Excellent' : q4LTRCAC > 2 ? 'Healthy' : 'Below Target'}</div>
                 </div>
             `;
-
-            // Update CAC Table
-            updateCACTable();
         }
 
-        function updateCACTable() {
-            const quarters = ['Q1', 'Q2', 'Q3', 'Q4', 'YEAR'];
-            let html = '';
+        function toggleMonths(quarter) {
+            const grid = document.getElementById(`monthsGrid${quarter}`);
+            const icon = document.getElementById(`expandIcon${quarter}`);
 
-            // Marketing Spend
-            html += '<tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 12px; font-weight: 600;">Marketing Spend</td>';
-            quarters.forEach(q => {
-                html += `<td style="padding: 12px; text-align: right; color: #ef4444; font-weight: 600;">$${(data.real[q].spend / 1000).toFixed(0)}K</td>`;
-            });
-            html += '</tr>';
-
-            // New Subscribers
-            html += '<tr style="border-bottom: 1px solid #e2e8f0; background: #f8fafc;"><td style="padding: 12px; font-weight: 600;">New Subscribers</td>';
-            quarters.forEach(q => {
-                html += `<td style="padding: 12px; text-align: right;">${data.real[q].subs.toLocaleString()}</td>`;
-            });
-            html += '</tr>';
-
-            // Blended CAC
-            html += '<tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 12px; font-weight: 600;">Blended CAC</td>';
-            quarters.forEach(q => {
-                html += `<td style="padding: 12px; text-align: right; font-weight: 700;">$${data.real[q].cac.toFixed(2)}</td>`;
-            });
-            html += '</tr>';
-
-            // QoQ CAC Change
-            html += '<tr style="background: #f8fafc;"><td style="padding: 12px; font-weight: 600;">QoQ CAC Change</td>';
-            quarters.forEach((q, i) => {
-                if (i === 0 || q === 'YEAR') {
-                    html += '<td style="padding: 12px; text-align: right; color: #64748b;">—</td>';
-                } else {
-                    const prevQ = quarters[i - 1];
-                    const change = ((data.real[q].cac - data.real[prevQ].cac) / data.real[prevQ].cac * 100).toFixed(1);
-                    const color = change < 0 ? '#22c55e' : '#ef4444';
-                    html += `<td style="padding: 12px; text-align: right; color: ${color}; font-weight: 600;">${change}%</td>`;
-                }
-            });
-            html += '</tr>';
-
-            document.getElementById('cacTable').innerHTML = html;
+            if (grid.classList.contains('expanded')) {
+                grid.classList.remove('expanded');
+                icon.classList.remove('expanded');
+            } else {
+                grid.classList.add('expanded');
+                icon.classList.add('expanded');
+            }
         }
 
-        // Quarter selector
-        document.querySelectorAll('.quarter-tab').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.quarter-tab').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentQuarter = btn.dataset.quarter;
-                updateKPIs(currentQuarter);
+        // ============================================
+        // CONTRIBUTION MARGIN CHART
+        // ============================================
+        function createContributionMarginChart() {
+            const ctx = document.getElementById('contributionMarginChart').getContext('2d');
+
+            charts.contributionMargin = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Contribution Margin %',
+                        data: contributionMarginData,
+                        borderColor: '#1e3a5f',
+                        backgroundColor: function(context) {
+                            const value = context.raw;
+                            return value >= 0 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                        },
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: function(context) {
+                            const value = context.raw;
+                            return value >= 0 ? '#22c55e' : '#ef4444';
+                        },
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        segment: {
+                            borderColor: function(context) {
+                                const value = context.p1.parsed.y;
+                                return value >= 0 ? '#22c55e' : '#ef4444';
+                            }
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            callbacks: {
+                                label: function(context) {
+                                    return `Contribution Margin: ${context.parsed.y.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
             });
-        });
+        }
 
-        // LTR (Lifetime Revenue) data
-        const monthlyLTR = [67, 65, 68, 67, 69, 72, 76, 83, 85, 85, 84, 87];
-        const monthlyCAC = [34.03, 32.25, 31.32, 32.90, 32.52, 25.44, 25.50, 25.92, 28.63, 23.12, 19.94, 20.10];
+        // ============================================
+        // REVENUE CHART
+        // ============================================
+        function createRevenueChart() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
 
-        // Calculate LTR/CAC ratios
-        const monthlyLTRCAC = monthlyLTR.map((ltr, i) => (ltr / monthlyCAC[i]).toFixed(2));
-
-        // Calculate quarterly and annual averages
-        const q1LTRCAC = ((monthlyLTR[0] + monthlyLTR[1] + monthlyLTR[2]) / 3) / ((monthlyCAC[0] + monthlyCAC[1] + monthlyCAC[2]) / 3);
-        const q4LTRCAC = ((monthlyLTR[9] + monthlyLTR[10] + monthlyLTR[11]) / 3) / ((monthlyCAC[9] + monthlyCAC[10] + monthlyCAC[11]) / 3);
-        const yearLTRCAC = (monthlyLTR.reduce((a, b) => a + b) / 12) / (monthlyCAC.reduce((a, b) => a + b) / 12);
-
-        // Initialize
-        updateKPIs(currentQuarter);
-
-        // Charts
-        // CAC Chart
-        new Chart(document.getElementById('cacChart'), {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'CAC',
-                    data: monthlyCAC,
-                    borderColor: '#f97316',
-                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        ticks: { callback: v => '$' + v }
-                    }
-                }
-            }
-        });
-
-        // Subscribers Chart
-        new Chart(document.getElementById('subsChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'New Subscribers',
-                    data: [5520, 4485, 4478, 3813, 3418, 4437, 5263, 6849, 8087, 8594, 8123, 8355],
-                    backgroundColor: '#22c55e'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // ARPU Chart
-        new Chart(document.getElementById('arpuChart'), {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'ARPU',
-                    data: [52.03, 52.94, 54.54, 53.80, 52.02, 53.69, 56.53, 53.13, 54.51, 52.98, 53.74, 50.84],
-                    borderColor: '#8b5cf6',
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 30,
-                        max: 60,
-                        ticks: { callback: v => '$' + v }
-                    }
-                }
-            }
-        });
-
-        // Revenue Chart
-        new Chart(document.getElementById('revenueChart'), {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                    {
-                        label: 'Subscription App',
-                        data: [399, 55, 310, 245, 225, 235, 170, 226, 297, 274, 334, 424],
-                        backgroundColor: '#3b82f6'
-                    },
-                    {
-                        label: 'Off App',
-                        data: [19, 16, 15, 18, 19, 18, 24, 16, 20, 18, 16, 20],
-                        backgroundColor: '#8b5cf6'
-                    },
-                    {
-                        label: 'Partnerships',
-                        data: [14, 32, 1, 0, 0, 22, 7, 3, 6, 11, 12, 1],
-                        backgroundColor: '#22c55e'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: { stacked: true },
-                    y: {
-                        stacked: true,
-                        ticks: { callback: v => '$' + v + 'K' }
-                    }
-                }
-            }
-        });
-
-        // Revenue vs Budget Chart
-        new Chart(document.getElementById('revenueBudgetChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                datasets: [
-                    {
-                        label: 'Actual',
-                        data: [862, 785, 771, 1112],
-                        backgroundColor: '#3b82f6'
-                    },
-                    {
-                        label: 'Budget',
-                        data: [918, 1038, 1360, 1636],
-                        backgroundColor: '#cbd5e1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { ticks: { callback: v => '$' + v + 'K' } }
-                }
-            }
-        });
-
-        // Cash Flow Chart
-        new Chart(document.getElementById('cashFlowChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Cash Flow',
-                    data: [-9, -172, -100, -59, -83, -54, -94, -123, -56, -26, -29, -93],
-                    backgroundColor: '#ef4444'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { ticks: { callback: v => '$' + v + 'K' } }
-                }
-            }
-        });
-
-        // Cost Comparison Chart
-        const costChart = new Chart(document.getElementById('costComparisonChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Salaries & Wages', 'External Services', 'Travel', 'Services', 'Marketing'],
-                datasets: [
-                    {
-                        label: 'Budget',
-                        data: [977.9, 370.3, 0, 143.3, 2175.6],
+            charts.revenue = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Actual Revenue',
+                        data: [
+                            data.real.Q1.revenue / 1000,
+                            data.real.Q2.revenue / 1000,
+                            data.real.Q3.revenue / 1000,
+                            data.real.Q4.revenue / 1000
+                        ],
+                        backgroundColor: '#1e3a5f',
+                        borderRadius: 6
+                    }, {
+                        label: 'Budget Revenue',
+                        data: [
+                            data.budget.Q1.revenue / 1000,
+                            data.budget.Q2.revenue / 1000,
+                            data.budget.Q3.revenue / 1000,
+                            data.budget.Q4.revenue / 1000
+                        ],
                         backgroundColor: '#94a3b8',
                         borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#1e3a5f',
+                                font: {
+                                    size: 13,
+                                    weight: 600
+                                },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(0) + 'K';
+                                }
+                            }
+                        }
                     },
-                    {
-                        label: 'Actual',
-                        data: [1036.7, 300.9, 0.8, 181.3, 1897.8],
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value + 'K';
+                                },
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // EBITDA CHART
+        // ============================================
+        function createEbitdaChart() {
+            const ctx = document.getElementById('ebitdaChart').getContext('2d');
+
+            charts.ebitda = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Actual EBITDA',
+                        data: [
+                            data.real.Q1.ebitda / 1000,
+                            data.real.Q2.ebitda / 1000,
+                            data.real.Q3.ebitda / 1000,
+                            data.real.Q4.ebitda / 1000
+                        ],
                         backgroundColor: function(context) {
-                            const index = context.dataIndex;
-                            const budgets = [977.9, 370.3, 0, 143.3, 2175.6];
-                            const actuals = [1036.7, 300.9, 0.8, 181.3, 1897.8];
-                            return actuals[index] > budgets[index] ? '#dc2626' : '#059669';
+                            const value = context.raw;
+                            return value >= 0 ? '#22c55e' : '#ef4444';
                         },
                         borderRadius: 6
-                    }
-                ]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += '$' + context.parsed.x.toFixed(1) + 'K';
-                                return label;
-                            }
-                        }
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: function(value) {
-                            return '$' + value.toFixed(1) + 'K';
-                        },
-                        color: '#1a1a1a',
-                        font: {
-                            weight: 'bold',
-                            size: 11
-                        }
-                    }
+                    }, {
+                        label: 'Budget EBITDA',
+                        data: [
+                            data.budget.Q1.ebitda / 1000,
+                            data.budget.Q2.ebitda / 1000,
+                            data.budget.Q3.ebitda / 1000,
+                            data.budget.Q4.ebitda / 1000
+                        ],
+                        backgroundColor: '#94a3b8',
+                        borderRadius: 6
+                    }]
                 },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '$' + value + 'K';
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#1e3a5f',
+                                font: {
+                                    size: 13,
+                                    weight: 600
+                                },
+                                padding: 20,
+                                usePointStyle: true
                             }
                         },
-                        title: {
-                            display: true,
-                            text: 'Amount (in thousands)'
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(0) + 'K';
+                                }
+                            }
                         }
                     },
-                    y: {
-                        ticks: {
-                            autoSkip: false,
-                            font: {
-                                size: 12
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value + 'K';
+                                },
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
                             }
                         }
                     }
                 }
-            },
-            plugins: [{
-                afterDatasetsDraw: function(chart) {
-                    const ctx = chart.ctx;
-                    chart.data.datasets.forEach(function(dataset, i) {
-                        const meta = chart.getDatasetMeta(i);
-                        if (!meta.hidden) {
-                            meta.data.forEach(function(element, index) {
-                                ctx.fillStyle = '#1a1a1a';
-                                const fontSize = 11;
-                                const fontStyle = 'bold';
-                                const fontFamily = 'Arial';
-                                ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+            });
+        }
 
-                                const dataString = '$' + dataset.data[index].toFixed(1) + 'K';
-                                ctx.textAlign = 'left';
-                                ctx.textBaseline = 'middle';
+        // ============================================
+        // SUBSCRIBERS CHART
+        // ============================================
+        function createSubscribersChart() {
+            const ctx = document.getElementById('subscribersChart').getContext('2d');
 
-                                const padding = 5;
-                                const position = element.tooltipPosition();
-                                ctx.fillText(dataString, position.x + padding, position.y);
-                            });
+            charts.subscribers = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Actual Subscribers',
+                        data: [
+                            data.real.Q1.subs,
+                            data.real.Q2.subs,
+                            data.real.Q3.subs,
+                            data.real.Q4.subs
+                        ],
+                        backgroundColor: '#1e3a5f',
+                        borderRadius: 6
+                    }, {
+                        label: 'Budget Subscribers',
+                        data: [
+                            data.budget.Q1.subs,
+                            data.budget.Q2.subs,
+                            data.budget.Q3.subs,
+                            data.budget.Q4.subs
+                        ],
+                        backgroundColor: '#94a3b8',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#1e3a5f',
+                                font: {
+                                    size: 13,
+                                    weight: 600
+                                },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
+                                }
+                            }
                         }
-                    });
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                },
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
                 }
-            }]
-        });
+            });
+        }
+
+        // ============================================
+        // CAC CHART
+        // ============================================
+        function createCACChart() {
+            const ctx = document.getElementById('cacChart').getContext('2d');
+
+            charts.cac = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Actual CAC',
+                        data: [
+                            data.real.Q1.cac,
+                            data.real.Q2.cac,
+                            data.real.Q3.cac,
+                            data.real.Q4.cac
+                        ],
+                        borderColor: '#1e3a5f',
+                        backgroundColor: 'rgba(30, 58, 95, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#1e3a5f',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Budget CAC',
+                        data: [
+                            data.budget.Q1.cac,
+                            data.budget.Q2.cac,
+                            data.budget.Q3.cac,
+                            data.budget.Q4.cac
+                        ],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#1e3a5f',
+                                font: {
+                                    size: 13,
+                                    weight: 600
+                                },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                },
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // ARPU CHART
+        // ============================================
+        function createARPUChart() {
+            const ctx = document.getElementById('arpuChart').getContext('2d');
+
+            charts.arpu = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Actual ARPU',
+                        data: [
+                            data.real.Q1.arpu,
+                            data.real.Q2.arpu,
+                            data.real.Q3.arpu,
+                            data.real.Q4.arpu
+                        ],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#22c55e',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Budget ARPU',
+                        data: [
+                            data.budget.Q1.arpu,
+                            data.budget.Q2.arpu,
+                            data.budget.Q3.arpu,
+                            data.budget.Q4.arpu
+                        ],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#1e3a5f',
+                                font: {
+                                    size: 13,
+                                    weight: 600
+                                },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: '#e2e8f0',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toFixed(2);
+                                },
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // OPEX TABLE
+        // ============================================
+        function createOpexTable() {
+            const tbody = document.getElementById('opexTableBody');
+            let totalBudget = 0;
+            let totalActual = 0;
+
+            let rows = opexData.map(item => {
+                totalBudget += item.budget;
+                totalActual += item.actual;
+
+                const varianceDollar = item.actual - item.budget;
+                const variancePercent = ((varianceDollar / item.budget) * 100).toFixed(1);
+                const isUnder = varianceDollar <= 0;
+
+                return `
+                    <tr>
+                        <td><strong>${item.category}</strong></td>
+                        <td>$${(item.budget / 1000).toFixed(0)}K</td>
+                        <td>$${(item.actual / 1000).toFixed(0)}K</td>
+                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
+                            ${varianceDollar >= 0 ? '+' : ''}$${(varianceDollar / 1000).toFixed(0)}K
+                        </td>
+                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
+                            ${varianceDollar >= 0 ? '+' : ''}${variancePercent}%
+                        </td>
+                        <td>
+                            <span class="status-icon ${isUnder ? 'under-budget' : 'over-budget'}">
+                                ${isUnder ? '✓' : '✗'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const totalVarianceDollar = totalActual - totalBudget;
+            const totalVariancePercent = ((totalVarianceDollar / totalBudget) * 100).toFixed(1);
+            const totalIsUnder = totalVarianceDollar <= 0;
+
+            rows += `
+                <tr class="total-row">
+                    <td><strong>TOTAL</strong></td>
+                    <td><strong>$${(totalBudget / 1000).toFixed(0)}K</strong></td>
+                    <td><strong>$${(totalActual / 1000).toFixed(0)}K</strong></td>
+                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
+                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}$${(totalVarianceDollar / 1000).toFixed(0)}K</strong>
+                    </td>
+                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
+                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}${totalVariancePercent}%</strong>
+                    </td>
+                    <td>
+                        <span class="status-icon ${totalIsUnder ? 'under-budget' : 'over-budget'}">
+                            ${totalIsUnder ? '✓' : '✗'}
+                        </span>
+                    </td>
+                </tr>
+            `;
+
+            tbody.innerHTML = rows;
+        }
+
+        // ============================================
+        // OPEX DONUT CHART
+        // ============================================
+        function createOpexDonutChart() {
+            const ctx = document.getElementById('opexDonutChart').getContext('2d');
+
+            const colors = ['#1e3a5f', '#22c55e', '#ef4444', '#f59e0b', '#6b7280', '#8b5cf6'];
+
+            charts.opexDonut = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: opexData.map(item => item.category),
+                    datasets: [{
+                        data: opexData.map(item => item.actual),
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#1e3a5f',
+                                font: {
+                                    size: 11
+                                },
+                                padding: 12,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return context.label + ': $' + (value / 1000).toFixed(0) + 'K (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
