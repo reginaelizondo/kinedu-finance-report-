@@ -353,6 +353,66 @@
             margin-bottom: 24px;
         }
 
+        /* Revenue Filter Buttons */
+        .revenue-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .revenue-filter-btn {
+            padding: 10px 24px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .revenue-filter-btn:hover {
+            border-color: #1e3a5f;
+            color: #1e3a5f;
+            transform: translateY(-1px);
+        }
+
+        .revenue-filter-btn.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        .revenue-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 20px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .revenue-breakdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .revenue-breakdown-label {
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .revenue-breakdown-value {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1e3a5f;
+        }
+
         /* Operating Expenses Table */
         .opex-container {
             display: grid;
@@ -670,7 +730,14 @@
                 <h2 class="section-title">Financial Performance</h2>
                 <div class="chart-container">
                     <div class="chart-title">Quarterly Revenue: Actual vs Budget</div>
+                    <div class="revenue-filters">
+                        <button class="revenue-filter-btn active" onclick="filterRevenue('all')">All Revenue</button>
+                        <button class="revenue-filter-btn" onclick="filterRevenue('subscriptions')">Subscription Sales</button>
+                        <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
+                        <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
+                    </div>
                     <canvas id="revenueChart" height="80"></canvas>
+                    <div class="revenue-breakdown" id="revenueBreakdown"></div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Quarterly EBITDA: Actual vs Budget</div>
@@ -793,31 +860,46 @@
         // Monthly data for drill-down
         const monthlyData = {
             "Q1": [
-                {"month": "January", "revenue": 432.5, "subs": 7089, "cac": 21.76, "arpu": 61.01, "cm": 39.3},
-                {"month": "February", "revenue": 102.9, "subs": 1636, "cac": 88.85, "arpu": 62.91, "cm": -66.2},
-                {"month": "March", "revenue": 326.9, "subs": 5758, "cac": 33.59, "arpu": 56.77, "cm": 15.8}
+                {"month": "January", "revenue": 432.5, "subs": 7089, "cac": 21.76, "arpu": 61.01, "cm": 39.1},
+                {"month": "February", "revenue": 102.9, "subs": 1636, "cac": 88.85, "arpu": 62.91, "cm": -63.6},
+                {"month": "March", "revenue": 326.9, "subs": 5758, "cac": 33.59, "arpu": 56.77, "cm": 12.8}
             ],
             "Q2": [
-                {"month": "April", "revenue": 264.9, "subs": 3844, "cac": 37.53, "arpu": 68.91, "cm": 20.5},
-                {"month": "May", "revenue": 243.9, "subs": 3535, "cac": 39.94, "arpu": 68.99, "cm": 17.1},
-                {"month": "June", "revenue": 275.8, "subs": 4289, "cac": 31.01, "arpu": 64.30, "cm": 26.8}
+                {"month": "April", "revenue": 264.9, "subs": 3844, "cac": 37.53, "arpu": 68.91, "cm": 18.0},
+                {"month": "May", "revenue": 243.9, "subs": 3535, "cac": 39.94, "arpu": 68.99, "cm": 14.3},
+                {"month": "June", "revenue": 275.8, "subs": 4289, "cac": 31.01, "arpu": 64.30, "cm": 26.1}
             ],
             "Q3": [
-                {"month": "July", "revenue": 201.1, "subs": 4373, "cac": 25.89, "arpu": 45.99, "cm": 18.7},
-                {"month": "August", "revenue": 245.6, "subs": 6464, "cac": 24.15, "arpu": 38.00, "cm": 11.4},
-                {"month": "September", "revenue": 324.8, "subs": 9362, "cac": 16.97, "arpu": 34.69, "cm": 26.1}
+                {"month": "July", "revenue": 201.1, "subs": 4373, "cac": 25.89, "arpu": 45.99, "cm": 18.0},
+                {"month": "August", "revenue": 245.6, "subs": 6464, "cac": 24.15, "arpu": 38.00, "cm": 8.2},
+                {"month": "September", "revenue": 324.8, "subs": 9362, "cac": 16.97, "arpu": 34.69, "cm": 29.4}
             ],
             "Q4": [
-                {"month": "October", "revenue": 303.9, "subs": 7024, "cac": 21.81, "arpu": 43.27, "cm": 24.6},
-                {"month": "November", "revenue": 362.6, "subs": 8390, "cac": 24.34, "arpu": 43.22, "cm": 18.7},
-                {"month": "December", "revenue": 445.2, "subs": 9658, "cac": 21.21, "arpu": 46.09, "cm": 29.0}
+                {"month": "October", "revenue": 303.9, "subs": 7024, "cac": 21.81, "arpu": 43.27, "cm": 28.0},
+                {"month": "November", "revenue": 362.6, "subs": 8390, "cac": 24.34, "arpu": 43.22, "cm": 21.0},
+                {"month": "December", "revenue": 445.2, "subs": 9658, "cac": 21.21, "arpu": 46.09, "cm": 29.4}
             ]
         };
 
-        // Operating Expenses
+        // Revenue Breakdown by Category
+        const revenueBreakdown = {
+            "actual": {
+                "subscriptions": {"Q1": 764468, "Q2": 704850, "Q3": 692745, "Q4": 1032208},
+                "offapp": {"Q1": 50272, "Q2": 54913, "Q3": 59839, "Q4": 54248},
+                "partnership": {"Q1": 46260, "Q2": 22814, "Q3": 16734, "Q4": 23958}
+            },
+            "budget": {
+                "subscriptions": {"Q1": 822505, "Q2": 925468, "Q3": 1235160, "Q4": 1470148},
+                "offapp": {"Q1": 20184, "Q2": 22120, "Q3": 34890, "Q4": 45725},
+                "partnership": {"Q1": 75000, "Q2": 90000, "Q3": 90000, "Q4": 120000}
+            }
+        };
+
+        let currentRevenueFilter = 'all';
+
+        // Operating Expenses (excluding Marketing - analyzed separately in CAC section)
         const opexData = [
             {category: "Salaries & Payroll", budget: 983000, actual: 1042000},
-            {category: "Marketing & Advertising", budget: 2740000, actual: 1987000},
             {category: "Technology & Software", budget: 450000, actual: 428000},
             {category: "Services & Contractors", budget: 145000, actual: 183000},
             {category: "Operations & Admin", budget: 320000, actual: 305000},
@@ -825,7 +907,7 @@
         ];
 
         // Contribution Margin monthly data
-        const contributionMarginData = [39.3, -66.2, 15.8, 20.5, 17.1, 26.8, 18.7, 11.4, 26.1, 24.6, 18.7, 29.0];
+        const contributionMarginData = [39.1, -63.6, 12.8, 18.0, 14.3, 26.1, 18.0, 8.2, 29.4, 28.0, 21.0, 29.4];
 
         let currentQuarter = 'Q4';
         let charts = {};
@@ -1085,8 +1167,43 @@
         // ============================================
         // REVENUE CHART
         // ============================================
+        function getRevenueData(filter) {
+            if (filter === 'all') {
+                return {
+                    actual: [
+                        data.real.Q1.revenue / 1000,
+                        data.real.Q2.revenue / 1000,
+                        data.real.Q3.revenue / 1000,
+                        data.real.Q4.revenue / 1000
+                    ],
+                    budget: [
+                        data.budget.Q1.revenue / 1000,
+                        data.budget.Q2.revenue / 1000,
+                        data.budget.Q3.revenue / 1000,
+                        data.budget.Q4.revenue / 1000
+                    ]
+                };
+            } else {
+                return {
+                    actual: [
+                        revenueBreakdown.actual[filter].Q1 / 1000,
+                        revenueBreakdown.actual[filter].Q2 / 1000,
+                        revenueBreakdown.actual[filter].Q3 / 1000,
+                        revenueBreakdown.actual[filter].Q4 / 1000
+                    ],
+                    budget: [
+                        revenueBreakdown.budget[filter].Q1 / 1000,
+                        revenueBreakdown.budget[filter].Q2 / 1000,
+                        revenueBreakdown.budget[filter].Q3 / 1000,
+                        revenueBreakdown.budget[filter].Q4 / 1000
+                    ]
+                };
+            }
+        }
+
         function createRevenueChart() {
             const ctx = document.getElementById('revenueChart').getContext('2d');
+            const revenueData = getRevenueData('all');
 
             charts.revenue = new Chart(ctx, {
                 type: 'bar',
@@ -1094,22 +1211,12 @@
                     labels: ['Q1', 'Q2', 'Q3', 'Q4'],
                     datasets: [{
                         label: 'Actual Revenue',
-                        data: [
-                            data.real.Q1.revenue / 1000,
-                            data.real.Q2.revenue / 1000,
-                            data.real.Q3.revenue / 1000,
-                            data.real.Q4.revenue / 1000
-                        ],
+                        data: revenueData.actual,
                         backgroundColor: '#1e3a5f',
                         borderRadius: 6
                     }, {
                         label: 'Budget Revenue',
-                        data: [
-                            data.budget.Q1.revenue / 1000,
-                            data.budget.Q2.revenue / 1000,
-                            data.budget.Q3.revenue / 1000,
-                            data.budget.Q4.revenue / 1000
-                        ],
+                        data: revenueData.budget,
                         backgroundColor: '#94a3b8',
                         borderRadius: 6
                     }]
@@ -1179,6 +1286,98 @@
                     }
                 }
             });
+
+            updateRevenueBreakdown('all');
+        }
+
+        // ============================================
+        // REVENUE FILTER
+        // ============================================
+        function filterRevenue(filter) {
+            currentRevenueFilter = filter;
+
+            // Update button states
+            document.querySelectorAll('.revenue-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update chart data
+            const revenueData = getRevenueData(filter);
+            charts.revenue.data.datasets[0].data = revenueData.actual;
+            charts.revenue.data.datasets[1].data = revenueData.budget;
+            charts.revenue.update();
+
+            // Update breakdown
+            updateRevenueBreakdown(filter);
+        }
+
+        function updateRevenueBreakdown(filter) {
+            const container = document.getElementById('revenueBreakdown');
+
+            if (filter === 'all') {
+                // Calculate totals for full year
+                const subsActual = revenueBreakdown.actual.subscriptions.Q1 + revenueBreakdown.actual.subscriptions.Q2 +
+                                   revenueBreakdown.actual.subscriptions.Q3 + revenueBreakdown.actual.subscriptions.Q4;
+                const offActual = revenueBreakdown.actual.offapp.Q1 + revenueBreakdown.actual.offapp.Q2 +
+                                  revenueBreakdown.actual.offapp.Q3 + revenueBreakdown.actual.offapp.Q4;
+                const partActual = revenueBreakdown.actual.partnership.Q1 + revenueBreakdown.actual.partnership.Q2 +
+                                   revenueBreakdown.actual.partnership.Q3 + revenueBreakdown.actual.partnership.Q4;
+                const totalActual = subsActual + offActual + partActual;
+
+                const subsPercent = (subsActual / totalActual * 100).toFixed(1);
+                const offPercent = (offActual / totalActual * 100).toFixed(1);
+                const partPercent = (partActual / totalActual * 100).toFixed(1);
+
+                container.innerHTML = `
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">Subscriptions</div>
+                        <div class="revenue-breakdown-value">${subsPercent}%</div>
+                    </div>
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">Off App Sales</div>
+                        <div class="revenue-breakdown-value">${offPercent}%</div>
+                    </div>
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">Partnership</div>
+                        <div class="revenue-breakdown-value">${partPercent}%</div>
+                    </div>
+                `;
+            } else {
+                // Show specific category info
+                const actual = revenueBreakdown.actual[filter];
+                const budget = revenueBreakdown.budget[filter];
+                const totalActual = actual.Q1 + actual.Q2 + actual.Q3 + actual.Q4;
+                const totalBudget = budget.Q1 + budget.Q2 + budget.Q3 + budget.Q4;
+                const variance = ((totalActual - totalBudget) / totalBudget * 100).toFixed(1);
+
+                const categoryNames = {
+                    'subscriptions': 'Subscription Sales',
+                    'offapp': 'Off App Sales',
+                    'partnership': 'Partnership'
+                };
+
+                container.innerHTML = `
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">Category</div>
+                        <div class="revenue-breakdown-value">${categoryNames[filter]}</div>
+                    </div>
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">Actual (FY 2025)</div>
+                        <div class="revenue-breakdown-value">$${(totalActual / 1000).toFixed(0)}K</div>
+                    </div>
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">Budget</div>
+                        <div class="revenue-breakdown-value">$${(totalBudget / 1000).toFixed(0)}K</div>
+                    </div>
+                    <div class="revenue-breakdown-item">
+                        <div class="revenue-breakdown-label">vs Budget</div>
+                        <div class="revenue-breakdown-value" style="color: ${variance >= 0 ? '#22c55e' : '#ef4444'}">
+                            ${variance >= 0 ? '↑' : '↓'} ${Math.abs(variance)}%
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // ============================================
@@ -1676,7 +1875,7 @@
         function createOpexDonutChart() {
             const ctx = document.getElementById('opexDonutChart').getContext('2d');
 
-            const colors = ['#1e3a5f', '#22c55e', '#ef4444', '#f59e0b', '#6b7280', '#8b5cf6'];
+            const colors = ['#1e3a5f', '#22c55e', '#ef4444', '#f59e0b', '#6b7280'];
 
             charts.opexDonut = new Chart(ctx, {
                 type: 'doughnut',
