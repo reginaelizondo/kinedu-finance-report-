@@ -653,6 +653,87 @@
                 padding: 24px;
             }
         }
+
+        /* Chart Toggle Controls */
+        .chart-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            align-items: center;
+        }
+
+        .chart-toggle-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .chart-toggle-label:hover {
+            border-color: #1e3a5f;
+            color: #1e3a5f;
+        }
+
+        .chart-toggle-label.active {
+            background: #1e3a5f;
+            border-color: #1e3a5f;
+            color: white;
+        }
+
+        .chart-toggle-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .chart-toggle-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .chart-toggle-reset {
+            margin-left: auto;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+
+        .chart-toggle-reset:hover {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .chart-toggles {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .chart-toggle-reset {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -721,6 +802,7 @@
                 <h2 class="section-title">Contribution Margin Analysis</h2>
                 <div class="chart-container">
                     <div class="chart-title">Monthly Contribution Margin % (2025)</div>
+                    <div class="chart-toggles" id="toggles-contributionMargin"></div>
                     <canvas id="contributionMarginChart" height="80"></canvas>
                 </div>
             </div>
@@ -736,11 +818,13 @@
                         <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
                     </div>
+                    <div class="chart-toggles" id="toggles-revenue"></div>
                     <canvas id="revenueChart" height="80"></canvas>
                     <div class="revenue-breakdown" id="revenueBreakdown"></div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Quarterly EBITDA: Actual vs Budget</div>
+                    <div class="chart-toggles" id="toggles-ebitda"></div>
                     <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
             </div>
@@ -778,14 +862,17 @@
                 <h2 class="section-title">Subscriber Growth & Acquisition</h2>
                 <div class="chart-container">
                     <div class="chart-title">Quarterly New Subscribers: Actual vs Budget</div>
+                    <div class="chart-toggles" id="toggles-subscribers"></div>
                     <canvas id="subscribersChart" height="80"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Customer Acquisition Cost (CAC) Trend</div>
+                    <div class="chart-toggles" id="toggles-cac"></div>
                     <canvas id="cacChart" height="80"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Average Revenue Per User (ARPU)</div>
+                    <div class="chart-toggles" id="toggles-arpu"></div>
                     <canvas id="arpuChart" height="80"></canvas>
                 </div>
             </div>
@@ -1919,6 +2006,162 @@
                 }
             });
         }
+
+        // ============================================
+        // CHART TOGGLE SYSTEM
+        // ============================================
+        const chartToggleConfig = {
+            contributionMargin: {
+                datasets: [
+                    { label: 'Actual', color: '#1e3a5f' },
+                    { label: 'Budget', color: '#94a3b8' }
+                ]
+            },
+            revenue: {
+                datasets: [
+                    { label: 'Actual Revenue', color: '#1e3a5f' },
+                    { label: 'Budget Revenue', color: '#94a3b8' }
+                ]
+            },
+            ebitda: {
+                datasets: [
+                    { label: 'Actual EBITDA', color: '#22c55e' },
+                    { label: 'Budget EBITDA', color: '#94a3b8' }
+                ]
+            },
+            subscribers: {
+                datasets: [
+                    { label: 'Actual Subscribers', color: '#1e3a5f' },
+                    { label: 'Budget Subscribers', color: '#94a3b8' }
+                ]
+            },
+            cac: {
+                datasets: [
+                    { label: 'Actual CAC', color: '#1e3a5f' },
+                    { label: 'Budget CAC', color: '#94a3b8' }
+                ]
+            },
+            arpu: {
+                datasets: [
+                    { label: 'Actual ARPU', color: '#22c55e' },
+                    { label: 'Budget ARPU', color: '#94a3b8' }
+                ]
+            }
+        };
+
+        function getToggleStorageKey(chartName) {
+            return `kinedu_chart_toggles_${chartName}`;
+        }
+
+        function loadTogglePreferences(chartName) {
+            try {
+                const stored = localStorage.getItem(getToggleStorageKey(chartName));
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+            } catch (e) {
+                console.warn('Could not load toggle preferences:', e);
+            }
+            return null;
+        }
+
+        function saveTogglePreferences(chartName, visibility) {
+            try {
+                localStorage.setItem(getToggleStorageKey(chartName), JSON.stringify(visibility));
+            } catch (e) {
+                console.warn('Could not save toggle preferences:', e);
+            }
+        }
+
+        function createChartToggles(chartName) {
+            const container = document.getElementById(`toggles-${chartName}`);
+            if (!container) return;
+
+            const config = chartToggleConfig[chartName];
+            if (!config) return;
+
+            const chart = charts[chartName];
+            if (!chart) return;
+
+            // Load saved preferences
+            const savedPrefs = loadTogglePreferences(chartName);
+
+            let html = '';
+            config.datasets.forEach((dataset, index) => {
+                const isVisible = savedPrefs ? savedPrefs[index] : true;
+                html += `
+                    <label class="chart-toggle-label ${isVisible ? 'active' : ''}" data-chart="${chartName}" data-index="${index}">
+                        <input type="checkbox" ${isVisible ? 'checked' : ''} onchange="toggleDataset('${chartName}', ${index}, this.checked)">
+                        <span class="chart-toggle-color" style="background-color: ${dataset.color}"></span>
+                        ${dataset.label}
+                    </label>
+                `;
+
+                // Apply saved visibility
+                if (!isVisible) {
+                    chart.setDatasetVisibility(index, false);
+                }
+            });
+
+            html += `<button class="chart-toggle-reset" onclick="resetChartToggles('${chartName}')">Reset</button>`;
+            container.innerHTML = html;
+
+            // Update chart after applying saved preferences
+            chart.update();
+        }
+
+        function toggleDataset(chartName, datasetIndex, isVisible) {
+            const chart = charts[chartName];
+            if (!chart) return;
+
+            chart.setDatasetVisibility(datasetIndex, isVisible);
+            chart.update();
+
+            // Update toggle label styling
+            const label = document.querySelector(`.chart-toggle-label[data-chart="${chartName}"][data-index="${datasetIndex}"]`);
+            if (label) {
+                label.classList.toggle('active', isVisible);
+            }
+
+            // Save preferences
+            const visibility = chart.data.datasets.map((_, i) => chart.isDatasetVisible(i));
+            saveTogglePreferences(chartName, visibility);
+        }
+
+        function resetChartToggles(chartName) {
+            const chart = charts[chartName];
+            if (!chart) return;
+
+            // Reset all datasets to visible
+            chart.data.datasets.forEach((_, index) => {
+                chart.setDatasetVisibility(index, true);
+            });
+            chart.update();
+
+            // Update toggle labels
+            const labels = document.querySelectorAll(`.chart-toggle-label[data-chart="${chartName}"]`);
+            labels.forEach(label => {
+                label.classList.add('active');
+                const checkbox = label.querySelector('input[type="checkbox"]');
+                if (checkbox) checkbox.checked = true;
+            });
+
+            // Clear saved preferences
+            localStorage.removeItem(getToggleStorageKey(chartName));
+        }
+
+        function initializeAllChartToggles() {
+            Object.keys(chartToggleConfig).forEach(chartName => {
+                createChartToggles(chartName);
+            });
+        }
+
+        // Initialize toggles after charts are created
+        const originalOnload = window.onload;
+        window.onload = function() {
+            if (originalOnload) originalOnload();
+            initializeAllChartToggles();
+        };
     </script>
 </body>
 </html>
