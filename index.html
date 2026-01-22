@@ -33,6 +33,25 @@
             position: relative;
         }
 
+        .header-branding {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-logo {
+            height: 60px;
+            margin-bottom: 12px;
+        }
+
+        .header-subtitle {
+            font-size: 28px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 0.5px;
+        }
+
         .header h1 {
             font-size: 42px;
             font-weight: 700;
@@ -348,6 +367,66 @@
             font-weight: 600;
             color: #1e3a5f;
             margin-bottom: 24px;
+        }
+
+        /* Dynamic Insight Callouts */
+        .insight-callout {
+            background: #F8FAFC;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            border-left: 4px solid #9CA3AF;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+
+        .insight-callout.positive {
+            border-left-color: #10B981;
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.05), #F8FAFC);
+        }
+
+        .insight-callout.neutral {
+            border-left-color: #F59E0B;
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.05), #F8FAFC);
+        }
+
+        .insight-callout.alert {
+            border-left-color: #EF4444;
+            background: linear-gradient(to right, rgba(239, 68, 68, 0.05), #F8FAFC);
+        }
+
+        .insight-callout .insight-emoji {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        .insight-callout .insight-metric {
+            font-weight: 600;
+            color: #1E3A5F;
+        }
+
+        .insight-callout .insight-positive {
+            color: #10B981;
+            font-weight: 600;
+        }
+
+        .insight-callout .insight-negative {
+            color: #EF4444;
+            font-weight: 600;
+        }
+
+        .insight-callout .insight-neutral {
+            color: #F59E0B;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .insight-callout {
+                padding: 14px 16px;
+                font-size: 13px;
+            }
         }
 
         /* Revenue Filter Buttons */
@@ -1153,7 +1232,22 @@
     <div class="container">
         <!-- Header with Title and Time Filters -->
         <div class="header">
-            <h1>Kinedu Financial Performance 2025</h1>
+            <div class="header-branding">
+                <!-- Kinedu Logo -->
+                <svg class="header-logo" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Icon: Green square -->
+                    <rect x="0" y="0" width="22" height="22" fill="#4CAF50"/>
+                    <!-- Icon: Yellow circle -->
+                    <circle cx="33" cy="11" r="11" fill="#FFC107"/>
+                    <!-- Icon: Pink arc -->
+                    <path d="M0 80 Q0 35 22 35 L22 80 Z" fill="#E91E63"/>
+                    <!-- Icon: Blue rectangle -->
+                    <rect x="22" y="35" width="11" height="45" fill="#2196F3"/>
+                    <!-- Text: kinedu -->
+                    <text x="60" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="700" fill="#2196F3">kinedu</text>
+                </svg>
+                <div class="header-subtitle">Financial Performance 2025</div>
+            </div>
 
             <!-- Time Filters -->
             <div class="time-filters-container">
@@ -1257,34 +1351,37 @@
                     <div class="chart-title" id="subscribersChartTitle">Marketing Efficiency & User Acquisition</div>
                     <div class="subscribers-toggles" id="toggles-subscribers">
                         <div class="sub-toggle-group">
-                            <button class="sub-toggle-btn active" data-metric="newUsers" style="--toggle-color: #6366f1;">
-                                <span class="sub-toggle-indicator" style="background: #6366f1;"></span>
+                            <button class="sub-toggle-btn active" data-metric="newUsers" style="--toggle-color: #3B82F6;">
+                                <span class="sub-toggle-indicator" style="background: #3B82F6;"></span>
                                 New Users
                             </button>
-                            <button class="sub-toggle-btn" data-metric="newUsersBudget" style="--toggle-color: #a5b4fc;">
-                                <span class="sub-toggle-indicator" style="background: #a5b4fc;"></span>
+                            <button class="sub-toggle-btn" data-metric="newUsersBudget" style="--toggle-color: #9CA3AF;">
+                                <span class="sub-toggle-indicator" style="background: #9CA3AF;"></span>
                                 New Users Budget
                             </button>
-                            <button class="sub-toggle-btn active" data-metric="marketingSpend" style="--toggle-color: #f59e0b;">
-                                <span class="sub-toggle-indicator" style="background: #f59e0b;"></span>
+                            <button class="sub-toggle-btn active" data-metric="marketingSpend" style="--toggle-color: #F59E0B;">
+                                <span class="sub-toggle-indicator" style="background: #F59E0B;"></span>
                                 Marketing Spend
                             </button>
-                            <button class="sub-toggle-btn" data-metric="marketingSpendBudget" style="--toggle-color: #fcd34d;">
-                                <span class="sub-toggle-indicator" style="background: #fcd34d;"></span>
+                            <button class="sub-toggle-btn" data-metric="marketingSpendBudget" style="--toggle-color: #D1D5DB;">
+                                <span class="sub-toggle-indicator" style="background: #D1D5DB;"></span>
                                 Spend Budget
                             </button>
-                            <button class="sub-toggle-btn active" data-metric="cpnu" style="--toggle-color: #10b981;">
-                                <span class="sub-toggle-indicator" style="background: #10b981;"></span>
+                            <button class="sub-toggle-btn active" data-metric="cpnu" style="--toggle-color: #8B5CF6;">
+                                <span class="sub-toggle-indicator" style="background: #8B5CF6;"></span>
                                 CPNU
                             </button>
-                            <button class="sub-toggle-btn" data-metric="cpnuBudget" style="--toggle-color: #10b981;">
-                                <span class="sub-toggle-indicator" style="background: #10b981; opacity: 0.5;"></span>
+                            <button class="sub-toggle-btn" data-metric="cpnuBudget" style="--toggle-color: #6B7280;">
+                                <span class="sub-toggle-indicator" style="background: #6B7280;"></span>
                                 CPNU Budget
                             </button>
                         </div>
                         <button class="sub-reset-btn" onclick="resetSubscribersToggles()">Reset</button>
                     </div>
                     <canvas id="subscribersChart" height="100"></canvas>
+                    <div id="marketingInsight" class="insight-callout">
+                        <span class="insight-emoji">📊</span> Loading marketing insights...
+                    </div>
                 </div>
 
                 <!-- Subscriber Acquisition & Conversion Chart -->
@@ -1292,26 +1389,29 @@
                     <div class="chart-title" id="subscriberAcquisitionChartTitle">Subscriber Acquisition & Conversion</div>
                     <div class="subscriber-acq-toggles" id="toggles-subscriberAcquisition">
                         <div class="sacq-toggle-group">
-                            <button class="sacq-toggle-btn active" data-metric="actualSubs" style="--toggle-color: #1e3a5f;">
-                                <span class="sacq-toggle-indicator" style="background: #1e3a5f;"></span>
+                            <button class="sacq-toggle-btn active" data-metric="actualSubs" style="--toggle-color: #1E40AF;">
+                                <span class="sacq-toggle-indicator" style="background: #1E40AF;"></span>
                                 Actual Subscribers
                             </button>
-                            <button class="sacq-toggle-btn" data-metric="budgetSubs" style="--toggle-color: #94a3b8;">
-                                <span class="sacq-toggle-indicator" style="background: #94a3b8;"></span>
+                            <button class="sacq-toggle-btn" data-metric="budgetSubs" style="--toggle-color: #9CA3AF;">
+                                <span class="sacq-toggle-indicator" style="background: #9CA3AF;"></span>
                                 Budget Subscribers
                             </button>
-                            <button class="sacq-toggle-btn active" data-metric="conversionRate" style="--toggle-color: #22c55e;">
-                                <span class="sacq-toggle-indicator" style="background: #22c55e;"></span>
+                            <button class="sacq-toggle-btn active" data-metric="conversionRate" style="--toggle-color: #10B981;">
+                                <span class="sacq-toggle-indicator" style="background: #10B981;"></span>
                                 Conversion Rate
                             </button>
-                            <button class="sacq-toggle-btn" data-metric="conversionRateBudget" style="--toggle-color: #22c55e;">
-                                <span class="sacq-toggle-indicator" style="background: #22c55e; opacity: 0.5;"></span>
+                            <button class="sacq-toggle-btn" data-metric="conversionRateBudget" style="--toggle-color: #34D399;">
+                                <span class="sacq-toggle-indicator" style="background: #34D399;"></span>
                                 Conv. Rate Budget
                             </button>
                         </div>
                         <button class="sacq-reset-btn" onclick="resetSubscriberAcqToggles()">Reset</button>
                     </div>
                     <canvas id="subscriberAcquisitionChart" height="100"></canvas>
+                    <div id="subscriberAcqInsight" class="insight-callout">
+                        <span class="insight-emoji">📊</span> Loading subscriber acquisition insights...
+                    </div>
                 </div>
             </div>
 
@@ -1322,34 +1422,37 @@
                     <div class="chart-title" id="unitEconomicsChartTitle">Unit Economics: ARPU, CAC & Efficiency Metrics</div>
                     <div class="unit-economics-toggles" id="toggles-unitEconomics">
                         <div class="ue-toggle-group">
-                            <button class="ue-toggle-btn active" data-metric="actualArpu" style="--toggle-color: #3b82f6;">
-                                <span class="ue-toggle-indicator" style="background: #3b82f6;"></span>
+                            <button class="ue-toggle-btn active" data-metric="actualArpu" style="--toggle-color: #10B981;">
+                                <span class="ue-toggle-indicator" style="background: #10B981;"></span>
                                 Actual ARPU
                             </button>
-                            <button class="ue-toggle-btn" data-metric="budgetArpu" style="--toggle-color: #3b82f6;">
-                                <span class="ue-toggle-indicator" style="background: #3b82f6; opacity: 0.5;"></span>
+                            <button class="ue-toggle-btn" data-metric="budgetArpu" style="--toggle-color: #9CA3AF;">
+                                <span class="ue-toggle-indicator" style="background: #9CA3AF;"></span>
                                 Budget ARPU
                             </button>
-                            <button class="ue-toggle-btn active" data-metric="actualCac" style="--toggle-color: #f97316;">
-                                <span class="ue-toggle-indicator" style="background: #f97316;"></span>
+                            <button class="ue-toggle-btn active" data-metric="actualCac" style="--toggle-color: #F59E0B;">
+                                <span class="ue-toggle-indicator" style="background: #F59E0B;"></span>
                                 Actual CAC
                             </button>
-                            <button class="ue-toggle-btn" data-metric="budgetCac" style="--toggle-color: #f97316;">
-                                <span class="ue-toggle-indicator" style="background: #f97316; opacity: 0.5;"></span>
+                            <button class="ue-toggle-btn" data-metric="budgetCac" style="--toggle-color: #6B7280;">
+                                <span class="ue-toggle-indicator" style="background: #6B7280;"></span>
                                 Budget CAC
                             </button>
-                            <button class="ue-toggle-btn" data-metric="arpuCacRatio" style="--toggle-color: #22c55e;">
-                                <span class="ue-toggle-indicator" style="background: #22c55e;"></span>
+                            <button class="ue-toggle-btn" data-metric="arpuCacRatio" style="--toggle-color: #8B5CF6;">
+                                <span class="ue-toggle-indicator" style="background: #8B5CF6;"></span>
                                 ARPU/CAC Ratio
                             </button>
-                            <button class="ue-toggle-btn" data-metric="contributionMargin" style="--toggle-color: #8b5cf6;">
-                                <span class="ue-toggle-indicator" style="background: #8b5cf6;"></span>
+                            <button class="ue-toggle-btn" data-metric="contributionMargin" style="--toggle-color: #A78BFA;">
+                                <span class="ue-toggle-indicator" style="background: #A78BFA;"></span>
                                 Cont. Margin
                             </button>
                         </div>
                         <button class="ue-reset-btn" onclick="resetUnitEconomicsToggles()">Reset</button>
                     </div>
                     <canvas id="unitEconomicsChart" height="100"></canvas>
+                    <div id="unitEconomicsInsight" class="insight-callout">
+                        <span class="insight-emoji">📊</span> Loading unit economics insights...
+                    </div>
                 </div>
             </div>
 
@@ -2021,6 +2124,306 @@
             createUnitEconomicsChart();
             createOpexTable();
             createOpexDonutChart();
+            updateAllInsights();
+        }
+
+        // ============================================
+        // DYNAMIC INSIGHTS GENERATION
+        // ============================================
+
+        function formatCurrency(value, decimals = 0) {
+            if (Math.abs(value) >= 1000000) {
+                return '$' + (value / 1000000).toFixed(1) + 'M';
+            } else if (Math.abs(value) >= 1000) {
+                return '$' + (value / 1000).toFixed(decimals) + 'K';
+            }
+            return '$' + value.toFixed(decimals);
+        }
+
+        function formatPercent(value, decimals = 1) {
+            return value.toFixed(decimals) + '%';
+        }
+
+        function formatNumber(value, decimals = 0) {
+            if (Math.abs(value) >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            } else if (Math.abs(value) >= 1000) {
+                return (value / 1000).toFixed(decimals) + 'K';
+            }
+            return value.toFixed(decimals);
+        }
+
+        function getInsightData() {
+            // Aggregate data based on current granularity and period
+            let actualData = { spend: 0, signups: 0, cpnu: 0, subs: 0, cac: 0, arpu: 0, conversion: 0, ltvCac: 0 };
+            let budgetData = { spend: 0, signups: 0, cpnu: 0, subs: 0, cac: 0, arpu: 0, conversion: 0, ltvCac: 0 };
+            let months = [];
+
+            // Determine which months to include based on granularity and period
+            if (currentGranularity === 'yearly') {
+                months = monthNames;
+            } else if (currentGranularity === 'semester') {
+                if (currentPeriod === 'H1') {
+                    months = ['January', 'February', 'March', 'April', 'May', 'June'];
+                } else {
+                    months = ['July', 'August', 'September', 'October', 'November', 'December'];
+                }
+            } else if (currentGranularity === 'quarterly') {
+                const quarterMonths = {
+                    'Q1': ['January', 'February', 'March'],
+                    'Q2': ['April', 'May', 'June'],
+                    'Q3': ['July', 'August', 'September'],
+                    'Q4': ['October', 'November', 'December']
+                };
+                months = quarterMonths[currentPeriod] || ['October', 'November', 'December'];
+            } else {
+                // Monthly - single month
+                months = [currentPeriod];
+            }
+
+            // Aggregate actual data
+            let count = 0;
+            months.forEach(m => {
+                if (monthlyData[m]) {
+                    actualData.spend += monthlyData[m].spend || 0;
+                    actualData.signups += monthlyData[m].signups || 0;
+                    actualData.subs += monthlyData[m].subs || 0;
+                    actualData.cpnu += monthlyData[m].cpnu || 0;
+                    actualData.cac += monthlyData[m].cac || 0;
+                    actualData.arpu += monthlyData[m].arpu || 0;
+                    actualData.conversion += monthlyData[m].conversion || 0;
+                    actualData.ltvCac += monthlyData[m].ltvCac || 0;
+                    count++;
+                }
+            });
+
+            // Average out rate-based metrics
+            if (count > 0) {
+                actualData.cpnu = actualData.cpnu / count;
+                actualData.cac = actualData.cac / count;
+                actualData.arpu = actualData.arpu / count;
+                actualData.conversion = actualData.conversion / count;
+                actualData.ltvCac = actualData.ltvCac / count;
+            }
+
+            // Aggregate budget data
+            count = 0;
+            months.forEach(m => {
+                if (monthlyBudget[m]) {
+                    budgetData.spend += monthlyBudget[m].spend || 0;
+                    budgetData.signups += monthlyBudget[m].signups || 0;
+                    budgetData.subs += monthlyBudget[m].subs || 0;
+                    budgetData.cpnu += monthlyBudget[m].cpnu || 0;
+                    budgetData.cac += monthlyBudget[m].cac || 0;
+                    budgetData.arpu += monthlyBudget[m].arpu || 0;
+                    budgetData.conversion += monthlyBudget[m].conversion || 0;
+                    budgetData.ltvCac += monthlyBudget[m].ltvCac || 0;
+                    count++;
+                }
+            });
+
+            // Average out rate-based metrics
+            if (count > 0) {
+                budgetData.cpnu = budgetData.cpnu / count;
+                budgetData.cac = budgetData.cac / count;
+                budgetData.arpu = budgetData.arpu / count;
+                budgetData.conversion = budgetData.conversion / count;
+                budgetData.ltvCac = budgetData.ltvCac / count;
+            }
+
+            return { actual: actualData, budget: budgetData, periodMonths: months.length };
+        }
+
+        function generateMarketingInsight() {
+            const { actual, budget } = getInsightData();
+
+            // Calculate metrics
+            const spendVariation = budget.spend > 0 ? ((actual.spend - budget.spend) / budget.spend) * 100 : 0;
+            const spendDelta = actual.spend - budget.spend;
+            const spendPct = budget.spend > 0 ? (actual.spend / budget.spend) * 100 : 0;
+
+            const cpnuVariation = budget.cpnu > 0 ? ((actual.cpnu - budget.cpnu) / budget.cpnu) * 100 : 0;
+            const cpnuEfficiency = cpnuVariation < 0 ? Math.abs(cpnuVariation) : -cpnuVariation;
+
+            // Determine sentiment
+            let sentiment = 'neutral';
+            let emoji = '📊';
+
+            // Positive: spending less AND CPNU better than target
+            if (spendVariation < 0 && cpnuVariation <= 0) {
+                sentiment = 'positive';
+                emoji = '✅';
+            } else if (spendVariation < -10 || cpnuVariation > 10) {
+                sentiment = 'alert';
+                emoji = '⚠️';
+            } else if (spendVariation < 0) {
+                sentiment = 'neutral';
+                emoji = '📉';
+            }
+
+            // Build insight text
+            let text = `<span class="insight-emoji">${emoji}</span>`;
+
+            text += `Marketing spend at <span class="insight-metric">${formatPercent(spendPct, 1)}</span> of budget `;
+            text += `(<span class="${spendDelta < 0 ? 'insight-positive' : 'insight-negative'}">${spendDelta < 0 ? '' : '+'}${formatCurrency(spendDelta)}</span>). `;
+
+            text += `CPNU performing at <span class="insight-metric">$${actual.cpnu.toFixed(2)}</span> vs $${budget.cpnu.toFixed(2)} target `;
+
+            if (cpnuVariation <= 0) {
+                text += `(<span class="insight-positive">+${Math.abs(cpnuVariation).toFixed(1)}% efficiency</span>). `;
+            } else {
+                text += `(<span class="insight-negative">-${cpnuVariation.toFixed(1)}% efficiency</span>). `;
+            }
+
+            // Conclusion based on analysis
+            if (spendVariation < -15 && cpnuVariation <= 5) {
+                text += `<em>Opportunity to scale acquisition in efficient channels.</em>`;
+            } else if (spendVariation < 0 && cpnuVariation <= 0) {
+                text += `<em>Operating efficiently below budget with strong unit economics.</em>`;
+            } else if (cpnuVariation > 10) {
+                text += `<em>Review channel mix to improve cost per acquisition.</em>`;
+            } else {
+                text += `<em>Marketing metrics tracking within acceptable ranges.</em>`;
+            }
+
+            // Update DOM
+            const el = document.getElementById('marketingInsight');
+            el.innerHTML = text;
+            el.className = `insight-callout ${sentiment}`;
+        }
+
+        function generateSubscriberAcqInsight() {
+            const { actual, budget } = getInsightData();
+
+            // Calculate metrics
+            const subsGap = actual.subs - budget.subs;
+            const subsGapPct = budget.subs > 0 ? (subsGap / budget.subs) * 100 : 0;
+
+            const convVariation = budget.conversion > 0 ? ((actual.conversion - budget.conversion) / budget.conversion) * 100 : 0;
+
+            // Determine sentiment
+            let sentiment = 'neutral';
+            let emoji = '👥';
+
+            if (subsGapPct >= -5 && convVariation >= 0) {
+                sentiment = 'positive';
+                emoji = '📈';
+            } else if (subsGapPct < -15) {
+                sentiment = 'alert';
+                emoji = '⚠️';
+            } else {
+                emoji = '👥';
+            }
+
+            // Build insight text
+            let text = `<span class="insight-emoji">${emoji}</span>`;
+
+            if (subsGap >= 0) {
+                text += `Subscriber surplus of <span class="insight-positive">+${formatNumber(Math.abs(subsGap))}</span> `;
+                text += `(<span class="insight-positive">+${Math.abs(subsGapPct).toFixed(1)}%</span> vs target). `;
+            } else {
+                text += `Subscriber gap of <span class="insight-negative">${formatNumber(subsGap)}</span> `;
+                text += `(<span class="insight-negative">${subsGapPct.toFixed(1)}%</span> vs target). `;
+            }
+
+            text += `Conversion rate `;
+            if (convVariation >= 0) {
+                text += `outperforming at <span class="insight-metric">${actual.conversion.toFixed(1)}%</span> vs ${budget.conversion.toFixed(1)}% budget `;
+                text += `(<span class="insight-positive">+${convVariation.toFixed(1)}%</span>). `;
+            } else {
+                text += `at <span class="insight-metric">${actual.conversion.toFixed(1)}%</span> vs ${budget.conversion.toFixed(1)}% budget `;
+                text += `(<span class="insight-negative">${convVariation.toFixed(1)}%</span>). `;
+            }
+
+            // Analysis conclusion
+            if (subsGapPct < -10 && convVariation >= 0) {
+                text += `<em>Volume deficit driven by marketing deployment, not conversion efficiency.</em>`;
+            } else if (subsGapPct < -10 && convVariation < 0) {
+                text += `<em>Both volume and conversion need attention - review funnel optimization.</em>`;
+            } else if (subsGapPct >= 0) {
+                text += `<em>Strong subscriber acquisition performance exceeding targets.</em>`;
+            } else {
+                text += `<em>Acquisition tracking near target with stable conversion rates.</em>`;
+            }
+
+            // Update DOM
+            const el = document.getElementById('subscriberAcqInsight');
+            el.innerHTML = text;
+            el.className = `insight-callout ${sentiment}`;
+        }
+
+        function generateUnitEconomicsInsight() {
+            const { actual, budget } = getInsightData();
+
+            // Calculate LTV:CAC (using simple 12-month LTV approximation)
+            const ltvCacActual = actual.cac > 0 ? (actual.arpu * 12) / actual.cac : 0;
+            const ltvCacBenchmark = 3.0;
+
+            const arpuVariation = budget.arpu > 0 ? ((actual.arpu - budget.arpu) / budget.arpu) * 100 : 0;
+            const cacVariation = budget.cac > 0 ? ((actual.cac - budget.cac) / budget.cac) * 100 : 0;
+
+            // Determine sentiment
+            let sentiment = 'neutral';
+            let emoji = '💰';
+
+            if (ltvCacActual >= ltvCacBenchmark && cacVariation <= 5) {
+                sentiment = 'positive';
+                emoji = '✅';
+            } else if (ltvCacActual < 2.5 || cacVariation > 15) {
+                sentiment = 'alert';
+                emoji = '⚠️';
+            }
+
+            // Build insight text
+            let text = `<span class="insight-emoji">${emoji}</span>`;
+
+            text += `Unit economics `;
+            if (ltvCacActual >= ltvCacBenchmark) {
+                text += `<span class="insight-positive">healthy</span>: `;
+            } else if (ltvCacActual >= 2.5) {
+                text += `<span class="insight-neutral">acceptable</span>: `;
+            } else {
+                text += `<span class="insight-negative">under pressure</span>: `;
+            }
+
+            text += `LTV:CAC at <span class="insight-metric">${ltvCacActual.toFixed(2)}x</span> `;
+            if (ltvCacActual >= ltvCacBenchmark) {
+                text += `(<span class="insight-positive">above ${ltvCacBenchmark}x benchmark</span>). `;
+            } else {
+                text += `(<span class="insight-negative">below ${ltvCacBenchmark}x benchmark</span>). `;
+            }
+
+            text += `ARPU at <span class="insight-metric">$${actual.arpu.toFixed(2)}</span> `;
+            text += `(<span class="${arpuVariation >= 0 ? 'insight-positive' : 'insight-negative'}">${arpuVariation >= 0 ? '+' : ''}${arpuVariation.toFixed(1)}%</span> vs budget) `;
+
+            text += `with CAC `;
+            if (cacVariation <= 0) {
+                text += `controlled at <span class="insight-metric">$${actual.cac.toFixed(2)}</span>. `;
+            } else {
+                text += `at <span class="insight-metric">$${actual.cac.toFixed(2)}</span> (<span class="insight-negative">+${cacVariation.toFixed(1)}%</span>). `;
+            }
+
+            // Conclusion
+            if (ltvCacActual >= ltvCacBenchmark && cacVariation <= 0) {
+                text += `<em>Sustainable growth metrics with efficient customer acquisition.</em>`;
+            } else if (ltvCacActual >= ltvCacBenchmark) {
+                text += `<em>Healthy unit economics despite volume challenges.</em>`;
+            } else if (cacVariation > 10) {
+                text += `<em>Focus on reducing CAC to improve payback period.</em>`;
+            } else {
+                text += `<em>Monitor unit economics closely as scale increases.</em>`;
+            }
+
+            // Update DOM
+            const el = document.getElementById('unitEconomicsInsight');
+            el.innerHTML = text;
+            el.className = `insight-callout ${sentiment}`;
+        }
+
+        function updateAllInsights() {
+            generateMarketingInsight();
+            generateSubscriberAcqInsight();
+            generateUnitEconomicsInsight();
         }
 
         // ============================================
@@ -2056,6 +2459,9 @@
             updateEbitdaChart();
             updateOpexDonutChart();
             updateOpexTable();
+
+            // Update dynamic insights
+            updateAllInsights();
         }
 
         function updateDropdownOptions() {
@@ -2121,6 +2527,9 @@
             updateEbitdaChart();
             updateOpexDonutChart();
             updateOpexTable();
+
+            // Update dynamic insights
+            updateAllInsights();
         }
 
         function updatePeriodIndicator() {
@@ -2978,72 +3387,72 @@
         function buildSubscribersDatasets(data) {
             const datasets = [];
 
-            // New Users Actual - Indigo
+            // New Users Actual - Blue (Actual = Blue)
             if (subscribersToggles.newUsers) {
                 datasets.push({
                     label: 'New Users (K)',
                     data: data.signupsActual,
                     type: 'bar',
-                    backgroundColor: '#6366f1',
+                    backgroundColor: '#3B82F6',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 3
                 });
             }
 
-            // New Users Budget - Light Indigo
+            // New Users Budget - Gray (Budget = Gray)
             if (subscribersToggles.newUsersBudget) {
                 datasets.push({
                     label: 'New Users Budget (K)',
                     data: data.signupsBudget,
                     type: 'bar',
-                    backgroundColor: '#a5b4fc',
+                    backgroundColor: '#9CA3AF',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 4
                 });
             }
 
-            // Marketing Spend Actual - Amber
+            // Marketing Spend Actual - Amber (Cost = Amber)
             if (subscribersToggles.marketingSpend) {
                 datasets.push({
                     label: 'Marketing Spend ($K)',
                     data: data.spendActual,
                     type: 'bar',
-                    backgroundColor: '#f59e0b',
+                    backgroundColor: '#F59E0B',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 5
                 });
             }
 
-            // Marketing Spend Budget - Light Amber
+            // Marketing Spend Budget - Light Gray (Budget = Gray)
             if (subscribersToggles.marketingSpendBudget) {
                 datasets.push({
                     label: 'Spend Budget ($K)',
                     data: data.spendBudget,
                     type: 'bar',
-                    backgroundColor: '#fcd34d',
+                    backgroundColor: '#D1D5DB',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 6
                 });
             }
 
-            // CPNU Actual - Emerald (solid line)
+            // CPNU Actual - Purple (Ratio/Efficiency = Purple)
             if (subscribersToggles.cpnu) {
                 datasets.push({
                     label: 'CPNU ($)',
                     data: data.cpnuActual,
                     type: 'line',
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: '#8B5CF6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    pointBackgroundColor: '#10b981',
+                    pointBackgroundColor: '#8B5CF6',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
@@ -3051,13 +3460,13 @@
                 });
             }
 
-            // CPNU Budget - Emerald (dashed line)
+            // CPNU Budget - Light Purple dashed (Budget = lighter)
             if (subscribersToggles.cpnuBudget) {
                 datasets.push({
                     label: 'CPNU Budget ($)',
                     data: data.cpnuBudget,
                     type: 'line',
-                    borderColor: '#10b981',
+                    borderColor: '#A78BFA',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [6, 4],
@@ -3065,7 +3474,7 @@
                     tension: 0.4,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#10b981',
+                    pointBackgroundColor: '#A78BFA',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y1',
@@ -3276,43 +3685,46 @@
         function buildSubscriberAcqDatasets(data) {
             const datasets = [];
 
+            // Actual Subscribers - Blue (Actual = Blue)
             if (subscriberAcqToggles.actualSubs) {
                 datasets.push({
                     label: 'Actual Subscribers',
                     data: data.actualSubs,
                     type: 'bar',
-                    backgroundColor: '#1e3a5f',
+                    backgroundColor: '#1E40AF',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 2
                 });
             }
 
+            // Budget Subscribers - Gray (Budget = Gray)
             if (subscriberAcqToggles.budgetSubs) {
                 datasets.push({
                     label: 'Budget Subscribers',
                     data: data.budgetSubs,
                     type: 'bar',
-                    backgroundColor: '#94a3b8',
+                    backgroundColor: '#9CA3AF',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 3
                 });
             }
 
+            // Conversion Rate Actual - Green (Positive metric = Green)
             if (subscriberAcqToggles.conversionRate) {
                 datasets.push({
                     label: 'Conversion Rate',
                     data: data.conversionActual,
                     type: 'line',
-                    borderColor: '#22c55e',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    pointBackgroundColor: '#22c55e',
+                    pointBackgroundColor: '#10B981',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
@@ -3320,12 +3732,13 @@
                 });
             }
 
+            // Conversion Rate Budget - Light Green dashed
             if (subscriberAcqToggles.conversionRateBudget) {
                 datasets.push({
                     label: 'Conv. Rate Budget',
                     data: data.conversionBudget,
                     type: 'line',
-                    borderColor: '#22c55e',
+                    borderColor: '#34D399',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [6, 4],
@@ -3333,7 +3746,7 @@
                     tension: 0.4,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#22c55e',
+                    pointBackgroundColor: '#34D399',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y1',
@@ -3558,29 +3971,31 @@
         function buildUnitEconomicsDatasets(data) {
             const datasets = [];
 
+            // ARPU Actual - Green (positive metric)
             if (unitEconomicsToggles.actualArpu) {
                 datasets.push({
                     label: 'Actual ARPU',
                     data: data.actualArpu,
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    pointBackgroundColor: '#3b82f6',
+                    pointBackgroundColor: '#10B981',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y'
                 });
             }
 
+            // ARPU Budget - Gray (budget = gray)
             if (unitEconomicsToggles.budgetArpu) {
                 datasets.push({
                     label: 'Budget ARPU',
                     data: data.budgetArpu,
-                    borderColor: '#3b82f6',
+                    borderColor: '#9CA3AF',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [6, 4],
@@ -3588,36 +4003,38 @@
                     tension: 0.4,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#3b82f6',
+                    pointBackgroundColor: '#9CA3AF',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y'
                 });
             }
 
+            // CAC Actual - Amber (cost metric)
             if (unitEconomicsToggles.actualCac) {
                 datasets.push({
                     label: 'Actual CAC',
                     data: data.actualCac,
-                    borderColor: '#f97316',
-                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    pointBackgroundColor: '#f97316',
+                    pointBackgroundColor: '#F59E0B',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y'
                 });
             }
 
+            // CAC Budget - Gray (budget = gray)
             if (unitEconomicsToggles.budgetCac) {
                 datasets.push({
                     label: 'Budget CAC',
                     data: data.budgetCac,
-                    borderColor: '#f97316',
+                    borderColor: '#6B7280',
                     backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [6, 4],
@@ -3625,47 +4042,45 @@
                     tension: 0.4,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#f97316',
+                    pointBackgroundColor: '#6B7280',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y'
                 });
             }
 
+            // ARPU/CAC Ratio - Purple (ratio/efficiency)
             if (unitEconomicsToggles.arpuCacRatio) {
                 datasets.push({
                     label: 'ARPU/CAC Ratio',
                     data: data.arpuCacRatio,
-                    borderColor: '#22c55e',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                    borderWidth: 3,
-                    fill: false,
-                    tension: 0.4,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: '#22c55e',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    yAxisID: 'y1'
-                });
-            }
-
-            if (unitEconomicsToggles.contributionMargin) {
-                datasets.push({
-                    label: 'Cont. Margin ($)',
-                    data: data.contributionMargin,
-                    type: 'line',
-                    borderColor: '#8b5cf6',
+                    borderColor: '#8B5CF6',
                     backgroundColor: 'rgba(139, 92, 246, 0.1)',
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    pointBackgroundColor: '#8b5cf6',
+                    pointBackgroundColor: '#8B5CF6',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    yAxisID: 'y'
+                    yAxisID: 'y1'
+                });
+            }
+
+            // Contribution Margin - Purple (efficiency metric)
+            if (unitEconomicsToggles.contributionMargin) {
+                datasets.push({
+                    label: 'Cont. Margin ($)',
+                    data: data.contributionMargin,
+                    type: 'bar',
+                    backgroundColor: function(context) {
+                        const value = context.raw;
+                        return value >= 0 ? '#A78BFA' : '#C4B5FD';
+                    },
+                    borderRadius: 4,
+                    yAxisID: 'y',
+                    order: 10
                 });
             }
 
