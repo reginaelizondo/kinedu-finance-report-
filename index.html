@@ -3345,6 +3345,9 @@
                     };
                 }
 
+                console.log('======= LOADING 2026 DATA =======');
+                console.log('DATA_SOURCES_2026:', DATA_SOURCES_2026);
+
                 // Load all 2026 data sources in parallel
                 const [
                     kpiActualData,
@@ -3366,11 +3369,19 @@
                     fetch(DATA_SOURCES_2026.plBudgetPessimistic).then(r => r.text())
                 ]);
 
+                console.log('Fetched KPI Actual data length:', kpiActualData ? kpiActualData.length : 'NULL');
+                console.log('Fetched KPI Optimistic data length:', kpiOptimisticData ? kpiOptimisticData.length : 'NULL');
+                console.log('First 500 chars of KPI Actual:', kpiActualData ? kpiActualData.substring(0, 500) : 'NULL');
+
                 // Parse KPI data for each scenario
                 // Note: KPIs Actual uses specific row indices, Budget uses same structure
+                console.log('--- Parsing KPI Actual ---');
                 data2026.actual.monthlyData = parseKPIData(kpiActualData, 'actual');
+                console.log('--- Parsing KPI Optimistic ---');
                 data2026.optimistic.monthlyBudget = parseKPIData(kpiOptimisticData, 'budget');
+                console.log('--- Parsing KPI Conservative ---');
                 data2026.conservative.monthlyBudget = parseKPIData(kpiConservativeData, 'budget');
+                console.log('--- Parsing KPI Pessimistic ---');
                 data2026.pessimistic.monthlyBudget = parseKPIData(kpiPessimisticData, 'budget');
 
                 // Parse P&L data for each scenario
@@ -3383,7 +3394,9 @@
                 aggregate2026Data();
 
                 data2026Loaded = true;
-                console.log('2026 data loaded successfully');
+                console.log('======= 2026 DATA LOADED SUCCESSFULLY =======');
+                console.log('data2026.actual.monthlyData:', data2026.actual.monthlyData);
+                console.log('data2026.conservative.monthlyBudget:', data2026.conservative.monthlyBudget);
 
                 // Apply 2026 data to current view
                 applyYearData();
@@ -3422,7 +3435,21 @@
          * - Row 18 (idx 17): LTV/CAC (LTR/CAC)
          */
         function parseKPIData(csvText, scenario = 'actual') {
+            console.log('=== parseKPIData called ===');
+            console.log('Scenario:', scenario);
+            console.log('CSV text length:', csvText ? csvText.length : 'NULL');
+
             const parsed = parseCSV(csvText);
+            console.log('Parsed rows count:', parsed ? parsed.length : 'NULL');
+
+            // Debug: show first few rows
+            if (parsed && parsed.length > 0) {
+                console.log('First 5 rows of parsed data:');
+                for (let r = 0; r < Math.min(5, parsed.length); r++) {
+                    console.log(`Row ${r}:`, parsed[r]);
+                }
+            }
+
             const monthlyKPIs = {};
 
             // Different row indices for Actual vs Budget
@@ -3508,7 +3535,18 @@
                     ebitda: 0,
                     burnRate: 0
                 };
+
+                // Debug: log January data
+                if (month === 'January') {
+                    console.log(`=== ${scenario} January KPIs ===`);
+                    console.log('spend:', spend, '| signups:', signups, '| cpnu:', cpnu);
+                    console.log('subs:', subs, '| cac:', cac, '| arpu:', arpu);
+                    console.log('conversion:', conversion, '| ltvCac:', ltvCac);
+                }
             });
+
+            console.log('=== parseKPIData complete for', scenario, '===');
+            console.log('Monthly KPIs keys:', Object.keys(monthlyKPIs));
 
             return monthlyKPIs;
         }
@@ -3894,22 +3932,36 @@
          * Apply 2026 data to the current view
          */
         function applyYearData() {
-            if (currentYear !== 2026) return;
+            console.log('======= applyYearData called =======');
+            console.log('currentYear:', currentYear);
+
+            if (currentYear !== 2026) {
+                console.log('Not 2026, returning');
+                return;
+            }
 
             // Get primary scenario for budget comparison
             const primaryScenario = getPrimaryScenario();
+            console.log('Primary scenario:', primaryScenario);
 
             // Set monthlyData to 2026 actual
             monthlyData = data2026.actual.monthlyData;
+            console.log('monthlyData set to data2026.actual.monthlyData');
+            console.log('monthlyData January:', monthlyData?.January);
 
             // Set monthlyBudget to primary scenario
             monthlyBudget = data2026[primaryScenario].monthlyBudget;
+            console.log('monthlyBudget set to data2026[' + primaryScenario + '].monthlyBudget');
+            console.log('monthlyBudget January:', monthlyBudget?.January);
 
             // Set aggregated data
             data.real = data2026.actual.real;
             data.budget = data2026[primaryScenario].budget;
+            console.log('data.real:', data.real);
+            console.log('data.budget:', data.budget);
 
             // Update all visualizations
+            console.log('Calling updateAllChartsAndKPIs...');
             updateAllChartsAndKPIs();
         }
 
@@ -3964,6 +4016,15 @@
         // KPI UPDATES
         // ============================================
         function getDataForPeriod() {
+            console.log('======= getDataForPeriod called =======');
+            console.log('currentGranularity:', currentGranularity);
+            console.log('currentPeriod:', currentPeriod);
+            console.log('customRangeActive:', customRangeActive);
+            console.log('monthlyData available:', !!monthlyData);
+            console.log('monthlyBudget available:', !!monthlyBudget);
+            console.log('data.real available:', !!data?.real);
+            console.log('data.budget available:', !!data?.budget);
+
             let real, budget;
 
             // Default empty structure for safety
@@ -3974,20 +4035,32 @@
                 const months = getCustomRangeMonths();
                 real = aggregateMonthlyData(months, monthlyData);
                 budget = aggregateMonthlyData(months, monthlyBudget);
+                console.log('Using custom range');
             } else if (currentGranularity === 'monthly') {
                 real = monthlyData?.[currentPeriod];
                 budget = monthlyBudget?.[currentPeriod];
+                console.log('Using monthly data for', currentPeriod);
+                console.log('monthlyData[' + currentPeriod + ']:', real);
+                console.log('monthlyBudget[' + currentPeriod + ']:', budget);
             } else if (currentGranularity === 'quarterly') {
                 real = data?.real?.[currentPeriod];
                 budget = data?.budget?.[currentPeriod];
+                console.log('Using quarterly data for', currentPeriod);
             } else if (currentGranularity === 'semester') {
                 real = data?.real?.[currentPeriod];
                 budget = data?.budget?.[currentPeriod];
+                console.log('Using semester data');
             } else {
                 // yearly - use YEAR data for both YTD and YEAR (same at end of year)
                 real = data?.real?.['YEAR'];
                 budget = data?.budget?.['YEAR'];
+                console.log('Using yearly data');
+                console.log('data.real.YEAR:', real);
+                console.log('data.budget.YEAR:', budget);
             }
+
+            console.log('Final real:', real);
+            console.log('Final budget:', budget);
 
             // Ensure we always return valid objects with all required properties
             return {
@@ -4031,7 +4104,11 @@
         }
 
         function updateKPIs() {
+            console.log('======= updateKPIs called =======');
             const { real, budget } = getDataForPeriod();
+            console.log('getDataForPeriod returned:');
+            console.log('real:', real);
+            console.log('budget:', budget);
 
             const kpiGrid = document.getElementById('consolidatedKPIs');
             if (!kpiGrid) return;
