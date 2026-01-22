@@ -137,314 +137,6 @@
             color: white;
         }
 
-        /* Custom Range Selector */
-        .custom-range-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .custom-range-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .range-dropdown {
-            padding: 8px 14px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: 6px;
-            cursor: pointer;
-            min-width: 120px;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            padding-right: 30px;
-            transition: all 0.2s ease;
-        }
-
-        .range-dropdown:hover {
-            border-color: rgba(255, 255, 255, 0.5);
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .range-dropdown:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.7);
-        }
-
-        .range-dropdown option {
-            background: #1e3a5f;
-            color: white;
-        }
-
-        .range-btn {
-            padding: 8px 16px;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .range-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .range-btn.apply-btn {
-            background: #48bb78;
-        }
-
-        .range-btn.apply-btn:hover {
-            background: #38a169;
-        }
-
-        .range-btn.reset-btn {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .range-btn.reset-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .range-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .range-error {
-            color: #fc8181;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            background: rgba(252, 129, 129, 0.15);
-            border-radius: 4px;
-            display: none;
-        }
-
-        .range-error.visible {
-            display: block;
-        }
-
-        .custom-range-active {
-            background: rgba(72, 187, 120, 0.2);
-            border: 1px solid rgba(72, 187, 120, 0.4);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            color: #9ae6b4;
-            font-weight: 500;
-            display: none;
-        }
-
-        .custom-range-active.visible {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Year Selector */
-        .year-selector-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .year-selector {
-            display: flex;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 4px;
-            gap: 4px;
-        }
-
-        .year-btn {
-            padding: 10px 32px;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 16px;
-            font-weight: 700;
-            border-radius: 26px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .year-btn:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .year-btn.active {
-            background: white;
-            color: #1e3a5f;
-        }
-
-        /* Scenario Selector (2026 only) */
-        .scenario-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 24px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-
-        .scenario-container.visible {
-            display: flex;
-        }
-
-        .scenario-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .scenario-toggles {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .scenario-btn {
-            padding: 8px 20px;
-            border: 2px solid;
-            background: transparent;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .scenario-btn.optimistic {
-            border-color: rgba(16, 185, 129, 0.5);
-            color: rgba(16, 185, 129, 0.8);
-        }
-
-        .scenario-btn.optimistic:hover {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: #10B981;
-            color: #10B981;
-        }
-
-        .scenario-btn.optimistic.active {
-            background: #10B981;
-            border-color: #10B981;
-            color: white;
-        }
-
-        .scenario-btn.conservative {
-            border-color: rgba(59, 130, 246, 0.5);
-            color: rgba(59, 130, 246, 0.8);
-        }
-
-        .scenario-btn.conservative:hover {
-            background: rgba(59, 130, 246, 0.15);
-            border-color: #3B82F6;
-            color: #3B82F6;
-        }
-
-        .scenario-btn.conservative.active {
-            background: #3B82F6;
-            border-color: #3B82F6;
-            color: white;
-        }
-
-        .scenario-btn.pessimistic {
-            border-color: rgba(245, 158, 11, 0.5);
-            color: rgba(245, 158, 11, 0.8);
-        }
-
-        .scenario-btn.pessimistic:hover {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: #F59E0B;
-            color: #F59E0B;
-        }
-
-        .scenario-btn.pessimistic.active {
-            background: #F59E0B;
-            border-color: #F59E0B;
-            color: white;
-        }
-
-        .scenario-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        /* Compare vs 2025 Checkbox */
-        .compare-container {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .compare-container.visible {
-            display: flex;
-        }
-
-        .compare-checkbox {
-            width: 18px;
-            height: 18px;
-            accent-color: #6b7280;
-            cursor: pointer;
-        }
-
-        .compare-label {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
-            cursor: pointer;
-        }
-
-        .compare-label:hover {
-            color: white;
-        }
-
-        /* Scenario indicator in period display */
-        .scenario-indicator-text {
-            display: none;
-            margin-left: 12px;
-            padding-left: 12px;
-            border-left: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .scenario-indicator-text.visible {
-            display: inline;
-        }
-
-        .scenario-indicator-text .scenario-name {
-            font-weight: 600;
-            color: white;
-        }
-
         /* Consolidated KPIs Section */
         .kpi-section {
             background: white;
@@ -767,34 +459,6 @@
             background: #1e3a5f;
             color: white;
             border-color: #1e3a5f;
-        }
-
-        .revenue-filter-btn.cagr-trend-btn {
-            border-color: #5BA4E6;
-            color: #5BA4E6;
-            margin-left: 8px;
-            border-style: dashed;
-        }
-
-        .revenue-filter-btn.cagr-trend-btn:hover {
-            background: rgba(91, 164, 230, 0.1);
-            border-color: #5BA4E6;
-            color: #5BA4E6;
-        }
-
-        .revenue-filter-btn.cagr-trend-btn.active {
-            background: #5BA4E6;
-            color: white;
-            border-color: #5BA4E6;
-            border-style: solid;
-        }
-
-        .ebitda-filters {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
         }
 
         .revenue-breakdown {
@@ -1155,91 +819,6 @@
             .chart-toggle-reset {
                 margin-left: 0;
                 margin-top: 8px;
-            }
-        }
-
-        /* CAGR Trend Toggle */
-        .cagr-toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: auto;
-            padding-left: 16px;
-            border-left: 1px solid #e2e8f0;
-        }
-
-        .cagr-toggle-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            color: #6b7280;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .cagr-toggle-btn:hover {
-            border-color: #5BA4E6;
-            color: #5BA4E6;
-        }
-
-        .cagr-toggle-btn.active {
-            background: linear-gradient(135deg, #5BA4E6 0%, #4A93D5 100%);
-            border-color: #5BA4E6;
-            color: white;
-        }
-
-        .cagr-toggle-btn .toggle-icon {
-            font-size: 14px;
-        }
-
-        .cagr-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .cagr-badge.positive {
-            background: rgba(34, 197, 94, 0.15);
-            color: #16a34a;
-        }
-
-        .cagr-badge.negative {
-            background: rgba(239, 68, 68, 0.15);
-            color: #dc2626;
-        }
-
-        .cagr-badge.neutral {
-            background: rgba(107, 114, 128, 0.15);
-            color: #6b7280;
-        }
-
-        .cagr-badge.hidden {
-            display: none;
-        }
-
-        .cagr-badge .badge-arrow {
-            font-size: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .cagr-toggle-container {
-                margin-left: 0;
-                padding-left: 0;
-                border-left: none;
-                margin-top: 8px;
-                width: 100%;
             }
         }
 
@@ -1655,41 +1234,19 @@
         <div class="header">
             <div class="header-branding">
                 <!-- Kinedu Logo -->
-                <img class="header-logo" src="logo kinedu.png" alt="Kinedu Logo">
-                <div class="header-subtitle" id="headerSubtitle">Financial Performance 2025</div>
-            </div>
-
-            <!-- Year Selector -->
-            <div class="year-selector-container">
-                <div class="year-selector">
-                    <button class="year-btn active" id="yearBtn2025" onclick="setYear(2025)">2025</button>
-                    <button class="year-btn" id="yearBtn2026" onclick="setYear(2026)">2026</button>
-                </div>
-            </div>
-
-            <!-- Scenario Selector (2026 only) -->
-            <div class="scenario-container" id="scenarioContainer">
-                <span class="scenario-label">Budget Scenarios</span>
-                <div class="scenario-toggles">
-                    <button class="scenario-btn optimistic" id="scenarioOptimistic" onclick="toggleScenario('optimistic')">
-                        <span class="scenario-indicator"></span>
-                        Optimistic
-                    </button>
-                    <button class="scenario-btn conservative active" id="scenarioConservative" onclick="toggleScenario('conservative')">
-                        <span class="scenario-indicator"></span>
-                        Conservative
-                    </button>
-                    <button class="scenario-btn pessimistic" id="scenarioPessimistic" onclick="toggleScenario('pessimistic')">
-                        <span class="scenario-indicator"></span>
-                        Pessimistic
-                    </button>
-                </div>
-            </div>
-
-            <!-- Compare vs 2025 Checkbox (2026 only) -->
-            <div class="compare-container" id="compareContainer">
-                <input type="checkbox" class="compare-checkbox" id="compareCheckbox" onchange="toggleCompareWith2025()">
-                <label class="compare-label" for="compareCheckbox">Compare vs 2025 Actual (reference line)</label>
+                <svg class="header-logo" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Icon: Green square -->
+                    <rect x="0" y="0" width="22" height="22" fill="#4CAF50"/>
+                    <!-- Icon: Yellow circle -->
+                    <circle cx="33" cy="11" r="11" fill="#FFC107"/>
+                    <!-- Icon: Pink arc -->
+                    <path d="M0 80 Q0 35 22 35 L22 80 Z" fill="#E91E63"/>
+                    <!-- Icon: Blue rectangle -->
+                    <rect x="22" y="35" width="11" height="45" fill="#2196F3"/>
+                    <!-- Text: kinedu -->
+                    <text x="60" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="700" fill="#2196F3">kinedu</text>
+                </svg>
+                <div class="header-subtitle">Financial Performance 2025</div>
             </div>
 
             <!-- Time Filters -->
@@ -1707,50 +1264,7 @@
                     </select>
                     <div class="period-indicator" id="periodIndicator">
                         Showing: <strong>Year to Date 2025</strong>
-                        <span class="scenario-indicator-text" id="scenarioIndicatorText">
-                            Scenario: <span class="scenario-name">Conservative</span>
-                        </span>
                     </div>
-                    <span class="custom-range-active" id="customRangeActive">
-                        Custom Range Active
-                    </span>
-                </div>
-
-                <!-- Custom Date Range Selector -->
-                <div class="custom-range-container" id="customRangeContainer">
-                    <span class="custom-range-label">Custom Range:</span>
-                    <select class="range-dropdown" id="rangeFrom" onchange="validateRange()">
-                        <option value="0">January</option>
-                        <option value="1">February</option>
-                        <option value="2">March</option>
-                        <option value="3">April</option>
-                        <option value="4">May</option>
-                        <option value="5">June</option>
-                        <option value="6">July</option>
-                        <option value="7">August</option>
-                        <option value="8">September</option>
-                        <option value="9">October</option>
-                        <option value="10">November</option>
-                        <option value="11">December</option>
-                    </select>
-                    <span class="custom-range-label">to</span>
-                    <select class="range-dropdown" id="rangeTo" onchange="validateRange()">
-                        <option value="0">January</option>
-                        <option value="1">February</option>
-                        <option value="2">March</option>
-                        <option value="3">April</option>
-                        <option value="4">May</option>
-                        <option value="5">June</option>
-                        <option value="6">July</option>
-                        <option value="7">August</option>
-                        <option value="8">September</option>
-                        <option value="9">October</option>
-                        <option value="10">November</option>
-                        <option value="11" selected>December</option>
-                    </select>
-                    <button class="range-btn apply-btn" id="applyRangeBtn" onclick="applyCustomRange()">Apply</button>
-                    <button class="range-btn reset-btn" id="resetRangeBtn" onclick="resetCustomRange()">Reset</button>
-                    <span class="range-error" id="rangeError">From must be before To</span>
                 </div>
             </div>
         </div>
@@ -1790,13 +1304,6 @@
                         <button class="revenue-filter-btn" onclick="filterRevenue('subscriptions')">Subscription Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
-                        <button class="revenue-filter-btn cagr-trend-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
-                            CAGR Trend
-                        </button>
-                        <span class="cagr-badge hidden" id="revenueCagrBadge">
-                            <span class="badge-arrow">↑</span>
-                            <span class="badge-value">+0%</span>
-                        </span>
                     </div>
                     <div class="chart-toggles" id="toggles-revenue"></div>
                     <canvas id="revenueChart" height="80"></canvas>
@@ -1804,15 +1311,7 @@
                 </div>
                 <div class="chart-container">
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
-                    <div class="ebitda-filters">
-                        <button class="revenue-filter-btn cagr-trend-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
-                            CAGR Trend
-                        </button>
-                        <span class="cagr-badge hidden" id="ebitdaCagrBadge">
-                            <span class="badge-arrow">↑</span>
-                            <span class="badge-value">+0%</span>
-                        </span>
-                    </div>
+                    <div class="chart-toggles" id="toggles-ebitda"></div>
                     <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
             </div>
@@ -2007,28 +1506,12 @@
         // ============================================
         // GOOGLE SHEETS DATA SOURCES
         // ============================================
-        // 2025 Data Sources
-        const DATA_SOURCES_2025 = {
+        const DATA_SOURCES = {
             kpiActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTJbzzS-WZtUAhV-pD1yaYzTPofqmh74UYlJgOIJOZC3ZGwlWxe63U8Het9RYJifsjWPELPdRvi2Mqp/pub?output=csv',
             kpiBudget: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSvqeNn34Kx8mu7QADDkU2vB6jW1xGhOZ5_E60A0hpKV_Z7rURC75PkHTW71NBBsgzHwl9VAq3g_bP5/pub?output=csv',
             plActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBn3e5-CrJplm6IPSv6us2ZQUROWdAdDxTyEn5ydzQVmTNGOVpfFXp5eBVibaTrA4Bxfevihn453x3/pub?output=csv',
             plBudget: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSv_vWUvx1AFEUlZmg_sWwzcgkDEFnbNy2Ox4UtxA3HLytst3YZG40FJSMMhup-AqWK3c3xDHkwvacy/pub?output=csv'
         };
-
-        // 2026 Data Sources
-        const DATA_SOURCES_2026 = {
-            kpiActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ0Uy9ou09cF78AgvontFHLAculFyBG4n7r_dCrUY9Wb-6c7nPj1eORYqSOrhT47MLqrw48Sii5v4b/pub?output=csv',
-            kpiBudgetOptimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNtj2ts9qPvq6KiFsPxLs7NJY1jR-ivaf-zuIkoqSqS_Hs1Ewazeaz3s5csN5GuQSOAJ6w_pOkVFxz/pub?output=csv',
-            kpiBudgetConservative: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8KODgWuDngND6ghCPZwLjd2eGqBIaJA6vLJRqXSfl0Es4i1HwfFJwSM0Nn47eFPYzyUmi_ULOd_mG/pub?output=csv',
-            kpiBudgetPessimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-JbVG8en1sSFg0VMH991T1mCngfV4A_zKt63ufeWjoAuq_2TEb5iFIYJGBRuK43PUanLyOYhrC6Qk/pub?output=csv',
-            plActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmpvi1XsOQeuArJC54QipxDuf9_xC6AFAO9g3ysw4lQu8BkhLmcoc7aMa0p6SKpX4UlLFrXdZlMan/pub?output=csv',
-            plBudgetOptimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRS5sB5UDDyPJ1tPNii2p0taeWnP-5JuQafzz4WKGujs14x1dA9ldnTbS5RSAb6VRoZcps53edhiUFB/pub?output=csv',
-            plBudgetConservative: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRBg9z9AZbDU05iLL3iq30pue4QY45PxPNYKvTO47YW3BuZDzJ8zK1nSFzJ1M6wRSLEgTAssr2L1ZKE/pub?output=csv',
-            plBudgetPessimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSAMJJTXoKK_whKUo5gqC3ONxmL9U1ESLKso3CD11hrJC-afsBzWtGhVAgc2GfYEV0oAmUR6Py1fB9i/pub?output=csv'
-        };
-
-        // Legacy reference (points to current year)
-        const DATA_SOURCES = DATA_SOURCES_2025;
 
         // ============================================
         // DATA VARIABLES (will be populated from Google Sheets)
@@ -2056,36 +1539,6 @@
         let currentGranularity = 'yearly';
         let currentPeriod = 'YTD';
         let charts = {};
-
-        // Custom Range variables
-        let customRangeActive = false;
-        let customRangeFrom = 0;  // Month index (0 = January)
-        let customRangeTo = 11;   // Month index (11 = December)
-
-        // CAGR Trend toggle states
-        let showRevenueCagrTrend = false;
-        let showEbitdaCagrTrend = false;
-
-        // Multi-year and scenario state
-        let currentYear = 2025;
-        let scenarioStates = {
-            optimistic: false,
-            conservative: true,  // Default for 2026
-            pessimistic: false
-        };
-        let compareWith2025 = false;
-
-        // 2026 Data storage
-        let data2026 = {
-            actual: { real: {}, monthlyData: {}, monthlyBudget: {} },
-            optimistic: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {} },
-            conservative: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {} },
-            pessimistic: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {} }
-        };
-        let data2026Loaded = false;
-
-        // 2025 Data backup for comparison
-        let data2025Backup = null;
 
         // ============================================
         // CSV PARSING UTILITIES
@@ -2706,10 +2159,8 @@
             let budgetData = { spend: 0, signups: 0, cpnu: 0, subs: 0, cac: 0, arpu: 0, conversion: 0, ltvCac: 0 };
             let months = [];
 
-            // Handle custom range first
-            if (customRangeActive) {
-                months = getCustomRangeMonths();
-            } else if (currentGranularity === 'yearly') {
+            // Determine which months to include based on granularity and period
+            if (currentGranularity === 'yearly') {
                 months = monthNames;
             } else if (currentGranularity === 'semester') {
                 if (currentPeriod === 'H1') {
@@ -2988,10 +2439,6 @@
         function setGranularity(granularity) {
             currentGranularity = granularity;
 
-            // Deactivate custom range when selecting a granularity
-            customRangeActive = false;
-            document.getElementById('customRangeActive').classList.remove('visible');
-
             // Update button styling
             document.querySelectorAll('.granularity-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -3019,48 +2466,46 @@
 
         function updateDropdownOptions() {
             const dropdown = document.getElementById('periodDropdown');
-            const year = currentYear;
             let options = '';
 
             switch(currentGranularity) {
                 case 'monthly':
                     options = `
-                        <option value="January">January ${year}</option>
-                        <option value="February">February ${year}</option>
-                        <option value="March">March ${year}</option>
-                        <option value="April">April ${year}</option>
-                        <option value="May">May ${year}</option>
-                        <option value="June">June ${year}</option>
-                        <option value="July">July ${year}</option>
-                        <option value="August">August ${year}</option>
-                        <option value="September">September ${year}</option>
-                        <option value="October">October ${year}</option>
-                        <option value="November">November ${year}</option>
-                        <option value="December">December ${year}</option>
+                        <option value="January">January 2025</option>
+                        <option value="February">February 2025</option>
+                        <option value="March">March 2025</option>
+                        <option value="April">April 2025</option>
+                        <option value="May">May 2025</option>
+                        <option value="June">June 2025</option>
+                        <option value="July">July 2025</option>
+                        <option value="August">August 2025</option>
+                        <option value="September">September 2025</option>
+                        <option value="October">October 2025</option>
+                        <option value="November">November 2025</option>
+                        <option value="December">December 2025</option>
                     `;
-                    // For 2026, default to January (limited data available)
-                    currentPeriod = year === 2026 ? 'January' : 'December';
+                    currentPeriod = 'December';
                     break;
                 case 'quarterly':
                     options = `
-                        <option value="Q1">Q1 ${year}</option>
-                        <option value="Q2">Q2 ${year}</option>
-                        <option value="Q3">Q3 ${year}</option>
-                        <option value="Q4">Q4 ${year}</option>
+                        <option value="Q1">Q1 2025</option>
+                        <option value="Q2">Q2 2025</option>
+                        <option value="Q3">Q3 2025</option>
+                        <option value="Q4">Q4 2025</option>
                     `;
-                    currentPeriod = year === 2026 ? 'Q1' : 'Q4';
+                    currentPeriod = 'Q4';
                     break;
                 case 'semester':
                     options = `
-                        <option value="H1">H1 ${year} (Jan-Jun)</option>
-                        <option value="H2">H2 ${year} (Jul-Dec)</option>
+                        <option value="H1">H1 2025 (Jan-Jun)</option>
+                        <option value="H2">H2 2025 (Jul-Dec)</option>
                     `;
-                    currentPeriod = year === 2026 ? 'H1' : 'H2';
+                    currentPeriod = 'H2';
                     break;
                 case 'yearly':
                     options = `
-                        <option value="YTD">Year to Date ${year}</option>
-                        <option value="YEAR">Full Year ${year}</option>
+                        <option value="YTD">Year to Date 2025</option>
+                        <option value="YEAR">Full Year 2025</option>
                     `;
                     currentPeriod = 'YTD';
                     break;
@@ -3089,600 +2534,24 @@
 
         function updatePeriodIndicator() {
             const indicator = document.getElementById('periodIndicator');
-            const customRangeActiveEl = document.getElementById('customRangeActive');
-            const scenarioIndicator = document.getElementById('scenarioIndicatorText');
             let displayText = '';
-            const year = currentYear;
 
-            // If custom range is active, show the range
-            if (customRangeActive) {
-                const fromMonth = monthNames[customRangeFrom];
-                const toMonth = monthNames[customRangeTo];
-                if (customRangeFrom === customRangeTo) {
-                    displayText = `${fromMonth} ${year}`;
-                } else {
-                    displayText = `${fromMonth} - ${toMonth} ${year}`;
-                }
-                customRangeActiveEl.classList.add('visible');
-            } else {
-                customRangeActiveEl.classList.remove('visible');
-                switch(currentGranularity) {
-                    case 'monthly':
-                        displayText = currentPeriod + ' ' + year;
-                        break;
-                    case 'quarterly':
-                        displayText = currentPeriod + ' ' + year;
-                        break;
-                    case 'semester':
-                        displayText = currentPeriod === 'H1' ? `First Half ${year}` : `Second Half ${year}`;
-                        break;
-                    case 'yearly':
-                        displayText = currentPeriod === 'YTD' ? `Year to Date ${year}` : `Full Year ${year}`;
-                        break;
-                }
+            switch(currentGranularity) {
+                case 'monthly':
+                    displayText = currentPeriod + ' 2025';
+                    break;
+                case 'quarterly':
+                    displayText = currentPeriod + ' 2025';
+                    break;
+                case 'semester':
+                    displayText = currentPeriod === 'H1' ? 'First Half 2025' : 'Second Half 2025';
+                    break;
+                case 'yearly':
+                    displayText = currentPeriod === 'YTD' ? 'Year to Date 2025' : 'Full Year 2025';
+                    break;
             }
 
-            // Build the indicator HTML
-            let indicatorHTML = `Showing: <strong>${displayText}</strong>`;
-
-            // Add scenario indicator for 2026
-            if (currentYear === 2026) {
-                scenarioIndicator.classList.add('visible');
-                updateScenarioIndicator();
-            } else {
-                scenarioIndicator.classList.remove('visible');
-            }
-
-            indicator.innerHTML = indicatorHTML + (scenarioIndicator ? scenarioIndicator.outerHTML : '');
-        }
-
-        // ============================================
-        // CUSTOM RANGE FUNCTIONS
-        // ============================================
-        function validateRange() {
-            const fromVal = parseInt(document.getElementById('rangeFrom').value);
-            const toVal = parseInt(document.getElementById('rangeTo').value);
-            const errorEl = document.getElementById('rangeError');
-            const applyBtn = document.getElementById('applyRangeBtn');
-
-            if (fromVal > toVal) {
-                errorEl.classList.add('visible');
-                applyBtn.disabled = true;
-                return false;
-            } else {
-                errorEl.classList.remove('visible');
-                applyBtn.disabled = false;
-                return true;
-            }
-        }
-
-        function applyCustomRange() {
-            if (!validateRange()) return;
-
-            const fromVal = parseInt(document.getElementById('rangeFrom').value);
-            const toVal = parseInt(document.getElementById('rangeTo').value);
-
-            customRangeFrom = fromVal;
-            customRangeTo = toVal;
-            customRangeActive = true;
-
-            // Deactivate granularity buttons (visual indicator)
-            document.querySelectorAll('.granularity-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Update UI
-            updatePeriodIndicator();
-            updateKPIs();
-            updateQuarterDrillDown();
-            updateRevenueChart();
-            updateEbitdaChart();
-            updateOpexDonutChart();
-            updateOpexTable();
-            updateAllInsights();
-        }
-
-        function resetCustomRange() {
-            customRangeActive = false;
-            customRangeFrom = 0;
-            customRangeTo = 11;
-
-            // Reset dropdown selections
-            document.getElementById('rangeFrom').value = '0';
-            document.getElementById('rangeTo').value = '11';
-
-            // Clear error
-            document.getElementById('rangeError').classList.remove('visible');
-            document.getElementById('applyRangeBtn').disabled = false;
-
-            // Re-activate yearly button and reset to YTD
-            currentGranularity = 'yearly';
-            currentPeriod = 'YTD';
-            document.querySelectorAll('.granularity-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent === 'Yearly') {
-                    btn.classList.add('active');
-                }
-            });
-            updateDropdownOptions();
-
-            // Update all
-            updatePeriodIndicator();
-            updateKPIs();
-            updateQuarterDrillDown();
-            updateRevenueChart();
-            updateEbitdaChart();
-            updateOpexDonutChart();
-            updateOpexTable();
-            updateAllInsights();
-        }
-
-        function getCustomRangeMonths() {
-            const months = [];
-            for (let i = customRangeFrom; i <= customRangeTo; i++) {
-                months.push(monthNames[i]);
-            }
-            return months;
-        }
-
-        // ============================================
-        // MULTI-YEAR AND SCENARIO FUNCTIONS
-        // ============================================
-
-        /**
-         * Set the active year and update UI
-         */
-        function setYear(year) {
-            if (currentYear === year) return;
-
-            currentYear = year;
-
-            // Update year button styles
-            document.getElementById('yearBtn2025').classList.toggle('active', year === 2025);
-            document.getElementById('yearBtn2026').classList.toggle('active', year === 2026);
-
-            // Update header subtitle
-            document.getElementById('headerSubtitle').textContent = `Financial Performance ${year}`;
-
-            // Show/hide scenario controls
-            const scenarioContainer = document.getElementById('scenarioContainer');
-            const compareContainer = document.getElementById('compareContainer');
-            const scenarioIndicator = document.getElementById('scenarioIndicatorText');
-
-            if (year === 2026) {
-                scenarioContainer.classList.add('visible');
-                compareContainer.classList.add('visible');
-                scenarioIndicator.classList.add('visible');
-
-                // Load 2026 data if not already loaded
-                if (!data2026Loaded) {
-                    load2026Data();
-                } else {
-                    applyYearData();
-                }
-            } else {
-                scenarioContainer.classList.remove('visible');
-                compareContainer.classList.remove('visible');
-                scenarioIndicator.classList.remove('visible');
-
-                // Restore 2025 data
-                restore2025Data();
-            }
-
-            // Update dropdown options for the year
-            updateDropdownOptions();
-            updatePeriodIndicator();
-        }
-
-        /**
-         * Toggle a budget scenario
-         */
-        function toggleScenario(scenario) {
-            scenarioStates[scenario] = !scenarioStates[scenario];
-
-            // Update button style
-            const btn = document.getElementById('scenario' + scenario.charAt(0).toUpperCase() + scenario.slice(1));
-            btn.classList.toggle('active', scenarioStates[scenario]);
-
-            // Update scenario indicator text
-            updateScenarioIndicator();
-
-            // Update all visualizations
-            if (currentYear === 2026) {
-                updateAllChartsAndKPIs();
-            }
-        }
-
-        /**
-         * Toggle compare with 2025
-         */
-        function toggleCompareWith2025() {
-            compareWith2025 = document.getElementById('compareCheckbox').checked;
-
-            // Update all charts to show/hide 2025 comparison line
-            if (currentYear === 2026) {
-                updateAllChartsAndKPIs();
-            }
-        }
-
-        /**
-         * Update the scenario indicator text
-         */
-        function updateScenarioIndicator() {
-            const indicatorText = document.getElementById('scenarioIndicatorText');
-            const scenarioName = indicatorText.querySelector('.scenario-name');
-
-            // Get active scenarios
-            const activeScenarios = [];
-            if (scenarioStates.conservative) activeScenarios.push('Conservative');
-            if (scenarioStates.optimistic) activeScenarios.push('Optimistic');
-            if (scenarioStates.pessimistic) activeScenarios.push('Pessimistic');
-
-            if (activeScenarios.length === 0) {
-                scenarioName.textContent = 'None';
-            } else if (activeScenarios.length === 1) {
-                scenarioName.textContent = activeScenarios[0];
-            } else {
-                scenarioName.textContent = activeScenarios.join(', ');
-            }
-        }
-
-        /**
-         * Get the primary active scenario for comparisons
-         */
-        function getPrimaryScenario() {
-            // Priority: Conservative > Optimistic > Pessimistic
-            if (scenarioStates.conservative) return 'conservative';
-            if (scenarioStates.optimistic) return 'optimistic';
-            if (scenarioStates.pessimistic) return 'pessimistic';
-            return 'conservative'; // fallback
-        }
-
-        /**
-         * Load 2026 data from Google Sheets
-         */
-        async function load2026Data() {
-            try {
-                console.log('Loading 2026 data...');
-
-                // Backup current 2025 data
-                if (!data2025Backup) {
-                    data2025Backup = {
-                        data: JSON.parse(JSON.stringify(data)),
-                        monthlyData: JSON.parse(JSON.stringify(monthlyData)),
-                        monthlyBudget: JSON.parse(JSON.stringify(monthlyBudget)),
-                        revenueBreakdown: JSON.parse(JSON.stringify(revenueBreakdown)),
-                        opexData: JSON.parse(JSON.stringify(opexData)),
-                        contributionMarginActual: [...contributionMarginActual],
-                        contributionMarginBudget: [...contributionMarginBudget]
-                    };
-                }
-
-                // Load all 2026 data sources in parallel
-                const [
-                    kpiActualData,
-                    kpiOptimisticData,
-                    kpiConservativeData,
-                    kpiPessimisticData,
-                    plActualData,
-                    plOptimisticData,
-                    plConservativeData,
-                    plPessimisticData
-                ] = await Promise.all([
-                    fetch(DATA_SOURCES_2026.kpiActual).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.kpiBudgetOptimistic).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.kpiBudgetConservative).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.kpiBudgetPessimistic).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plActual).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plBudgetOptimistic).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plBudgetConservative).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plBudgetPessimistic).then(r => r.text())
-                ]);
-
-                // Parse KPI data for each scenario
-                data2026.actual.monthlyData = parseKPIData(kpiActualData);
-                data2026.optimistic.monthlyBudget = parseKPIData(kpiOptimisticData);
-                data2026.conservative.monthlyBudget = parseKPIData(kpiConservativeData);
-                data2026.pessimistic.monthlyBudget = parseKPIData(kpiPessimisticData);
-
-                // Parse P&L data for each scenario
-                parse2026PLData(plActualData, 'actual');
-                parse2026PLData(plOptimisticData, 'optimistic');
-                parse2026PLData(plConservativeData, 'conservative');
-                parse2026PLData(plPessimisticData, 'pessimistic');
-
-                // Aggregate quarterly/yearly data
-                aggregate2026Data();
-
-                data2026Loaded = true;
-                console.log('2026 data loaded successfully');
-
-                // Apply 2026 data to current view
-                applyYearData();
-
-            } catch (error) {
-                console.error('Error loading 2026 data:', error);
-                alert('Error loading 2026 data. Please check console for details.');
-            }
-        }
-
-        /**
-         * Parse KPI CSV data into monthly structure
-         */
-        function parseKPIData(csvText) {
-            const parsed = parseCSV(csvText);
-            const monthlyKPIs = {};
-
-            // Find the row indices for each KPI
-            let rowMap = {};
-            parsed.forEach((row, idx) => {
-                if (row[0]) {
-                    const label = row[0].toLowerCase().trim();
-                    if (label.includes('new users') || label.includes('signups')) rowMap.signups = idx;
-                    if (label.includes('spend') && !label.includes('cpnu')) rowMap.spend = idx;
-                    if (label.includes('cpnu') || label.includes('cost per new user')) rowMap.cpnu = idx;
-                    if (label.includes('new subs') || label.includes('subscribers')) rowMap.subs = idx;
-                    if (label.includes('cac') && !label.includes('ltv')) rowMap.cac = idx;
-                    if (label.includes('arpu')) rowMap.arpu = idx;
-                    if (label.includes('conversion')) rowMap.conversion = idx;
-                    if (label.includes('ltv/cac') || label.includes('ltv:cac')) rowMap.ltvCac = idx;
-                }
-            });
-
-            // Extract monthly values
-            monthNames.forEach((month, i) => {
-                monthlyKPIs[month] = {
-                    signups: rowMap.signups !== undefined ? parseNumber(parsed[rowMap.signups]?.[i + 1]) : 0,
-                    spend: rowMap.spend !== undefined ? parseNumber(parsed[rowMap.spend]?.[i + 1]) : 0,
-                    cpnu: rowMap.cpnu !== undefined ? parseNumber(parsed[rowMap.cpnu]?.[i + 1]) : 0,
-                    subs: rowMap.subs !== undefined ? parseNumber(parsed[rowMap.subs]?.[i + 1]) : 0,
-                    cac: rowMap.cac !== undefined ? parseNumber(parsed[rowMap.cac]?.[i + 1]) : 0,
-                    arpu: rowMap.arpu !== undefined ? parseNumber(parsed[rowMap.arpu]?.[i + 1]) : 0,
-                    conversion: rowMap.conversion !== undefined ? parseNumber(parsed[rowMap.conversion]?.[i + 1]) : 0,
-                    ltvCac: rowMap.ltvCac !== undefined ? parseNumber(parsed[rowMap.ltvCac]?.[i + 1]) : 0,
-                    revenue: 0,
-                    ebitda: 0,
-                    burnRate: 0
-                };
-            });
-
-            return monthlyKPIs;
-        }
-
-        /**
-         * Parse P&L data for 2026
-         */
-        function parse2026PLData(csvText, scenario) {
-            const parsed = parseCSV(csvText);
-
-            // Find revenue and EBITDA rows
-            let grossSalesRow = null;
-            let ebitdaRow = null;
-
-            parsed.forEach(row => {
-                if (row[0]) {
-                    const label = row[0].toLowerCase().trim();
-                    if (label.includes('gross sales') || label === 'revenue' || label === 'total revenue') {
-                        grossSalesRow = row;
-                    }
-                    if (label.includes('ebitda') && !label.includes('margin')) {
-                        ebitdaRow = row;
-                    }
-                }
-            });
-
-            // Get the correct monthly data object
-            let targetMonthlyData;
-            if (scenario === 'actual') {
-                targetMonthlyData = data2026.actual.monthlyData;
-            } else {
-                targetMonthlyData = data2026[scenario].monthlyBudget;
-            }
-
-            // Update monthly data with P&L values
-            monthNames.forEach((month, i) => {
-                if (!targetMonthlyData[month]) {
-                    targetMonthlyData[month] = {};
-                }
-                if (grossSalesRow) {
-                    targetMonthlyData[month].revenue = parseNumber(grossSalesRow[i + 1]);
-                }
-                if (ebitdaRow) {
-                    targetMonthlyData[month].ebitda = parseNumber(ebitdaRow[i + 1]);
-                    targetMonthlyData[month].burnRate = Math.abs(parseNumber(ebitdaRow[i + 1]));
-                }
-            });
-        }
-
-        /**
-         * Aggregate 2026 monthly data into quarterly and yearly
-         */
-        function aggregate2026Data() {
-            const scenarios = ['actual', 'optimistic', 'conservative', 'pessimistic'];
-
-            scenarios.forEach(scenario => {
-                const sourceData = scenario === 'actual' ? data2026.actual.monthlyData : data2026[scenario].monthlyBudget;
-                const targetData = scenario === 'actual' ? data2026.actual : data2026[scenario];
-
-                if (!targetData.real) targetData.real = {};
-                if (!targetData.budget) targetData.budget = {};
-
-                // Aggregate quarters
-                ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                    const qMonths = quarterMonths[q];
-                    let qData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
-                    let count = 0;
-
-                    qMonths.forEach(m => {
-                        if (sourceData[m] && (sourceData[m].revenue || sourceData[m].subs)) {
-                            qData.revenue += sourceData[m].revenue || 0;
-                            qData.ebitda += sourceData[m].ebitda || 0;
-                            qData.subs += sourceData[m].subs || 0;
-                            qData.spend += sourceData[m].spend || 0;
-                            qData.arpu += sourceData[m].arpu || 0;
-                            qData.cac += sourceData[m].cac || 0;
-                            qData.conversion += sourceData[m].conversion || 0;
-                            qData.ltvCac += sourceData[m].ltvCac || 0;
-                            count++;
-                        }
-                    });
-
-                    // Average rate-based metrics
-                    if (count > 0) {
-                        qData.arpu = qData.arpu / count;
-                        qData.cac = qData.cac / count;
-                        qData.conversion = qData.conversion / count;
-                        qData.ltvCac = qData.ltvCac / count;
-                    }
-                    qData.burnRate = Math.abs(qData.ebitda);
-
-                    if (scenario === 'actual') {
-                        targetData.real[q] = qData;
-                    } else {
-                        targetData.budget[q] = qData;
-                    }
-                });
-
-                // Aggregate semesters
-                ['H1', 'H2'].forEach(h => {
-                    const hMonths = h === 'H1'
-                        ? ['January', 'February', 'March', 'April', 'May', 'June']
-                        : ['July', 'August', 'September', 'October', 'November', 'December'];
-
-                    let hData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
-                    let count = 0;
-
-                    hMonths.forEach(m => {
-                        if (sourceData[m] && (sourceData[m].revenue || sourceData[m].subs)) {
-                            hData.revenue += sourceData[m].revenue || 0;
-                            hData.ebitda += sourceData[m].ebitda || 0;
-                            hData.subs += sourceData[m].subs || 0;
-                            hData.spend += sourceData[m].spend || 0;
-                            hData.arpu += sourceData[m].arpu || 0;
-                            hData.cac += sourceData[m].cac || 0;
-                            hData.conversion += sourceData[m].conversion || 0;
-                            hData.ltvCac += sourceData[m].ltvCac || 0;
-                            count++;
-                        }
-                    });
-
-                    if (count > 0) {
-                        hData.arpu = hData.arpu / count;
-                        hData.cac = hData.cac / count;
-                        hData.conversion = hData.conversion / count;
-                        hData.ltvCac = hData.ltvCac / count;
-                    }
-                    hData.burnRate = Math.abs(hData.ebitda);
-
-                    if (scenario === 'actual') {
-                        targetData.real[h] = hData;
-                    } else {
-                        targetData.budget[h] = hData;
-                    }
-                });
-
-                // Aggregate yearly
-                let yearData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
-                let count = 0;
-
-                monthNames.forEach(m => {
-                    if (sourceData[m] && (sourceData[m].revenue || sourceData[m].subs)) {
-                        yearData.revenue += sourceData[m].revenue || 0;
-                        yearData.ebitda += sourceData[m].ebitda || 0;
-                        yearData.subs += sourceData[m].subs || 0;
-                        yearData.spend += sourceData[m].spend || 0;
-                        yearData.arpu += sourceData[m].arpu || 0;
-                        yearData.cac += sourceData[m].cac || 0;
-                        yearData.conversion += sourceData[m].conversion || 0;
-                        yearData.ltvCac += sourceData[m].ltvCac || 0;
-                        count++;
-                    }
-                });
-
-                if (count > 0) {
-                    yearData.arpu = yearData.arpu / count;
-                    yearData.cac = yearData.cac / count;
-                    yearData.conversion = yearData.conversion / count;
-                    yearData.ltvCac = yearData.ltvCac / count;
-                }
-                yearData.burnRate = Math.abs(yearData.ebitda);
-
-                if (scenario === 'actual') {
-                    targetData.real['YEAR'] = yearData;
-                } else {
-                    targetData.budget['YEAR'] = yearData;
-                }
-            });
-        }
-
-        /**
-         * Apply 2026 data to the current view
-         */
-        function applyYearData() {
-            if (currentYear !== 2026) return;
-
-            // Get primary scenario for budget comparison
-            const primaryScenario = getPrimaryScenario();
-
-            // Set monthlyData to 2026 actual
-            monthlyData = data2026.actual.monthlyData;
-
-            // Set monthlyBudget to primary scenario
-            monthlyBudget = data2026[primaryScenario].monthlyBudget;
-
-            // Set aggregated data
-            data.real = data2026.actual.real;
-            data.budget = data2026[primaryScenario].budget;
-
-            // Update all visualizations
-            updateAllChartsAndKPIs();
-        }
-
-        /**
-         * Restore 2025 data
-         */
-        function restore2025Data() {
-            if (!data2025Backup) return;
-
-            data = data2025Backup.data;
-            monthlyData = data2025Backup.monthlyData;
-            monthlyBudget = data2025Backup.monthlyBudget;
-            revenueBreakdown = data2025Backup.revenueBreakdown;
-            opexData = data2025Backup.opexData;
-            contributionMarginActual = data2025Backup.contributionMarginActual;
-            contributionMarginBudget = data2025Backup.contributionMarginBudget;
-
-            // Update all visualizations
-            updateAllChartsAndKPIs();
-        }
-
-        /**
-         * Update all charts and KPIs
-         */
-        function updateAllChartsAndKPIs() {
-            updateKPIs();
-            updateQuarterDrillDown();
-            updateRevenueChart();
-            updateEbitdaChart();
-            updateOpexDonutChart();
-            updateOpexTable();
-            updateAllInsights();
-            updateContributionMarginChart();
-        }
-
-        /**
-         * Update contribution margin chart if it exists
-         */
-        function updateContributionMarginChart() {
-            if (charts.contributionMargin) {
-                // Recalculate contribution margin for current year
-                const actualData = monthNames.map(m => (monthlyData[m]?.revenue || 0) / 1000);
-                const budgetData = monthNames.map(m => (monthlyBudget[m]?.revenue || 0) / 1000);
-
-                charts.contributionMargin.data.datasets[0].data = actualData;
-                charts.contributionMargin.data.datasets[1].data = budgetData;
-                charts.contributionMargin.update();
-            }
+            indicator.innerHTML = `Showing: <strong>${displayText}</strong>`;
         }
 
         // ============================================
@@ -3691,12 +2560,7 @@
         function getDataForPeriod() {
             let real, budget;
 
-            // Handle custom range
-            if (customRangeActive) {
-                const months = getCustomRangeMonths();
-                real = aggregateMonthlyData(months, monthlyData);
-                budget = aggregateMonthlyData(months, monthlyBudget);
-            } else if (currentGranularity === 'monthly') {
+            if (currentGranularity === 'monthly') {
                 real = monthlyData[currentPeriod];
                 budget = monthlyBudget[currentPeriod];
             } else if (currentGranularity === 'quarterly') {
@@ -3712,40 +2576,6 @@
             }
 
             return { real, budget };
-        }
-
-        // Helper function to aggregate monthly data for custom range
-        function aggregateMonthlyData(months, dataSource) {
-            let totalRevenue = 0, totalEbitda = 0, totalSubs = 0, totalSpend = 0;
-            let totalArpu = 0, totalCac = 0, totalConv = 0, totalLtvCac = 0;
-            let count = 0;
-
-            for (const month of months) {
-                if (dataSource[month]) {
-                    const d = dataSource[month];
-                    totalRevenue += d.revenue || 0;
-                    totalEbitda += d.ebitda || 0;
-                    totalSubs += d.subs || 0;
-                    totalSpend += d.spend || 0;
-                    totalArpu += d.arpu || 0;
-                    totalCac += d.cac || 0;
-                    totalConv += d.conversion || 0;
-                    totalLtvCac += d.ltvCac || 0;
-                    count++;
-                }
-            }
-
-            return {
-                revenue: totalRevenue,
-                ebitda: totalEbitda,
-                subs: totalSubs,
-                spend: totalSpend,
-                arpu: count > 0 ? totalArpu / count : 0,
-                cac: count > 0 ? totalCac / count : 0,
-                conversion: count > 0 ? totalConv / count : 0,
-                ltvCac: count > 0 ? totalLtvCac / count : 0,
-                burnRate: Math.abs(totalEbitda)
-            };
         }
 
         function updateKPIs() {
@@ -4051,27 +2881,6 @@
             let actualData = [];
             let budgetData = [];
 
-            // Handle custom range - show monthly data for selected months
-            if (customRangeActive) {
-                const months = getCustomRangeMonths();
-                labels = months.map(m => monthLabelsShort[monthNames.indexOf(m)]);
-                if (filter === 'all') {
-                    months.forEach(month => {
-                        actualData.push((monthlyData[month]?.revenue || 0) / 1000);
-                        budgetData.push((monthlyBudget[month]?.revenue || 0) / 1000);
-                    });
-                } else {
-                    // For category filters, approximate from quarterly data
-                    months.forEach(month => {
-                        const monthIdx = monthNames.indexOf(month);
-                        const q = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'][monthIdx];
-                        actualData.push((revenueBreakdown.actual[filter]?.[q] || 0) / 3000);
-                        budgetData.push((revenueBreakdown.budget[filter]?.[q] || 0) / 3000);
-                    });
-                }
-                return { labels, actual: actualData, budget: budgetData };
-            }
-
             switch(currentGranularity) {
                 case 'monthly':
                     labels = monthLabelsShort;
@@ -4122,15 +2931,15 @@
 
                 case 'yearly':
                 default:
-                    labels = [`FY ${currentYear}`];
+                    labels = ['FY 2025'];
                     if (filter === 'all') {
-                        actualData = [(data.real.YEAR?.revenue || 0) / 1000];
-                        budgetData = [(data.budget.YEAR?.revenue || 0) / 1000];
+                        actualData = [data.real.YEAR.revenue / 1000];
+                        budgetData = [data.budget.YEAR.revenue / 1000];
                     } else {
-                        const yearActual = (revenueBreakdown.actual?.[filter]?.Q1 || 0) + (revenueBreakdown.actual?.[filter]?.Q2 || 0) +
-                                          (revenueBreakdown.actual?.[filter]?.Q3 || 0) + (revenueBreakdown.actual?.[filter]?.Q4 || 0);
-                        const yearBudget = (revenueBreakdown.budget?.[filter]?.Q1 || 0) + (revenueBreakdown.budget?.[filter]?.Q2 || 0) +
-                                          (revenueBreakdown.budget?.[filter]?.Q3 || 0) + (revenueBreakdown.budget?.[filter]?.Q4 || 0);
+                        const yearActual = revenueBreakdown.actual[filter].Q1 + revenueBreakdown.actual[filter].Q2 +
+                                          revenueBreakdown.actual[filter].Q3 + revenueBreakdown.actual[filter].Q4;
+                        const yearBudget = revenueBreakdown.budget[filter].Q1 + revenueBreakdown.budget[filter].Q2 +
+                                          revenueBreakdown.budget[filter].Q3 + revenueBreakdown.budget[filter].Q4;
                         actualData = [yearActual / 1000];
                         budgetData = [yearBudget / 1000];
                     }
@@ -4141,14 +2950,6 @@
         }
 
         function getRevenueChartTitle() {
-            if (customRangeActive) {
-                const fromMonth = monthNames[customRangeFrom];
-                const toMonth = monthNames[customRangeTo];
-                if (customRangeFrom === customRangeTo) {
-                    return `${fromMonth} Revenue: Actual vs Budget`;
-                }
-                return `${fromMonth} - ${toMonth} Revenue: Actual vs Budget`;
-            }
             const periodNames = {
                 'monthly': 'Monthly',
                 'quarterly': 'Quarterly',
@@ -4260,171 +3061,10 @@
 
             charts.revenue.data.labels = revenueData.labels;
             charts.revenue.data.datasets[0].data = revenueData.actual;
-            charts.revenue.data.datasets[0].label = `Actual ${currentYear}`;
             charts.revenue.data.datasets[1].data = revenueData.budget;
-            charts.revenue.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
-
-            // Remove extra scenario datasets if any
-            while (charts.revenue.data.datasets.length > 2) {
-                // Keep CAGR trendline if it exists
-                const lastDataset = charts.revenue.data.datasets[charts.revenue.data.datasets.length - 1];
-                if (lastDataset.label === 'CAGR Trend') break;
-                charts.revenue.data.datasets.pop();
-            }
-
-            // Add 2026 scenario lines if applicable
-            if (currentYear === 2026) {
-                add2026ScenarioDatasets(charts.revenue, 'revenue');
-            }
-
-            // Add 2025 comparison line if enabled
-            if (currentYear === 2026 && compareWith2025 && data2025Backup) {
-                add2025ComparisonDataset(charts.revenue, 'revenue');
-            }
-
-            // Handle CAGR trend line
-            updateRevenueCagrTrendline();
-
             charts.revenue.update();
 
             updateRevenueBreakdown(currentRevenueFilter);
-        }
-
-        /**
-         * Add 2026 scenario datasets to a chart
-         */
-        function add2026ScenarioDatasets(chart, metric) {
-            const scenarioColors = {
-                optimistic: { border: '#10B981', bg: 'rgba(16, 185, 129, 0.1)' },
-                conservative: { border: '#3B82F6', bg: 'rgba(59, 130, 246, 0.1)' },
-                pessimistic: { border: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' }
-            };
-
-            // Get the primary scenario (already shown in main budget bar)
-            const primaryScenario = getPrimaryScenario();
-
-            // Add lines for other active scenarios
-            ['optimistic', 'conservative', 'pessimistic'].forEach(scenario => {
-                if (scenarioStates[scenario] && scenario !== primaryScenario) {
-                    const scenarioData = getScenarioData(scenario, metric);
-
-                    // Check if this dataset already exists
-                    const existingIdx = chart.data.datasets.findIndex(ds => ds.label === `${scenario.charAt(0).toUpperCase() + scenario.slice(1)} Budget`);
-                    if (existingIdx === -1) {
-                        chart.data.datasets.push({
-                            label: `${scenario.charAt(0).toUpperCase() + scenario.slice(1)} Budget`,
-                            data: scenarioData,
-                            type: 'line',
-                            borderColor: scenarioColors[scenario].border,
-                            backgroundColor: scenarioColors[scenario].bg,
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointBackgroundColor: scenarioColors[scenario].border,
-                            pointRadius: 3,
-                            fill: false,
-                            tension: 0.1,
-                            order: 1
-                        });
-                    }
-                }
-            });
-        }
-
-        /**
-         * Get scenario data for a specific metric
-         */
-        function getScenarioData(scenario, metric) {
-            const scenarioMonthlyData = data2026[scenario].monthlyBudget;
-            let resultData = [];
-
-            if (customRangeActive) {
-                const months = getCustomRangeMonths();
-                months.forEach(month => {
-                    resultData.push((scenarioMonthlyData[month]?.[metric] || 0) / 1000);
-                });
-            } else {
-                switch(currentGranularity) {
-                    case 'monthly':
-                        monthNames.forEach(month => {
-                            resultData.push((scenarioMonthlyData[month]?.[metric] || 0) / 1000);
-                        });
-                        break;
-                    case 'quarterly':
-                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                            resultData.push((data2026[scenario].budget[q]?.[metric] || 0) / 1000);
-                        });
-                        break;
-                    case 'semester':
-                        resultData = [
-                            (data2026[scenario].budget.H1?.[metric] || 0) / 1000,
-                            (data2026[scenario].budget.H2?.[metric] || 0) / 1000
-                        ];
-                        break;
-                    case 'yearly':
-                    default:
-                        resultData = [(data2026[scenario].budget.YEAR?.[metric] || 0) / 1000];
-                        break;
-                }
-            }
-
-            return resultData;
-        }
-
-        /**
-         * Add 2025 comparison dataset to a chart
-         */
-        function add2025ComparisonDataset(chart, metric) {
-            const backup = data2025Backup;
-            let comparisonData = [];
-
-            if (customRangeActive) {
-                const months = getCustomRangeMonths();
-                months.forEach(month => {
-                    comparisonData.push((backup.monthlyData[month]?.[metric] || 0) / 1000);
-                });
-            } else {
-                switch(currentGranularity) {
-                    case 'monthly':
-                        monthNames.forEach(month => {
-                            comparisonData.push((backup.monthlyData[month]?.[metric] || 0) / 1000);
-                        });
-                        break;
-                    case 'quarterly':
-                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                            comparisonData.push((backup.data.real[q]?.[metric] || 0) / 1000);
-                        });
-                        break;
-                    case 'semester':
-                        comparisonData = [
-                            (backup.data.real.H1?.[metric] || 0) / 1000,
-                            (backup.data.real.H2?.[metric] || 0) / 1000
-                        ];
-                        break;
-                    case 'yearly':
-                    default:
-                        comparisonData = [(backup.data.real.YEAR?.[metric] || 0) / 1000];
-                        break;
-                }
-            }
-
-            // Check if 2025 comparison already exists
-            const existingIdx = chart.data.datasets.findIndex(ds => ds.label === '2025 Actual');
-            if (existingIdx === -1) {
-                chart.data.datasets.push({
-                    label: '2025 Actual',
-                    data: comparisonData,
-                    type: 'line',
-                    borderColor: '#9CA3AF',
-                    backgroundColor: 'rgba(156, 163, 175, 0.1)',
-                    borderWidth: 2,
-                    borderDash: [8, 4],
-                    pointBackgroundColor: '#9CA3AF',
-                    pointRadius: 3,
-                    fill: false,
-                    tension: 0.1,
-                    order: 2
-                });
-            }
         }
 
         // ============================================
@@ -4526,45 +3166,34 @@
             let actualData = [];
             let budgetData = [];
 
-            // Handle custom range
-            if (customRangeActive) {
-                const months = getCustomRangeMonths();
-                labels = months.map(m => monthLabelsShort[monthNames.indexOf(m)]);
-                months.forEach(month => {
-                    actualData.push((monthlyData[month]?.ebitda || 0) / 1000);
-                    budgetData.push((monthlyBudget[month]?.ebitda || 0) / 1000);
-                });
-                return { labels, actual: actualData, budget: budgetData };
-            }
-
             switch(currentGranularity) {
                 case 'monthly':
                     labels = monthLabelsShort;
                     monthNames.forEach(month => {
-                        actualData.push((monthlyData[month]?.ebitda || 0) / 1000);
-                        budgetData.push((monthlyBudget[month]?.ebitda || 0) / 1000);
+                        actualData.push(monthlyData[month].ebitda / 1000);
+                        budgetData.push(monthlyBudget[month].ebitda / 1000);
                     });
                     break;
 
                 case 'quarterly':
                     labels = ['Q1', 'Q2', 'Q3', 'Q4'];
                     ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                        actualData.push((data.real[q]?.ebitda || 0) / 1000);
-                        budgetData.push((data.budget[q]?.ebitda || 0) / 1000);
+                        actualData.push(data.real[q].ebitda / 1000);
+                        budgetData.push(data.budget[q].ebitda / 1000);
                     });
                     break;
 
                 case 'semester':
                     labels = ['H1', 'H2'];
-                    actualData = [(data.real.H1?.ebitda || 0) / 1000, (data.real.H2?.ebitda || 0) / 1000];
-                    budgetData = [(data.budget.H1?.ebitda || 0) / 1000, (data.budget.H2?.ebitda || 0) / 1000];
+                    actualData = [data.real.H1.ebitda / 1000, data.real.H2.ebitda / 1000];
+                    budgetData = [data.budget.H1.ebitda / 1000, data.budget.H2.ebitda / 1000];
                     break;
 
                 case 'yearly':
                 default:
-                    labels = [`FY ${currentYear}`];
-                    actualData = [(data.real.YEAR?.ebitda || 0) / 1000];
-                    budgetData = [(data.budget.YEAR?.ebitda || 0) / 1000];
+                    labels = ['FY 2025'];
+                    actualData = [data.real.YEAR.ebitda / 1000];
+                    budgetData = [data.budget.YEAR.ebitda / 1000];
                     break;
             }
 
@@ -4572,14 +3201,6 @@
         }
 
         function getEbitdaChartTitle() {
-            if (customRangeActive) {
-                const fromMonth = monthNames[customRangeFrom];
-                const toMonth = monthNames[customRangeTo];
-                if (customRangeFrom === customRangeTo) {
-                    return `${fromMonth} EBITDA: Actual vs Budget`;
-                }
-                return `${fromMonth} - ${toMonth} EBITDA: Actual vs Budget`;
-            }
             const periodNames = {
                 'monthly': 'Monthly',
                 'quarterly': 'Quarterly',
@@ -4692,270 +3313,8 @@
 
             charts.ebitda.data.labels = ebitdaData.labels;
             charts.ebitda.data.datasets[0].data = ebitdaData.actual;
-            charts.ebitda.data.datasets[0].label = `Actual ${currentYear}`;
             charts.ebitda.data.datasets[1].data = ebitdaData.budget;
-            charts.ebitda.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
-
-            // Remove extra scenario datasets if any
-            while (charts.ebitda.data.datasets.length > 2) {
-                const lastDataset = charts.ebitda.data.datasets[charts.ebitda.data.datasets.length - 1];
-                if (lastDataset.label === 'CAGR Trend') break;
-                charts.ebitda.data.datasets.pop();
-            }
-
-            // Add 2026 scenario lines if applicable
-            if (currentYear === 2026) {
-                add2026ScenarioDatasets(charts.ebitda, 'ebitda');
-            }
-
-            // Add 2025 comparison line if enabled
-            if (currentYear === 2026 && compareWith2025 && data2025Backup) {
-                add2025ComparisonDataset(charts.ebitda, 'ebitda');
-            }
-
-            // Handle CAGR trend line
-            updateEbitdaCagrTrendline();
-
             charts.ebitda.update();
-        }
-
-        // ============================================
-        // CAGR TREND CALCULATIONS AND DISPLAY
-        // ============================================
-
-        /**
-         * Calculate growth rate based on data series
-         * Returns the period-over-period growth rate
-         */
-        function calculateGrowthRate(dataArray) {
-            if (!dataArray || dataArray.length < 2) return null;
-
-            const firstValue = dataArray[0];
-            const lastValue = dataArray[dataArray.length - 1];
-            const periods = dataArray.length - 1;
-
-            // Handle edge cases
-            if (firstValue === 0 || firstValue === null || firstValue === undefined) return null;
-            if (lastValue === null || lastValue === undefined) return null;
-
-            // For negative values (like EBITDA losses), we need special handling
-            if (firstValue < 0 && lastValue < 0) {
-                // Both negative - check if loss is decreasing (improving)
-                const ratio = lastValue / firstValue;
-                if (ratio <= 0) return null;
-                const cagr = (Math.pow(ratio, 1 / periods) - 1) * 100;
-                return cagr;
-            } else if (firstValue < 0 && lastValue >= 0) {
-                // Went from loss to profit - can't calculate traditional CAGR
-                return null;
-            } else if (firstValue > 0 && lastValue < 0) {
-                // Went from profit to loss - can't calculate traditional CAGR
-                return null;
-            }
-
-            // Normal case: both positive
-            const cagr = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
-            return cagr;
-        }
-
-        /**
-         * Generate trendline data based on CAGR
-         */
-        function generateTrendlineData(startValue, growthRate, periods) {
-            const trendData = [];
-            for (let i = 0; i < periods; i++) {
-                const value = startValue * Math.pow(1 + growthRate / 100, i);
-                trendData.push(value);
-            }
-            return trendData;
-        }
-
-        /**
-         * Get the period label for CAGR display
-         */
-        function getCagrPeriodLabel() {
-            if (customRangeActive) {
-                const months = getCustomRangeMonths();
-                if (months.length <= 1) return 'Growth';
-                return 'Period Growth';
-            }
-
-            switch(currentGranularity) {
-                case 'monthly':
-                    return 'MoM Growth';
-                case 'quarterly':
-                    return 'QoQ Growth';
-                case 'semester':
-                    return 'Semester Growth';
-                case 'yearly':
-                default:
-                    return 'CAGR';
-            }
-        }
-
-        /**
-         * Update CAGR badge display
-         */
-        function updateCagrBadge(badgeId, cagrValue, show) {
-            const badge = document.getElementById(badgeId);
-            if (!badge) return;
-
-            if (!show || cagrValue === null) {
-                badge.classList.add('hidden');
-                return;
-            }
-
-            badge.classList.remove('hidden');
-
-            // Update badge class based on value
-            badge.classList.remove('positive', 'negative', 'neutral');
-            if (cagrValue > 0) {
-                badge.classList.add('positive');
-            } else if (cagrValue < 0) {
-                badge.classList.add('negative');
-            } else {
-                badge.classList.add('neutral');
-            }
-
-            // Update badge content
-            const arrowEl = badge.querySelector('.badge-arrow');
-            const valueEl = badge.querySelector('.badge-value');
-
-            if (arrowEl) {
-                arrowEl.textContent = cagrValue >= 0 ? '↑' : '↓';
-            }
-
-            if (valueEl) {
-                const label = getCagrPeriodLabel();
-                const sign = cagrValue >= 0 ? '+' : '';
-                valueEl.textContent = `${label}: ${sign}${cagrValue.toFixed(1)}%`;
-            }
-        }
-
-        /**
-         * Toggle Revenue CAGR trend visibility
-         */
-        function toggleRevenueCagr() {
-            showRevenueCagrTrend = !showRevenueCagrTrend;
-
-            const btn = document.getElementById('revenueCagrToggle');
-            if (btn) {
-                btn.classList.toggle('active', showRevenueCagrTrend);
-            }
-
-            updateRevenueCagrTrendline();
-            charts.revenue.update();
-        }
-
-        /**
-         * Toggle EBITDA CAGR trend visibility
-         */
-        function toggleEbitdaCagr() {
-            showEbitdaCagrTrend = !showEbitdaCagrTrend;
-
-            const btn = document.getElementById('ebitdaCagrToggle');
-            if (btn) {
-                btn.classList.toggle('active', showEbitdaCagrTrend);
-            }
-
-            updateEbitdaCagrTrendline();
-            charts.ebitda.update();
-        }
-
-        /**
-         * Update Revenue chart trendline
-         */
-        function updateRevenueCagrTrendline() {
-            if (!charts.revenue) return;
-
-            const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
-            const actualData = revenueData.actual;
-
-            // Remove existing trendline dataset if exists
-            const trendlineIndex = charts.revenue.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
-            if (trendlineIndex !== -1) {
-                charts.revenue.data.datasets.splice(trendlineIndex, 1);
-            }
-
-            // Calculate CAGR
-            const cagr = calculateGrowthRate(actualData);
-
-            // Update badge
-            updateCagrBadge('revenueCagrBadge', cagr, showRevenueCagrTrend);
-
-            if (!showRevenueCagrTrend || cagr === null || actualData.length < 2) {
-                return;
-            }
-
-            // Generate trendline data
-            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
-
-            // Add trendline dataset
-            charts.revenue.data.datasets.push({
-                label: 'CAGR Trend',
-                data: trendlineData,
-                type: 'line',
-                borderColor: '#5BA4E6',
-                backgroundColor: 'rgba(91, 164, 230, 0.1)',
-                borderWidth: 2,
-                borderDash: [6, 4],
-                pointBackgroundColor: '#5BA4E6',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                fill: false,
-                tension: 0.1,
-                order: 0 // Draw on top
-            });
-        }
-
-        /**
-         * Update EBITDA chart trendline
-         */
-        function updateEbitdaCagrTrendline() {
-            if (!charts.ebitda) return;
-
-            const ebitdaData = getEbitdaDataForGranularity();
-            const actualData = ebitdaData.actual;
-
-            // Remove existing trendline dataset if exists
-            const trendlineIndex = charts.ebitda.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
-            if (trendlineIndex !== -1) {
-                charts.ebitda.data.datasets.splice(trendlineIndex, 1);
-            }
-
-            // Calculate CAGR
-            const cagr = calculateGrowthRate(actualData);
-
-            // Update badge
-            updateCagrBadge('ebitdaCagrBadge', cagr, showEbitdaCagrTrend);
-
-            if (!showEbitdaCagrTrend || cagr === null || actualData.length < 2) {
-                return;
-            }
-
-            // Generate trendline data
-            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
-
-            // Add trendline dataset
-            charts.ebitda.data.datasets.push({
-                label: 'CAGR Trend',
-                data: trendlineData,
-                type: 'line',
-                borderColor: '#5BA4E6',
-                backgroundColor: 'rgba(91, 164, 230, 0.1)',
-                borderWidth: 2,
-                borderDash: [6, 4],
-                pointBackgroundColor: '#5BA4E6',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                fill: false,
-                tension: 0.1,
-                order: 0 // Draw on top
-            });
         }
 
         // ============================================
@@ -5933,18 +4292,6 @@
         // OPEX DONUT CHART
         // ============================================
         function getOpexPeriodText() {
-            // Handle custom range first
-            if (customRangeActive) {
-                const fromMonth = monthNames[customRangeFrom];
-                const toMonth = monthNames[customRangeTo];
-                const fromShort = monthLabelsShort[customRangeFrom];
-                const toShort = monthLabelsShort[customRangeTo];
-                if (customRangeFrom === customRangeTo) {
-                    return `${fromMonth} 2025`;
-                }
-                return `${fromShort}-${toShort} 2025`;
-            }
-
             switch(currentGranularity) {
                 case 'monthly':
                     return currentPeriod + ' 2025';
@@ -5977,35 +4324,28 @@
             let scaleFactor = 1;
             let monthsIncluded = [];
 
-            // Handle custom range first
-            if (customRangeActive) {
-                const numMonths = customRangeTo - customRangeFrom + 1;
-                scaleFactor = numMonths / 12;
-                monthsIncluded = getCustomRangeMonths();
-            } else {
-                switch(currentGranularity) {
-                    case 'monthly':
-                        scaleFactor = 1 / 12;
-                        monthsIncluded = [currentPeriod];
-                        break;
-                    case 'quarterly':
-                        scaleFactor = 3 / 12;
-                        monthsIncluded = quarterMonths[currentPeriod] || [];
-                        break;
-                    case 'semester':
-                        scaleFactor = 6 / 12;
-                        if (currentPeriod === 'H1') {
-                            monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
-                        } else {
-                            monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
-                        }
-                        break;
-                    case 'yearly':
-                    default:
-                        scaleFactor = 1;
-                        monthsIncluded = monthNames;
-                        break;
-                }
+            switch(currentGranularity) {
+                case 'monthly':
+                    scaleFactor = 1 / 12;
+                    monthsIncluded = [currentPeriod];
+                    break;
+                case 'quarterly':
+                    scaleFactor = 3 / 12;
+                    monthsIncluded = quarterMonths[currentPeriod] || [];
+                    break;
+                case 'semester':
+                    scaleFactor = 6 / 12;
+                    if (currentPeriod === 'H1') {
+                        monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
+                    } else {
+                        monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
+                    }
+                    break;
+                case 'yearly':
+                default:
+                    scaleFactor = 1;
+                    monthsIncluded = monthNames;
+                    break;
             }
 
             // Scale the annual OpEx data to the selected period
