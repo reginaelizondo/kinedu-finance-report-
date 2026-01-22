@@ -3367,10 +3367,11 @@
                 ]);
 
                 // Parse KPI data for each scenario
-                data2026.actual.monthlyData = parseKPIData(kpiActualData);
-                data2026.optimistic.monthlyBudget = parseKPIData(kpiOptimisticData);
-                data2026.conservative.monthlyBudget = parseKPIData(kpiConservativeData);
-                data2026.pessimistic.monthlyBudget = parseKPIData(kpiPessimisticData);
+                // Note: KPIs Actual uses specific row indices, Budget uses same structure
+                data2026.actual.monthlyData = parseKPIData(kpiActualData, 'actual');
+                data2026.optimistic.monthlyBudget = parseKPIData(kpiOptimisticData, 'budget');
+                data2026.conservative.monthlyBudget = parseKPIData(kpiConservativeData, 'budget');
+                data2026.pessimistic.monthlyBudget = parseKPIData(kpiPessimisticData, 'budget');
 
                 // Parse P&L data for each scenario
                 parse2026PLData(plActualData, 'actual');
@@ -3395,38 +3396,73 @@
 
         /**
          * Parse KPI CSV data into monthly structure
+         *
+         * KPIs_2026_Actual row mapping (0-based index):
+         * - Row 2 (idx 1): Marketing Spend
+         * - Row 5 (idx 4): Signups (New Users)
+         * - Row 6 (idx 5): CPNU
+         * - Row 7 (idx 6): FTs Started (Trials Started)
+         * - Row 9 (idx 8): FTs Converted (Trials Converted)
+         * - Row 11 (idx 10): CAC
+         * - Row 12 (idx 11): New Subscriptions
+         * - Row 18 (idx 17): Conversion Rate
+         * - Row 21 (idx 20): ARPU
+         * - Row 42 (idx 41): LTV (LTR)
+         * - Row 43 (idx 42): Churn Rate
          */
-        function parseKPIData(csvText) {
+        function parseKPIData(csvText, scenario = 'actual') {
             const parsed = parseCSV(csvText);
             const monthlyKPIs = {};
 
-            // Find the row indices for each KPI
-            let rowMap = {};
-            parsed.forEach((row, idx) => {
-                if (row[0]) {
-                    const label = row[0].toLowerCase().trim();
-                    if (label.includes('new users') || label.includes('signups')) rowMap.signups = idx;
-                    if (label.includes('spend') && !label.includes('cpnu')) rowMap.spend = idx;
-                    if (label.includes('cpnu') || label.includes('cost per new user')) rowMap.cpnu = idx;
-                    if (label.includes('new subs') || label.includes('subscribers')) rowMap.subs = idx;
-                    if (label.includes('cac') && !label.includes('ltv')) rowMap.cac = idx;
-                    if (label.includes('arpu')) rowMap.arpu = idx;
-                    if (label.includes('conversion')) rowMap.conversion = idx;
-                    if (label.includes('ltv/cac') || label.includes('ltv:cac')) rowMap.ltvCac = idx;
-                }
-            });
+            // Use specific row indices for KPIs_2026_Actual
+            // Row numbers are 1-based in spreadsheet, so subtract 1 for 0-based index
+            const rowIndices = {
+                spend: 1,           // Row 2: Marketing Spend
+                signups: 4,         // Row 5: Signups (New Users)
+                cpnu: 5,            // Row 6: CPNU
+                trialsStarted: 6,   // Row 7: FTs Started
+                trialsConverted: 8, // Row 9: FTs Converted
+                cac: 10,            // Row 11: CAC
+                subs: 11,           // Row 12: New Subscriptions
+                conversion: 17,     // Row 18: Conversion Rate
+                arpu: 20,           // Row 21: ARPU
+                ltv: 41,            // Row 42: LTV (LTR)
+                churn: 42           // Row 43: Churn Rate
+            };
 
-            // Extract monthly values
+            // Extract monthly values (Column B = index 1 for January, etc.)
             monthNames.forEach((month, i) => {
+                const colIdx = i + 1; // Column B is index 1
+
+                const spend = parsed[rowIndices.spend] ? parseNumber(parsed[rowIndices.spend][colIdx]) : 0;
+                const signups = parsed[rowIndices.signups] ? parseNumber(parsed[rowIndices.signups][colIdx]) : 0;
+                const cpnu = parsed[rowIndices.cpnu] ? parseNumber(parsed[rowIndices.cpnu][colIdx]) : 0;
+                const trialsStarted = parsed[rowIndices.trialsStarted] ? parseNumber(parsed[rowIndices.trialsStarted][colIdx]) : 0;
+                const trialsConverted = parsed[rowIndices.trialsConverted] ? parseNumber(parsed[rowIndices.trialsConverted][colIdx]) : 0;
+                const cac = parsed[rowIndices.cac] ? parseNumber(parsed[rowIndices.cac][colIdx]) : 0;
+                const subs = parsed[rowIndices.subs] ? parseNumber(parsed[rowIndices.subs][colIdx]) : 0;
+                const conversion = parsed[rowIndices.conversion] ? parseNumber(parsed[rowIndices.conversion][colIdx]) : 0;
+                const arpu = parsed[rowIndices.arpu] ? parseNumber(parsed[rowIndices.arpu][colIdx]) : 0;
+                const ltv = parsed[rowIndices.ltv] ? parseNumber(parsed[rowIndices.ltv][colIdx]) : 0;
+                const churn = parsed[rowIndices.churn] ? parseNumber(parsed[rowIndices.churn][colIdx]) : 0;
+
+                // Calculate LTV/CAC ratio
+                const ltvCac = cac > 0 ? ltv / cac : 0;
+
                 monthlyKPIs[month] = {
-                    signups: rowMap.signups !== undefined ? parseNumber(parsed[rowMap.signups]?.[i + 1]) : 0,
-                    spend: rowMap.spend !== undefined ? parseNumber(parsed[rowMap.spend]?.[i + 1]) : 0,
-                    cpnu: rowMap.cpnu !== undefined ? parseNumber(parsed[rowMap.cpnu]?.[i + 1]) : 0,
-                    subs: rowMap.subs !== undefined ? parseNumber(parsed[rowMap.subs]?.[i + 1]) : 0,
-                    cac: rowMap.cac !== undefined ? parseNumber(parsed[rowMap.cac]?.[i + 1]) : 0,
-                    arpu: rowMap.arpu !== undefined ? parseNumber(parsed[rowMap.arpu]?.[i + 1]) : 0,
-                    conversion: rowMap.conversion !== undefined ? parseNumber(parsed[rowMap.conversion]?.[i + 1]) : 0,
-                    ltvCac: rowMap.ltvCac !== undefined ? parseNumber(parsed[rowMap.ltvCac]?.[i + 1]) : 0,
+                    spend: spend,
+                    signups: signups,
+                    cpnu: cpnu,
+                    trialsStarted: trialsStarted,
+                    trialsConverted: trialsConverted,
+                    cac: cac,
+                    subs: subs,
+                    conversion: conversion,
+                    arpu: arpu,
+                    ltv: ltv,
+                    churn: churn,
+                    ltvCac: ltvCac,
+                    // These will be populated from P&L data
                     revenue: 0,
                     ebitda: 0,
                     burnRate: 0
@@ -3438,25 +3474,58 @@
 
         /**
          * Parse P&L data for 2026
+         *
+         * P&L BUDGET (Optimistic/Conservative/Pessimistic) row mapping:
+         * Revenue:
+         * - Row 4 (idx 3): Subscriptions IOS
+         * - Row 5 (idx 4): Subscriptions aOS
+         * - Row 6 (idx 5): Off App Sales
+         * - Row 7 (idx 6): Partnerships
+         * Marketing:
+         * - Row 18 (idx 17): Marketing Spend (Meta)
+         * - Row 19 (idx 18): Marketing Spend (Others)
+         * Margins:
+         * - Row 21 (idx 20): Contribution Margin
+         * Operating Expenses:
+         * - Row 14 (idx 13): Servers
+         * - Row 34 (idx 33): Salaries & Wages
+         * - Row 35 (idx 34): External Services
+         * - Row 36 (idx 35): Travel Expenses
+         * - Row 37 (idx 36): Services
+         * - Row 38 (idx 37): Other
+         * - Row 39 (idx 38): CAPEX
+         * Profit:
+         * - Row 27 (idx 26): Operating Profit
+         * - Row 30 (idx 29): Net Income
+         *
+         * P&L ACTUAL row mapping:
+         * Revenue:
+         * - Row 9 (idx 8): Subscription Sales (total)
+         * - Row 36 (idx 35): Subscription IOS (detail)
+         * - Row 37 (idx 36): Subscription aOS (detail)
+         * - Row 10 (idx 9): Off App Sales
+         * - Row 11 (idx 10): Partnerships
+         * - Row 14 (idx 13): Gross Revenue
+         * - Row 16 (idx 15): Net Revenue
+         * Marketing:
+         * - Row 18 (idx 17): Marketing Spend (Meta)
+         * - Row 19 (idx 18): Marketing Spend (Others)
+         * Margins:
+         * - Row 21 (idx 20): Contribution Margin
+         * Operating Expenses:
+         * - Row 15 (idx 14): Servers
+         * - Row 23 (idx 22): Salaries
+         * - Row 24 (idx 23): External Services
+         * - Row 25 (idx 24): Travel
+         * - Row 26 (idx 25): Services
+         * - Row 27 (idx 26): Others
+         * - Row 38 (idx 37): CAPEX
+         * Profit:
+         * - Row 33 (idx 32): Operating Profit (EBIT)
+         * - Row 36 (idx 35): Net Income (Cash Flow before taxes)
          */
         function parse2026PLData(csvText, scenario) {
             const parsed = parseCSV(csvText);
-
-            // Find revenue and EBITDA rows
-            let grossSalesRow = null;
-            let ebitdaRow = null;
-
-            parsed.forEach(row => {
-                if (row[0]) {
-                    const label = row[0].toLowerCase().trim();
-                    if (label.includes('gross sales') || label === 'revenue' || label === 'total revenue') {
-                        grossSalesRow = row;
-                    }
-                    if (label.includes('ebitda') && !label.includes('margin')) {
-                        ebitdaRow = row;
-                    }
-                }
-            });
 
             // Get the correct monthly data object
             let targetMonthlyData;
@@ -3466,19 +3535,197 @@
                 targetMonthlyData = data2026[scenario].monthlyBudget;
             }
 
-            // Update monthly data with P&L values
+            // Initialize revenue breakdown storage
+            if (!data2026[scenario === 'actual' ? 'actual' : scenario].revenueBreakdown) {
+                data2026[scenario === 'actual' ? 'actual' : scenario].revenueBreakdown = {
+                    actual: { subscriptions: {}, subscriptionsIOS: {}, subscriptionsAOS: {}, offapp: {}, partnership: {} },
+                    budget: { subscriptions: {}, subscriptionsIOS: {}, subscriptionsAOS: {}, offapp: {}, partnership: {} }
+                };
+            }
+
+            // Initialize OpEx totals for yearly aggregation
+            let opexTotals = {
+                servers: 0,
+                salaries: 0,
+                externalServices: 0,
+                travel: 0,
+                services: 0,
+                other: 0,
+                capex: 0
+            };
+
+            // Process each month
             monthNames.forEach((month, i) => {
+                const colIdx = i + 1; // Column B is index 1
+
                 if (!targetMonthlyData[month]) {
                     targetMonthlyData[month] = {};
                 }
-                if (grossSalesRow) {
-                    targetMonthlyData[month].revenue = parseNumber(grossSalesRow[i + 1]);
+
+                if (scenario === 'actual') {
+                    // P&L ACTUAL row indices
+                    const subsTotal = parsed[8] ? parseNumber(parsed[8][colIdx]) : 0;    // Row 9: Subscription Sales total
+                    const subsIOS = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;    // Row 36: Subscription IOS
+                    const subsAOS = parsed[36] ? parseNumber(parsed[36][colIdx]) : 0;    // Row 37: Subscription aOS
+                    const offApp = parsed[9] ? parseNumber(parsed[9][colIdx]) : 0;       // Row 10: Off App Sales
+                    const partnership = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0; // Row 11: Partnerships
+                    const grossRevenue = parsed[13] ? parseNumber(parsed[13][colIdx]) : 0; // Row 14: Gross Revenue
+                    const netRevenue = parsed[15] ? parseNumber(parsed[15][colIdx]) : 0;   // Row 16: Net Revenue
+
+                    // Marketing
+                    const mktMeta = parsed[17] ? parseNumber(parsed[17][colIdx]) : 0;    // Row 18: Marketing Meta
+                    const mktOthers = parsed[18] ? parseNumber(parsed[18][colIdx]) : 0;  // Row 19: Marketing Others
+
+                    // Contribution Margin
+                    const contributionMargin = parsed[20] ? parseNumber(parsed[20][colIdx]) : 0; // Row 21
+
+                    // Operating Expenses
+                    const servers = parsed[14] ? parseNumber(parsed[14][colIdx]) : 0;    // Row 15: Servers
+                    const salaries = parsed[22] ? parseNumber(parsed[22][colIdx]) : 0;   // Row 23: Salaries
+                    const extServices = parsed[23] ? parseNumber(parsed[23][colIdx]) : 0; // Row 24: External Services
+                    const travel = parsed[24] ? parseNumber(parsed[24][colIdx]) : 0;     // Row 25: Travel
+                    const services = parsed[25] ? parseNumber(parsed[25][colIdx]) : 0;   // Row 26: Services
+                    const other = parsed[26] ? parseNumber(parsed[26][colIdx]) : 0;      // Row 27: Others
+                    const capex = parsed[37] ? parseNumber(parsed[37][colIdx]) : 0;      // Row 38: CAPEX
+
+                    // Profit
+                    const operatingProfit = parsed[32] ? parseNumber(parsed[32][colIdx]) : 0; // Row 33: EBIT
+                    const netIncome = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;       // Row 36: Net Income
+
+                    // Store in monthly data
+                    targetMonthlyData[month].subscriptions = subsTotal;
+                    targetMonthlyData[month].subscriptionsIOS = subsIOS;
+                    targetMonthlyData[month].subscriptionsAOS = subsAOS;
+                    targetMonthlyData[month].offapp = offApp;
+                    targetMonthlyData[month].partnership = partnership;
+                    targetMonthlyData[month].revenue = grossRevenue || (subsTotal + offApp + partnership);
+                    targetMonthlyData[month].netRevenue = netRevenue;
+
+                    targetMonthlyData[month].mktSpendMeta = mktMeta;
+                    targetMonthlyData[month].mktSpendOthers = mktOthers;
+                    targetMonthlyData[month].spend = mktMeta + mktOthers;
+
+                    targetMonthlyData[month].contributionMargin = contributionMargin;
+
+                    targetMonthlyData[month].servers = servers;
+                    targetMonthlyData[month].salaries = salaries;
+                    targetMonthlyData[month].externalServices = extServices;
+                    targetMonthlyData[month].travel = travel;
+                    targetMonthlyData[month].services = services;
+                    targetMonthlyData[month].otherOpex = other;
+                    targetMonthlyData[month].capex = capex;
+
+                    targetMonthlyData[month].operatingProfit = operatingProfit;
+                    targetMonthlyData[month].ebitda = netIncome;
+                    targetMonthlyData[month].netIncome = netIncome;
+                    targetMonthlyData[month].burnRate = Math.abs(netIncome);
+
+                    // Accumulate OpEx totals
+                    opexTotals.servers += servers;
+                    opexTotals.salaries += salaries;
+                    opexTotals.externalServices += extServices;
+                    opexTotals.travel += travel;
+                    opexTotals.services += services;
+                    opexTotals.other += other;
+                    opexTotals.capex += capex;
+
+                } else {
+                    // P&L BUDGET row indices (Optimistic/Conservative/Pessimistic)
+                    const subsIOS = parsed[3] ? parseNumber(parsed[3][colIdx]) : 0;      // Row 4: Subscriptions IOS
+                    const subsAOS = parsed[4] ? parseNumber(parsed[4][colIdx]) : 0;      // Row 5: Subscriptions aOS
+                    const subsTotal = subsIOS + subsAOS;
+                    const offApp = parsed[5] ? parseNumber(parsed[5][colIdx]) : 0;       // Row 6: Off App Sales
+                    const partnership = parsed[6] ? parseNumber(parsed[6][colIdx]) : 0;  // Row 7: Partnerships
+
+                    // Marketing
+                    const mktMeta = parsed[17] ? parseNumber(parsed[17][colIdx]) : 0;    // Row 18: Marketing Meta
+                    const mktOthers = parsed[18] ? parseNumber(parsed[18][colIdx]) : 0;  // Row 19: Marketing Others
+
+                    // Contribution Margin
+                    const contributionMargin = parsed[20] ? parseNumber(parsed[20][colIdx]) : 0; // Row 21
+
+                    // Operating Expenses
+                    const servers = parsed[13] ? parseNumber(parsed[13][colIdx]) : 0;    // Row 14: Servers
+                    const salaries = parsed[33] ? parseNumber(parsed[33][colIdx]) : 0;   // Row 34: Salaries
+                    const extServices = parsed[34] ? parseNumber(parsed[34][colIdx]) : 0; // Row 35: External Services
+                    const travel = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;     // Row 36: Travel
+                    const services = parsed[36] ? parseNumber(parsed[36][colIdx]) : 0;   // Row 37: Services
+                    const other = parsed[37] ? parseNumber(parsed[37][colIdx]) : 0;      // Row 38: Other
+                    const capex = parsed[38] ? parseNumber(parsed[38][colIdx]) : 0;      // Row 39: CAPEX
+
+                    // Profit
+                    const operatingProfit = parsed[26] ? parseNumber(parsed[26][colIdx]) : 0; // Row 27: Operating Profit
+                    const netIncome = parsed[29] ? parseNumber(parsed[29][colIdx]) : 0;       // Row 30: Net Income
+
+                    // Store in monthly data
+                    targetMonthlyData[month].subscriptions = subsTotal;
+                    targetMonthlyData[month].subscriptionsIOS = subsIOS;
+                    targetMonthlyData[month].subscriptionsAOS = subsAOS;
+                    targetMonthlyData[month].offapp = offApp;
+                    targetMonthlyData[month].partnership = partnership;
+                    targetMonthlyData[month].revenue = subsTotal + offApp + partnership;
+
+                    targetMonthlyData[month].mktSpendMeta = mktMeta;
+                    targetMonthlyData[month].mktSpendOthers = mktOthers;
+                    targetMonthlyData[month].spend = mktMeta + mktOthers;
+
+                    targetMonthlyData[month].contributionMargin = contributionMargin;
+
+                    targetMonthlyData[month].servers = servers;
+                    targetMonthlyData[month].salaries = salaries;
+                    targetMonthlyData[month].externalServices = extServices;
+                    targetMonthlyData[month].travel = travel;
+                    targetMonthlyData[month].services = services;
+                    targetMonthlyData[month].otherOpex = other;
+                    targetMonthlyData[month].capex = capex;
+
+                    targetMonthlyData[month].operatingProfit = operatingProfit;
+                    targetMonthlyData[month].ebitda = netIncome;
+                    targetMonthlyData[month].netIncome = netIncome;
+                    targetMonthlyData[month].burnRate = Math.abs(netIncome);
+
+                    // Accumulate OpEx totals
+                    opexTotals.servers += servers;
+                    opexTotals.salaries += salaries;
+                    opexTotals.externalServices += extServices;
+                    opexTotals.travel += travel;
+                    opexTotals.services += services;
+                    opexTotals.other += other;
+                    opexTotals.capex += capex;
                 }
-                if (ebitdaRow) {
-                    targetMonthlyData[month].ebitda = parseNumber(ebitdaRow[i + 1]);
-                    targetMonthlyData[month].burnRate = Math.abs(parseNumber(ebitdaRow[i + 1]));
-                }
+
+                // Aggregate into quarterly revenue breakdown
+                const quarterIdx = Math.floor(i / 3);
+                const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+                const q = quarters[quarterIdx];
+                const targetBreakdown = scenario === 'actual'
+                    ? data2026.actual.revenueBreakdown.actual
+                    : data2026[scenario].revenueBreakdown.budget;
+
+                if (!targetBreakdown.subscriptions[q]) targetBreakdown.subscriptions[q] = 0;
+                if (!targetBreakdown.subscriptionsIOS[q]) targetBreakdown.subscriptionsIOS[q] = 0;
+                if (!targetBreakdown.subscriptionsAOS[q]) targetBreakdown.subscriptionsAOS[q] = 0;
+                if (!targetBreakdown.offapp[q]) targetBreakdown.offapp[q] = 0;
+                if (!targetBreakdown.partnership[q]) targetBreakdown.partnership[q] = 0;
+
+                targetBreakdown.subscriptions[q] += targetMonthlyData[month].subscriptions || 0;
+                targetBreakdown.subscriptionsIOS[q] += targetMonthlyData[month].subscriptionsIOS || 0;
+                targetBreakdown.subscriptionsAOS[q] += targetMonthlyData[month].subscriptionsAOS || 0;
+                targetBreakdown.offapp[q] += targetMonthlyData[month].offapp || 0;
+                targetBreakdown.partnership[q] += targetMonthlyData[month].partnership || 0;
             });
+
+            // Store OpEx data for charts
+            const targetScenario = scenario === 'actual' ? data2026.actual : data2026[scenario];
+            targetScenario.opexData = [
+                { category: 'Servers', budget: opexTotals.servers, actual: opexTotals.servers },
+                { category: 'Salaries & Wages', budget: opexTotals.salaries, actual: opexTotals.salaries },
+                { category: 'External Services', budget: opexTotals.externalServices, actual: opexTotals.externalServices },
+                { category: 'Travel', budget: opexTotals.travel, actual: opexTotals.travel },
+                { category: 'Services', budget: opexTotals.services, actual: opexTotals.services },
+                { category: 'Other', budget: opexTotals.other, actual: opexTotals.other },
+                { category: 'CAPEX', budget: opexTotals.capex, actual: opexTotals.capex }
+            ];
         }
 
         /**
