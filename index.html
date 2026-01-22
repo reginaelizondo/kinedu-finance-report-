@@ -5494,6 +5494,11 @@
             };
         }
 
+        // Helper function to generate pointRadius array - hide points when value is 0
+        function getPointRadiusArray(dataArray, defaultRadius = 6) {
+            return dataArray.map(value => (value && value > 0) ? defaultRadius : 0);
+        }
+
         function buildSubscribersDatasets(data) {
             const datasets = [];
 
@@ -5560,13 +5565,14 @@
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 6,
+                    pointRadius: getPointRadiusArray(data.cpnuActual, 6),
                     pointHoverRadius: 8,
                     pointBackgroundColor: '#8B5CF6',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
-                    order: 1
+                    order: 1,
+                    spanGaps: true
                 });
             }
 
@@ -5582,13 +5588,14 @@
                     borderDash: [6, 4],
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 4,
+                    pointRadius: getPointRadiusArray(data.cpnuBudget, 4),
                     pointHoverRadius: 6,
                     pointBackgroundColor: '#A78BFA',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y1',
-                    order: 2
+                    order: 2,
+                    spanGaps: true
                 });
             }
 
@@ -5836,13 +5843,14 @@
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 6,
+                    pointRadius: getPointRadiusArray(data.conversionActual, 6),
                     pointHoverRadius: 8,
                     pointBackgroundColor: '#10B981',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
-                    order: 1
+                    order: 1,
+                    spanGaps: true
                 });
             }
 
@@ -5858,13 +5866,14 @@
                     borderDash: [6, 4],
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 4,
+                    pointRadius: getPointRadiusArray(data.conversionBudget, 4),
                     pointHoverRadius: 6,
                     pointBackgroundColor: '#34D399',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y1',
-                    order: 0
+                    order: 0,
+                    spanGaps: true
                 });
             }
 
@@ -6099,12 +6108,13 @@
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 6,
+                    pointRadius: getPointRadiusArray(data.actualArpu, 6),
                     pointHoverRadius: 8,
                     pointBackgroundColor: '#10B981',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    yAxisID: 'y'
+                    yAxisID: 'y',
+                    spanGaps: true
                 });
             }
 
@@ -6119,12 +6129,13 @@
                     borderDash: [6, 4],
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 4,
+                    pointRadius: getPointRadiusArray(data.budgetArpu, 4),
                     pointHoverRadius: 6,
                     pointBackgroundColor: '#9CA3AF',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
-                    yAxisID: 'y'
+                    yAxisID: 'y',
+                    spanGaps: true
                 });
             }
 
@@ -6138,12 +6149,13 @@
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 6,
+                    pointRadius: getPointRadiusArray(data.actualCac, 6),
                     pointHoverRadius: 8,
                     pointBackgroundColor: '#F59E0B',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    yAxisID: 'y'
+                    yAxisID: 'y',
+                    spanGaps: true
                 });
             }
 
@@ -6158,12 +6170,13 @@
                     borderDash: [6, 4],
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 4,
+                    pointRadius: getPointRadiusArray(data.budgetCac, 4),
                     pointHoverRadius: 6,
                     pointBackgroundColor: '#6B7280',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
-                    yAxisID: 'y'
+                    yAxisID: 'y',
+                    spanGaps: true
                 });
             }
 
@@ -6177,12 +6190,13 @@
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
-                    pointRadius: 6,
+                    pointRadius: getPointRadiusArray(data.arpuCacRatio, 6),
                     pointHoverRadius: 8,
                     pointBackgroundColor: '#8B5CF6',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    yAxisID: 'y1'
+                    yAxisID: 'y1',
+                    spanGaps: true
                 });
             }
 
