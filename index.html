@@ -4064,6 +4064,10 @@
             updateOpexTable();
             updateAllInsights();
             updateContributionMarginChart();
+            // Update KPI charts (Marketing, Subscriber Acquisition, Unit Economics)
+            if (charts.marketing) updateMarketingChart();
+            if (charts.subscriberAcquisition) updateSubscriberAcquisitionChart();
+            if (charts.unitEconomics) updateUnitEconomicsChart();
         }
 
         /**
