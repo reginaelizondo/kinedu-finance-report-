@@ -1204,7 +1204,7 @@
             <div class="section">
                 <h2 class="section-title">Financial Performance</h2>
                 <div class="chart-container">
-                    <div class="chart-title">Quarterly Revenue: Actual vs Budget</div>
+                    <div class="chart-title" id="revenueChartTitle">Quarterly Revenue: Actual vs Budget</div>
                     <div class="revenue-filters">
                         <button class="revenue-filter-btn active" onclick="filterRevenue('all')">All Revenue</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('subscriptions')">Subscription Sales</button>
@@ -1216,7 +1216,7 @@
                     <div class="revenue-breakdown" id="revenueBreakdown"></div>
                 </div>
                 <div class="chart-container">
-                    <div class="chart-title">Quarterly EBITDA: Actual vs Budget</div>
+                    <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
                     <div class="chart-toggles" id="toggles-ebitda"></div>
                     <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
@@ -1224,7 +1224,7 @@
 
             <!-- Operating Expenses -->
             <div class="section">
-                <h2 class="section-title">Operating Expenses Breakdown</h2>
+                <h2 class="section-title" id="opexSectionTitle">Operating Expenses Breakdown</h2>
                 <div class="opex-container">
                     <div class="opex-table-wrapper">
                         <table class="opex-table">
@@ -1243,7 +1243,7 @@
                     </div>
                     <div>
                         <div class="chart-container">
-                            <div class="chart-title">Expense Distribution</div>
+                            <div class="chart-title" id="opexDonutChartTitle">Operating Expenses Breakdown - Full Year 2025</div>
                             <canvas id="opexDonutChart"></canvas>
                         </div>
                     </div>
@@ -2038,6 +2038,12 @@
 
             // Update drill-down visibility
             updateQuarterDrillDown();
+
+            // Update all charts that respond to time filters
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
         }
 
         function updateDropdownOptions() {
@@ -2097,6 +2103,12 @@
             updatePeriodIndicator();
             updateKPIs();
             updateQuarterDrillDown();
+
+            // Update all charts that respond to time filters
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
         }
 
         function updatePeriodIndicator() {
@@ -2285,9 +2297,9 @@
                                     <div>ARPU: <span>$${real.arpu.toFixed(2)}</span></div>
                                 </div>
                             </div>
-                            <div class="expand-icon" id="expandIcon${currentPeriod}">▼</div>
+                            <div class="expand-icon expanded" id="expandIcon${currentPeriod}">▼</div>
                         </div>
-                        <div class="months-grid" id="monthsGrid${currentPeriod}">
+                        <div class="months-grid expanded" id="monthsGrid${currentPeriod}">
                             ${months.map(month => {
                                 const m = monthlyData[month];
                                 return `
@@ -2443,48 +2455,100 @@
         // ============================================
         // REVENUE CHART
         // ============================================
-        function getRevenueData(filter) {
-            if (filter === 'all') {
-                return {
-                    actual: [
-                        data.real.Q1.revenue / 1000,
-                        data.real.Q2.revenue / 1000,
-                        data.real.Q3.revenue / 1000,
-                        data.real.Q4.revenue / 1000
-                    ],
-                    budget: [
-                        data.budget.Q1.revenue / 1000,
-                        data.budget.Q2.revenue / 1000,
-                        data.budget.Q3.revenue / 1000,
-                        data.budget.Q4.revenue / 1000
-                    ]
-                };
-            } else {
-                return {
-                    actual: [
-                        revenueBreakdown.actual[filter].Q1 / 1000,
-                        revenueBreakdown.actual[filter].Q2 / 1000,
-                        revenueBreakdown.actual[filter].Q3 / 1000,
-                        revenueBreakdown.actual[filter].Q4 / 1000
-                    ],
-                    budget: [
-                        revenueBreakdown.budget[filter].Q1 / 1000,
-                        revenueBreakdown.budget[filter].Q2 / 1000,
-                        revenueBreakdown.budget[filter].Q3 / 1000,
-                        revenueBreakdown.budget[filter].Q4 / 1000
-                    ]
-                };
+        function getRevenueDataForGranularity(filter) {
+            let labels = [];
+            let actualData = [];
+            let budgetData = [];
+
+            switch(currentGranularity) {
+                case 'monthly':
+                    labels = monthLabelsShort;
+                    if (filter === 'all') {
+                        monthNames.forEach(month => {
+                            actualData.push(monthlyData[month].revenue / 1000);
+                            budgetData.push(monthlyBudget[month].revenue / 1000);
+                        });
+                    } else {
+                        // For category filters, calculate monthly from quarterly (approximate)
+                        const quarters = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'];
+                        quarters.forEach((q, i) => {
+                            actualData.push(revenueBreakdown.actual[filter][q] / 3000);
+                            budgetData.push(revenueBreakdown.budget[filter][q] / 3000);
+                        });
+                    }
+                    break;
+
+                case 'quarterly':
+                    labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                    if (filter === 'all') {
+                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                            actualData.push(data.real[q].revenue / 1000);
+                            budgetData.push(data.budget[q].revenue / 1000);
+                        });
+                    } else {
+                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                            actualData.push(revenueBreakdown.actual[filter][q] / 1000);
+                            budgetData.push(revenueBreakdown.budget[filter][q] / 1000);
+                        });
+                    }
+                    break;
+
+                case 'semester':
+                    labels = ['H1', 'H2'];
+                    if (filter === 'all') {
+                        actualData = [data.real.H1.revenue / 1000, data.real.H2.revenue / 1000];
+                        budgetData = [data.budget.H1.revenue / 1000, data.budget.H2.revenue / 1000];
+                    } else {
+                        const h1Actual = revenueBreakdown.actual[filter].Q1 + revenueBreakdown.actual[filter].Q2;
+                        const h2Actual = revenueBreakdown.actual[filter].Q3 + revenueBreakdown.actual[filter].Q4;
+                        const h1Budget = revenueBreakdown.budget[filter].Q1 + revenueBreakdown.budget[filter].Q2;
+                        const h2Budget = revenueBreakdown.budget[filter].Q3 + revenueBreakdown.budget[filter].Q4;
+                        actualData = [h1Actual / 1000, h2Actual / 1000];
+                        budgetData = [h1Budget / 1000, h2Budget / 1000];
+                    }
+                    break;
+
+                case 'yearly':
+                default:
+                    labels = ['FY 2025'];
+                    if (filter === 'all') {
+                        actualData = [data.real.YEAR.revenue / 1000];
+                        budgetData = [data.budget.YEAR.revenue / 1000];
+                    } else {
+                        const yearActual = revenueBreakdown.actual[filter].Q1 + revenueBreakdown.actual[filter].Q2 +
+                                          revenueBreakdown.actual[filter].Q3 + revenueBreakdown.actual[filter].Q4;
+                        const yearBudget = revenueBreakdown.budget[filter].Q1 + revenueBreakdown.budget[filter].Q2 +
+                                          revenueBreakdown.budget[filter].Q3 + revenueBreakdown.budget[filter].Q4;
+                        actualData = [yearActual / 1000];
+                        budgetData = [yearBudget / 1000];
+                    }
+                    break;
             }
+
+            return { labels, actual: actualData, budget: budgetData };
+        }
+
+        function getRevenueChartTitle() {
+            const periodNames = {
+                'monthly': 'Monthly',
+                'quarterly': 'Quarterly',
+                'semester': 'Semester',
+                'yearly': 'Annual'
+            };
+            return `${periodNames[currentGranularity]} Revenue: Actual vs Budget`;
         }
 
         function createRevenueChart() {
             const ctx = document.getElementById('revenueChart').getContext('2d');
-            const revenueData = getRevenueData('all');
+            const revenueData = getRevenueDataForGranularity('all');
+
+            // Update chart title
+            document.getElementById('revenueChartTitle').textContent = getRevenueChartTitle();
 
             charts.revenue = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    labels: revenueData.labels,
                     datasets: [{
                         label: 'Actual Revenue',
                         data: revenueData.actual,
@@ -2566,6 +2630,22 @@
             updateRevenueBreakdown('all');
         }
 
+        function updateRevenueChart() {
+            if (!charts.revenue) return;
+
+            const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
+
+            // Update chart title
+            document.getElementById('revenueChartTitle').textContent = getRevenueChartTitle();
+
+            charts.revenue.data.labels = revenueData.labels;
+            charts.revenue.data.datasets[0].data = revenueData.actual;
+            charts.revenue.data.datasets[1].data = revenueData.budget;
+            charts.revenue.update();
+
+            updateRevenueBreakdown(currentRevenueFilter);
+        }
+
         // ============================================
         // REVENUE FILTER
         // ============================================
@@ -2578,8 +2658,9 @@
             });
             event.target.classList.add('active');
 
-            // Update chart data
-            const revenueData = getRevenueData(filter);
+            // Update chart with new filter and current granularity
+            const revenueData = getRevenueDataForGranularity(filter);
+            charts.revenue.data.labels = revenueData.labels;
             charts.revenue.data.datasets[0].data = revenueData.actual;
             charts.revenue.data.datasets[1].data = revenueData.budget;
             charts.revenue.update();
@@ -2659,21 +2740,69 @@
         // ============================================
         // EBITDA CHART
         // ============================================
+        function getEbitdaDataForGranularity() {
+            let labels = [];
+            let actualData = [];
+            let budgetData = [];
+
+            switch(currentGranularity) {
+                case 'monthly':
+                    labels = monthLabelsShort;
+                    monthNames.forEach(month => {
+                        actualData.push(monthlyData[month].ebitda / 1000);
+                        budgetData.push(monthlyBudget[month].ebitda / 1000);
+                    });
+                    break;
+
+                case 'quarterly':
+                    labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                    ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                        actualData.push(data.real[q].ebitda / 1000);
+                        budgetData.push(data.budget[q].ebitda / 1000);
+                    });
+                    break;
+
+                case 'semester':
+                    labels = ['H1', 'H2'];
+                    actualData = [data.real.H1.ebitda / 1000, data.real.H2.ebitda / 1000];
+                    budgetData = [data.budget.H1.ebitda / 1000, data.budget.H2.ebitda / 1000];
+                    break;
+
+                case 'yearly':
+                default:
+                    labels = ['FY 2025'];
+                    actualData = [data.real.YEAR.ebitda / 1000];
+                    budgetData = [data.budget.YEAR.ebitda / 1000];
+                    break;
+            }
+
+            return { labels, actual: actualData, budget: budgetData };
+        }
+
+        function getEbitdaChartTitle() {
+            const periodNames = {
+                'monthly': 'Monthly',
+                'quarterly': 'Quarterly',
+                'semester': 'Semester',
+                'yearly': 'Annual'
+            };
+            return `${periodNames[currentGranularity]} EBITDA: Actual vs Budget`;
+        }
+
         function createEbitdaChart() {
             const ctx = document.getElementById('ebitdaChart').getContext('2d');
+            const ebitdaData = getEbitdaDataForGranularity();
+
+            // Update chart title
+            document.getElementById('ebitdaChartTitle').textContent = getEbitdaChartTitle();
 
             charts.ebitda = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    labels: ebitdaData.labels,
                     datasets: [{
                         label: 'Actual EBITDA',
-                        data: [
-                            data.real.Q1.ebitda / 1000,
-                            data.real.Q2.ebitda / 1000,
-                            data.real.Q3.ebitda / 1000,
-                            data.real.Q4.ebitda / 1000
-                        ],
+                        data: ebitdaData.actual,
                         backgroundColor: function(context) {
                             const value = context.raw;
                             return value >= 0 ? '#22c55e' : '#ef4444';
@@ -2681,12 +2810,7 @@
                         borderRadius: 6
                     }, {
                         label: 'Budget EBITDA',
-                        data: [
-                            data.budget.Q1.ebitda / 1000,
-                            data.budget.Q2.ebitda / 1000,
-                            data.budget.Q3.ebitda / 1000,
-                            data.budget.Q4.ebitda / 1000
-                        ],
+                        data: ebitdaData.budget,
                         backgroundColor: '#94a3b8',
                         borderRadius: 6
                     }]
@@ -2720,7 +2844,7 @@
                     },
                     scales: {
                         y: {
-                            beginAtZero: true,
+                            beginAtZero: false,
                             grid: {
                                 color: '#e2e8f0',
                                 drawBorder: false
@@ -2756,6 +2880,20 @@
                     }
                 }
             });
+        }
+
+        function updateEbitdaChart() {
+            if (!charts.ebitda) return;
+
+            const ebitdaData = getEbitdaDataForGranularity();
+
+            // Update chart title
+            document.getElementById('ebitdaChartTitle').textContent = getEbitdaChartTitle();
+
+            charts.ebitda.data.labels = ebitdaData.labels;
+            charts.ebitda.data.datasets[0].data = ebitdaData.actual;
+            charts.ebitda.data.datasets[1].data = ebitdaData.budget;
+            charts.ebitda.update();
         }
 
         // ============================================
@@ -3656,17 +3794,86 @@
         // ============================================
         // OPEX DONUT CHART
         // ============================================
+        function getOpexPeriodText() {
+            switch(currentGranularity) {
+                case 'monthly':
+                    return currentPeriod + ' 2025';
+                case 'quarterly':
+                    const qMonths = {
+                        'Q1': 'Jan-Mar',
+                        'Q2': 'Apr-Jun',
+                        'Q3': 'Jul-Sep',
+                        'Q4': 'Oct-Dec'
+                    };
+                    return `${currentPeriod} 2025 (${qMonths[currentPeriod]})`;
+                case 'semester':
+                    return currentPeriod === 'H1' ? 'H1 2025 (Jan-Jun)' : 'H2 2025 (Jul-Dec)';
+                case 'yearly':
+                default:
+                    return 'Full Year 2025 (Jan-Dec)';
+            }
+        }
+
+        function getOpexChartTitle() {
+            return `Expense Distribution - ${getOpexPeriodText()}`;
+        }
+
+        function getOpexSectionTitle() {
+            return `Operating Expenses - ${getOpexPeriodText()}`;
+        }
+
+        function getOpexDataForPeriod() {
+            // Calculate the scaling factor based on the current period
+            let scaleFactor = 1;
+            let monthsIncluded = [];
+
+            switch(currentGranularity) {
+                case 'monthly':
+                    scaleFactor = 1 / 12;
+                    monthsIncluded = [currentPeriod];
+                    break;
+                case 'quarterly':
+                    scaleFactor = 3 / 12;
+                    monthsIncluded = quarterMonths[currentPeriod] || [];
+                    break;
+                case 'semester':
+                    scaleFactor = 6 / 12;
+                    if (currentPeriod === 'H1') {
+                        monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
+                    } else {
+                        monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
+                    }
+                    break;
+                case 'yearly':
+                default:
+                    scaleFactor = 1;
+                    monthsIncluded = monthNames;
+                    break;
+            }
+
+            // Scale the annual OpEx data to the selected period
+            return opexData.map(item => ({
+                category: item.category,
+                actual: Math.round(item.actual * scaleFactor),
+                budget: Math.round(item.budget * scaleFactor)
+            }));
+        }
+
         function createOpexDonutChart() {
             const ctx = document.getElementById('opexDonutChart').getContext('2d');
+            const periodData = getOpexDataForPeriod();
 
             const colors = ['#1e3a5f', '#22c55e', '#ef4444', '#f59e0b', '#6b7280'];
+
+            // Update chart title
+            document.getElementById('opexDonutChartTitle').textContent = getOpexChartTitle();
 
             charts.opexDonut = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: opexData.map(item => item.category),
+                    labels: periodData.map(item => item.category),
                     datasets: [{
-                        data: opexData.map(item => item.actual),
+                        data: periodData.map(item => item.actual),
                         backgroundColor: colors,
                         borderWidth: 2,
                         borderColor: '#fff'
@@ -3702,6 +3909,81 @@
                     }
                 }
             });
+        }
+
+        function updateOpexDonutChart() {
+            if (!charts.opexDonut) return;
+
+            const periodData = getOpexDataForPeriod();
+
+            // Update chart title and section title
+            document.getElementById('opexDonutChartTitle').textContent = getOpexChartTitle();
+            document.getElementById('opexSectionTitle').textContent = getOpexSectionTitle();
+
+            charts.opexDonut.data.datasets[0].data = periodData.map(item => item.actual);
+            charts.opexDonut.update();
+        }
+
+        function updateOpexTable() {
+            const periodData = getOpexDataForPeriod();
+            const tbody = document.getElementById('opexTableBody');
+            if (!tbody) return;
+
+            let totalBudget = 0;
+            let totalActual = 0;
+
+            const rows = periodData.map(item => {
+                const varianceDollar = item.actual - item.budget;
+                const variancePercent = ((varianceDollar / item.budget) * 100).toFixed(1);
+                const isUnder = varianceDollar <= 0;
+
+                totalBudget += item.budget;
+                totalActual += item.actual;
+
+                return `
+                    <tr>
+                        <td>${item.category}</td>
+                        <td>$${(item.budget / 1000).toFixed(0)}K</td>
+                        <td>$${(item.actual / 1000).toFixed(0)}K</td>
+                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
+                            ${varianceDollar >= 0 ? '+' : ''}$${(varianceDollar / 1000).toFixed(0)}K
+                        </td>
+                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
+                            ${varianceDollar >= 0 ? '+' : ''}${variancePercent}%
+                        </td>
+                        <td>
+                            <span class="status-icon ${isUnder ? 'under-budget' : 'over-budget'}">
+                                ${isUnder ? '✓' : '✗'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const totalVarianceDollar = totalActual - totalBudget;
+            const totalVariancePercent = ((totalVarianceDollar / totalBudget) * 100).toFixed(1);
+            const totalIsUnder = totalVarianceDollar <= 0;
+
+            const totalRow = `
+                <tr class="total-row">
+                    <td><strong>TOTAL</strong></td>
+                    <td><strong>$${(totalBudget / 1000).toFixed(0)}K</strong></td>
+                    <td><strong>$${(totalActual / 1000).toFixed(0)}K</strong></td>
+                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
+                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}$${(totalVarianceDollar / 1000).toFixed(0)}K</strong>
+                    </td>
+                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
+                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}${totalVariancePercent}%</strong>
+                    </td>
+                    <td>
+                        <span class="status-icon ${totalIsUnder ? 'under-budget' : 'over-budget'}">
+                            ${totalIsUnder ? '✓' : '✗'}
+                        </span>
+                    </td>
+                </tr>
+            `;
+
+            tbody.innerHTML = rows + totalRow;
         }
 
         // ============================================
