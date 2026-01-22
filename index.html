@@ -576,6 +576,34 @@
             border-color: #1e3a5f;
         }
 
+        .revenue-filter-btn.cagr-trend-btn {
+            border-color: #5BA4E6;
+            color: #5BA4E6;
+            margin-left: 8px;
+            border-style: dashed;
+        }
+
+        .revenue-filter-btn.cagr-trend-btn:hover {
+            background: rgba(91, 164, 230, 0.1);
+            border-color: #5BA4E6;
+            color: #5BA4E6;
+        }
+
+        .revenue-filter-btn.cagr-trend-btn.active {
+            background: #5BA4E6;
+            color: white;
+            border-color: #5BA4E6;
+            border-style: solid;
+        }
+
+        .ebitda-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
         .revenue-breakdown {
             display: flex;
             justify-content: center;
@@ -964,13 +992,13 @@
         }
 
         .cagr-toggle-btn:hover {
-            border-color: #8B5CF6;
-            color: #8B5CF6;
+            border-color: #5BA4E6;
+            color: #5BA4E6;
         }
 
         .cagr-toggle-btn.active {
-            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-            border-color: #8B5CF6;
+            background: linear-gradient(135deg, #5BA4E6 0%, #4A93D5 100%);
+            border-color: #5BA4E6;
             color: white;
         }
 
@@ -1533,35 +1561,28 @@
                         <button class="revenue-filter-btn" onclick="filterRevenue('subscriptions')">Subscription Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
+                        <button class="revenue-filter-btn cagr-trend-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
+                            CAGR Trend
+                        </button>
+                        <span class="cagr-badge hidden" id="revenueCagrBadge">
+                            <span class="badge-arrow">↑</span>
+                            <span class="badge-value">+0%</span>
+                        </span>
                     </div>
-                    <div class="chart-toggles" id="toggles-revenue">
-                        <div class="cagr-toggle-container">
-                            <button class="cagr-toggle-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
-                                <span class="toggle-icon">📈</span>
-                                Show CAGR Trend
-                            </button>
-                            <span class="cagr-badge hidden" id="revenueCagrBadge">
-                                <span class="badge-arrow">↑</span>
-                                <span class="badge-value">+0%</span>
-                            </span>
-                        </div>
-                    </div>
+                    <div class="chart-toggles" id="toggles-revenue"></div>
                     <canvas id="revenueChart" height="80"></canvas>
                     <div class="revenue-breakdown" id="revenueBreakdown"></div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
-                    <div class="chart-toggles" id="toggles-ebitda">
-                        <div class="cagr-toggle-container">
-                            <button class="cagr-toggle-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
-                                <span class="toggle-icon">📈</span>
-                                Show CAGR Trend
-                            </button>
-                            <span class="cagr-badge hidden" id="ebitdaCagrBadge">
-                                <span class="badge-arrow">↑</span>
-                                <span class="badge-value">+0%</span>
-                            </span>
-                        </div>
+                    <div class="ebitda-filters">
+                        <button class="revenue-filter-btn cagr-trend-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
+                            CAGR Trend
+                        </button>
+                        <span class="cagr-badge hidden" id="ebitdaCagrBadge">
+                            <span class="badge-arrow">↑</span>
+                            <span class="badge-value">+0%</span>
+                        </span>
                     </div>
                     <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
@@ -3957,11 +3978,11 @@
                 label: 'CAGR Trend',
                 data: trendlineData,
                 type: 'line',
-                borderColor: '#8B5CF6',
-                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                borderColor: '#5BA4E6',
+                backgroundColor: 'rgba(91, 164, 230, 0.1)',
                 borderWidth: 2,
                 borderDash: [6, 4],
-                pointBackgroundColor: '#8B5CF6',
+                pointBackgroundColor: '#5BA4E6',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 pointRadius: 4,
@@ -4005,11 +4026,11 @@
                 label: 'CAGR Trend',
                 data: trendlineData,
                 type: 'line',
-                borderColor: '#8B5CF6',
-                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                borderColor: '#5BA4E6',
+                backgroundColor: 'rgba(91, 164, 230, 0.1)',
                 borderWidth: 2,
                 borderDash: [6, 4],
-                pointBackgroundColor: '#8B5CF6',
+                pointBackgroundColor: '#5BA4E6',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 pointRadius: 4,
