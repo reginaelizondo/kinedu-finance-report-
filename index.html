@@ -5475,12 +5475,14 @@
             monthNames.forEach(month => {
                 const mData = monthlyData?.[month] || {};
                 const mBudget = monthlyBudget?.[month] || {};
+                // Bars: use 0 for empty values
                 signupsActual.push((mData.signups || 0) / 1000);
                 signupsBudget.push((mBudget.signups || 0) / 1000);
                 spendActual.push((mData.spend || 0) / 1000);
                 spendBudget.push((mBudget.spend || 0) / 1000);
-                cpnuActual.push(mData.cpnu || 0);
-                cpnuBudget.push(mBudget.cpnu || 0);
+                // Lines: use null for empty values so line doesn't draw
+                cpnuActual.push(mData.cpnu > 0 ? mData.cpnu : null);
+                cpnuBudget.push(mBudget.cpnu > 0 ? mBudget.cpnu : null);
             });
 
             return {
@@ -5572,7 +5574,7 @@
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
                     order: 1,
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -5595,7 +5597,7 @@
                     pointBorderWidth: 1,
                     yAxisID: 'y1',
                     order: 2,
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -5788,10 +5790,12 @@
             monthNames.forEach(month => {
                 const mData = monthlyData?.[month] || {};
                 const mBudget = monthlyBudget?.[month] || {};
+                // Bars: use 0 for empty values
                 actualSubs.push(mData.subs || 0);
                 budgetSubs.push(mBudget.subs || 0);
-                conversionActual.push(mData.conversion || 0);
-                conversionBudget.push(mBudget.conversion || 0);
+                // Lines: use null for empty values so line doesn't draw
+                conversionActual.push(mData.conversion > 0 ? mData.conversion : null);
+                conversionBudget.push(mBudget.conversion > 0 ? mBudget.conversion : null);
             });
 
             return {
@@ -5850,7 +5854,7 @@
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
                     order: 1,
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -5873,7 +5877,7 @@
                     pointBorderWidth: 1,
                     yAxisID: 'y1',
                     order: 0,
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -6067,21 +6071,22 @@
             monthNames.forEach(month => {
                 const mData = monthlyData?.[month] || {};
                 const mBudget = monthlyBudget?.[month] || {};
-                actualArpu.push(mData.arpu || 0);
-                budgetArpu.push(mBudget.arpu || 0);
-                actualCac.push(mData.cac || 0);
-                budgetCac.push(mBudget.cac || 0);
+                // Lines: use null for empty values so line doesn't draw
+                actualArpu.push(mData.arpu > 0 ? mData.arpu : null);
+                budgetArpu.push(mBudget.arpu > 0 ? mBudget.arpu : null);
+                actualCac.push(mData.cac > 0 ? mData.cac : null);
+                budgetCac.push(mBudget.cac > 0 ? mBudget.cac : null);
             });
 
-            // Calculate ARPU/CAC Ratio
+            // Calculate ARPU/CAC Ratio (null if no data)
             const ratioData = actualArpu.map((arpu, i) => {
                 const cac = actualCac[i];
-                return cac > 0 ? (arpu / cac) : 0;
+                return (arpu && cac && cac > 0) ? (arpu / cac) : null;
             });
 
             // Calculate Contribution Margin as ARPU - CAC (in dollars)
-            const cmActual = actualArpu.map((arpu, i) => arpu - actualCac[i]);
-            const cmBudget = budgetArpu.map((arpu, i) => arpu - budgetCac[i]);
+            const cmActual = actualArpu.map((arpu, i) => (arpu && actualCac[i]) ? arpu - actualCac[i] : 0);
+            const cmBudget = budgetArpu.map((arpu, i) => (arpu && budgetCac[i]) ? arpu - budgetCac[i] : 0);
 
             return {
                 labels: labels,
@@ -6114,7 +6119,7 @@
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y',
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -6135,7 +6140,7 @@
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y',
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -6155,7 +6160,7 @@
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y',
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -6176,7 +6181,7 @@
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
                     yAxisID: 'y',
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
@@ -6196,7 +6201,7 @@
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
-                    spanGaps: true
+                    spanGaps: false
                 });
             }
 
