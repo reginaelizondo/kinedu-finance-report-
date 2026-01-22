@@ -2095,15 +2095,20 @@
         // Parse numeric value from Spanish/European format (dots as thousands, commas as decimals)
         function parseNumber(value) {
             if (!value || value === '') return 0;
-            // Remove $ and whitespace
-            let cleaned = value.toString().replace(/[$\s]/g, '');
+
+            // Convert to string and remove $ and whitespace
+            let cleaned = value.toString().replace(/[$\s"]/g, '');
+
+            // Debug for specific values
+            const originalCleaned = cleaned;
+
             // Check if it's a percentage
             const isPercent = cleaned.includes('%');
             cleaned = cleaned.replace('%', '');
 
             // Handle number formats
             // US format: "150,872.00" (comma = thousands, dot = decimal)
-            // EU format: "150.872,00" (dot = thousands, comma = decimal)
+            // MX/EU format: "150.872,00" (dot = thousands, comma = decimal)
 
             if (cleaned.includes('.') && cleaned.includes(',')) {
                 // Both dot and comma present - determine format by position
@@ -2114,29 +2119,39 @@
                     // US format: "150,872.00" - comma is thousands, dot is decimal
                     cleaned = cleaned.replace(/,/g, '');
                 } else {
-                    // EU format: "150.872,00" - dot is thousands, comma is decimal
+                    // MX/EU format: "150.872,00" - dot is thousands, comma is decimal
                     cleaned = cleaned.replace(/\./g, '').replace(',', '.');
                 }
             } else if (cleaned.includes(',') && !cleaned.includes('.')) {
-                // Only comma - determine if decimal or thousands separator
+                // Only comma present
                 const parts = cleaned.split(',');
                 if (parts.length === 2 && parts[1].length <= 2) {
-                    // Likely decimal: "1,5" or "1,50" -> "1.5"
+                    // Decimal separator: "1,5" or "1,50" -> "1.5"
                     cleaned = cleaned.replace(',', '.');
                 } else {
-                    // Likely thousands: "1,234" or "150,872" -> "1234" or "150872"
+                    // Thousands separator: "1,234" or "150,872" -> "1234" or "150872"
                     cleaned = cleaned.replace(/,/g, '');
                 }
             } else if (cleaned.includes('.')) {
-                // Only dots - check if thousands separator
+                // Only dots present
                 const parts = cleaned.split('.');
-                if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) {
-                    // Multiple dots or last part is 3 digits = thousands separator
+                if (parts.length > 2) {
+                    // Multiple dots = thousands separator: "1.234.567" -> "1234567"
+                    cleaned = cleaned.replace(/\./g, '');
+                } else if (parts.length === 2 && parts[1].length === 3 && parts[0].length > 0) {
+                    // Single dot with 3 digits after = thousands: "150.872" -> "150872"
                     cleaned = cleaned.replace(/\./g, '');
                 }
+                // Otherwise keep as decimal: "1.5" stays "1.5"
             }
 
             const num = parseFloat(cleaned) || 0;
+
+            // Debug logging for troubleshooting
+            if (originalCleaned.includes('150') || originalCleaned.includes('180') || originalCleaned.includes('200')) {
+                console.log('parseNumber DEBUG:', originalCleaned, '->', cleaned, '->', num);
+            }
+
             return isPercent ? num : num;
         }
 
