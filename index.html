@@ -137,6 +137,121 @@
             color: white;
         }
 
+        /* Custom Range Selector */
+        .custom-range-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .custom-range-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .range-dropdown {
+            padding: 8px 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            min-width: 120px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+            transition: all 0.2s ease;
+        }
+
+        .range-dropdown:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .range-dropdown:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .range-dropdown option {
+            background: #1e3a5f;
+            color: white;
+        }
+
+        .range-btn {
+            padding: 8px 16px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .range-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .range-btn.apply-btn {
+            background: #48bb78;
+        }
+
+        .range-btn.apply-btn:hover {
+            background: #38a169;
+        }
+
+        .range-btn.reset-btn {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .range-btn.reset-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .range-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .range-error {
+            color: #fc8181;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            background: rgba(252, 129, 129, 0.15);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .range-error.visible {
+            display: block;
+        }
+
+        .custom-range-active {
+            background: rgba(72, 187, 120, 0.2);
+            border: 1px solid rgba(72, 187, 120, 0.4);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #9ae6b4;
+            font-weight: 500;
+            display: none;
+        }
+
+        .custom-range-active.visible {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         /* Consolidated KPIs Section */
         .kpi-section {
             background: white;
@@ -822,6 +937,91 @@
             }
         }
 
+        /* CAGR Trend Toggle */
+        .cagr-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            padding-left: 16px;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .cagr-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .cagr-toggle-btn:hover {
+            border-color: #8B5CF6;
+            color: #8B5CF6;
+        }
+
+        .cagr-toggle-btn.active {
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            border-color: #8B5CF6;
+            color: white;
+        }
+
+        .cagr-toggle-btn .toggle-icon {
+            font-size: 14px;
+        }
+
+        .cagr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cagr-badge.positive {
+            background: rgba(34, 197, 94, 0.15);
+            color: #16a34a;
+        }
+
+        .cagr-badge.negative {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+        }
+
+        .cagr-badge.neutral {
+            background: rgba(107, 114, 128, 0.15);
+            color: #6b7280;
+        }
+
+        .cagr-badge.hidden {
+            display: none;
+        }
+
+        .cagr-badge .badge-arrow {
+            font-size: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .cagr-toggle-container {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                margin-top: 8px;
+                width: 100%;
+            }
+        }
+
         /* Unit Economics Toggle Controls */
         .unit-economics-toggles {
             display: flex;
@@ -1234,18 +1434,7 @@
         <div class="header">
             <div class="header-branding">
                 <!-- Kinedu Logo -->
-                <svg class="header-logo" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Icon: Green square -->
-                    <rect x="0" y="0" width="22" height="22" fill="#4CAF50"/>
-                    <!-- Icon: Yellow circle -->
-                    <circle cx="33" cy="11" r="11" fill="#FFC107"/>
-                    <!-- Icon: Pink arc -->
-                    <path d="M0 80 Q0 35 22 35 L22 80 Z" fill="#E91E63"/>
-                    <!-- Icon: Blue rectangle -->
-                    <rect x="22" y="35" width="11" height="45" fill="#2196F3"/>
-                    <!-- Text: kinedu -->
-                    <text x="60" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="700" fill="#2196F3">kinedu</text>
-                </svg>
+                <img class="header-logo" src="logo kinedu.png" alt="Kinedu Logo">
                 <div class="header-subtitle">Financial Performance 2025</div>
             </div>
 
@@ -1265,6 +1454,46 @@
                     <div class="period-indicator" id="periodIndicator">
                         Showing: <strong>Year to Date 2025</strong>
                     </div>
+                    <span class="custom-range-active" id="customRangeActive">
+                        Custom Range Active
+                    </span>
+                </div>
+
+                <!-- Custom Date Range Selector -->
+                <div class="custom-range-container" id="customRangeContainer">
+                    <span class="custom-range-label">Custom Range:</span>
+                    <select class="range-dropdown" id="rangeFrom" onchange="validateRange()">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                    <span class="custom-range-label">to</span>
+                    <select class="range-dropdown" id="rangeTo" onchange="validateRange()">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11" selected>December</option>
+                    </select>
+                    <button class="range-btn apply-btn" id="applyRangeBtn" onclick="applyCustomRange()">Apply</button>
+                    <button class="range-btn reset-btn" id="resetRangeBtn" onclick="resetCustomRange()">Reset</button>
+                    <span class="range-error" id="rangeError">From must be before To</span>
                 </div>
             </div>
         </div>
@@ -1305,13 +1534,35 @@
                         <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
                     </div>
-                    <div class="chart-toggles" id="toggles-revenue"></div>
+                    <div class="chart-toggles" id="toggles-revenue">
+                        <div class="cagr-toggle-container">
+                            <button class="cagr-toggle-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
+                                <span class="toggle-icon">📈</span>
+                                Show CAGR Trend
+                            </button>
+                            <span class="cagr-badge hidden" id="revenueCagrBadge">
+                                <span class="badge-arrow">↑</span>
+                                <span class="badge-value">+0%</span>
+                            </span>
+                        </div>
+                    </div>
                     <canvas id="revenueChart" height="80"></canvas>
                     <div class="revenue-breakdown" id="revenueBreakdown"></div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
-                    <div class="chart-toggles" id="toggles-ebitda"></div>
+                    <div class="chart-toggles" id="toggles-ebitda">
+                        <div class="cagr-toggle-container">
+                            <button class="cagr-toggle-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
+                                <span class="toggle-icon">📈</span>
+                                Show CAGR Trend
+                            </button>
+                            <span class="cagr-badge hidden" id="ebitdaCagrBadge">
+                                <span class="badge-arrow">↑</span>
+                                <span class="badge-value">+0%</span>
+                            </span>
+                        </div>
+                    </div>
                     <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
             </div>
@@ -1539,6 +1790,15 @@
         let currentGranularity = 'yearly';
         let currentPeriod = 'YTD';
         let charts = {};
+
+        // Custom Range variables
+        let customRangeActive = false;
+        let customRangeFrom = 0;  // Month index (0 = January)
+        let customRangeTo = 11;   // Month index (11 = December)
+
+        // CAGR Trend toggle states
+        let showRevenueCagrTrend = false;
+        let showEbitdaCagrTrend = false;
 
         // ============================================
         // CSV PARSING UTILITIES
@@ -2159,8 +2419,10 @@
             let budgetData = { spend: 0, signups: 0, cpnu: 0, subs: 0, cac: 0, arpu: 0, conversion: 0, ltvCac: 0 };
             let months = [];
 
-            // Determine which months to include based on granularity and period
-            if (currentGranularity === 'yearly') {
+            // Handle custom range first
+            if (customRangeActive) {
+                months = getCustomRangeMonths();
+            } else if (currentGranularity === 'yearly') {
                 months = monthNames;
             } else if (currentGranularity === 'semester') {
                 if (currentPeriod === 'H1') {
@@ -2439,6 +2701,10 @@
         function setGranularity(granularity) {
             currentGranularity = granularity;
 
+            // Deactivate custom range when selecting a granularity
+            customRangeActive = false;
+            document.getElementById('customRangeActive').classList.remove('visible');
+
             // Update button styling
             document.querySelectorAll('.granularity-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -2534,24 +2800,127 @@
 
         function updatePeriodIndicator() {
             const indicator = document.getElementById('periodIndicator');
+            const customRangeActiveEl = document.getElementById('customRangeActive');
             let displayText = '';
 
-            switch(currentGranularity) {
-                case 'monthly':
-                    displayText = currentPeriod + ' 2025';
-                    break;
-                case 'quarterly':
-                    displayText = currentPeriod + ' 2025';
-                    break;
-                case 'semester':
-                    displayText = currentPeriod === 'H1' ? 'First Half 2025' : 'Second Half 2025';
-                    break;
-                case 'yearly':
-                    displayText = currentPeriod === 'YTD' ? 'Year to Date 2025' : 'Full Year 2025';
-                    break;
+            // If custom range is active, show the range
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    displayText = `${fromMonth} 2025`;
+                } else {
+                    displayText = `${fromMonth} - ${toMonth} 2025`;
+                }
+                customRangeActiveEl.classList.add('visible');
+            } else {
+                customRangeActiveEl.classList.remove('visible');
+                switch(currentGranularity) {
+                    case 'monthly':
+                        displayText = currentPeriod + ' 2025';
+                        break;
+                    case 'quarterly':
+                        displayText = currentPeriod + ' 2025';
+                        break;
+                    case 'semester':
+                        displayText = currentPeriod === 'H1' ? 'First Half 2025' : 'Second Half 2025';
+                        break;
+                    case 'yearly':
+                        displayText = currentPeriod === 'YTD' ? 'Year to Date 2025' : 'Full Year 2025';
+                        break;
+                }
             }
 
             indicator.innerHTML = `Showing: <strong>${displayText}</strong>`;
+        }
+
+        // ============================================
+        // CUSTOM RANGE FUNCTIONS
+        // ============================================
+        function validateRange() {
+            const fromVal = parseInt(document.getElementById('rangeFrom').value);
+            const toVal = parseInt(document.getElementById('rangeTo').value);
+            const errorEl = document.getElementById('rangeError');
+            const applyBtn = document.getElementById('applyRangeBtn');
+
+            if (fromVal > toVal) {
+                errorEl.classList.add('visible');
+                applyBtn.disabled = true;
+                return false;
+            } else {
+                errorEl.classList.remove('visible');
+                applyBtn.disabled = false;
+                return true;
+            }
+        }
+
+        function applyCustomRange() {
+            if (!validateRange()) return;
+
+            const fromVal = parseInt(document.getElementById('rangeFrom').value);
+            const toVal = parseInt(document.getElementById('rangeTo').value);
+
+            customRangeFrom = fromVal;
+            customRangeTo = toVal;
+            customRangeActive = true;
+
+            // Deactivate granularity buttons (visual indicator)
+            document.querySelectorAll('.granularity-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Update UI
+            updatePeriodIndicator();
+            updateKPIs();
+            updateQuarterDrillDown();
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
+            updateAllInsights();
+        }
+
+        function resetCustomRange() {
+            customRangeActive = false;
+            customRangeFrom = 0;
+            customRangeTo = 11;
+
+            // Reset dropdown selections
+            document.getElementById('rangeFrom').value = '0';
+            document.getElementById('rangeTo').value = '11';
+
+            // Clear error
+            document.getElementById('rangeError').classList.remove('visible');
+            document.getElementById('applyRangeBtn').disabled = false;
+
+            // Re-activate yearly button and reset to YTD
+            currentGranularity = 'yearly';
+            currentPeriod = 'YTD';
+            document.querySelectorAll('.granularity-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === 'Yearly') {
+                    btn.classList.add('active');
+                }
+            });
+            updateDropdownOptions();
+
+            // Update all
+            updatePeriodIndicator();
+            updateKPIs();
+            updateQuarterDrillDown();
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
+            updateAllInsights();
+        }
+
+        function getCustomRangeMonths() {
+            const months = [];
+            for (let i = customRangeFrom; i <= customRangeTo; i++) {
+                months.push(monthNames[i]);
+            }
+            return months;
         }
 
         // ============================================
@@ -2560,7 +2929,12 @@
         function getDataForPeriod() {
             let real, budget;
 
-            if (currentGranularity === 'monthly') {
+            // Handle custom range
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                real = aggregateMonthlyData(months, monthlyData);
+                budget = aggregateMonthlyData(months, monthlyBudget);
+            } else if (currentGranularity === 'monthly') {
                 real = monthlyData[currentPeriod];
                 budget = monthlyBudget[currentPeriod];
             } else if (currentGranularity === 'quarterly') {
@@ -2576,6 +2950,40 @@
             }
 
             return { real, budget };
+        }
+
+        // Helper function to aggregate monthly data for custom range
+        function aggregateMonthlyData(months, dataSource) {
+            let totalRevenue = 0, totalEbitda = 0, totalSubs = 0, totalSpend = 0;
+            let totalArpu = 0, totalCac = 0, totalConv = 0, totalLtvCac = 0;
+            let count = 0;
+
+            for (const month of months) {
+                if (dataSource[month]) {
+                    const d = dataSource[month];
+                    totalRevenue += d.revenue || 0;
+                    totalEbitda += d.ebitda || 0;
+                    totalSubs += d.subs || 0;
+                    totalSpend += d.spend || 0;
+                    totalArpu += d.arpu || 0;
+                    totalCac += d.cac || 0;
+                    totalConv += d.conversion || 0;
+                    totalLtvCac += d.ltvCac || 0;
+                    count++;
+                }
+            }
+
+            return {
+                revenue: totalRevenue,
+                ebitda: totalEbitda,
+                subs: totalSubs,
+                spend: totalSpend,
+                arpu: count > 0 ? totalArpu / count : 0,
+                cac: count > 0 ? totalCac / count : 0,
+                conversion: count > 0 ? totalConv / count : 0,
+                ltvCac: count > 0 ? totalLtvCac / count : 0,
+                burnRate: Math.abs(totalEbitda)
+            };
         }
 
         function updateKPIs() {
@@ -2881,6 +3289,27 @@
             let actualData = [];
             let budgetData = [];
 
+            // Handle custom range - show monthly data for selected months
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                labels = months.map(m => monthLabelsShort[monthNames.indexOf(m)]);
+                if (filter === 'all') {
+                    months.forEach(month => {
+                        actualData.push((monthlyData[month]?.revenue || 0) / 1000);
+                        budgetData.push((monthlyBudget[month]?.revenue || 0) / 1000);
+                    });
+                } else {
+                    // For category filters, approximate from quarterly data
+                    months.forEach(month => {
+                        const monthIdx = monthNames.indexOf(month);
+                        const q = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'][monthIdx];
+                        actualData.push((revenueBreakdown.actual[filter]?.[q] || 0) / 3000);
+                        budgetData.push((revenueBreakdown.budget[filter]?.[q] || 0) / 3000);
+                    });
+                }
+                return { labels, actual: actualData, budget: budgetData };
+            }
+
             switch(currentGranularity) {
                 case 'monthly':
                     labels = monthLabelsShort;
@@ -2950,6 +3379,14 @@
         }
 
         function getRevenueChartTitle() {
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    return `${fromMonth} Revenue: Actual vs Budget`;
+                }
+                return `${fromMonth} - ${toMonth} Revenue: Actual vs Budget`;
+            }
             const periodNames = {
                 'monthly': 'Monthly',
                 'quarterly': 'Quarterly',
@@ -3062,6 +3499,10 @@
             charts.revenue.data.labels = revenueData.labels;
             charts.revenue.data.datasets[0].data = revenueData.actual;
             charts.revenue.data.datasets[1].data = revenueData.budget;
+
+            // Handle CAGR trend line
+            updateRevenueCagrTrendline();
+
             charts.revenue.update();
 
             updateRevenueBreakdown(currentRevenueFilter);
@@ -3166,6 +3607,17 @@
             let actualData = [];
             let budgetData = [];
 
+            // Handle custom range
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                labels = months.map(m => monthLabelsShort[monthNames.indexOf(m)]);
+                months.forEach(month => {
+                    actualData.push((monthlyData[month]?.ebitda || 0) / 1000);
+                    budgetData.push((monthlyBudget[month]?.ebitda || 0) / 1000);
+                });
+                return { labels, actual: actualData, budget: budgetData };
+            }
+
             switch(currentGranularity) {
                 case 'monthly':
                     labels = monthLabelsShort;
@@ -3201,6 +3653,14 @@
         }
 
         function getEbitdaChartTitle() {
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    return `${fromMonth} EBITDA: Actual vs Budget`;
+                }
+                return `${fromMonth} - ${toMonth} EBITDA: Actual vs Budget`;
+            }
             const periodNames = {
                 'monthly': 'Monthly',
                 'quarterly': 'Quarterly',
@@ -3314,7 +3774,250 @@
             charts.ebitda.data.labels = ebitdaData.labels;
             charts.ebitda.data.datasets[0].data = ebitdaData.actual;
             charts.ebitda.data.datasets[1].data = ebitdaData.budget;
+
+            // Handle CAGR trend line
+            updateEbitdaCagrTrendline();
+
             charts.ebitda.update();
+        }
+
+        // ============================================
+        // CAGR TREND CALCULATIONS AND DISPLAY
+        // ============================================
+
+        /**
+         * Calculate growth rate based on data series
+         * Returns the period-over-period growth rate
+         */
+        function calculateGrowthRate(dataArray) {
+            if (!dataArray || dataArray.length < 2) return null;
+
+            const firstValue = dataArray[0];
+            const lastValue = dataArray[dataArray.length - 1];
+            const periods = dataArray.length - 1;
+
+            // Handle edge cases
+            if (firstValue === 0 || firstValue === null || firstValue === undefined) return null;
+            if (lastValue === null || lastValue === undefined) return null;
+
+            // For negative values (like EBITDA losses), we need special handling
+            if (firstValue < 0 && lastValue < 0) {
+                // Both negative - check if loss is decreasing (improving)
+                const ratio = lastValue / firstValue;
+                if (ratio <= 0) return null;
+                const cagr = (Math.pow(ratio, 1 / periods) - 1) * 100;
+                return cagr;
+            } else if (firstValue < 0 && lastValue >= 0) {
+                // Went from loss to profit - can't calculate traditional CAGR
+                return null;
+            } else if (firstValue > 0 && lastValue < 0) {
+                // Went from profit to loss - can't calculate traditional CAGR
+                return null;
+            }
+
+            // Normal case: both positive
+            const cagr = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
+            return cagr;
+        }
+
+        /**
+         * Generate trendline data based on CAGR
+         */
+        function generateTrendlineData(startValue, growthRate, periods) {
+            const trendData = [];
+            for (let i = 0; i < periods; i++) {
+                const value = startValue * Math.pow(1 + growthRate / 100, i);
+                trendData.push(value);
+            }
+            return trendData;
+        }
+
+        /**
+         * Get the period label for CAGR display
+         */
+        function getCagrPeriodLabel() {
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                if (months.length <= 1) return 'Growth';
+                return 'Period Growth';
+            }
+
+            switch(currentGranularity) {
+                case 'monthly':
+                    return 'MoM Growth';
+                case 'quarterly':
+                    return 'QoQ Growth';
+                case 'semester':
+                    return 'Semester Growth';
+                case 'yearly':
+                default:
+                    return 'CAGR';
+            }
+        }
+
+        /**
+         * Update CAGR badge display
+         */
+        function updateCagrBadge(badgeId, cagrValue, show) {
+            const badge = document.getElementById(badgeId);
+            if (!badge) return;
+
+            if (!show || cagrValue === null) {
+                badge.classList.add('hidden');
+                return;
+            }
+
+            badge.classList.remove('hidden');
+
+            // Update badge class based on value
+            badge.classList.remove('positive', 'negative', 'neutral');
+            if (cagrValue > 0) {
+                badge.classList.add('positive');
+            } else if (cagrValue < 0) {
+                badge.classList.add('negative');
+            } else {
+                badge.classList.add('neutral');
+            }
+
+            // Update badge content
+            const arrowEl = badge.querySelector('.badge-arrow');
+            const valueEl = badge.querySelector('.badge-value');
+
+            if (arrowEl) {
+                arrowEl.textContent = cagrValue >= 0 ? '↑' : '↓';
+            }
+
+            if (valueEl) {
+                const label = getCagrPeriodLabel();
+                const sign = cagrValue >= 0 ? '+' : '';
+                valueEl.textContent = `${label}: ${sign}${cagrValue.toFixed(1)}%`;
+            }
+        }
+
+        /**
+         * Toggle Revenue CAGR trend visibility
+         */
+        function toggleRevenueCagr() {
+            showRevenueCagrTrend = !showRevenueCagrTrend;
+
+            const btn = document.getElementById('revenueCagrToggle');
+            if (btn) {
+                btn.classList.toggle('active', showRevenueCagrTrend);
+            }
+
+            updateRevenueCagrTrendline();
+            charts.revenue.update();
+        }
+
+        /**
+         * Toggle EBITDA CAGR trend visibility
+         */
+        function toggleEbitdaCagr() {
+            showEbitdaCagrTrend = !showEbitdaCagrTrend;
+
+            const btn = document.getElementById('ebitdaCagrToggle');
+            if (btn) {
+                btn.classList.toggle('active', showEbitdaCagrTrend);
+            }
+
+            updateEbitdaCagrTrendline();
+            charts.ebitda.update();
+        }
+
+        /**
+         * Update Revenue chart trendline
+         */
+        function updateRevenueCagrTrendline() {
+            if (!charts.revenue) return;
+
+            const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
+            const actualData = revenueData.actual;
+
+            // Remove existing trendline dataset if exists
+            const trendlineIndex = charts.revenue.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
+            if (trendlineIndex !== -1) {
+                charts.revenue.data.datasets.splice(trendlineIndex, 1);
+            }
+
+            // Calculate CAGR
+            const cagr = calculateGrowthRate(actualData);
+
+            // Update badge
+            updateCagrBadge('revenueCagrBadge', cagr, showRevenueCagrTrend);
+
+            if (!showRevenueCagrTrend || cagr === null || actualData.length < 2) {
+                return;
+            }
+
+            // Generate trendline data
+            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
+
+            // Add trendline dataset
+            charts.revenue.data.datasets.push({
+                label: 'CAGR Trend',
+                data: trendlineData,
+                type: 'line',
+                borderColor: '#8B5CF6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                pointBackgroundColor: '#8B5CF6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: false,
+                tension: 0.1,
+                order: 0 // Draw on top
+            });
+        }
+
+        /**
+         * Update EBITDA chart trendline
+         */
+        function updateEbitdaCagrTrendline() {
+            if (!charts.ebitda) return;
+
+            const ebitdaData = getEbitdaDataForGranularity();
+            const actualData = ebitdaData.actual;
+
+            // Remove existing trendline dataset if exists
+            const trendlineIndex = charts.ebitda.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
+            if (trendlineIndex !== -1) {
+                charts.ebitda.data.datasets.splice(trendlineIndex, 1);
+            }
+
+            // Calculate CAGR
+            const cagr = calculateGrowthRate(actualData);
+
+            // Update badge
+            updateCagrBadge('ebitdaCagrBadge', cagr, showEbitdaCagrTrend);
+
+            if (!showEbitdaCagrTrend || cagr === null || actualData.length < 2) {
+                return;
+            }
+
+            // Generate trendline data
+            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
+
+            // Add trendline dataset
+            charts.ebitda.data.datasets.push({
+                label: 'CAGR Trend',
+                data: trendlineData,
+                type: 'line',
+                borderColor: '#8B5CF6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                pointBackgroundColor: '#8B5CF6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: false,
+                tension: 0.1,
+                order: 0 // Draw on top
+            });
         }
 
         // ============================================
@@ -4292,6 +4995,18 @@
         // OPEX DONUT CHART
         // ============================================
         function getOpexPeriodText() {
+            // Handle custom range first
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                const fromShort = monthLabelsShort[customRangeFrom];
+                const toShort = monthLabelsShort[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    return `${fromMonth} 2025`;
+                }
+                return `${fromShort}-${toShort} 2025`;
+            }
+
             switch(currentGranularity) {
                 case 'monthly':
                     return currentPeriod + ' 2025';
@@ -4324,28 +5039,35 @@
             let scaleFactor = 1;
             let monthsIncluded = [];
 
-            switch(currentGranularity) {
-                case 'monthly':
-                    scaleFactor = 1 / 12;
-                    monthsIncluded = [currentPeriod];
-                    break;
-                case 'quarterly':
-                    scaleFactor = 3 / 12;
-                    monthsIncluded = quarterMonths[currentPeriod] || [];
-                    break;
-                case 'semester':
-                    scaleFactor = 6 / 12;
-                    if (currentPeriod === 'H1') {
-                        monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
-                    } else {
-                        monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
-                    }
-                    break;
-                case 'yearly':
-                default:
-                    scaleFactor = 1;
-                    monthsIncluded = monthNames;
-                    break;
+            // Handle custom range first
+            if (customRangeActive) {
+                const numMonths = customRangeTo - customRangeFrom + 1;
+                scaleFactor = numMonths / 12;
+                monthsIncluded = getCustomRangeMonths();
+            } else {
+                switch(currentGranularity) {
+                    case 'monthly':
+                        scaleFactor = 1 / 12;
+                        monthsIncluded = [currentPeriod];
+                        break;
+                    case 'quarterly':
+                        scaleFactor = 3 / 12;
+                        monthsIncluded = quarterMonths[currentPeriod] || [];
+                        break;
+                    case 'semester':
+                        scaleFactor = 6 / 12;
+                        if (currentPeriod === 'H1') {
+                            monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
+                        } else {
+                            monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
+                        }
+                        break;
+                    case 'yearly':
+                    default:
+                        scaleFactor = 1;
+                        monthsIncluded = monthNames;
+                        break;
+                }
             }
 
             // Scale the annual OpEx data to the selected period
