@@ -126,11 +126,71 @@
         }
 
         /* Custom Range Selector */
-        .custom-range-container {
+        .custom-range-wrapper {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             margin-top: 6px;
+        }
+
+        .custom-range-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .custom-range-toggle:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .custom-range-toggle.active {
+            background: rgba(72, 187, 120, 0.3);
+            border-color: rgba(72, 187, 120, 0.5);
+            color: #86efac;
+        }
+
+        .custom-range-toggle .toggle-icon {
+            font-size: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-range-toggle.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .custom-range-container {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            animation: slideDown 0.2s ease;
+        }
+
+        .custom-range-container.visible {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .custom-range-label {
@@ -1905,40 +1965,45 @@
                 </div>
 
                 <!-- 3. Custom Date Range Selector -->
-                <div class="custom-range-container" id="customRangeContainer">
-                    <span class="custom-range-label">Custom Range:</span>
-                    <select class="range-dropdown" id="rangeFrom" onchange="validateRange()">
-                        <option value="0">January</option>
-                        <option value="1">February</option>
-                        <option value="2">March</option>
-                        <option value="3">April</option>
-                        <option value="4">May</option>
-                        <option value="5">June</option>
-                        <option value="6">July</option>
-                        <option value="7">August</option>
-                        <option value="8">September</option>
-                        <option value="9">October</option>
-                        <option value="10">November</option>
-                        <option value="11">December</option>
-                    </select>
-                    <span class="custom-range-label">to</span>
-                    <select class="range-dropdown" id="rangeTo" onchange="validateRange()">
-                        <option value="0">January</option>
-                        <option value="1">February</option>
-                        <option value="2">March</option>
-                        <option value="3">April</option>
-                        <option value="4">May</option>
-                        <option value="5">June</option>
-                        <option value="6">July</option>
-                        <option value="7">August</option>
-                        <option value="8">September</option>
-                        <option value="9">October</option>
-                        <option value="10">November</option>
-                        <option value="11" selected>December</option>
-                    </select>
-                    <button class="range-btn apply-btn" id="applyRangeBtn" onclick="applyCustomRange()">Apply</button>
-                    <button class="range-btn reset-btn" id="resetRangeBtn" onclick="resetCustomRange()">Reset</button>
-                    <span class="range-error" id="rangeError">From must be before To</span>
+                <div class="custom-range-wrapper">
+                    <button class="custom-range-toggle" id="customRangeToggle" onclick="toggleCustomRange()">
+                        <span>Custom Range</span>
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                    <div class="custom-range-container" id="customRangeContainer">
+                        <select class="range-dropdown" id="rangeFrom" onchange="validateRange()">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6">July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11">December</option>
+                        </select>
+                        <span class="custom-range-label">to</span>
+                        <select class="range-dropdown" id="rangeTo" onchange="validateRange()">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6">July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11" selected>December</option>
+                        </select>
+                        <button class="range-btn apply-btn" id="applyRangeBtn" onclick="applyCustomRange()">Apply</button>
+                        <button class="range-btn reset-btn" id="resetRangeBtn" onclick="resetCustomRange()">Reset</button>
+                        <span class="range-error" id="rangeError">From must be before To</span>
+                    </div>
                 </div>
 
                 <!-- 4. Budget Scenarios (only visible for 2026) -->
@@ -3545,6 +3610,14 @@
             }
         }
 
+        function toggleCustomRange() {
+            const container = document.getElementById('customRangeContainer');
+            const toggle = document.getElementById('customRangeToggle');
+
+            container.classList.toggle('visible');
+            toggle.classList.toggle('active');
+        }
+
         function applyCustomRange() {
             if (!validateRange()) return;
 
@@ -3559,6 +3632,12 @@
             document.querySelectorAll('.granularity-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
+
+            // Keep toggle button active to show custom range is in use
+            document.getElementById('customRangeToggle').classList.add('active');
+
+            // Collapse the panel after applying
+            document.getElementById('customRangeContainer').classList.remove('visible');
 
             // Update UI
             updatePeriodIndicator();
@@ -3583,6 +3662,10 @@
             // Clear error
             document.getElementById('rangeError').classList.remove('visible');
             document.getElementById('applyRangeBtn').disabled = false;
+
+            // Close the custom range panel
+            document.getElementById('customRangeContainer').classList.remove('visible');
+            document.getElementById('customRangeToggle').classList.remove('active');
 
             // Re-activate yearly button and reset to YTD
             currentGranularity = 'yearly';
