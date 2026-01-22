@@ -29,7 +29,7 @@
         .header {
             background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
             color: white;
-            padding: 40px 48px 32px;
+            padding: 30px 48px 24px;
             position: relative;
         }
 
@@ -37,7 +37,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .header-logo {
@@ -64,7 +64,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 10px;
         }
 
         .granularity-selector {
@@ -97,27 +97,27 @@
             color: #1e3a5f;
         }
 
-        .period-selector-row {
+        .granularity-row {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .period-dropdown {
-            padding: 10px 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
             cursor: pointer;
-            min-width: 180px;
+            min-width: 150px;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 36px;
+            background-position: right 10px center;
+            padding-right: 30px;
         }
 
         .period-dropdown option {
@@ -125,16 +125,306 @@
             color: white;
         }
 
-        .period-indicator {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 16px;
-            border-radius: 20px;
+        /* Custom Range Selector */
+        .custom-range-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .custom-range-label {
             font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .range-dropdown {
+            padding: 8px 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            min-width: 120px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+            transition: all 0.2s ease;
+        }
+
+        .range-dropdown:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .range-dropdown:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .range-dropdown option {
+            background: #1e3a5f;
+            color: white;
+        }
+
+        .range-btn {
+            padding: 8px 16px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .range-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .range-btn.apply-btn {
+            background: #48bb78;
+        }
+
+        .range-btn.apply-btn:hover {
+            background: #38a169;
+        }
+
+        .range-btn.reset-btn {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .range-btn.reset-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .range-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .range-error {
+            color: #fc8181;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            background: rgba(252, 129, 129, 0.15);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .range-error.visible {
+            display: block;
+        }
+
+        .custom-range-active {
+            background: rgba(72, 187, 120, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #86efac;
+            font-weight: 600;
+            margin-left: 8px;
+            display: none;
+        }
+
+        .custom-range-active.visible {
+            display: inline;
+        }
+
+        /* Year Selector */
+        .year-selector-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .year-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .year-btn {
+            padding: 8px 28px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 26px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .year-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .year-btn.active {
+            background: white;
+            color: #1e3a5f;
+        }
+
+        /* Budget Scenarios Row (2026 only) - Compact inline style */
+        .scenarios-row {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .scenarios-row.visible {
+            display: flex;
+        }
+
+        .scenarios-row-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .scenario-toggles-inline {
+            display: flex;
+            gap: 6px;
+        }
+
+        .scenario-toggle {
+            padding: 5px 12px;
+            border: 1px solid;
+            background: transparent;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .scenario-toggle.optimistic {
+            border-color: rgba(16, 185, 129, 0.4);
+            color: rgba(16, 185, 129, 0.7);
+        }
+
+        .scenario-toggle.optimistic:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10B981;
+            color: #10B981;
+        }
+
+        .scenario-toggle.optimistic.active {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: #10B981;
+            color: #10B981;
+        }
+
+        .scenario-toggle.conservative {
+            border-color: rgba(59, 130, 246, 0.4);
+            color: rgba(59, 130, 246, 0.7);
+        }
+
+        .scenario-toggle.conservative:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3B82F6;
+            color: #3B82F6;
+        }
+
+        .scenario-toggle.conservative.active {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: #3B82F6;
+            color: #3B82F6;
+        }
+
+        .scenario-toggle.pessimistic {
+            border-color: rgba(245, 158, 11, 0.4);
+            color: rgba(245, 158, 11, 0.7);
+        }
+
+        .scenario-toggle.pessimistic:hover {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #F59E0B;
+            color: #F59E0B;
+        }
+
+        .scenario-toggle.pessimistic.active {
+            background: rgba(245, 158, 11, 0.25);
+            border-color: #F59E0B;
+            color: #F59E0B;
+        }
+
+        /* Compare vs 2025 Checkbox - Compact inline */
+        .compare-row {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .compare-row.visible {
+            display: flex;
+        }
+
+        .compare-checkbox-small {
+            width: 14px;
+            height: 14px;
+            accent-color: #94a3b8;
+            cursor: pointer;
+        }
+
+        .compare-label-small {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+        }
+
+        .compare-label-small:hover {
             color: rgba(255, 255, 255, 0.9);
         }
 
-        .period-indicator strong {
-            color: white;
+        /* Status Display - Info style, not button */
+        .status-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .status-display strong {
+            color: #fbbf24;
+        }
+
+        .status-separator {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .status-scenario {
+            display: none;
+        }
+
+        .status-scenario.visible {
+            display: inline;
+        }
+
+        .status-scenario .scenario-value {
+            font-weight: 600;
+            color: #93c5fd;
         }
 
         /* Consolidated KPIs Section */
@@ -459,6 +749,34 @@
             background: #1e3a5f;
             color: white;
             border-color: #1e3a5f;
+        }
+
+        .revenue-filter-btn.cagr-trend-btn {
+            border-color: #5BA4E6;
+            color: #5BA4E6;
+            margin-left: 8px;
+            border-style: dashed;
+        }
+
+        .revenue-filter-btn.cagr-trend-btn:hover {
+            background: rgba(91, 164, 230, 0.1);
+            border-color: #5BA4E6;
+            color: #5BA4E6;
+        }
+
+        .revenue-filter-btn.cagr-trend-btn.active {
+            background: #5BA4E6;
+            color: white;
+            border-color: #5BA4E6;
+            border-style: solid;
+        }
+
+        .ebitda-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .revenue-breakdown {
@@ -819,6 +1137,91 @@
             .chart-toggle-reset {
                 margin-left: 0;
                 margin-top: 8px;
+            }
+        }
+
+        /* CAGR Trend Toggle */
+        .cagr-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            padding-left: 16px;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .cagr-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .cagr-toggle-btn:hover {
+            border-color: #5BA4E6;
+            color: #5BA4E6;
+        }
+
+        .cagr-toggle-btn.active {
+            background: linear-gradient(135deg, #5BA4E6 0%, #4A93D5 100%);
+            border-color: #5BA4E6;
+            color: white;
+        }
+
+        .cagr-toggle-btn .toggle-icon {
+            font-size: 14px;
+        }
+
+        .cagr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cagr-badge.positive {
+            background: rgba(34, 197, 94, 0.15);
+            color: #16a34a;
+        }
+
+        .cagr-badge.negative {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+        }
+
+        .cagr-badge.neutral {
+            background: rgba(107, 114, 128, 0.15);
+            color: #6b7280;
+        }
+
+        .cagr-badge.hidden {
+            display: none;
+        }
+
+        .cagr-badge .badge-arrow {
+            font-size: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .cagr-toggle-container {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+                margin-top: 8px;
+                width: 100%;
             }
         }
 
@@ -1234,37 +1637,94 @@
         <div class="header">
             <div class="header-branding">
                 <!-- Kinedu Logo -->
-                <svg class="header-logo" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Icon: Green square -->
-                    <rect x="0" y="0" width="22" height="22" fill="#4CAF50"/>
-                    <!-- Icon: Yellow circle -->
-                    <circle cx="33" cy="11" r="11" fill="#FFC107"/>
-                    <!-- Icon: Pink arc -->
-                    <path d="M0 80 Q0 35 22 35 L22 80 Z" fill="#E91E63"/>
-                    <!-- Icon: Blue rectangle -->
-                    <rect x="22" y="35" width="11" height="45" fill="#2196F3"/>
-                    <!-- Text: kinedu -->
-                    <text x="60" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="700" fill="#2196F3">kinedu</text>
-                </svg>
-                <div class="header-subtitle">Financial Performance 2025</div>
+                <img class="header-logo" src="logo kinedu.png" alt="Kinedu Logo">
+                <div class="header-subtitle" id="headerSubtitle">Financial Performance 2025</div>
             </div>
 
-            <!-- Time Filters -->
+            <!-- All Filters Container -->
             <div class="time-filters-container">
-                <div class="granularity-selector">
-                    <button class="granularity-btn" onclick="setGranularity('monthly')">Monthly</button>
-                    <button class="granularity-btn" onclick="setGranularity('quarterly')">Quarterly</button>
-                    <button class="granularity-btn" onclick="setGranularity('semester')">Semester</button>
-                    <button class="granularity-btn active" onclick="setGranularity('yearly')">Yearly</button>
+                <!-- 1. Year Selector -->
+                <div class="year-selector-container">
+                    <div class="year-selector">
+                        <button class="year-btn active" id="yearBtn2025" onclick="setYear(2025)">2025</button>
+                        <button class="year-btn" id="yearBtn2026" onclick="setYear(2026)">2026</button>
+                    </div>
                 </div>
 
-                <div class="period-selector-row">
+                <!-- 2. Time Granularity + Period Selector -->
+                <div class="granularity-row">
+                    <div class="granularity-selector">
+                        <button class="granularity-btn" onclick="setGranularity('monthly')">Monthly</button>
+                        <button class="granularity-btn" onclick="setGranularity('quarterly')">Quarterly</button>
+                        <button class="granularity-btn" onclick="setGranularity('semester')">Semester</button>
+                        <button class="granularity-btn active" onclick="setGranularity('yearly')">Yearly</button>
+                    </div>
                     <select class="period-dropdown" id="periodDropdown" onchange="setPeriod(this.value)">
                         <option value="YTD">Year to Date 2025</option>
                     </select>
-                    <div class="period-indicator" id="periodIndicator">
-                        Showing: <strong>Year to Date 2025</strong>
+                </div>
+
+                <!-- 3. Custom Date Range Selector -->
+                <div class="custom-range-container" id="customRangeContainer">
+                    <span class="custom-range-label">Custom Range:</span>
+                    <select class="range-dropdown" id="rangeFrom" onchange="validateRange()">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                    <span class="custom-range-label">to</span>
+                    <select class="range-dropdown" id="rangeTo" onchange="validateRange()">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11" selected>December</option>
+                    </select>
+                    <button class="range-btn apply-btn" id="applyRangeBtn" onclick="applyCustomRange()">Apply</button>
+                    <button class="range-btn reset-btn" id="resetRangeBtn" onclick="resetCustomRange()">Reset</button>
+                    <span class="range-error" id="rangeError">From must be before To</span>
+                </div>
+
+                <!-- 4. Budget Scenarios (only visible for 2026) -->
+                <div class="scenarios-row" id="scenariosRow">
+                    <span class="scenarios-row-label">Budget Scenario:</span>
+                    <div class="scenario-toggles-inline">
+                        <button class="scenario-toggle optimistic" id="scenarioOptimistic" onclick="toggleScenario('optimistic')">Optimistic</button>
+                        <button class="scenario-toggle conservative active" id="scenarioConservative" onclick="toggleScenario('conservative')">Conservative</button>
+                        <button class="scenario-toggle pessimistic" id="scenarioPessimistic" onclick="toggleScenario('pessimistic')">Pessimistic</button>
                     </div>
+                </div>
+
+                <!-- 5. Compare vs 2025 Checkbox (only visible for 2026) -->
+                <div class="compare-row" id="compareRow">
+                    <input type="checkbox" class="compare-checkbox-small" id="compareCheckbox" onchange="toggleCompareWith2025()">
+                    <label class="compare-label-small" for="compareCheckbox">Compare vs 2025 Actual</label>
+                </div>
+
+                <!-- 6. Status Display (info style) -->
+                <div class="status-display" id="statusDisplay">
+                    Showing: <strong id="statusPeriod">Year to Date 2025</strong>
+                    <span class="status-scenario" id="statusScenario">
+                        <span class="status-separator">|</span>
+                        Scenario: <span class="scenario-value" id="statusScenarioValue">Conservative</span>
+                    </span>
+                    <span class="custom-range-active" id="customRangeActive">Custom Range Active</span>
                 </div>
             </div>
         </div>
@@ -1304,6 +1764,13 @@
                         <button class="revenue-filter-btn" onclick="filterRevenue('subscriptions')">Subscription Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
+                        <button class="revenue-filter-btn cagr-trend-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
+                            CAGR Trend
+                        </button>
+                        <span class="cagr-badge hidden" id="revenueCagrBadge">
+                            <span class="badge-arrow">↑</span>
+                            <span class="badge-value">+0%</span>
+                        </span>
                     </div>
                     <div class="chart-toggles" id="toggles-revenue"></div>
                     <canvas id="revenueChart" height="80"></canvas>
@@ -1311,7 +1778,15 @@
                 </div>
                 <div class="chart-container">
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
-                    <div class="chart-toggles" id="toggles-ebitda"></div>
+                    <div class="ebitda-filters">
+                        <button class="revenue-filter-btn cagr-trend-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
+                            CAGR Trend
+                        </button>
+                        <span class="cagr-badge hidden" id="ebitdaCagrBadge">
+                            <span class="badge-arrow">↑</span>
+                            <span class="badge-value">+0%</span>
+                        </span>
+                    </div>
                     <canvas id="ebitdaChart" height="80"></canvas>
                 </div>
             </div>
@@ -1506,12 +1981,28 @@
         // ============================================
         // GOOGLE SHEETS DATA SOURCES
         // ============================================
-        const DATA_SOURCES = {
+        // 2025 Data Sources
+        const DATA_SOURCES_2025 = {
             kpiActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTJbzzS-WZtUAhV-pD1yaYzTPofqmh74UYlJgOIJOZC3ZGwlWxe63U8Het9RYJifsjWPELPdRvi2Mqp/pub?output=csv',
             kpiBudget: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSvqeNn34Kx8mu7QADDkU2vB6jW1xGhOZ5_E60A0hpKV_Z7rURC75PkHTW71NBBsgzHwl9VAq3g_bP5/pub?output=csv',
             plActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSBn3e5-CrJplm6IPSv6us2ZQUROWdAdDxTyEn5ydzQVmTNGOVpfFXp5eBVibaTrA4Bxfevihn453x3/pub?output=csv',
             plBudget: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSv_vWUvx1AFEUlZmg_sWwzcgkDEFnbNy2Ox4UtxA3HLytst3YZG40FJSMMhup-AqWK3c3xDHkwvacy/pub?output=csv'
         };
+
+        // 2026 Data Sources
+        const DATA_SOURCES_2026 = {
+            kpiActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQ0Uy9ou09cF78AgvontFHLAculFyBG4n7r_dCrUY9Wb-6c7nPj1eORYqSOrhT47MLqrw48Sii5v4b/pub?output=csv',
+            kpiBudgetOptimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNtj2ts9qPvq6KiFsPxLs7NJY1jR-ivaf-zuIkoqSqS_Hs1Ewazeaz3s5csN5GuQSOAJ6w_pOkVFxz/pub?output=csv',
+            kpiBudgetConservative: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8KODgWuDngND6ghCPZwLjd2eGqBIaJA6vLJRqXSfl0Es4i1HwfFJwSM0Nn47eFPYzyUmi_ULOd_mG/pub?output=csv',
+            kpiBudgetPessimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-JbVG8en1sSFg0VMH991T1mCngfV4A_zKt63ufeWjoAuq_2TEb5iFIYJGBRuK43PUanLyOYhrC6Qk/pub?output=csv',
+            plActual: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmpvi1XsOQeuArJC54QipxDuf9_xC6AFAO9g3ysw4lQu8BkhLmcoc7aMa0p6SKpX4UlLFrXdZlMan/pub?output=csv',
+            plBudgetOptimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRS5sB5UDDyPJ1tPNii2p0taeWnP-5JuQafzz4WKGujs14x1dA9ldnTbS5RSAb6VRoZcps53edhiUFB/pub?output=csv',
+            plBudgetConservative: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRBg9z9AZbDU05iLL3iq30pue4QY45PxPNYKvTO47YW3BuZDzJ8zK1nSFzJ1M6wRSLEgTAssr2L1ZKE/pub?output=csv',
+            plBudgetPessimistic: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSAMJJTXoKK_whKUo5gqC3ONxmL9U1ESLKso3CD11hrJC-afsBzWtGhVAgc2GfYEV0oAmUR6Py1fB9i/pub?output=csv'
+        };
+
+        // Legacy reference (points to current year)
+        const DATA_SOURCES = DATA_SOURCES_2025;
 
         // ============================================
         // DATA VARIABLES (will be populated from Google Sheets)
@@ -1539,6 +2030,36 @@
         let currentGranularity = 'yearly';
         let currentPeriod = 'YTD';
         let charts = {};
+
+        // Custom Range variables
+        let customRangeActive = false;
+        let customRangeFrom = 0;  // Month index (0 = January)
+        let customRangeTo = 11;   // Month index (11 = December)
+
+        // CAGR Trend toggle states
+        let showRevenueCagrTrend = false;
+        let showEbitdaCagrTrend = false;
+
+        // Multi-year and scenario state
+        let currentYear = 2025;
+        let scenarioStates = {
+            optimistic: false,
+            conservative: true,  // Default for 2026
+            pessimistic: false
+        };
+        let compareWith2025 = false;
+
+        // 2026 Data storage
+        let data2026 = {
+            actual: { real: {}, monthlyData: {}, monthlyBudget: {} },
+            optimistic: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {} },
+            conservative: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {} },
+            pessimistic: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {} }
+        };
+        let data2026Loaded = false;
+
+        // 2025 Data backup for comparison
+        let data2025Backup = null;
 
         // ============================================
         // CSV PARSING UTILITIES
@@ -2113,18 +2634,22 @@
         }
 
         function initializeDashboard() {
-            updateDropdownOptions();
-            updateKPIs();
-            updateQuarterDrillDown();
-            createContributionMarginChart();
-            createRevenueChart();
-            createEbitdaChart();
-            createMarketingEfficiencyChart();
-            createSubscriberAcquisitionChart();
-            createUnitEconomicsChart();
-            createOpexTable();
-            createOpexDonutChart();
-            updateAllInsights();
+            try {
+                updateDropdownOptions();
+                updateKPIs();
+                updateQuarterDrillDown();
+                createContributionMarginChart();
+                createRevenueChart();
+                createEbitdaChart();
+                createMarketingEfficiencyChart();
+                createSubscriberAcquisitionChart();
+                createUnitEconomicsChart();
+                createOpexTable();
+                createOpexDonutChart();
+                updateAllInsights();
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
         }
 
         // ============================================
@@ -2159,8 +2684,10 @@
             let budgetData = { spend: 0, signups: 0, cpnu: 0, subs: 0, cac: 0, arpu: 0, conversion: 0, ltvCac: 0 };
             let months = [];
 
-            // Determine which months to include based on granularity and period
-            if (currentGranularity === 'yearly') {
+            // Handle custom range first
+            if (customRangeActive) {
+                months = getCustomRangeMonths();
+            } else if (currentGranularity === 'yearly') {
                 months = monthNames;
             } else if (currentGranularity === 'semester') {
                 if (currentPeriod === 'H1') {
@@ -2235,7 +2762,9 @@
         }
 
         function generateMarketingInsight() {
-            const { actual, budget } = getInsightData();
+            const insightData = getInsightData();
+            if (!insightData) return;
+            const { actual, budget } = insightData;
 
             // Calculate metrics
             const spendVariation = budget.spend > 0 ? ((actual.spend - budget.spend) / budget.spend) * 100 : 0;
@@ -2293,7 +2822,9 @@
         }
 
         function generateSubscriberAcqInsight() {
-            const { actual, budget } = getInsightData();
+            const insightData = getInsightData();
+            if (!insightData) return;
+            const { actual, budget } = insightData;
 
             // Calculate metrics
             const subsGap = actual.subs - budget.subs;
@@ -2353,7 +2884,9 @@
         }
 
         function generateUnitEconomicsInsight() {
-            const { actual, budget } = getInsightData();
+            const insightData = getInsightData();
+            if (!insightData) return;
+            const { actual, budget } = insightData;
 
             // Calculate LTV:CAC (using simple 12-month LTV approximation)
             const ltvCacActual = actual.cac > 0 ? (actual.arpu * 12) / actual.cac : 0;
@@ -2421,9 +2954,9 @@
         }
 
         function updateAllInsights() {
-            generateMarketingInsight();
-            generateSubscriberAcqInsight();
-            generateUnitEconomicsInsight();
+            try { generateMarketingInsight(); } catch (e) { console.error('Marketing insight error:', e); }
+            try { generateSubscriberAcqInsight(); } catch (e) { console.error('Subscriber acq insight error:', e); }
+            try { generateUnitEconomicsInsight(); } catch (e) { console.error('Unit economics insight error:', e); }
         }
 
         // ============================================
@@ -2438,6 +2971,10 @@
         // ============================================
         function setGranularity(granularity) {
             currentGranularity = granularity;
+
+            // Deactivate custom range when selecting a granularity
+            customRangeActive = false;
+            document.getElementById('customRangeActive').classList.remove('visible');
 
             // Update button styling
             document.querySelectorAll('.granularity-btn').forEach(btn => {
@@ -2466,46 +3003,49 @@
 
         function updateDropdownOptions() {
             const dropdown = document.getElementById('periodDropdown');
+            if (!dropdown) return;
+            const year = currentYear;
             let options = '';
 
             switch(currentGranularity) {
                 case 'monthly':
                     options = `
-                        <option value="January">January 2025</option>
-                        <option value="February">February 2025</option>
-                        <option value="March">March 2025</option>
-                        <option value="April">April 2025</option>
-                        <option value="May">May 2025</option>
-                        <option value="June">June 2025</option>
-                        <option value="July">July 2025</option>
-                        <option value="August">August 2025</option>
-                        <option value="September">September 2025</option>
-                        <option value="October">October 2025</option>
-                        <option value="November">November 2025</option>
-                        <option value="December">December 2025</option>
+                        <option value="January">January ${year}</option>
+                        <option value="February">February ${year}</option>
+                        <option value="March">March ${year}</option>
+                        <option value="April">April ${year}</option>
+                        <option value="May">May ${year}</option>
+                        <option value="June">June ${year}</option>
+                        <option value="July">July ${year}</option>
+                        <option value="August">August ${year}</option>
+                        <option value="September">September ${year}</option>
+                        <option value="October">October ${year}</option>
+                        <option value="November">November ${year}</option>
+                        <option value="December">December ${year}</option>
                     `;
-                    currentPeriod = 'December';
+                    // For 2026, default to January (limited data available)
+                    currentPeriod = year === 2026 ? 'January' : 'December';
                     break;
                 case 'quarterly':
                     options = `
-                        <option value="Q1">Q1 2025</option>
-                        <option value="Q2">Q2 2025</option>
-                        <option value="Q3">Q3 2025</option>
-                        <option value="Q4">Q4 2025</option>
+                        <option value="Q1">Q1 ${year}</option>
+                        <option value="Q2">Q2 ${year}</option>
+                        <option value="Q3">Q3 ${year}</option>
+                        <option value="Q4">Q4 ${year}</option>
                     `;
-                    currentPeriod = 'Q4';
+                    currentPeriod = year === 2026 ? 'Q1' : 'Q4';
                     break;
                 case 'semester':
                     options = `
-                        <option value="H1">H1 2025 (Jan-Jun)</option>
-                        <option value="H2">H2 2025 (Jul-Dec)</option>
+                        <option value="H1">H1 ${year} (Jan-Jun)</option>
+                        <option value="H2">H2 ${year} (Jul-Dec)</option>
                     `;
-                    currentPeriod = 'H2';
+                    currentPeriod = year === 2026 ? 'H1' : 'H2';
                     break;
                 case 'yearly':
                     options = `
-                        <option value="YTD">Year to Date 2025</option>
-                        <option value="YEAR">Full Year 2025</option>
+                        <option value="YTD">Year to Date ${year}</option>
+                        <option value="YEAR">Full Year ${year}</option>
                     `;
                     currentPeriod = 'YTD';
                     break;
@@ -2533,25 +3073,603 @@
         }
 
         function updatePeriodIndicator() {
-            const indicator = document.getElementById('periodIndicator');
+            const statusPeriod = document.getElementById('statusPeriod');
+            const customRangeActiveEl = document.getElementById('customRangeActive');
+            const statusScenario = document.getElementById('statusScenario');
             let displayText = '';
+            const year = currentYear;
 
-            switch(currentGranularity) {
-                case 'monthly':
-                    displayText = currentPeriod + ' 2025';
-                    break;
-                case 'quarterly':
-                    displayText = currentPeriod + ' 2025';
-                    break;
-                case 'semester':
-                    displayText = currentPeriod === 'H1' ? 'First Half 2025' : 'Second Half 2025';
-                    break;
-                case 'yearly':
-                    displayText = currentPeriod === 'YTD' ? 'Year to Date 2025' : 'Full Year 2025';
-                    break;
+            // If custom range is active, show the range
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    displayText = `${fromMonth} ${year}`;
+                } else {
+                    displayText = `${fromMonth} - ${toMonth} ${year}`;
+                }
+                if (customRangeActiveEl) customRangeActiveEl.classList.add('visible');
+            } else {
+                if (customRangeActiveEl) customRangeActiveEl.classList.remove('visible');
+                switch(currentGranularity) {
+                    case 'monthly':
+                        displayText = currentPeriod + ' ' + year;
+                        break;
+                    case 'quarterly':
+                        displayText = currentPeriod + ' ' + year;
+                        break;
+                    case 'semester':
+                        displayText = currentPeriod === 'H1' ? `First Half ${year}` : `Second Half ${year}`;
+                        break;
+                    case 'yearly':
+                        displayText = currentPeriod === 'YTD' ? `Year to Date ${year}` : `Full Year ${year}`;
+                        break;
+                }
             }
 
-            indicator.innerHTML = `Showing: <strong>${displayText}</strong>`;
+            // Update the period text
+            if (statusPeriod) {
+                statusPeriod.textContent = displayText;
+            }
+
+            // Update scenario indicator visibility for 2026
+            if (statusScenario) {
+                if (currentYear === 2026) {
+                    statusScenario.classList.add('visible');
+                    updateScenarioIndicator();
+                } else {
+                    statusScenario.classList.remove('visible');
+                }
+            }
+        }
+
+        // ============================================
+        // CUSTOM RANGE FUNCTIONS
+        // ============================================
+        function validateRange() {
+            const fromVal = parseInt(document.getElementById('rangeFrom').value);
+            const toVal = parseInt(document.getElementById('rangeTo').value);
+            const errorEl = document.getElementById('rangeError');
+            const applyBtn = document.getElementById('applyRangeBtn');
+
+            if (fromVal > toVal) {
+                errorEl.classList.add('visible');
+                applyBtn.disabled = true;
+                return false;
+            } else {
+                errorEl.classList.remove('visible');
+                applyBtn.disabled = false;
+                return true;
+            }
+        }
+
+        function applyCustomRange() {
+            if (!validateRange()) return;
+
+            const fromVal = parseInt(document.getElementById('rangeFrom').value);
+            const toVal = parseInt(document.getElementById('rangeTo').value);
+
+            customRangeFrom = fromVal;
+            customRangeTo = toVal;
+            customRangeActive = true;
+
+            // Deactivate granularity buttons (visual indicator)
+            document.querySelectorAll('.granularity-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Update UI
+            updatePeriodIndicator();
+            updateKPIs();
+            updateQuarterDrillDown();
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
+            updateAllInsights();
+        }
+
+        function resetCustomRange() {
+            customRangeActive = false;
+            customRangeFrom = 0;
+            customRangeTo = 11;
+
+            // Reset dropdown selections
+            document.getElementById('rangeFrom').value = '0';
+            document.getElementById('rangeTo').value = '11';
+
+            // Clear error
+            document.getElementById('rangeError').classList.remove('visible');
+            document.getElementById('applyRangeBtn').disabled = false;
+
+            // Re-activate yearly button and reset to YTD
+            currentGranularity = 'yearly';
+            currentPeriod = 'YTD';
+            document.querySelectorAll('.granularity-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === 'Yearly') {
+                    btn.classList.add('active');
+                }
+            });
+            updateDropdownOptions();
+
+            // Update all
+            updatePeriodIndicator();
+            updateKPIs();
+            updateQuarterDrillDown();
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
+            updateAllInsights();
+        }
+
+        function getCustomRangeMonths() {
+            const months = [];
+            for (let i = customRangeFrom; i <= customRangeTo; i++) {
+                months.push(monthNames[i]);
+            }
+            return months;
+        }
+
+        // ============================================
+        // MULTI-YEAR AND SCENARIO FUNCTIONS
+        // ============================================
+
+        /**
+         * Set the active year and update UI
+         */
+        function setYear(year) {
+            if (currentYear === year) return;
+
+            currentYear = year;
+
+            // Update year button styles
+            document.getElementById('yearBtn2025').classList.toggle('active', year === 2025);
+            document.getElementById('yearBtn2026').classList.toggle('active', year === 2026);
+
+            // Update header subtitle
+            document.getElementById('headerSubtitle').textContent = `Financial Performance ${year}`;
+
+            // Show/hide scenario controls (new compact layout)
+            const scenariosRow = document.getElementById('scenariosRow');
+            const compareRow = document.getElementById('compareRow');
+            const statusScenario = document.getElementById('statusScenario');
+
+            if (year === 2026) {
+                if (scenariosRow) scenariosRow.classList.add('visible');
+                if (compareRow) compareRow.classList.add('visible');
+                if (statusScenario) statusScenario.classList.add('visible');
+
+                // Load 2026 data if not already loaded
+                if (!data2026Loaded) {
+                    load2026Data();
+                } else {
+                    applyYearData();
+                }
+            } else {
+                if (scenariosRow) scenariosRow.classList.remove('visible');
+                if (compareRow) compareRow.classList.remove('visible');
+                if (statusScenario) statusScenario.classList.remove('visible');
+
+                // Restore 2025 data
+                restore2025Data();
+            }
+
+            // Update dropdown options for the year
+            updateDropdownOptions();
+            updatePeriodIndicator();
+        }
+
+        /**
+         * Toggle a budget scenario
+         */
+        function toggleScenario(scenario) {
+            scenarioStates[scenario] = !scenarioStates[scenario];
+
+            // Update button style (works with both old and new class names)
+            const btn = document.getElementById('scenario' + scenario.charAt(0).toUpperCase() + scenario.slice(1));
+            if (btn) btn.classList.toggle('active', scenarioStates[scenario]);
+
+            // Update scenario indicator text
+            updateScenarioIndicator();
+
+            // Update all visualizations
+            if (currentYear === 2026) {
+                updateAllChartsAndKPIs();
+            }
+        }
+
+        /**
+         * Toggle compare with 2025
+         */
+        function toggleCompareWith2025() {
+            compareWith2025 = document.getElementById('compareCheckbox').checked;
+
+            // Update all charts to show/hide 2025 comparison line
+            if (currentYear === 2026) {
+                updateAllChartsAndKPIs();
+            }
+        }
+
+        /**
+         * Update the scenario indicator text
+         */
+        function updateScenarioIndicator() {
+            const scenarioValue = document.getElementById('statusScenarioValue');
+            if (!scenarioValue) return;
+
+            // Get active scenarios
+            const activeScenarios = [];
+            if (scenarioStates.conservative) activeScenarios.push('Conservative');
+            if (scenarioStates.optimistic) activeScenarios.push('Optimistic');
+            if (scenarioStates.pessimistic) activeScenarios.push('Pessimistic');
+
+            if (activeScenarios.length === 0) {
+                scenarioValue.textContent = 'None';
+            } else if (activeScenarios.length === 1) {
+                scenarioValue.textContent = activeScenarios[0];
+            } else {
+                scenarioValue.textContent = activeScenarios.join(', ');
+            }
+        }
+
+        /**
+         * Get the primary active scenario for comparisons
+         */
+        function getPrimaryScenario() {
+            // Priority: Conservative > Optimistic > Pessimistic
+            if (scenarioStates.conservative) return 'conservative';
+            if (scenarioStates.optimistic) return 'optimistic';
+            if (scenarioStates.pessimistic) return 'pessimistic';
+            return 'conservative'; // fallback
+        }
+
+        /**
+         * Load 2026 data from Google Sheets
+         */
+        async function load2026Data() {
+            try {
+                console.log('Loading 2026 data...');
+
+                // Backup current 2025 data
+                if (!data2025Backup) {
+                    data2025Backup = {
+                        data: JSON.parse(JSON.stringify(data)),
+                        monthlyData: JSON.parse(JSON.stringify(monthlyData)),
+                        monthlyBudget: JSON.parse(JSON.stringify(monthlyBudget)),
+                        revenueBreakdown: JSON.parse(JSON.stringify(revenueBreakdown)),
+                        opexData: JSON.parse(JSON.stringify(opexData)),
+                        contributionMarginActual: [...contributionMarginActual],
+                        contributionMarginBudget: [...contributionMarginBudget]
+                    };
+                }
+
+                // Load all 2026 data sources in parallel
+                const [
+                    kpiActualData,
+                    kpiOptimisticData,
+                    kpiConservativeData,
+                    kpiPessimisticData,
+                    plActualData,
+                    plOptimisticData,
+                    plConservativeData,
+                    plPessimisticData
+                ] = await Promise.all([
+                    fetch(DATA_SOURCES_2026.kpiActual).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.kpiBudgetOptimistic).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.kpiBudgetConservative).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.kpiBudgetPessimistic).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.plActual).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.plBudgetOptimistic).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.plBudgetConservative).then(r => r.text()),
+                    fetch(DATA_SOURCES_2026.plBudgetPessimistic).then(r => r.text())
+                ]);
+
+                // Parse KPI data for each scenario
+                data2026.actual.monthlyData = parseKPIData(kpiActualData);
+                data2026.optimistic.monthlyBudget = parseKPIData(kpiOptimisticData);
+                data2026.conservative.monthlyBudget = parseKPIData(kpiConservativeData);
+                data2026.pessimistic.monthlyBudget = parseKPIData(kpiPessimisticData);
+
+                // Parse P&L data for each scenario
+                parse2026PLData(plActualData, 'actual');
+                parse2026PLData(plOptimisticData, 'optimistic');
+                parse2026PLData(plConservativeData, 'conservative');
+                parse2026PLData(plPessimisticData, 'pessimistic');
+
+                // Aggregate quarterly/yearly data
+                aggregate2026Data();
+
+                data2026Loaded = true;
+                console.log('2026 data loaded successfully');
+
+                // Apply 2026 data to current view
+                applyYearData();
+
+            } catch (error) {
+                console.error('Error loading 2026 data:', error);
+                alert('Error loading 2026 data. Please check console for details.');
+            }
+        }
+
+        /**
+         * Parse KPI CSV data into monthly structure
+         */
+        function parseKPIData(csvText) {
+            const parsed = parseCSV(csvText);
+            const monthlyKPIs = {};
+
+            // Find the row indices for each KPI
+            let rowMap = {};
+            parsed.forEach((row, idx) => {
+                if (row[0]) {
+                    const label = row[0].toLowerCase().trim();
+                    if (label.includes('new users') || label.includes('signups')) rowMap.signups = idx;
+                    if (label.includes('spend') && !label.includes('cpnu')) rowMap.spend = idx;
+                    if (label.includes('cpnu') || label.includes('cost per new user')) rowMap.cpnu = idx;
+                    if (label.includes('new subs') || label.includes('subscribers')) rowMap.subs = idx;
+                    if (label.includes('cac') && !label.includes('ltv')) rowMap.cac = idx;
+                    if (label.includes('arpu')) rowMap.arpu = idx;
+                    if (label.includes('conversion')) rowMap.conversion = idx;
+                    if (label.includes('ltv/cac') || label.includes('ltv:cac')) rowMap.ltvCac = idx;
+                }
+            });
+
+            // Extract monthly values
+            monthNames.forEach((month, i) => {
+                monthlyKPIs[month] = {
+                    signups: rowMap.signups !== undefined ? parseNumber(parsed[rowMap.signups]?.[i + 1]) : 0,
+                    spend: rowMap.spend !== undefined ? parseNumber(parsed[rowMap.spend]?.[i + 1]) : 0,
+                    cpnu: rowMap.cpnu !== undefined ? parseNumber(parsed[rowMap.cpnu]?.[i + 1]) : 0,
+                    subs: rowMap.subs !== undefined ? parseNumber(parsed[rowMap.subs]?.[i + 1]) : 0,
+                    cac: rowMap.cac !== undefined ? parseNumber(parsed[rowMap.cac]?.[i + 1]) : 0,
+                    arpu: rowMap.arpu !== undefined ? parseNumber(parsed[rowMap.arpu]?.[i + 1]) : 0,
+                    conversion: rowMap.conversion !== undefined ? parseNumber(parsed[rowMap.conversion]?.[i + 1]) : 0,
+                    ltvCac: rowMap.ltvCac !== undefined ? parseNumber(parsed[rowMap.ltvCac]?.[i + 1]) : 0,
+                    revenue: 0,
+                    ebitda: 0,
+                    burnRate: 0
+                };
+            });
+
+            return monthlyKPIs;
+        }
+
+        /**
+         * Parse P&L data for 2026
+         */
+        function parse2026PLData(csvText, scenario) {
+            const parsed = parseCSV(csvText);
+
+            // Find revenue and EBITDA rows
+            let grossSalesRow = null;
+            let ebitdaRow = null;
+
+            parsed.forEach(row => {
+                if (row[0]) {
+                    const label = row[0].toLowerCase().trim();
+                    if (label.includes('gross sales') || label === 'revenue' || label === 'total revenue') {
+                        grossSalesRow = row;
+                    }
+                    if (label.includes('ebitda') && !label.includes('margin')) {
+                        ebitdaRow = row;
+                    }
+                }
+            });
+
+            // Get the correct monthly data object
+            let targetMonthlyData;
+            if (scenario === 'actual') {
+                targetMonthlyData = data2026.actual.monthlyData;
+            } else {
+                targetMonthlyData = data2026[scenario].monthlyBudget;
+            }
+
+            // Update monthly data with P&L values
+            monthNames.forEach((month, i) => {
+                if (!targetMonthlyData[month]) {
+                    targetMonthlyData[month] = {};
+                }
+                if (grossSalesRow) {
+                    targetMonthlyData[month].revenue = parseNumber(grossSalesRow[i + 1]);
+                }
+                if (ebitdaRow) {
+                    targetMonthlyData[month].ebitda = parseNumber(ebitdaRow[i + 1]);
+                    targetMonthlyData[month].burnRate = Math.abs(parseNumber(ebitdaRow[i + 1]));
+                }
+            });
+        }
+
+        /**
+         * Aggregate 2026 monthly data into quarterly and yearly
+         */
+        function aggregate2026Data() {
+            const scenarios = ['actual', 'optimistic', 'conservative', 'pessimistic'];
+
+            scenarios.forEach(scenario => {
+                const sourceData = scenario === 'actual' ? data2026.actual.monthlyData : data2026[scenario].monthlyBudget;
+                const targetData = scenario === 'actual' ? data2026.actual : data2026[scenario];
+
+                if (!targetData.real) targetData.real = {};
+                if (!targetData.budget) targetData.budget = {};
+
+                // Aggregate quarters
+                ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                    const qMonths = quarterMonths[q];
+                    let qData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+                    let count = 0;
+
+                    qMonths.forEach(m => {
+                        if (sourceData[m] && (sourceData[m].revenue || sourceData[m].subs)) {
+                            qData.revenue += sourceData[m].revenue || 0;
+                            qData.ebitda += sourceData[m].ebitda || 0;
+                            qData.subs += sourceData[m].subs || 0;
+                            qData.spend += sourceData[m].spend || 0;
+                            qData.arpu += sourceData[m].arpu || 0;
+                            qData.cac += sourceData[m].cac || 0;
+                            qData.conversion += sourceData[m].conversion || 0;
+                            qData.ltvCac += sourceData[m].ltvCac || 0;
+                            count++;
+                        }
+                    });
+
+                    // Average rate-based metrics
+                    if (count > 0) {
+                        qData.arpu = qData.arpu / count;
+                        qData.cac = qData.cac / count;
+                        qData.conversion = qData.conversion / count;
+                        qData.ltvCac = qData.ltvCac / count;
+                    }
+                    qData.burnRate = Math.abs(qData.ebitda);
+
+                    if (scenario === 'actual') {
+                        targetData.real[q] = qData;
+                    } else {
+                        targetData.budget[q] = qData;
+                    }
+                });
+
+                // Aggregate semesters
+                ['H1', 'H2'].forEach(h => {
+                    const hMonths = h === 'H1'
+                        ? ['January', 'February', 'March', 'April', 'May', 'June']
+                        : ['July', 'August', 'September', 'October', 'November', 'December'];
+
+                    let hData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+                    let count = 0;
+
+                    hMonths.forEach(m => {
+                        if (sourceData[m] && (sourceData[m].revenue || sourceData[m].subs)) {
+                            hData.revenue += sourceData[m].revenue || 0;
+                            hData.ebitda += sourceData[m].ebitda || 0;
+                            hData.subs += sourceData[m].subs || 0;
+                            hData.spend += sourceData[m].spend || 0;
+                            hData.arpu += sourceData[m].arpu || 0;
+                            hData.cac += sourceData[m].cac || 0;
+                            hData.conversion += sourceData[m].conversion || 0;
+                            hData.ltvCac += sourceData[m].ltvCac || 0;
+                            count++;
+                        }
+                    });
+
+                    if (count > 0) {
+                        hData.arpu = hData.arpu / count;
+                        hData.cac = hData.cac / count;
+                        hData.conversion = hData.conversion / count;
+                        hData.ltvCac = hData.ltvCac / count;
+                    }
+                    hData.burnRate = Math.abs(hData.ebitda);
+
+                    if (scenario === 'actual') {
+                        targetData.real[h] = hData;
+                    } else {
+                        targetData.budget[h] = hData;
+                    }
+                });
+
+                // Aggregate yearly
+                let yearData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+                let count = 0;
+
+                monthNames.forEach(m => {
+                    if (sourceData[m] && (sourceData[m].revenue || sourceData[m].subs)) {
+                        yearData.revenue += sourceData[m].revenue || 0;
+                        yearData.ebitda += sourceData[m].ebitda || 0;
+                        yearData.subs += sourceData[m].subs || 0;
+                        yearData.spend += sourceData[m].spend || 0;
+                        yearData.arpu += sourceData[m].arpu || 0;
+                        yearData.cac += sourceData[m].cac || 0;
+                        yearData.conversion += sourceData[m].conversion || 0;
+                        yearData.ltvCac += sourceData[m].ltvCac || 0;
+                        count++;
+                    }
+                });
+
+                if (count > 0) {
+                    yearData.arpu = yearData.arpu / count;
+                    yearData.cac = yearData.cac / count;
+                    yearData.conversion = yearData.conversion / count;
+                    yearData.ltvCac = yearData.ltvCac / count;
+                }
+                yearData.burnRate = Math.abs(yearData.ebitda);
+
+                if (scenario === 'actual') {
+                    targetData.real['YEAR'] = yearData;
+                } else {
+                    targetData.budget['YEAR'] = yearData;
+                }
+            });
+        }
+
+        /**
+         * Apply 2026 data to the current view
+         */
+        function applyYearData() {
+            if (currentYear !== 2026) return;
+
+            // Get primary scenario for budget comparison
+            const primaryScenario = getPrimaryScenario();
+
+            // Set monthlyData to 2026 actual
+            monthlyData = data2026.actual.monthlyData;
+
+            // Set monthlyBudget to primary scenario
+            monthlyBudget = data2026[primaryScenario].monthlyBudget;
+
+            // Set aggregated data
+            data.real = data2026.actual.real;
+            data.budget = data2026[primaryScenario].budget;
+
+            // Update all visualizations
+            updateAllChartsAndKPIs();
+        }
+
+        /**
+         * Restore 2025 data
+         */
+        function restore2025Data() {
+            if (!data2025Backup) return;
+
+            data = data2025Backup.data;
+            monthlyData = data2025Backup.monthlyData;
+            monthlyBudget = data2025Backup.monthlyBudget;
+            revenueBreakdown = data2025Backup.revenueBreakdown;
+            opexData = data2025Backup.opexData;
+            contributionMarginActual = data2025Backup.contributionMarginActual;
+            contributionMarginBudget = data2025Backup.contributionMarginBudget;
+
+            // Update all visualizations
+            updateAllChartsAndKPIs();
+        }
+
+        /**
+         * Update all charts and KPIs
+         */
+        function updateAllChartsAndKPIs() {
+            updateKPIs();
+            updateQuarterDrillDown();
+            updateRevenueChart();
+            updateEbitdaChart();
+            updateOpexDonutChart();
+            updateOpexTable();
+            updateAllInsights();
+            updateContributionMarginChart();
+        }
+
+        /**
+         * Update contribution margin chart if it exists
+         */
+        function updateContributionMarginChart() {
+            if (charts.contributionMargin) {
+                // Recalculate contribution margin for current year
+                const actualData = monthNames.map(m => (monthlyData[m]?.revenue || 0) / 1000);
+                const budgetData = monthNames.map(m => (monthlyBudget[m]?.revenue || 0) / 1000);
+
+                charts.contributionMargin.data.datasets[0].data = actualData;
+                charts.contributionMargin.data.datasets[1].data = budgetData;
+                charts.contributionMargin.update();
+            }
         }
 
         // ============================================
@@ -2560,37 +3678,90 @@
         function getDataForPeriod() {
             let real, budget;
 
-            if (currentGranularity === 'monthly') {
-                real = monthlyData[currentPeriod];
-                budget = monthlyBudget[currentPeriod];
+            // Default empty structure for safety
+            const emptyData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+
+            // Handle custom range
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                real = aggregateMonthlyData(months, monthlyData);
+                budget = aggregateMonthlyData(months, monthlyBudget);
+            } else if (currentGranularity === 'monthly') {
+                real = monthlyData?.[currentPeriod];
+                budget = monthlyBudget?.[currentPeriod];
             } else if (currentGranularity === 'quarterly') {
-                real = data.real[currentPeriod];
-                budget = data.budget[currentPeriod];
+                real = data?.real?.[currentPeriod];
+                budget = data?.budget?.[currentPeriod];
             } else if (currentGranularity === 'semester') {
-                real = data.real[currentPeriod];
-                budget = data.budget[currentPeriod];
+                real = data?.real?.[currentPeriod];
+                budget = data?.budget?.[currentPeriod];
             } else {
                 // yearly - use YEAR data for both YTD and YEAR (same at end of year)
-                real = data.real['YEAR'];
-                budget = data.budget['YEAR'];
+                real = data?.real?.['YEAR'];
+                budget = data?.budget?.['YEAR'];
             }
 
-            return { real, budget };
+            // Ensure we always return valid objects with all required properties
+            return {
+                real: real ? { ...emptyData, ...real } : emptyData,
+                budget: budget ? { ...emptyData, ...budget } : emptyData
+            };
+        }
+
+        // Helper function to aggregate monthly data for custom range
+        function aggregateMonthlyData(months, dataSource) {
+            let totalRevenue = 0, totalEbitda = 0, totalSubs = 0, totalSpend = 0;
+            let totalArpu = 0, totalCac = 0, totalConv = 0, totalLtvCac = 0;
+            let count = 0;
+
+            for (const month of months) {
+                if (dataSource[month]) {
+                    const d = dataSource[month];
+                    totalRevenue += d.revenue || 0;
+                    totalEbitda += d.ebitda || 0;
+                    totalSubs += d.subs || 0;
+                    totalSpend += d.spend || 0;
+                    totalArpu += d.arpu || 0;
+                    totalCac += d.cac || 0;
+                    totalConv += d.conversion || 0;
+                    totalLtvCac += d.ltvCac || 0;
+                    count++;
+                }
+            }
+
+            return {
+                revenue: totalRevenue,
+                ebitda: totalEbitda,
+                subs: totalSubs,
+                spend: totalSpend,
+                arpu: count > 0 ? totalArpu / count : 0,
+                cac: count > 0 ? totalCac / count : 0,
+                conversion: count > 0 ? totalConv / count : 0,
+                ltvCac: count > 0 ? totalLtvCac / count : 0,
+                burnRate: Math.abs(totalEbitda)
+            };
         }
 
         function updateKPIs() {
             const { real, budget } = getDataForPeriod();
 
             const kpiGrid = document.getElementById('consolidatedKPIs');
+            if (!kpiGrid) return;
 
-            // Calculate variances
-            const revenueVar = ((real.revenue - budget.revenue) / budget.revenue * 100);
-            const subsVar = ((real.subs - budget.subs) / budget.subs * 100);
-            const cacVar = ((real.cac - budget.cac) / budget.cac * 100);
-            const arpuVar = ((real.arpu - budget.arpu) / budget.arpu * 100);
+            // Helper function to safely calculate variance percentage
+            const safeVariance = (actual, budgetVal) => {
+                if (!budgetVal || budgetVal === 0) return 0;
+                return ((actual - budgetVal) / budgetVal * 100);
+            };
+
+            // Calculate variances with safe division
+            const revenueVar = safeVariance(real.revenue, budget.revenue);
+            const subsVar = safeVariance(real.subs, budget.subs);
+            const cacVar = safeVariance(real.cac, budget.cac);
+            const arpuVar = safeVariance(real.arpu, budget.arpu);
             const ebitdaVar = real.ebitda - budget.ebitda;
-            const ltvCacVar = ((real.ltvCac - budget.ltvCac) / budget.ltvCac * 100);
-            const burnRateVar = ((real.burnRate - budget.burnRate) / Math.abs(budget.burnRate || 1) * 100);
+            const ltvCacVar = safeVariance(real.ltvCac, budget.ltvCac);
+            const burnRateVar = safeVariance(real.burnRate, Math.abs(budget.burnRate || 1));
 
             // Format values
             const formatCurrency = (val, decimals = 0) => {
@@ -2699,12 +3870,14 @@
             const container = document.getElementById('quarterDrillDown');
             const drillDownContainer = document.getElementById('quarterDrillDownContainer');
 
+            if (!container || !drillDownContainer) return;
+
             // Show drill-down for quarterly view only
             if (currentGranularity === 'quarterly' && currentPeriod !== 'YEAR') {
                 drillDownContainer.style.display = 'block';
 
-                const real = data.real[currentPeriod];
-                const months = quarterMonths[currentPeriod];
+                const real = data?.real?.[currentPeriod] || { revenue: 0, subs: 0, cac: 0, arpu: 0 };
+                const months = quarterMonths[currentPeriod] || [];
 
                 container.innerHTML = `
                     <div class="quarter-detail">
@@ -2722,32 +3895,34 @@
                         </div>
                         <div class="months-grid expanded" id="monthsGrid${currentPeriod}">
                             ${months.map(month => {
-                                const m = monthlyData[month];
+                                const m = monthlyData?.[month] || { revenue: 0, subs: 0, cac: 0, arpu: 0 };
+                                const contributionMargin = (m.arpu || 0) - (m.cac || 0);
+                                const marginPercent = m.arpu ? Math.min(Math.abs(contributionMargin / m.arpu * 100), 100) : 0;
                                 return `
                                 <div class="month-card">
                                     <h4>${month}</h4>
                                     <div class="month-metric">
                                         <span class="month-metric-label">Revenue</span>
-                                        <span class="month-metric-value">$${(m.revenue / 1000).toFixed(1)}K</span>
+                                        <span class="month-metric-value">$${((m.revenue || 0) / 1000).toFixed(1)}K</span>
                                     </div>
                                     <div class="month-metric">
                                         <span class="month-metric-label">Subscribers</span>
-                                        <span class="month-metric-value">${m.subs.toLocaleString()}</span>
+                                        <span class="month-metric-value">${(m.subs || 0).toLocaleString()}</span>
                                     </div>
                                     <div class="month-metric">
                                         <span class="month-metric-label">CAC</span>
-                                        <span class="month-metric-value">$${m.cac.toFixed(2)}</span>
+                                        <span class="month-metric-value">$${(m.cac || 0).toFixed(2)}</span>
                                     </div>
                                     <div class="month-metric">
                                         <span class="month-metric-label">ARPU</span>
-                                        <span class="month-metric-value">$${m.arpu.toFixed(2)}</span>
+                                        <span class="month-metric-value">$${(m.arpu || 0).toFixed(2)}</span>
                                     </div>
                                     <div class="month-metric">
                                         <span class="month-metric-label">Contribution Margin</span>
-                                        <span class="month-metric-value" style="color: ${(m.arpu - m.cac) >= 0 ? '#22c55e' : '#ef4444'}">$${(m.arpu - m.cac).toFixed(2)}</span>
+                                        <span class="month-metric-value" style="color: ${contributionMargin >= 0 ? '#22c55e' : '#ef4444'}">$${contributionMargin.toFixed(2)}</span>
                                     </div>
                                     <div class="progress-bar-container">
-                                        <div class="progress-bar ${(m.arpu - m.cac) >= 0 ? 'under' : 'over'}" style="width: ${Math.min(Math.abs((m.arpu - m.cac) / m.arpu * 100), 100)}%"></div>
+                                        <div class="progress-bar ${contributionMargin >= 0 ? 'under' : 'over'}" style="width: ${marginPercent}%"></div>
                                     </div>
                                 </div>
                             `}).join('')}
@@ -2777,7 +3952,9 @@
         // CONTRIBUTION MARGIN CHART
         // ============================================
         function createContributionMarginChart() {
-            const ctx = document.getElementById('contributionMarginChart').getContext('2d');
+            const canvasEl = document.getElementById('contributionMarginChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
 
             charts.contributionMargin = new Chart(ctx, {
                 type: 'bar',
@@ -2881,20 +4058,41 @@
             let actualData = [];
             let budgetData = [];
 
+            // Handle custom range - show monthly data for selected months
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                labels = months.map(m => monthLabelsShort[monthNames.indexOf(m)]);
+                if (filter === 'all') {
+                    months.forEach(month => {
+                        actualData.push((monthlyData[month]?.revenue || 0) / 1000);
+                        budgetData.push((monthlyBudget[month]?.revenue || 0) / 1000);
+                    });
+                } else {
+                    // For category filters, approximate from quarterly data
+                    months.forEach(month => {
+                        const monthIdx = monthNames.indexOf(month);
+                        const q = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'][monthIdx];
+                        actualData.push((revenueBreakdown?.actual?.[filter]?.[q] || 0) / 3000);
+                        budgetData.push((revenueBreakdown?.budget?.[filter]?.[q] || 0) / 3000);
+                    });
+                }
+                return { labels, actual: actualData, budget: budgetData };
+            }
+
             switch(currentGranularity) {
                 case 'monthly':
                     labels = monthLabelsShort;
                     if (filter === 'all') {
                         monthNames.forEach(month => {
-                            actualData.push(monthlyData[month].revenue / 1000);
-                            budgetData.push(monthlyBudget[month].revenue / 1000);
+                            actualData.push((monthlyData[month]?.revenue || 0) / 1000);
+                            budgetData.push((monthlyBudget[month]?.revenue || 0) / 1000);
                         });
                     } else {
                         // For category filters, calculate monthly from quarterly (approximate)
                         const quarters = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'];
                         quarters.forEach((q, i) => {
-                            actualData.push(revenueBreakdown.actual[filter][q] / 3000);
-                            budgetData.push(revenueBreakdown.budget[filter][q] / 3000);
+                            actualData.push((revenueBreakdown.actual?.[filter]?.[q] || 0) / 3000);
+                            budgetData.push((revenueBreakdown.budget?.[filter]?.[q] || 0) / 3000);
                         });
                     }
                     break;
@@ -2903,13 +4101,13 @@
                     labels = ['Q1', 'Q2', 'Q3', 'Q4'];
                     if (filter === 'all') {
                         ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                            actualData.push(data.real[q].revenue / 1000);
-                            budgetData.push(data.budget[q].revenue / 1000);
+                            actualData.push((data.real[q]?.revenue || 0) / 1000);
+                            budgetData.push((data.budget[q]?.revenue || 0) / 1000);
                         });
                     } else {
                         ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                            actualData.push(revenueBreakdown.actual[filter][q] / 1000);
-                            budgetData.push(revenueBreakdown.budget[filter][q] / 1000);
+                            actualData.push((revenueBreakdown.actual?.[filter]?.[q] || 0) / 1000);
+                            budgetData.push((revenueBreakdown.budget?.[filter]?.[q] || 0) / 1000);
                         });
                     }
                     break;
@@ -2917,13 +4115,13 @@
                 case 'semester':
                     labels = ['H1', 'H2'];
                     if (filter === 'all') {
-                        actualData = [data.real.H1.revenue / 1000, data.real.H2.revenue / 1000];
-                        budgetData = [data.budget.H1.revenue / 1000, data.budget.H2.revenue / 1000];
+                        actualData = [(data.real.H1?.revenue || 0) / 1000, (data.real.H2?.revenue || 0) / 1000];
+                        budgetData = [(data.budget.H1?.revenue || 0) / 1000, (data.budget.H2?.revenue || 0) / 1000];
                     } else {
-                        const h1Actual = revenueBreakdown.actual[filter].Q1 + revenueBreakdown.actual[filter].Q2;
-                        const h2Actual = revenueBreakdown.actual[filter].Q3 + revenueBreakdown.actual[filter].Q4;
-                        const h1Budget = revenueBreakdown.budget[filter].Q1 + revenueBreakdown.budget[filter].Q2;
-                        const h2Budget = revenueBreakdown.budget[filter].Q3 + revenueBreakdown.budget[filter].Q4;
+                        const h1Actual = (revenueBreakdown.actual?.[filter]?.Q1 || 0) + (revenueBreakdown.actual?.[filter]?.Q2 || 0);
+                        const h2Actual = (revenueBreakdown.actual?.[filter]?.Q3 || 0) + (revenueBreakdown.actual?.[filter]?.Q4 || 0);
+                        const h1Budget = (revenueBreakdown.budget?.[filter]?.Q1 || 0) + (revenueBreakdown.budget?.[filter]?.Q2 || 0);
+                        const h2Budget = (revenueBreakdown.budget?.[filter]?.Q3 || 0) + (revenueBreakdown.budget?.[filter]?.Q4 || 0);
                         actualData = [h1Actual / 1000, h2Actual / 1000];
                         budgetData = [h1Budget / 1000, h2Budget / 1000];
                     }
@@ -2931,15 +4129,15 @@
 
                 case 'yearly':
                 default:
-                    labels = ['FY 2025'];
+                    labels = [`FY ${currentYear}`];
                     if (filter === 'all') {
-                        actualData = [data.real.YEAR.revenue / 1000];
-                        budgetData = [data.budget.YEAR.revenue / 1000];
+                        actualData = [(data.real.YEAR?.revenue || 0) / 1000];
+                        budgetData = [(data.budget.YEAR?.revenue || 0) / 1000];
                     } else {
-                        const yearActual = revenueBreakdown.actual[filter].Q1 + revenueBreakdown.actual[filter].Q2 +
-                                          revenueBreakdown.actual[filter].Q3 + revenueBreakdown.actual[filter].Q4;
-                        const yearBudget = revenueBreakdown.budget[filter].Q1 + revenueBreakdown.budget[filter].Q2 +
-                                          revenueBreakdown.budget[filter].Q3 + revenueBreakdown.budget[filter].Q4;
+                        const yearActual = (revenueBreakdown.actual?.[filter]?.Q1 || 0) + (revenueBreakdown.actual?.[filter]?.Q2 || 0) +
+                                          (revenueBreakdown.actual?.[filter]?.Q3 || 0) + (revenueBreakdown.actual?.[filter]?.Q4 || 0);
+                        const yearBudget = (revenueBreakdown.budget?.[filter]?.Q1 || 0) + (revenueBreakdown.budget?.[filter]?.Q2 || 0) +
+                                          (revenueBreakdown.budget?.[filter]?.Q3 || 0) + (revenueBreakdown.budget?.[filter]?.Q4 || 0);
                         actualData = [yearActual / 1000];
                         budgetData = [yearBudget / 1000];
                     }
@@ -2950,6 +4148,14 @@
         }
 
         function getRevenueChartTitle() {
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    return `${fromMonth} Revenue: Actual vs Budget`;
+                }
+                return `${fromMonth} - ${toMonth} Revenue: Actual vs Budget`;
+            }
             const periodNames = {
                 'monthly': 'Monthly',
                 'quarterly': 'Quarterly',
@@ -2960,11 +4166,14 @@
         }
 
         function createRevenueChart() {
-            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const canvasEl = document.getElementById('revenueChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             const revenueData = getRevenueDataForGranularity('all');
 
             // Update chart title
-            document.getElementById('revenueChartTitle').textContent = getRevenueChartTitle();
+            const titleEl = document.getElementById('revenueChartTitle');
+            if (titleEl) titleEl.textContent = getRevenueChartTitle();
 
             charts.revenue = new Chart(ctx, {
                 type: 'bar',
@@ -3061,10 +4270,171 @@
 
             charts.revenue.data.labels = revenueData.labels;
             charts.revenue.data.datasets[0].data = revenueData.actual;
+            charts.revenue.data.datasets[0].label = `Actual ${currentYear}`;
             charts.revenue.data.datasets[1].data = revenueData.budget;
+            charts.revenue.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
+
+            // Remove extra scenario datasets if any
+            while (charts.revenue.data.datasets.length > 2) {
+                // Keep CAGR trendline if it exists
+                const lastDataset = charts.revenue.data.datasets[charts.revenue.data.datasets.length - 1];
+                if (lastDataset.label === 'CAGR Trend') break;
+                charts.revenue.data.datasets.pop();
+            }
+
+            // Add 2026 scenario lines if applicable
+            if (currentYear === 2026) {
+                add2026ScenarioDatasets(charts.revenue, 'revenue');
+            }
+
+            // Add 2025 comparison line if enabled
+            if (currentYear === 2026 && compareWith2025 && data2025Backup) {
+                add2025ComparisonDataset(charts.revenue, 'revenue');
+            }
+
+            // Handle CAGR trend line
+            updateRevenueCagrTrendline();
+
             charts.revenue.update();
 
             updateRevenueBreakdown(currentRevenueFilter);
+        }
+
+        /**
+         * Add 2026 scenario datasets to a chart
+         */
+        function add2026ScenarioDatasets(chart, metric) {
+            const scenarioColors = {
+                optimistic: { border: '#10B981', bg: 'rgba(16, 185, 129, 0.1)' },
+                conservative: { border: '#3B82F6', bg: 'rgba(59, 130, 246, 0.1)' },
+                pessimistic: { border: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' }
+            };
+
+            // Get the primary scenario (already shown in main budget bar)
+            const primaryScenario = getPrimaryScenario();
+
+            // Add lines for other active scenarios
+            ['optimistic', 'conservative', 'pessimistic'].forEach(scenario => {
+                if (scenarioStates[scenario] && scenario !== primaryScenario) {
+                    const scenarioData = getScenarioData(scenario, metric);
+
+                    // Check if this dataset already exists
+                    const existingIdx = chart.data.datasets.findIndex(ds => ds.label === `${scenario.charAt(0).toUpperCase() + scenario.slice(1)} Budget`);
+                    if (existingIdx === -1) {
+                        chart.data.datasets.push({
+                            label: `${scenario.charAt(0).toUpperCase() + scenario.slice(1)} Budget`,
+                            data: scenarioData,
+                            type: 'line',
+                            borderColor: scenarioColors[scenario].border,
+                            backgroundColor: scenarioColors[scenario].bg,
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointBackgroundColor: scenarioColors[scenario].border,
+                            pointRadius: 3,
+                            fill: false,
+                            tension: 0.1,
+                            order: 1
+                        });
+                    }
+                }
+            });
+        }
+
+        /**
+         * Get scenario data for a specific metric
+         */
+        function getScenarioData(scenario, metric) {
+            const scenarioMonthlyData = data2026[scenario].monthlyBudget;
+            let resultData = [];
+
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                months.forEach(month => {
+                    resultData.push((scenarioMonthlyData[month]?.[metric] || 0) / 1000);
+                });
+            } else {
+                switch(currentGranularity) {
+                    case 'monthly':
+                        monthNames.forEach(month => {
+                            resultData.push((scenarioMonthlyData[month]?.[metric] || 0) / 1000);
+                        });
+                        break;
+                    case 'quarterly':
+                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                            resultData.push((data2026[scenario].budget[q]?.[metric] || 0) / 1000);
+                        });
+                        break;
+                    case 'semester':
+                        resultData = [
+                            (data2026[scenario].budget.H1?.[metric] || 0) / 1000,
+                            (data2026[scenario].budget.H2?.[metric] || 0) / 1000
+                        ];
+                        break;
+                    case 'yearly':
+                    default:
+                        resultData = [(data2026[scenario].budget.YEAR?.[metric] || 0) / 1000];
+                        break;
+                }
+            }
+
+            return resultData;
+        }
+
+        /**
+         * Add 2025 comparison dataset to a chart
+         */
+        function add2025ComparisonDataset(chart, metric) {
+            const backup = data2025Backup;
+            let comparisonData = [];
+
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                months.forEach(month => {
+                    comparisonData.push((backup.monthlyData[month]?.[metric] || 0) / 1000);
+                });
+            } else {
+                switch(currentGranularity) {
+                    case 'monthly':
+                        monthNames.forEach(month => {
+                            comparisonData.push((backup.monthlyData[month]?.[metric] || 0) / 1000);
+                        });
+                        break;
+                    case 'quarterly':
+                        ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                            comparisonData.push((backup.data.real[q]?.[metric] || 0) / 1000);
+                        });
+                        break;
+                    case 'semester':
+                        comparisonData = [
+                            (backup.data.real.H1?.[metric] || 0) / 1000,
+                            (backup.data.real.H2?.[metric] || 0) / 1000
+                        ];
+                        break;
+                    case 'yearly':
+                    default:
+                        comparisonData = [(backup.data.real.YEAR?.[metric] || 0) / 1000];
+                        break;
+                }
+            }
+
+            // Check if 2025 comparison already exists
+            const existingIdx = chart.data.datasets.findIndex(ds => ds.label === '2025 Actual');
+            if (existingIdx === -1) {
+                chart.data.datasets.push({
+                    label: '2025 Actual',
+                    data: comparisonData,
+                    type: 'line',
+                    borderColor: '#9CA3AF',
+                    backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                    borderWidth: 2,
+                    borderDash: [8, 4],
+                    pointBackgroundColor: '#9CA3AF',
+                    pointRadius: 3,
+                    fill: false,
+                    tension: 0.1,
+                    order: 2
+                });
+            }
         }
 
         // ============================================
@@ -3092,16 +4462,28 @@
 
         function updateRevenueBreakdown(filter) {
             const container = document.getElementById('revenueBreakdown');
+            if (!container) return;
+
+            // Check if revenueBreakdown has data
+            if (!revenueBreakdown?.actual?.subscriptions) {
+                container.innerHTML = '';
+                return;
+            }
 
             if (filter === 'all') {
                 // Calculate totals for full year
-                const subsActual = revenueBreakdown.actual.subscriptions.Q1 + revenueBreakdown.actual.subscriptions.Q2 +
-                                   revenueBreakdown.actual.subscriptions.Q3 + revenueBreakdown.actual.subscriptions.Q4;
-                const offActual = revenueBreakdown.actual.offapp.Q1 + revenueBreakdown.actual.offapp.Q2 +
-                                  revenueBreakdown.actual.offapp.Q3 + revenueBreakdown.actual.offapp.Q4;
-                const partActual = revenueBreakdown.actual.partnership.Q1 + revenueBreakdown.actual.partnership.Q2 +
-                                   revenueBreakdown.actual.partnership.Q3 + revenueBreakdown.actual.partnership.Q4;
+                const subsActual = (revenueBreakdown.actual.subscriptions?.Q1 || 0) + (revenueBreakdown.actual.subscriptions?.Q2 || 0) +
+                                   (revenueBreakdown.actual.subscriptions?.Q3 || 0) + (revenueBreakdown.actual.subscriptions?.Q4 || 0);
+                const offActual = (revenueBreakdown.actual.offapp?.Q1 || 0) + (revenueBreakdown.actual.offapp?.Q2 || 0) +
+                                  (revenueBreakdown.actual.offapp?.Q3 || 0) + (revenueBreakdown.actual.offapp?.Q4 || 0);
+                const partActual = (revenueBreakdown.actual.partnership?.Q1 || 0) + (revenueBreakdown.actual.partnership?.Q2 || 0) +
+                                   (revenueBreakdown.actual.partnership?.Q3 || 0) + (revenueBreakdown.actual.partnership?.Q4 || 0);
                 const totalActual = subsActual + offActual + partActual;
+
+                if (totalActual === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
 
                 const subsPercent = (subsActual / totalActual * 100).toFixed(1);
                 const offPercent = (offActual / totalActual * 100).toFixed(1);
@@ -3123,11 +4505,15 @@
                 `;
             } else {
                 // Show specific category info
-                const actual = revenueBreakdown.actual[filter];
-                const budget = revenueBreakdown.budget[filter];
-                const totalActual = actual.Q1 + actual.Q2 + actual.Q3 + actual.Q4;
-                const totalBudget = budget.Q1 + budget.Q2 + budget.Q3 + budget.Q4;
-                const variance = ((totalActual - totalBudget) / totalBudget * 100).toFixed(1);
+                const actual = revenueBreakdown.actual?.[filter];
+                const budget = revenueBreakdown.budget?.[filter];
+                if (!actual || !budget) {
+                    container.innerHTML = '';
+                    return;
+                }
+                const totalActual = (actual.Q1 || 0) + (actual.Q2 || 0) + (actual.Q3 || 0) + (actual.Q4 || 0);
+                const totalBudget = (budget.Q1 || 0) + (budget.Q2 || 0) + (budget.Q3 || 0) + (budget.Q4 || 0);
+                const variance = totalBudget > 0 ? ((totalActual - totalBudget) / totalBudget * 100).toFixed(1) : 0;
 
                 const categoryNames = {
                     'subscriptions': 'Subscription Sales',
@@ -3166,34 +4552,45 @@
             let actualData = [];
             let budgetData = [];
 
+            // Handle custom range
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                labels = months.map(m => monthLabelsShort[monthNames.indexOf(m)]);
+                months.forEach(month => {
+                    actualData.push((monthlyData[month]?.ebitda || 0) / 1000);
+                    budgetData.push((monthlyBudget[month]?.ebitda || 0) / 1000);
+                });
+                return { labels, actual: actualData, budget: budgetData };
+            }
+
             switch(currentGranularity) {
                 case 'monthly':
                     labels = monthLabelsShort;
                     monthNames.forEach(month => {
-                        actualData.push(monthlyData[month].ebitda / 1000);
-                        budgetData.push(monthlyBudget[month].ebitda / 1000);
+                        actualData.push((monthlyData[month]?.ebitda || 0) / 1000);
+                        budgetData.push((monthlyBudget[month]?.ebitda || 0) / 1000);
                     });
                     break;
 
                 case 'quarterly':
                     labels = ['Q1', 'Q2', 'Q3', 'Q4'];
                     ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
-                        actualData.push(data.real[q].ebitda / 1000);
-                        budgetData.push(data.budget[q].ebitda / 1000);
+                        actualData.push((data.real[q]?.ebitda || 0) / 1000);
+                        budgetData.push((data.budget[q]?.ebitda || 0) / 1000);
                     });
                     break;
 
                 case 'semester':
                     labels = ['H1', 'H2'];
-                    actualData = [data.real.H1.ebitda / 1000, data.real.H2.ebitda / 1000];
-                    budgetData = [data.budget.H1.ebitda / 1000, data.budget.H2.ebitda / 1000];
+                    actualData = [(data.real.H1?.ebitda || 0) / 1000, (data.real.H2?.ebitda || 0) / 1000];
+                    budgetData = [(data.budget.H1?.ebitda || 0) / 1000, (data.budget.H2?.ebitda || 0) / 1000];
                     break;
 
                 case 'yearly':
                 default:
-                    labels = ['FY 2025'];
-                    actualData = [data.real.YEAR.ebitda / 1000];
-                    budgetData = [data.budget.YEAR.ebitda / 1000];
+                    labels = [`FY ${currentYear}`];
+                    actualData = [(data.real.YEAR?.ebitda || 0) / 1000];
+                    budgetData = [(data.budget.YEAR?.ebitda || 0) / 1000];
                     break;
             }
 
@@ -3201,6 +4598,14 @@
         }
 
         function getEbitdaChartTitle() {
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    return `${fromMonth} EBITDA: Actual vs Budget`;
+                }
+                return `${fromMonth} - ${toMonth} EBITDA: Actual vs Budget`;
+            }
             const periodNames = {
                 'monthly': 'Monthly',
                 'quarterly': 'Quarterly',
@@ -3211,11 +4616,14 @@
         }
 
         function createEbitdaChart() {
-            const ctx = document.getElementById('ebitdaChart').getContext('2d');
+            const canvasEl = document.getElementById('ebitdaChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             const ebitdaData = getEbitdaDataForGranularity();
 
             // Update chart title
-            document.getElementById('ebitdaChartTitle').textContent = getEbitdaChartTitle();
+            const titleEl = document.getElementById('ebitdaChartTitle');
+            if (titleEl) titleEl.textContent = getEbitdaChartTitle();
 
             charts.ebitda = new Chart(ctx, {
                 type: 'bar',
@@ -3313,8 +4721,270 @@
 
             charts.ebitda.data.labels = ebitdaData.labels;
             charts.ebitda.data.datasets[0].data = ebitdaData.actual;
+            charts.ebitda.data.datasets[0].label = `Actual ${currentYear}`;
             charts.ebitda.data.datasets[1].data = ebitdaData.budget;
+            charts.ebitda.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
+
+            // Remove extra scenario datasets if any
+            while (charts.ebitda.data.datasets.length > 2) {
+                const lastDataset = charts.ebitda.data.datasets[charts.ebitda.data.datasets.length - 1];
+                if (lastDataset.label === 'CAGR Trend') break;
+                charts.ebitda.data.datasets.pop();
+            }
+
+            // Add 2026 scenario lines if applicable
+            if (currentYear === 2026) {
+                add2026ScenarioDatasets(charts.ebitda, 'ebitda');
+            }
+
+            // Add 2025 comparison line if enabled
+            if (currentYear === 2026 && compareWith2025 && data2025Backup) {
+                add2025ComparisonDataset(charts.ebitda, 'ebitda');
+            }
+
+            // Handle CAGR trend line
+            updateEbitdaCagrTrendline();
+
             charts.ebitda.update();
+        }
+
+        // ============================================
+        // CAGR TREND CALCULATIONS AND DISPLAY
+        // ============================================
+
+        /**
+         * Calculate growth rate based on data series
+         * Returns the period-over-period growth rate
+         */
+        function calculateGrowthRate(dataArray) {
+            if (!dataArray || dataArray.length < 2) return null;
+
+            const firstValue = dataArray[0];
+            const lastValue = dataArray[dataArray.length - 1];
+            const periods = dataArray.length - 1;
+
+            // Handle edge cases
+            if (firstValue === 0 || firstValue === null || firstValue === undefined) return null;
+            if (lastValue === null || lastValue === undefined) return null;
+
+            // For negative values (like EBITDA losses), we need special handling
+            if (firstValue < 0 && lastValue < 0) {
+                // Both negative - check if loss is decreasing (improving)
+                const ratio = lastValue / firstValue;
+                if (ratio <= 0) return null;
+                const cagr = (Math.pow(ratio, 1 / periods) - 1) * 100;
+                return cagr;
+            } else if (firstValue < 0 && lastValue >= 0) {
+                // Went from loss to profit - can't calculate traditional CAGR
+                return null;
+            } else if (firstValue > 0 && lastValue < 0) {
+                // Went from profit to loss - can't calculate traditional CAGR
+                return null;
+            }
+
+            // Normal case: both positive
+            const cagr = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
+            return cagr;
+        }
+
+        /**
+         * Generate trendline data based on CAGR
+         */
+        function generateTrendlineData(startValue, growthRate, periods) {
+            const trendData = [];
+            for (let i = 0; i < periods; i++) {
+                const value = startValue * Math.pow(1 + growthRate / 100, i);
+                trendData.push(value);
+            }
+            return trendData;
+        }
+
+        /**
+         * Get the period label for CAGR display
+         */
+        function getCagrPeriodLabel() {
+            if (customRangeActive) {
+                const months = getCustomRangeMonths();
+                if (months.length <= 1) return 'Growth';
+                return 'Period Growth';
+            }
+
+            switch(currentGranularity) {
+                case 'monthly':
+                    return 'MoM Growth';
+                case 'quarterly':
+                    return 'QoQ Growth';
+                case 'semester':
+                    return 'Semester Growth';
+                case 'yearly':
+                default:
+                    return 'CAGR';
+            }
+        }
+
+        /**
+         * Update CAGR badge display
+         */
+        function updateCagrBadge(badgeId, cagrValue, show) {
+            const badge = document.getElementById(badgeId);
+            if (!badge) return;
+
+            if (!show || cagrValue === null) {
+                badge.classList.add('hidden');
+                return;
+            }
+
+            badge.classList.remove('hidden');
+
+            // Update badge class based on value
+            badge.classList.remove('positive', 'negative', 'neutral');
+            if (cagrValue > 0) {
+                badge.classList.add('positive');
+            } else if (cagrValue < 0) {
+                badge.classList.add('negative');
+            } else {
+                badge.classList.add('neutral');
+            }
+
+            // Update badge content
+            const arrowEl = badge.querySelector('.badge-arrow');
+            const valueEl = badge.querySelector('.badge-value');
+
+            if (arrowEl) {
+                arrowEl.textContent = cagrValue >= 0 ? '↑' : '↓';
+            }
+
+            if (valueEl) {
+                const label = getCagrPeriodLabel();
+                const sign = cagrValue >= 0 ? '+' : '';
+                valueEl.textContent = `${label}: ${sign}${cagrValue.toFixed(1)}%`;
+            }
+        }
+
+        /**
+         * Toggle Revenue CAGR trend visibility
+         */
+        function toggleRevenueCagr() {
+            showRevenueCagrTrend = !showRevenueCagrTrend;
+
+            const btn = document.getElementById('revenueCagrToggle');
+            if (btn) {
+                btn.classList.toggle('active', showRevenueCagrTrend);
+            }
+
+            updateRevenueCagrTrendline();
+            charts.revenue.update();
+        }
+
+        /**
+         * Toggle EBITDA CAGR trend visibility
+         */
+        function toggleEbitdaCagr() {
+            showEbitdaCagrTrend = !showEbitdaCagrTrend;
+
+            const btn = document.getElementById('ebitdaCagrToggle');
+            if (btn) {
+                btn.classList.toggle('active', showEbitdaCagrTrend);
+            }
+
+            updateEbitdaCagrTrendline();
+            charts.ebitda.update();
+        }
+
+        /**
+         * Update Revenue chart trendline
+         */
+        function updateRevenueCagrTrendline() {
+            if (!charts.revenue) return;
+
+            const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
+            const actualData = revenueData.actual;
+
+            // Remove existing trendline dataset if exists
+            const trendlineIndex = charts.revenue.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
+            if (trendlineIndex !== -1) {
+                charts.revenue.data.datasets.splice(trendlineIndex, 1);
+            }
+
+            // Calculate CAGR
+            const cagr = calculateGrowthRate(actualData);
+
+            // Update badge
+            updateCagrBadge('revenueCagrBadge', cagr, showRevenueCagrTrend);
+
+            if (!showRevenueCagrTrend || cagr === null || actualData.length < 2) {
+                return;
+            }
+
+            // Generate trendline data
+            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
+
+            // Add trendline dataset
+            charts.revenue.data.datasets.push({
+                label: 'CAGR Trend',
+                data: trendlineData,
+                type: 'line',
+                borderColor: '#5BA4E6',
+                backgroundColor: 'rgba(91, 164, 230, 0.1)',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                pointBackgroundColor: '#5BA4E6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: false,
+                tension: 0.1,
+                order: 0 // Draw on top
+            });
+        }
+
+        /**
+         * Update EBITDA chart trendline
+         */
+        function updateEbitdaCagrTrendline() {
+            if (!charts.ebitda) return;
+
+            const ebitdaData = getEbitdaDataForGranularity();
+            const actualData = ebitdaData.actual;
+
+            // Remove existing trendline dataset if exists
+            const trendlineIndex = charts.ebitda.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
+            if (trendlineIndex !== -1) {
+                charts.ebitda.data.datasets.splice(trendlineIndex, 1);
+            }
+
+            // Calculate CAGR
+            const cagr = calculateGrowthRate(actualData);
+
+            // Update badge
+            updateCagrBadge('ebitdaCagrBadge', cagr, showEbitdaCagrTrend);
+
+            if (!showEbitdaCagrTrend || cagr === null || actualData.length < 2) {
+                return;
+            }
+
+            // Generate trendline data
+            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
+
+            // Add trendline dataset
+            charts.ebitda.data.datasets.push({
+                label: 'CAGR Trend',
+                data: trendlineData,
+                type: 'line',
+                borderColor: '#5BA4E6',
+                backgroundColor: 'rgba(91, 164, 230, 0.1)',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                pointBackgroundColor: '#5BA4E6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: false,
+                tension: 0.1,
+                order: 0 // Draw on top
+            });
         }
 
         // ============================================
@@ -3365,12 +5035,14 @@
             let cpnuBudget = [];
 
             monthNames.forEach(month => {
-                signupsActual.push(monthlyData[month].signups / 1000);
-                signupsBudget.push(monthlyBudget[month].signups / 1000);
-                spendActual.push(monthlyData[month].spend / 1000);
-                spendBudget.push(monthlyBudget[month].spend / 1000);
-                cpnuActual.push(monthlyData[month].cpnu);
-                cpnuBudget.push(monthlyBudget[month].cpnu);
+                const mData = monthlyData?.[month] || {};
+                const mBudget = monthlyBudget?.[month] || {};
+                signupsActual.push((mData.signups || 0) / 1000);
+                signupsBudget.push((mBudget.signups || 0) / 1000);
+                spendActual.push((mData.spend || 0) / 1000);
+                spendBudget.push((mBudget.spend || 0) / 1000);
+                cpnuActual.push(mData.cpnu || 0);
+                cpnuBudget.push(mBudget.cpnu || 0);
             });
 
             return {
@@ -3490,7 +5162,9 @@
         }
 
         function createMarketingEfficiencyChart() {
-            const ctx = document.getElementById('subscribersChart').getContext('2d');
+            const canvasEl = document.getElementById('subscribersChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             const data = getSubscribersChartData();
             const datasets = buildSubscribersDatasets(data);
 
@@ -3667,10 +5341,12 @@
             let conversionBudget = [];
 
             monthNames.forEach(month => {
-                actualSubs.push(monthlyData[month].subs);
-                budgetSubs.push(monthlyBudget[month].subs);
-                conversionActual.push(monthlyData[month].conversion);
-                conversionBudget.push(monthlyBudget[month].conversion);
+                const mData = monthlyData?.[month] || {};
+                const mBudget = monthlyBudget?.[month] || {};
+                actualSubs.push(mData.subs || 0);
+                budgetSubs.push(mBudget.subs || 0);
+                conversionActual.push(mData.conversion || 0);
+                conversionBudget.push(mBudget.conversion || 0);
             });
 
             return {
@@ -3762,7 +5438,9 @@
         }
 
         function createSubscriberAcquisitionChart() {
-            const ctx = document.getElementById('subscriberAcquisitionChart').getContext('2d');
+            const canvasEl = document.getElementById('subscriberAcquisitionChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             const data = getSubscriberAcquisitionData();
             const datasets = buildSubscriberAcqDatasets(data);
 
@@ -3940,10 +5618,12 @@
             let budgetCac = [];
 
             monthNames.forEach(month => {
-                actualArpu.push(monthlyData[month].arpu);
-                budgetArpu.push(monthlyBudget[month].arpu);
-                actualCac.push(monthlyData[month].cac);
-                budgetCac.push(monthlyBudget[month].cac);
+                const mData = monthlyData?.[month] || {};
+                const mBudget = monthlyBudget?.[month] || {};
+                actualArpu.push(mData.arpu || 0);
+                budgetArpu.push(mBudget.arpu || 0);
+                actualCac.push(mData.cac || 0);
+                budgetCac.push(mBudget.cac || 0);
             });
 
             // Calculate ARPU/CAC Ratio
@@ -4092,7 +5772,9 @@
         }
 
         function createUnitEconomicsChart() {
-            const ctx = document.getElementById('unitEconomicsChart').getContext('2d');
+            const canvasEl = document.getElementById('unitEconomicsChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             const data = getUnitEconomicsData();
             const datasets = buildUnitEconomicsDatasets(data);
 
@@ -4231,6 +5913,9 @@
         // ============================================
         function createOpexTable() {
             const tbody = document.getElementById('opexTableBody');
+            if (!tbody) return;
+            if (!opexData || opexData.length === 0) return;
+
             let totalBudget = 0;
             let totalActual = 0;
 
@@ -4292,6 +5977,18 @@
         // OPEX DONUT CHART
         // ============================================
         function getOpexPeriodText() {
+            // Handle custom range first
+            if (customRangeActive) {
+                const fromMonth = monthNames[customRangeFrom];
+                const toMonth = monthNames[customRangeTo];
+                const fromShort = monthLabelsShort[customRangeFrom];
+                const toShort = monthLabelsShort[customRangeTo];
+                if (customRangeFrom === customRangeTo) {
+                    return `${fromMonth} 2025`;
+                }
+                return `${fromShort}-${toShort} 2025`;
+            }
+
             switch(currentGranularity) {
                 case 'monthly':
                     return currentPeriod + ' 2025';
@@ -4324,28 +6021,35 @@
             let scaleFactor = 1;
             let monthsIncluded = [];
 
-            switch(currentGranularity) {
-                case 'monthly':
-                    scaleFactor = 1 / 12;
-                    monthsIncluded = [currentPeriod];
-                    break;
-                case 'quarterly':
-                    scaleFactor = 3 / 12;
-                    monthsIncluded = quarterMonths[currentPeriod] || [];
-                    break;
-                case 'semester':
-                    scaleFactor = 6 / 12;
-                    if (currentPeriod === 'H1') {
-                        monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
-                    } else {
-                        monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
-                    }
-                    break;
-                case 'yearly':
-                default:
-                    scaleFactor = 1;
-                    monthsIncluded = monthNames;
-                    break;
+            // Handle custom range first
+            if (customRangeActive) {
+                const numMonths = customRangeTo - customRangeFrom + 1;
+                scaleFactor = numMonths / 12;
+                monthsIncluded = getCustomRangeMonths();
+            } else {
+                switch(currentGranularity) {
+                    case 'monthly':
+                        scaleFactor = 1 / 12;
+                        monthsIncluded = [currentPeriod];
+                        break;
+                    case 'quarterly':
+                        scaleFactor = 3 / 12;
+                        monthsIncluded = quarterMonths[currentPeriod] || [];
+                        break;
+                    case 'semester':
+                        scaleFactor = 6 / 12;
+                        if (currentPeriod === 'H1') {
+                            monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
+                        } else {
+                            monthsIncluded = ['July', 'August', 'September', 'October', 'November', 'December'];
+                        }
+                        break;
+                    case 'yearly':
+                    default:
+                        scaleFactor = 1;
+                        monthsIncluded = monthNames;
+                        break;
+                }
             }
 
             // Scale the annual OpEx data to the selected period
@@ -4357,8 +6061,11 @@
         }
 
         function createOpexDonutChart() {
-            const ctx = document.getElementById('opexDonutChart').getContext('2d');
+            const canvasEl = document.getElementById('opexDonutChart');
+            if (!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
             const periodData = getOpexDataForPeriod();
+            if (!periodData || periodData.length === 0) return;
 
             const colors = ['#1e3a5f', '#22c55e', '#ef4444', '#f59e0b', '#6b7280'];
 
