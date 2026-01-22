@@ -867,75 +867,273 @@
             color: #1e3a5f;
         }
 
-        /* Operating Expenses Table */
-        .opex-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 32px;
-            margin-bottom: 32px;
-        }
-
-        .opex-table-wrapper {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
+        /* Operating Expenses - Modern Design */
+        .opex-section {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             overflow: hidden;
         }
 
-        .opex-table {
-            width: 100%;
-            border-collapse: collapse;
+        .opex-header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .opex-table thead {
-            background: #1e3a5f;
+        .opex-header-title {
             color: white;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
-        .opex-table th {
-            padding: 16px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 13px;
+        .opex-header-period {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .opex-header-total {
+            text-align: right;
+        }
+
+        .opex-header-total-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .opex-table th:last-child {
-            text-align: center;
-        }
-
-        .opex-table tbody tr {
-            border-bottom: 1px solid #e2e8f0;
-            transition: background 0.2s ease;
-        }
-
-        .opex-table tbody tr:nth-child(even) {
-            background: #f8fafc;
-        }
-
-        .opex-table tbody tr:hover {
-            background: #f1f5f9;
-        }
-
-        .opex-table tbody tr.total-row {
-            background: #f1f5f9;
+        .opex-header-total-value {
+            color: white;
+            font-size: 28px;
             font-weight: 700;
-            border-top: 2px solid #1e3a5f;
+            letter-spacing: -0.02em;
         }
 
-        .opex-table tbody tr.total-row:hover {
-            background: #e2e8f0;
+        .opex-header-total-variance {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 4px;
         }
 
-        .opex-table td {
-            padding: 14px 16px;
-            color: #1e3a1a;
+        .opex-header-total-variance.under {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        .opex-header-total-variance.over {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .opex-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .opex-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .opex-list {
+            padding: 24px 32px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 1200px) {
+            .opex-list {
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+        }
+
+        .opex-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .opex-item:last-child {
+            border-bottom: none;
+        }
+
+        .opex-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .opex-item-category {
             font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
         }
 
-        .opex-table td:last-child {
+        .opex-item-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .opex-item-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        .opex-item-bar-fill.under {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+
+        .opex-item-bar-fill.over {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .opex-item-bar-fill.neutral {
+            background: linear-gradient(90deg, #94a3b8, #cbd5e1);
+        }
+
+        .opex-item-amounts {
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .opex-item-actual {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .opex-item-budget {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .opex-item-variance {
+            min-width: 70px;
+            text-align: right;
+        }
+
+        .opex-variance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .opex-variance-badge.under {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .opex-variance-badge.over {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .opex-variance-badge.neutral {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .opex-item-status {
+            min-width: 32px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .opex-status-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .opex-status-icon.under {
+            background: #dcfce7;
+            color: #22c55e;
+        }
+
+        .opex-status-icon.over {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .opex-chart-section {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fafbfc;
+        }
+
+        .opex-chart-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
             text-align: center;
+        }
+
+        .opex-chart-wrapper {
+            width: 100%;
+            max-width: 280px;
+            position: relative;
+        }
+
+        .opex-chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .opex-chart-center-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .opex-chart-center-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Legacy styles for backward compatibility */
+        .opex-container {
+            display: none;
+        }
+
+        .opex-table-wrapper {
+            display: none;
         }
 
         .variance-positive {
@@ -2096,29 +2294,28 @@
                 </div>
             </div>
 
-            <!-- Operating Expenses -->
+            <!-- Operating Expenses - Modern Design -->
             <div class="section">
-                <h2 class="section-title" id="opexSectionTitle">Operating Expenses Breakdown</h2>
-                <div class="opex-container">
-                    <div class="opex-table-wrapper">
-                        <table class="opex-table">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Budget</th>
-                                    <th>Actual</th>
-                                    <th>Variance ($)</th>
-                                    <th>Variance (%)</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="opexTableBody"></tbody>
-                        </table>
+                <div class="opex-section">
+                    <div class="opex-header">
+                        <div>
+                            <div class="opex-header-title">Operating Expenses</div>
+                            <div class="opex-header-period" id="opexHeaderPeriod">January 2025</div>
+                        </div>
+                        <div class="opex-header-total">
+                            <div class="opex-header-total-label">Total Actual</div>
+                            <div class="opex-header-total-value" id="opexHeaderTotal">$0K</div>
+                            <div class="opex-header-total-variance under" id="opexHeaderVariance">$0K under budget</div>
+                        </div>
                     </div>
-                    <div>
-                        <div class="chart-container">
-                            <div class="chart-title" id="opexDonutChartTitle">Operating Expenses Breakdown - Full Year 2025</div>
-                            <canvas id="opexDonutChart"></canvas>
+                    <div class="opex-content">
+                        <div class="opex-list" id="opexList">
+                            <!-- Items will be generated by JS -->
+                        </div>
+                        <div class="opex-chart-section">
+                            <div class="opex-chart-wrapper">
+                                <canvas id="opexDonutChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -6828,71 +7025,96 @@
         // OPEX TABLE
         // ============================================
         function createOpexTable() {
-            const tbody = document.getElementById('opexTableBody');
-            if (!tbody) return;
-            if (!opexData || opexData.length === 0) return;
+            const opexList = document.getElementById('opexList');
+            if (!opexList) return;
+
+            const periodData = getOpexDataForPeriod();
+            if (!periodData || periodData.length === 0) return;
 
             let totalBudget = 0;
             let totalActual = 0;
 
-            let rows = opexData.map(item => {
+            // Calculate totals first for percentage bars
+            periodData.forEach(item => {
                 totalBudget += item.budget;
                 totalActual += item.actual;
+            });
 
+            // Category colors for visual distinction
+            const categoryColors = {
+                'Marketing': '#3B82F6',
+                'R&D': '#8B5CF6',
+                'G&A': '#F59E0B',
+                'Salaries': '#10B981',
+                'Other': '#6B7280'
+            };
+
+            const items = periodData.map(item => {
                 const varianceDollar = item.actual - item.budget;
-                const variancePercent = ((varianceDollar / item.budget) * 100).toFixed(1);
+                const variancePercent = item.budget > 0 ? Math.abs((varianceDollar / item.budget) * 100).toFixed(0) : 0;
                 const isUnder = varianceDollar <= 0;
+                const barWidth = totalActual > 0 ? Math.min((item.actual / totalActual) * 100, 100) : 0;
+                const barColor = categoryColors[item.category] || '#64748b';
 
                 return `
-                    <tr>
-                        <td><strong>${item.category}</strong></td>
-                        <td>$${(item.budget / 1000).toFixed(0)}K</td>
-                        <td>$${(item.actual / 1000).toFixed(0)}K</td>
-                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
-                            ${varianceDollar >= 0 ? '+' : ''}$${(varianceDollar / 1000).toFixed(0)}K
-                        </td>
-                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
-                            ${varianceDollar >= 0 ? '+' : ''}${variancePercent}%
-                        </td>
-                        <td>
-                            <span class="status-icon ${isUnder ? 'under-budget' : 'over-budget'}">
-                                ${isUnder ? '✓' : '✗'}
+                    <div class="opex-item">
+                        <div class="opex-item-info">
+                            <div class="opex-item-category">${item.category}</div>
+                            <div class="opex-item-bar">
+                                <div class="opex-item-bar-fill ${isUnder ? 'under' : 'over'}" style="width: ${barWidth}%; background: linear-gradient(90deg, ${barColor}, ${barColor}dd);"></div>
+                            </div>
+                        </div>
+                        <div class="opex-item-amounts">
+                            <div class="opex-item-actual">$${(item.actual / 1000).toFixed(0)}K</div>
+                            <div class="opex-item-budget">Budget: $${(item.budget / 1000).toFixed(0)}K</div>
+                        </div>
+                        <div class="opex-item-variance">
+                            <span class="opex-variance-badge ${isUnder ? 'under' : 'over'}">
+                                ${isUnder ? '↓' : '↑'} ${variancePercent}%
                             </span>
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="opex-item-status">
+                            <span class="opex-status-icon ${isUnder ? 'under' : 'over'}">
+                                ${isUnder ? '✓' : '!'}
+                            </span>
+                        </div>
+                    </div>
                 `;
             }).join('');
 
+            opexList.innerHTML = items;
+
+            // Update header values
             const totalVarianceDollar = totalActual - totalBudget;
-            const totalVariancePercent = ((totalVarianceDollar / totalBudget) * 100).toFixed(1);
             const totalIsUnder = totalVarianceDollar <= 0;
 
-            rows += `
-                <tr class="total-row">
-                    <td><strong>TOTAL</strong></td>
-                    <td><strong>$${(totalBudget / 1000).toFixed(0)}K</strong></td>
-                    <td><strong>$${(totalActual / 1000).toFixed(0)}K</strong></td>
-                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
-                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}$${(totalVarianceDollar / 1000).toFixed(0)}K</strong>
-                    </td>
-                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
-                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}${totalVariancePercent}%</strong>
-                    </td>
-                    <td>
-                        <span class="status-icon ${totalIsUnder ? 'under-budget' : 'over-budget'}">
-                            ${totalIsUnder ? '✓' : '✗'}
-                        </span>
-                    </td>
-                </tr>
-            `;
+            const headerTotal = document.getElementById('opexHeaderTotal');
+            const headerVariance = document.getElementById('opexHeaderVariance');
+            const headerPeriod = document.getElementById('opexHeaderPeriod');
 
-            tbody.innerHTML = rows;
+            if (headerTotal) {
+                headerTotal.textContent = `$${(totalActual / 1000).toFixed(0)}K`;
+            }
+
+            if (headerVariance) {
+                const absVariance = Math.abs(totalVarianceDollar / 1000).toFixed(0);
+                headerVariance.textContent = totalIsUnder
+                    ? `$${absVariance}K under budget`
+                    : `$${absVariance}K over budget`;
+                headerVariance.className = `opex-header-total-variance ${totalIsUnder ? 'under' : 'over'}`;
+            }
+
+            if (headerPeriod) {
+                headerPeriod.textContent = getOpexPeriodText();
+            }
         }
 
         // ============================================
         // OPEX DONUT CHART
         // ============================================
         function getOpexPeriodText() {
+            const year = currentYear;
+
             // Handle custom range first
             if (customRangeActive) {
                 const fromMonth = monthNames[customRangeFrom];
@@ -6900,14 +7122,14 @@
                 const fromShort = monthLabelsShort[customRangeFrom];
                 const toShort = monthLabelsShort[customRangeTo];
                 if (customRangeFrom === customRangeTo) {
-                    return `${fromMonth} 2025`;
+                    return `${fromMonth} ${year}`;
                 }
-                return `${fromShort}-${toShort} 2025`;
+                return `${fromShort}-${toShort} ${year}`;
             }
 
             switch(currentGranularity) {
                 case 'monthly':
-                    return currentPeriod + ' 2025';
+                    return currentPeriod + ' ' + year;
                 case 'quarterly':
                     const qMonths = {
                         'Q1': 'Jan-Mar',
@@ -6915,12 +7137,12 @@
                         'Q3': 'Jul-Sep',
                         'Q4': 'Oct-Dec'
                     };
-                    return `${currentPeriod} 2025 (${qMonths[currentPeriod]})`;
+                    return `${currentPeriod} ${year} (${qMonths[currentPeriod]})`;
                 case 'semester':
-                    return currentPeriod === 'H1' ? 'H1 2025 (Jan-Jun)' : 'H2 2025 (Jul-Dec)';
+                    return currentPeriod === 'H1' ? `H1 ${year} (Jan-Jun)` : `H2 ${year} (Jul-Dec)`;
                 case 'yearly':
                 default:
-                    return 'Full Year 2025 (Jan-Dec)';
+                    return `Full Year ${year} (Jan-Dec)`;
             }
         }
 
@@ -6983,10 +7205,11 @@
             const periodData = getOpexDataForPeriod();
             if (!periodData || periodData.length === 0) return;
 
-            const colors = ['#1e3a5f', '#22c55e', '#ef4444', '#f59e0b', '#6b7280'];
+            // Category colors matching the item bars
+            const colors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#6B7280'];
 
-            // Update chart title
-            document.getElementById('opexDonutChartTitle').textContent = getOpexChartTitle();
+            // Calculate total for center label
+            const total = periodData.reduce((sum, item) => sum + item.actual, 0);
 
             charts.opexDonut = new Chart(ctx, {
                 type: 'doughnut',
@@ -6995,39 +7218,72 @@
                     datasets: [{
                         data: periodData.map(item => item.actual),
                         backgroundColor: colors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
+                        borderWidth: 3,
+                        borderColor: '#fff',
+                        hoverBorderWidth: 4,
+                        hoverOffset: 8
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    cutout: '65%',
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
                                 color: '#1e3a5f',
                                 font: {
-                                    size: 11
+                                    size: 11,
+                                    weight: '500'
                                 },
-                                padding: 12,
-                                usePointStyle: true
+                                padding: 16,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 12,
+                            backgroundColor: 'rgba(30, 58, 95, 0.95)',
+                            padding: 14,
+                            titleFont: { size: 13, weight: '600' },
+                            bodyFont: { size: 12 },
+                            cornerRadius: 8,
                             callbacks: {
                                 label: function(context) {
                                     const value = context.parsed;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                     const percentage = ((value / total) * 100).toFixed(1);
-                                    return context.label + ': $' + (value / 1000).toFixed(0) + 'K (' + percentage + '%)';
+                                    return ` $${(value / 1000).toFixed(0)}K (${percentage}%)`;
                                 }
                             }
                         }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'centerText',
+                    beforeDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                        const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+                        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+
+                        ctx.save();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+
+                        // Total value
+                        ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, sans-serif';
+                        ctx.fillStyle = '#1e293b';
+                        ctx.fillText('$' + (total / 1000).toFixed(0) + 'K', centerX, centerY - 8);
+
+                        // Label
+                        ctx.font = '500 11px -apple-system, BlinkMacSystemFont, sans-serif';
+                        ctx.fillStyle = '#64748b';
+                        ctx.fillText('TOTAL', centerX, centerY + 14);
+
+                        ctx.restore();
+                    }
+                }]
             });
         }
 
@@ -7036,74 +7292,17 @@
 
             const periodData = getOpexDataForPeriod();
 
-            // Update chart title and section title
-            document.getElementById('opexDonutChartTitle').textContent = getOpexChartTitle();
-            document.getElementById('opexSectionTitle').textContent = getOpexSectionTitle();
-
+            // Update chart data
             charts.opexDonut.data.datasets[0].data = periodData.map(item => item.actual);
             charts.opexDonut.update();
+
+            // Update the list view as well
+            createOpexTable();
         }
 
         function updateOpexTable() {
-            const periodData = getOpexDataForPeriod();
-            const tbody = document.getElementById('opexTableBody');
-            if (!tbody) return;
-
-            let totalBudget = 0;
-            let totalActual = 0;
-
-            const rows = periodData.map(item => {
-                const varianceDollar = item.actual - item.budget;
-                const variancePercent = ((varianceDollar / item.budget) * 100).toFixed(1);
-                const isUnder = varianceDollar <= 0;
-
-                totalBudget += item.budget;
-                totalActual += item.actual;
-
-                return `
-                    <tr>
-                        <td>${item.category}</td>
-                        <td>$${(item.budget / 1000).toFixed(0)}K</td>
-                        <td>$${(item.actual / 1000).toFixed(0)}K</td>
-                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
-                            ${varianceDollar >= 0 ? '+' : ''}$${(varianceDollar / 1000).toFixed(0)}K
-                        </td>
-                        <td class="${isUnder ? 'variance-positive' : 'variance-negative'}">
-                            ${varianceDollar >= 0 ? '+' : ''}${variancePercent}%
-                        </td>
-                        <td>
-                            <span class="status-icon ${isUnder ? 'under-budget' : 'over-budget'}">
-                                ${isUnder ? '✓' : '✗'}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            const totalVarianceDollar = totalActual - totalBudget;
-            const totalVariancePercent = ((totalVarianceDollar / totalBudget) * 100).toFixed(1);
-            const totalIsUnder = totalVarianceDollar <= 0;
-
-            const totalRow = `
-                <tr class="total-row">
-                    <td><strong>TOTAL</strong></td>
-                    <td><strong>$${(totalBudget / 1000).toFixed(0)}K</strong></td>
-                    <td><strong>$${(totalActual / 1000).toFixed(0)}K</strong></td>
-                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
-                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}$${(totalVarianceDollar / 1000).toFixed(0)}K</strong>
-                    </td>
-                    <td class="${totalIsUnder ? 'variance-positive' : 'variance-negative'}">
-                        <strong>${totalVarianceDollar >= 0 ? '+' : ''}${totalVariancePercent}%</strong>
-                    </td>
-                    <td>
-                        <span class="status-icon ${totalIsUnder ? 'under-budget' : 'over-budget'}">
-                            ${totalIsUnder ? '✓' : '✗'}
-                        </span>
-                    </td>
-                </tr>
-            `;
-
-            tbody.innerHTML = rows + totalRow;
+            // Just call createOpexTable since it handles all the rendering
+            createOpexTable();
         }
 
         // ============================================
