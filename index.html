@@ -2101,19 +2101,30 @@
             const isPercent = cleaned.includes('%');
             cleaned = cleaned.replace('%', '');
 
-            // Handle Spanish number format: "1.234,56" or "$ 190.695"
-            // If contains both dot and comma, it's European format
+            // Handle number formats
+            // US format: "150,872.00" (comma = thousands, dot = decimal)
+            // EU format: "150.872,00" (dot = thousands, comma = decimal)
+
             if (cleaned.includes('.') && cleaned.includes(',')) {
-                // European: dots are thousands, comma is decimal
-                cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+                // Both dot and comma present - determine format by position
+                const lastDot = cleaned.lastIndexOf('.');
+                const lastComma = cleaned.lastIndexOf(',');
+
+                if (lastDot > lastComma) {
+                    // US format: "150,872.00" - comma is thousands, dot is decimal
+                    cleaned = cleaned.replace(/,/g, '');
+                } else {
+                    // EU format: "150.872,00" - dot is thousands, comma is decimal
+                    cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+                }
             } else if (cleaned.includes(',') && !cleaned.includes('.')) {
-                // Only comma - could be decimal separator
+                // Only comma - determine if decimal or thousands separator
                 const parts = cleaned.split(',');
                 if (parts.length === 2 && parts[1].length <= 2) {
-                    // Likely decimal: "1,5" -> "1.5"
+                    // Likely decimal: "1,5" or "1,50" -> "1.5"
                     cleaned = cleaned.replace(',', '.');
                 } else {
-                    // Likely thousands: "1,234" -> "1234"
+                    // Likely thousands: "1,234" or "150,872" -> "1234" or "150872"
                     cleaned = cleaned.replace(/,/g, '');
                 }
             } else if (cleaned.includes('.')) {
@@ -3683,7 +3694,7 @@
                     const operatingProfit = parsed[32] ? parseNumber(parsed[32][colIdx]) : 0; // Row 33: EBIT
                     const netIncome = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;       // Row 36: Net Income
 
-                    // Store in monthly data
+                    // Store in monthly data (ACTUAL)
                     targetMonthlyData[month].subscriptions = subsTotal;
                     targetMonthlyData[month].subscriptionsIOS = subsIOS;
                     targetMonthlyData[month].subscriptionsAOS = subsAOS;
@@ -3694,7 +3705,10 @@
 
                     targetMonthlyData[month].mktSpendMeta = mktMeta;
                     targetMonthlyData[month].mktSpendOthers = mktOthers;
-                    targetMonthlyData[month].spend = mktMeta + mktOthers;
+                    // Only set spend from P&L if not already set by KPI data
+                    if (!targetMonthlyData[month].spend || targetMonthlyData[month].spend === 0) {
+                        targetMonthlyData[month].spend = mktMeta + mktOthers;
+                    }
 
                     targetMonthlyData[month].contributionMargin = contributionMargin;
 
@@ -3748,7 +3762,7 @@
                     const operatingProfit = parsed[26] ? parseNumber(parsed[26][colIdx]) : 0; // Row 27: Operating Profit
                     const netIncome = parsed[29] ? parseNumber(parsed[29][colIdx]) : 0;       // Row 30: Net Income
 
-                    // Store in monthly data
+                    // Store in monthly data (BUDGET)
                     targetMonthlyData[month].subscriptions = subsTotal;
                     targetMonthlyData[month].subscriptionsIOS = subsIOS;
                     targetMonthlyData[month].subscriptionsAOS = subsAOS;
@@ -3758,7 +3772,10 @@
 
                     targetMonthlyData[month].mktSpendMeta = mktMeta;
                     targetMonthlyData[month].mktSpendOthers = mktOthers;
-                    targetMonthlyData[month].spend = mktMeta + mktOthers;
+                    // Only set spend from P&L if not already set by KPI data
+                    if (!targetMonthlyData[month].spend || targetMonthlyData[month].spend === 0) {
+                        targetMonthlyData[month].spend = mktMeta + mktOthers;
+                    }
 
                     targetMonthlyData[month].contributionMargin = contributionMargin;
 
