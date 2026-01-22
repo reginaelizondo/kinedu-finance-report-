@@ -3397,7 +3397,7 @@
         /**
          * Parse KPI CSV data into monthly structure
          *
-         * KPIs_2026_Actual row mapping (0-based index):
+         * KPIs_2026_ACTUAL row mapping (0-based index):
          * - Row 2 (idx 1): Marketing Spend
          * - Row 5 (idx 4): Signups (New Users)
          * - Row 6 (idx 5): CPNU
@@ -3409,45 +3409,86 @@
          * - Row 21 (idx 20): ARPU
          * - Row 42 (idx 41): LTV (LTR)
          * - Row 43 (idx 42): Churn Rate
+         *
+         * KPIs_2026_BUDGET row mapping (0-based index):
+         * - Row 3 (idx 2): Marketing Spend
+         * - Row 4 (idx 3): CPNU
+         * - Row 5 (idx 4): Signups (New Users)
+         * - Row 6 (idx 5): Conversion Rate
+         * - Row 7 (idx 6): New Subscriptions
+         * - Row 8 (idx 7): CAC
+         * - Row 15 (idx 14): ARPU
+         * - Row 16 (idx 15): Ticket vs CA
+         * - Row 18 (idx 17): LTV/CAC (LTR/CAC)
          */
         function parseKPIData(csvText, scenario = 'actual') {
             const parsed = parseCSV(csvText);
             const monthlyKPIs = {};
 
-            // Use specific row indices for KPIs_2026_Actual
-            // Row numbers are 1-based in spreadsheet, so subtract 1 for 0-based index
-            const rowIndices = {
-                spend: 1,           // Row 2: Marketing Spend
-                signups: 4,         // Row 5: Signups (New Users)
-                cpnu: 5,            // Row 6: CPNU
-                trialsStarted: 6,   // Row 7: FTs Started
-                trialsConverted: 8, // Row 9: FTs Converted
-                cac: 10,            // Row 11: CAC
-                subs: 11,           // Row 12: New Subscriptions
-                conversion: 17,     // Row 18: Conversion Rate
-                arpu: 20,           // Row 21: ARPU
-                ltv: 41,            // Row 42: LTV (LTR)
-                churn: 42           // Row 43: Churn Rate
-            };
+            // Different row indices for Actual vs Budget
+            let rowIndices;
+
+            if (scenario === 'actual') {
+                // KPIs_2026_ACTUAL row mapping
+                rowIndices = {
+                    spend: 1,           // Row 2: Marketing Spend
+                    signups: 4,         // Row 5: Signups (New Users)
+                    cpnu: 5,            // Row 6: CPNU
+                    trialsStarted: 6,   // Row 7: FTs Started
+                    trialsConverted: 8, // Row 9: FTs Converted
+                    cac: 10,            // Row 11: CAC
+                    subs: 11,           // Row 12: New Subscriptions
+                    conversion: 17,     // Row 18: Conversion Rate
+                    arpu: 20,           // Row 21: ARPU
+                    ltv: 41,            // Row 42: LTV (LTR)
+                    churn: 42,          // Row 43: Churn Rate
+                    ltvCac: null        // Will be calculated from ltv/cac
+                };
+            } else {
+                // KPIs_2026_BUDGET row mapping (Optimistic/Conservative/Pessimistic)
+                rowIndices = {
+                    spend: 2,           // Row 3: Marketing Spend
+                    cpnu: 3,            // Row 4: CPNU
+                    signups: 4,         // Row 5: Signups (New Users)
+                    conversion: 5,      // Row 6: Conversion Rate
+                    subs: 6,            // Row 7: New Subscriptions
+                    cac: 7,             // Row 8: CAC
+                    arpu: 14,           // Row 15: ARPU
+                    ticketVsCA: 15,     // Row 16: Ticket vs CA
+                    ltvCac: 17,         // Row 18: LTV/CAC (LTR/CAC)
+                    // These don't exist in Budget
+                    trialsStarted: null,
+                    trialsConverted: null,
+                    ltv: null,
+                    churn: null
+                };
+            }
 
             // Extract monthly values (Column B = index 1 for January, etc.)
             monthNames.forEach((month, i) => {
                 const colIdx = i + 1; // Column B is index 1
 
-                const spend = parsed[rowIndices.spend] ? parseNumber(parsed[rowIndices.spend][colIdx]) : 0;
-                const signups = parsed[rowIndices.signups] ? parseNumber(parsed[rowIndices.signups][colIdx]) : 0;
-                const cpnu = parsed[rowIndices.cpnu] ? parseNumber(parsed[rowIndices.cpnu][colIdx]) : 0;
-                const trialsStarted = parsed[rowIndices.trialsStarted] ? parseNumber(parsed[rowIndices.trialsStarted][colIdx]) : 0;
-                const trialsConverted = parsed[rowIndices.trialsConverted] ? parseNumber(parsed[rowIndices.trialsConverted][colIdx]) : 0;
-                const cac = parsed[rowIndices.cac] ? parseNumber(parsed[rowIndices.cac][colIdx]) : 0;
-                const subs = parsed[rowIndices.subs] ? parseNumber(parsed[rowIndices.subs][colIdx]) : 0;
-                const conversion = parsed[rowIndices.conversion] ? parseNumber(parsed[rowIndices.conversion][colIdx]) : 0;
-                const arpu = parsed[rowIndices.arpu] ? parseNumber(parsed[rowIndices.arpu][colIdx]) : 0;
-                const ltv = parsed[rowIndices.ltv] ? parseNumber(parsed[rowIndices.ltv][colIdx]) : 0;
-                const churn = parsed[rowIndices.churn] ? parseNumber(parsed[rowIndices.churn][colIdx]) : 0;
+                const spend = rowIndices.spend !== null && parsed[rowIndices.spend] ? parseNumber(parsed[rowIndices.spend][colIdx]) : 0;
+                const signups = rowIndices.signups !== null && parsed[rowIndices.signups] ? parseNumber(parsed[rowIndices.signups][colIdx]) : 0;
+                const cpnu = rowIndices.cpnu !== null && parsed[rowIndices.cpnu] ? parseNumber(parsed[rowIndices.cpnu][colIdx]) : 0;
+                const trialsStarted = rowIndices.trialsStarted !== null && parsed[rowIndices.trialsStarted] ? parseNumber(parsed[rowIndices.trialsStarted][colIdx]) : 0;
+                const trialsConverted = rowIndices.trialsConverted !== null && parsed[rowIndices.trialsConverted] ? parseNumber(parsed[rowIndices.trialsConverted][colIdx]) : 0;
+                const cac = rowIndices.cac !== null && parsed[rowIndices.cac] ? parseNumber(parsed[rowIndices.cac][colIdx]) : 0;
+                const subs = rowIndices.subs !== null && parsed[rowIndices.subs] ? parseNumber(parsed[rowIndices.subs][colIdx]) : 0;
+                const conversion = rowIndices.conversion !== null && parsed[rowIndices.conversion] ? parseNumber(parsed[rowIndices.conversion][colIdx]) : 0;
+                const arpu = rowIndices.arpu !== null && parsed[rowIndices.arpu] ? parseNumber(parsed[rowIndices.arpu][colIdx]) : 0;
+                const ltv = rowIndices.ltv !== null && parsed[rowIndices.ltv] ? parseNumber(parsed[rowIndices.ltv][colIdx]) : 0;
+                const churn = rowIndices.churn !== null && parsed[rowIndices.churn] ? parseNumber(parsed[rowIndices.churn][colIdx]) : 0;
 
-                // Calculate LTV/CAC ratio
-                const ltvCac = cac > 0 ? ltv / cac : 0;
+                // LTV/CAC: read directly from Budget, calculate for Actual
+                let ltvCac;
+                if (scenario === 'actual') {
+                    // Calculate from LTV and CAC
+                    ltvCac = cac > 0 ? ltv / cac : 0;
+                } else {
+                    // Read directly from Budget row 18
+                    ltvCac = rowIndices.ltvCac !== null && parsed[rowIndices.ltvCac] ? parseNumber(parsed[rowIndices.ltvCac][colIdx]) : 0;
+                }
 
                 monthlyKPIs[month] = {
                     spend: spend,
