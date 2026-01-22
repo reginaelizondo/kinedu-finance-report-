@@ -3495,6 +3495,18 @@
             monthNames.forEach((month, i) => {
                 const colIdx = i + 1; // Column B is index 1
 
+                // Debug spend specifically
+                if (i === 0) { // January only
+                    console.log('=== DEBUG SPEND for', scenario, '===');
+                    console.log('rowIndices.spend:', rowIndices.spend);
+                    console.log('parsed[rowIndices.spend]:', parsed[rowIndices.spend]);
+                    console.log('colIdx:', colIdx);
+                    if (parsed[rowIndices.spend]) {
+                        console.log('parsed[rowIndices.spend][colIdx]:', parsed[rowIndices.spend][colIdx]);
+                        console.log('Raw value type:', typeof parsed[rowIndices.spend][colIdx]);
+                    }
+                }
+
                 const spend = rowIndices.spend !== null && parsed[rowIndices.spend] ? parseNumber(parsed[rowIndices.spend][colIdx]) : 0;
                 const signups = rowIndices.signups !== null && parsed[rowIndices.signups] ? parseNumber(parsed[rowIndices.signups][colIdx]) : 0;
                 const cpnu = rowIndices.cpnu !== null && parsed[rowIndices.cpnu] ? parseNumber(parsed[rowIndices.cpnu][colIdx]) : 0;
