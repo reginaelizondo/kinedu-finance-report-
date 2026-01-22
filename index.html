@@ -999,19 +999,245 @@
             color: #ef4444;
         }
 
-        /* Metric Highlights for Executive Summary */
-        .metric-highlight {
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 13px;
+        /* Executive Summary - Professional Dashboard Style */
+        .exec-summary-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 8px;
         }
 
-        .metric-highlight.blue { background: #dbeafe; color: #1d4ed8; }
-        .metric-highlight.green { background: #dcfce7; color: #16a34a; }
-        .metric-highlight.red { background: #fee2e2; color: #dc2626; }
-        .metric-highlight.amber { background: #fef3c7; color: #d97706; }
-        .metric-highlight.purple { background: #ede9fe; color: #7c3aed; }
+        @media (max-width: 1200px) {
+            .exec-summary-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .exec-summary-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exec-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .exec-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .exec-card-header {
+            padding: 20px 24px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .exec-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .exec-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .exec-card-body {
+            padding: 16px 24px 20px;
+        }
+
+        .exec-card-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .exec-card-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 13.5px;
+            line-height: 1.5;
+            color: #475569;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .exec-card-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .exec-card-item:first-child {
+            padding-top: 0;
+        }
+
+        .exec-item-arrow {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .exec-item-text {
+            flex: 1;
+        }
+
+        .exec-item-text strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        /* Strengths Card - Green Theme */
+        .exec-card.strengths {
+            border-left: 4px solid #22c55e;
+        }
+
+        .exec-card.strengths .exec-card-header {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .exec-card.strengths .exec-card-icon {
+            background: #22c55e;
+            color: white;
+        }
+
+        .exec-card.strengths .exec-card-title {
+            color: #15803d;
+        }
+
+        .exec-card.strengths .exec-item-arrow {
+            color: #22c55e;
+        }
+
+        /* Watch Items Card - Amber Theme */
+        .exec-card.watch {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .exec-card.watch .exec-card-header {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .exec-card.watch .exec-card-icon {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .exec-card.watch .exec-card-title {
+            color: #b45309;
+        }
+
+        .exec-card.watch .exec-item-arrow {
+            color: #f59e0b;
+        }
+
+        /* Critical Issues Card - Red Theme */
+        .exec-card.critical {
+            border-left: 4px solid #ef4444;
+        }
+
+        .exec-card.critical .exec-card-header {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        }
+
+        .exec-card.critical .exec-card-icon {
+            background: #ef4444;
+            color: white;
+        }
+
+        .exec-card.critical .exec-card-title {
+            color: #b91c1c;
+        }
+
+        .exec-card.critical .exec-item-arrow {
+            color: #ef4444;
+        }
+
+        /* Metric Badges/Pills */
+        .metric-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+        }
+
+        .metric-badge.primary {
+            background: #1e40af;
+            color: white;
+        }
+
+        .metric-badge.success {
+            background: #15803d;
+            color: white;
+        }
+
+        .metric-badge.warning {
+            background: #b45309;
+            color: white;
+        }
+
+        .metric-badge.danger {
+            background: #b91c1c;
+            color: white;
+        }
+
+        .metric-badge.neutral {
+            background: #475569;
+            color: white;
+        }
+
+        .metric-badge.light-success {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .metric-badge.light-warning {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .metric-badge.light-danger {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .metric-badge.light-primary {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Variance indicators */
+        .variance-positive {
+            color: #15803d;
+            font-weight: 600;
+        }
+
+        .variance-negative {
+            color: #b91c1c;
+            font-weight: 600;
+        }
 
         /* Footer */
         .footer {
@@ -1949,25 +2175,54 @@
             <div class="section">
                 <h2 class="section-title">Executive Summary</h2>
 
-                <div class="insight-box positive-box">
-                    <h3>Strengths & Positive Indicators</h3>
-                    <ul id="exec-strengths">
-                        <li>Loading data...</li>
-                    </ul>
-                </div>
+                <div class="exec-summary-container">
+                    <!-- Strengths Card -->
+                    <div class="exec-card strengths">
+                        <div class="exec-card-header">
+                            <div class="exec-card-icon">✓</div>
+                            <div class="exec-card-title">Strengths</div>
+                        </div>
+                        <div class="exec-card-body">
+                            <ul class="exec-card-list" id="exec-strengths">
+                                <li class="exec-card-item">
+                                    <span class="exec-item-arrow">→</span>
+                                    <span class="exec-item-text">Loading data...</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                <div class="insight-box">
-                    <h3>Watch Items & Key Insights</h3>
-                    <ul id="exec-warnings">
-                        <li>Loading data...</li>
-                    </ul>
-                </div>
+                    <!-- Watch Items Card -->
+                    <div class="exec-card watch">
+                        <div class="exec-card-header">
+                            <div class="exec-card-icon">!</div>
+                            <div class="exec-card-title">Watch Items</div>
+                        </div>
+                        <div class="exec-card-body">
+                            <ul class="exec-card-list" id="exec-warnings">
+                                <li class="exec-card-item">
+                                    <span class="exec-item-arrow">→</span>
+                                    <span class="exec-item-text">Loading data...</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                <div class="insight-box negative-box">
-                    <h3>Critical Issues & Risk Factors</h3>
-                    <ul id="exec-critical">
-                        <li>Loading data...</li>
-                    </ul>
+                    <!-- Critical Issues Card -->
+                    <div class="exec-card critical">
+                        <div class="exec-card-header">
+                            <div class="exec-card-icon">✕</div>
+                            <div class="exec-card-title">Critical Issues</div>
+                        </div>
+                        <div class="exec-card-body">
+                            <ul class="exec-card-list" id="exec-critical">
+                                <li class="exec-card-item">
+                                    <span class="exec-item-arrow">→</span>
+                                    <span class="exec-item-text">Loading data...</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3012,66 +3267,80 @@
             const arpuVar = budget.arpu > 0 ? ((real.arpu - budget.arpu) / budget.arpu * 100) : 0;
             const convVar = budget.conversion > 0 ? ((real.conversion - budget.conversion) / budget.conversion * 100) : 0;
 
+            // Helper for badges
+            const badge = (value, type = 'primary') => `<span class="metric-badge ${type}">${value}</span>`;
+            const varBadge = (value, invert = false) => {
+                const isGood = invert ? value < 0 : value >= 0;
+                const sign = value >= 0 ? '+' : '';
+                return `<span class="metric-badge ${isGood ? 'light-success' : 'light-danger'}">${sign}${value.toFixed(1)}%</span>`;
+            };
+
             // STRENGTHS
             if (real.ltvCac >= 3) {
-                strengths.push(`<strong>Healthy LTV:CAC</strong> at <span class="metric-highlight green">${real.ltvCac.toFixed(2)}x</span> - above 3x benchmark for sustainable growth`);
+                strengths.push(`<strong>LTV:CAC Ratio</strong> ${badge(real.ltvCac.toFixed(2) + 'x', 'success')} above 3x benchmark for sustainable growth`);
             }
             if (cacVar < 0 && real.cac > 0) {
-                strengths.push(`<strong>CAC Efficiency</strong> at <span class="metric-highlight green">$${real.cac.toFixed(2)}</span> vs $${budget.cac.toFixed(2)} budget (<span class="metric-highlight green">${cacVar.toFixed(1)}%</span>)`);
+                strengths.push(`<strong>CAC Efficiency</strong> ${badge('$' + real.cac.toFixed(2), 'success')} vs $${budget.cac.toFixed(2)} budget ${varBadge(cacVar, true)}`);
             }
             if (convVar > 0 && real.conversion > 0) {
-                strengths.push(`<strong>Conversion Rate</strong> at <span class="metric-highlight green">${real.conversion.toFixed(2)}%</span> vs ${budget.conversion.toFixed(2)}% target (<span class="metric-highlight green">+${convVar.toFixed(1)}%</span>)`);
+                strengths.push(`<strong>Conversion Rate</strong> ${badge(real.conversion.toFixed(2) + '%', 'success')} vs ${budget.conversion.toFixed(2)}% target ${varBadge(convVar)}`);
             }
             if (spendVar < -5) {
-                strengths.push(`<strong>Cost Control</strong> - Marketing spend <span class="metric-highlight green">${Math.abs(spendVar).toFixed(1)}% under budget</span> at ${formatCurrency(real.spend)}`);
+                strengths.push(`<strong>Cost Control</strong> Marketing spend ${badge(Math.abs(spendVar).toFixed(1) + '% under', 'light-success')} budget at ${formatCurrency(real.spend)}`);
             }
             if (arpuVar > 0 && real.arpu > 0) {
-                strengths.push(`<strong>ARPU Growth</strong> at <span class="metric-highlight green">$${real.arpu.toFixed(2)}</span> vs $${budget.arpu.toFixed(2)} budget (<span class="metric-highlight green">+${arpuVar.toFixed(1)}%</span>)`);
+                strengths.push(`<strong>ARPU Growth</strong> ${badge('$' + real.arpu.toFixed(2), 'success')} vs $${budget.arpu.toFixed(2)} budget ${varBadge(arpuVar)}`);
+            }
+            if (revenueVar > 0) {
+                strengths.push(`<strong>Revenue Performance</strong> ${badge(formatCurrency(real.revenue), 'primary')} ${varBadge(revenueVar)} above target`);
             }
 
             // WARNINGS
-            if (Math.abs(revenueVar) > 5 && Math.abs(revenueVar) <= 15) {
-                warnings.push(`<strong>Revenue Variance</strong> - ${revenueVar > 0 ? 'Above' : 'Below'} budget by <span class="metric-highlight amber">${Math.abs(revenueVar).toFixed(1)}%</span> (${formatCurrency(real.revenue)} vs ${formatCurrency(budget.revenue)})`);
+            if (revenueVar < -5 && revenueVar >= -15) {
+                warnings.push(`<strong>Revenue Variance</strong> ${badge(Math.abs(revenueVar).toFixed(1) + '% below', 'light-warning')} budget (${formatCurrency(real.revenue)} vs ${formatCurrency(budget.revenue)})`);
             }
             if (cacVar > 0 && cacVar <= 15) {
-                warnings.push(`<strong>CAC Pressure</strong> at <span class="metric-highlight amber">$${real.cac.toFixed(2)}</span> vs $${budget.cac.toFixed(2)} budget (<span class="metric-highlight amber">+${cacVar.toFixed(1)}%</span>)`);
+                warnings.push(`<strong>CAC Pressure</strong> ${badge('$' + real.cac.toFixed(2), 'warning')} vs $${budget.cac.toFixed(2)} budget ${varBadge(cacVar, true)}`);
             }
             if (real.ltvCac >= 2 && real.ltvCac < 3) {
-                warnings.push(`<strong>LTV:CAC Monitor</strong> at <span class="metric-highlight amber">${real.ltvCac.toFixed(2)}x</span> - approaching 3x minimum threshold`);
+                warnings.push(`<strong>LTV:CAC Monitor</strong> ${badge(real.ltvCac.toFixed(2) + 'x', 'warning')} approaching 3x minimum threshold`);
             }
             if (arpuVar < -5 && arpuVar >= -15) {
-                warnings.push(`<strong>ARPU Decline</strong> at <span class="metric-highlight amber">$${real.arpu.toFixed(2)}</span> vs $${budget.arpu.toFixed(2)} budget (<span class="metric-highlight amber">${arpuVar.toFixed(1)}%</span>)`);
+                warnings.push(`<strong>ARPU Decline</strong> ${badge('$' + real.arpu.toFixed(2), 'warning')} vs $${budget.arpu.toFixed(2)} budget ${varBadge(arpuVar)}`);
             }
             if (convVar < -5 && convVar >= -15) {
-                warnings.push(`<strong>Conversion Softness</strong> at <span class="metric-highlight amber">${real.conversion.toFixed(2)}%</span> vs ${budget.conversion.toFixed(2)}% target`);
+                warnings.push(`<strong>Conversion Softness</strong> ${badge(real.conversion.toFixed(2) + '%', 'warning')} vs ${budget.conversion.toFixed(2)}% target`);
+            }
+            if (subsVar < -10 && subsVar >= -20) {
+                warnings.push(`<strong>Subscriber Growth</strong> ${badge(formatNumber(real.subs), 'warning')} vs ${formatNumber(budget.subs)} target ${varBadge(subsVar)}`);
             }
 
             // CRITICAL
             if (revenueVar < -15) {
-                critical.push(`<strong>Revenue Gap</strong> - <span class="metric-highlight red">${Math.abs(revenueVar).toFixed(1)}% below budget</span> (${formatCurrency(real.revenue)} vs ${formatCurrency(budget.revenue)})`);
+                critical.push(`<strong>Revenue Gap</strong> ${badge(Math.abs(revenueVar).toFixed(1) + '% below', 'danger')} budget (${formatCurrency(real.revenue)} vs ${formatCurrency(budget.revenue)})`);
             }
             if (real.ebitda < 0 && budget.ebitda >= 0) {
-                critical.push(`<strong>Negative EBITDA</strong> at <span class="metric-highlight red">${formatCurrency(real.ebitda)}</span> vs ${formatCurrency(budget.ebitda)} budget - monitor burn rate`);
+                critical.push(`<strong>Negative EBITDA</strong> ${badge(formatCurrency(real.ebitda), 'danger')} vs ${formatCurrency(budget.ebitda)} budget - monitor burn rate`);
             }
             if (real.ltvCac < 2 && real.ltvCac > 0) {
-                critical.push(`<strong>LTV:CAC Critical</strong> at <span class="metric-highlight red">${real.ltvCac.toFixed(2)}x</span> - below 2x sustainability threshold`);
+                critical.push(`<strong>LTV:CAC Critical</strong> ${badge(real.ltvCac.toFixed(2) + 'x', 'danger')} below 2x sustainability threshold`);
             }
             if (subsVar < -20) {
-                critical.push(`<strong>Subscriber Shortfall</strong> - <span class="metric-highlight red">${Math.abs(subsVar).toFixed(1)}% below target</span> (${formatNumber(real.subs)} vs ${formatNumber(budget.subs)})`);
+                critical.push(`<strong>Subscriber Shortfall</strong> ${badge(Math.abs(subsVar).toFixed(1) + '% below', 'danger')} target (${formatNumber(real.subs)} vs ${formatNumber(budget.subs)})`);
             }
             if (cacVar > 15) {
-                critical.push(`<strong>CAC Overrun</strong> at <span class="metric-highlight red">$${real.cac.toFixed(2)}</span> - <span class="metric-highlight red">${cacVar.toFixed(1)}% above budget</span>`);
+                critical.push(`<strong>CAC Overrun</strong> ${badge('$' + real.cac.toFixed(2), 'danger')} is ${badge(cacVar.toFixed(1) + '% above', 'light-danger')} budget`);
             }
 
             // Default messages if no insights
             if (strengths.length === 0) {
-                strengths.push('<strong>Data Loading</strong> - Add more months of data to generate insights');
+                strengths.push(`<strong>Awaiting Data</strong> Add more data to generate performance insights`);
             }
             if (warnings.length === 0) {
-                warnings.push('<strong>No Warnings</strong> - All metrics within acceptable ranges');
+                warnings.push(`<strong>All Clear</strong> ${badge('✓', 'light-success')} No warning indicators detected`);
             }
             if (critical.length === 0) {
-                critical.push('<strong>No Critical Issues</strong> - Performance on track');
+                critical.push(`<strong>No Issues</strong> ${badge('✓', 'light-success')} All metrics within healthy ranges`);
             }
 
             // Update DOM
@@ -3084,7 +3353,12 @@
             const el = document.getElementById(elementId);
             if (!el) return;
 
-            el.innerHTML = items.slice(0, 5).map(item => `<li>${item}</li>`).join('');
+            el.innerHTML = items.slice(0, 5).map(item => `
+                <li class="exec-card-item">
+                    <span class="exec-item-arrow">→</span>
+                    <span class="exec-item-text">${item}</span>
+                </li>
+            `).join('');
         }
 
         // ============================================
