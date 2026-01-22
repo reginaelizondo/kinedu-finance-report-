@@ -3673,41 +3673,66 @@
 
             // Process each month
             monthNames.forEach((month, i) => {
-                const colIdx = i + 1; // Column B is index 1
+                // P&L ACTUAL (P&L_2026_CASH) has data starting in column D (index 3)
+                // P&L BUDGET files have data starting in column B (index 1)
+                const colIdx = scenario === 'actual' ? i + 3 : i + 1;
 
                 if (!targetMonthlyData[month]) {
                     targetMonthlyData[month] = {};
                 }
 
                 if (scenario === 'actual') {
-                    // P&L ACTUAL row indices
-                    const subsTotal = parsed[8] ? parseNumber(parsed[8][colIdx]) : 0;    // Row 9: Subscription Sales total
-                    const subsIOS = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;    // Row 36: Subscription IOS
-                    const subsAOS = parsed[36] ? parseNumber(parsed[36][colIdx]) : 0;    // Row 37: Subscription aOS
-                    const offApp = parsed[9] ? parseNumber(parsed[9][colIdx]) : 0;       // Row 10: Off App Sales
-                    const partnership = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0; // Row 11: Partnerships
-                    const grossRevenue = parsed[13] ? parseNumber(parsed[13][colIdx]) : 0; // Row 14: Gross Revenue
-                    const netRevenue = parsed[15] ? parseNumber(parsed[15][colIdx]) : 0;   // Row 16: Net Revenue
+                    // P&L_2026_CASH row indices (0-indexed from CSV)
+                    // Row 9 (idx 8): Subscriptions App
+                    // Row 10 (idx 9): Subscriptions Off App
+                    // Row 11 (idx 10): Other Revenue/Partnerships
+                    // Row 13 (idx 12): Gross Revenue
+                    // Row 14 (idx 13): Comissions
+                    // Row 15 (idx 14): Servers
+                    // Row 16 (idx 15): Net Revenue
+                    // Row 18 (idx 17): Marketing Spend (meta)
+                    // Row 19 (idx 18): Marketing Spend (others)
+                    // Row 21 (idx 20): Contribution Margin
+                    // Row 23 (idx 22): Salaries & Wages
+                    // Row 24 (idx 23): External Services
+                    // Row 25 (idx 24): Travel expenses
+                    // Row 26 (idx 25): Services
+                    // Row 27 (idx 26): Other
+                    // Row 30 (idx 29): EBITDA
+                    // Row 33 (idx 32): EBIT
+                    // Row 36 (idx 35): Cash Flow (before taxes)
+                    // Row 38 (idx 37): Investments/CAPEX
+                    // Row 41 (idx 40): Subscriptions IOS
+                    // Row 42 (idx 41): Subscriptions aOS
 
-                    // Marketing
-                    const mktMeta = parsed[17] ? parseNumber(parsed[17][colIdx]) : 0;    // Row 18: Marketing Meta
-                    const mktOthers = parsed[18] ? parseNumber(parsed[18][colIdx]) : 0;  // Row 19: Marketing Others
+                    const subsTotal = parsed[8] ? parseNumber(parsed[8][colIdx]) : 0;     // Subscriptions App
+                    const subsIOS = parsed[40] ? parseNumber(parsed[40][colIdx]) : 0;     // Subscriptions IOS
+                    const subsAOS = parsed[41] ? parseNumber(parsed[41][colIdx]) : 0;     // Subscriptions aOS
+                    const offApp = parsed[9] ? parseNumber(parsed[9][colIdx]) : 0;        // Subscriptions Off App
+                    const partnership = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0; // Other Revenue/Partnerships
+                    const grossRevenue = parsed[12] ? parseNumber(parsed[12][colIdx]) : 0; // Gross Revenue
+                    const netRevenue = parsed[15] ? parseNumber(parsed[15][colIdx]) : 0;   // Net Revenue
+
+                    // Marketing (values are negative in P&L, take absolute)
+                    const mktMeta = Math.abs(parsed[17] ? parseNumber(parsed[17][colIdx]) : 0);    // Marketing Spend (meta)
+                    const mktOthers = Math.abs(parsed[18] ? parseNumber(parsed[18][colIdx]) : 0);  // Marketing Spend (others)
 
                     // Contribution Margin
-                    const contributionMargin = parsed[20] ? parseNumber(parsed[20][colIdx]) : 0; // Row 21
+                    const contributionMargin = parsed[20] ? parseNumber(parsed[20][colIdx]) : 0;
 
-                    // Operating Expenses
-                    const servers = parsed[14] ? parseNumber(parsed[14][colIdx]) : 0;    // Row 15: Servers
-                    const salaries = parsed[22] ? parseNumber(parsed[22][colIdx]) : 0;   // Row 23: Salaries
-                    const extServices = parsed[23] ? parseNumber(parsed[23][colIdx]) : 0; // Row 24: External Services
-                    const travel = parsed[24] ? parseNumber(parsed[24][colIdx]) : 0;     // Row 25: Travel
-                    const services = parsed[25] ? parseNumber(parsed[25][colIdx]) : 0;   // Row 26: Services
-                    const other = parsed[26] ? parseNumber(parsed[26][colIdx]) : 0;      // Row 27: Others
-                    const capex = parsed[37] ? parseNumber(parsed[37][colIdx]) : 0;      // Row 38: CAPEX
+                    // Operating Expenses (values may be negative, take absolute)
+                    const servers = Math.abs(parsed[14] ? parseNumber(parsed[14][colIdx]) : 0);      // Servers
+                    const salaries = Math.abs(parsed[22] ? parseNumber(parsed[22][colIdx]) : 0);     // Salaries & Wages
+                    const extServices = Math.abs(parsed[23] ? parseNumber(parsed[23][colIdx]) : 0);  // External Services
+                    const travel = Math.abs(parsed[24] ? parseNumber(parsed[24][colIdx]) : 0);       // Travel expenses
+                    const services = Math.abs(parsed[25] ? parseNumber(parsed[25][colIdx]) : 0);     // Services
+                    const other = Math.abs(parsed[26] ? parseNumber(parsed[26][colIdx]) : 0);        // Other
+                    const capex = Math.abs(parsed[37] ? parseNumber(parsed[37][colIdx]) : 0);        // Investments/CAPEX
 
                     // Profit
-                    const operatingProfit = parsed[32] ? parseNumber(parsed[32][colIdx]) : 0; // Row 33: EBIT
-                    const netIncome = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;       // Row 36: Net Income
+                    const ebitda = parsed[29] ? parseNumber(parsed[29][colIdx]) : 0;           // EBITDA
+                    const operatingProfit = parsed[32] ? parseNumber(parsed[32][colIdx]) : 0;  // EBIT
+                    const cashFlow = parsed[35] ? parseNumber(parsed[35][colIdx]) : 0;         // Cash Flow (before taxes)
 
                     // Store in monthly data (ACTUAL)
                     targetMonthlyData[month].subscriptions = subsTotal;
@@ -3736,9 +3761,9 @@
                     targetMonthlyData[month].capex = capex;
 
                     targetMonthlyData[month].operatingProfit = operatingProfit;
-                    targetMonthlyData[month].ebitda = netIncome;
-                    targetMonthlyData[month].netIncome = netIncome;
-                    targetMonthlyData[month].burnRate = Math.abs(netIncome);
+                    targetMonthlyData[month].ebitda = ebitda;
+                    targetMonthlyData[month].netIncome = cashFlow;
+                    targetMonthlyData[month].burnRate = Math.abs(cashFlow);
 
                     // Accumulate OpEx totals
                     opexTotals.servers += servers;
