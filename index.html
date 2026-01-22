@@ -1257,17 +1257,29 @@
                     <div class="chart-title" id="subscribersChartTitle">Marketing Efficiency & User Acquisition</div>
                     <div class="subscribers-toggles" id="toggles-subscribers">
                         <div class="sub-toggle-group">
-                            <button class="sub-toggle-btn active" data-metric="newUsers" style="--toggle-color: #3b82f6;">
-                                <span class="sub-toggle-indicator" style="background: #3b82f6;"></span>
+                            <button class="sub-toggle-btn active" data-metric="newUsers" style="--toggle-color: #6366f1;">
+                                <span class="sub-toggle-indicator" style="background: #6366f1;"></span>
                                 New Users
                             </button>
-                            <button class="sub-toggle-btn active" data-metric="marketingSpend" style="--toggle-color: #f97316;">
-                                <span class="sub-toggle-indicator" style="background: #f97316;"></span>
+                            <button class="sub-toggle-btn" data-metric="newUsersBudget" style="--toggle-color: #a5b4fc;">
+                                <span class="sub-toggle-indicator" style="background: #a5b4fc;"></span>
+                                New Users Budget
+                            </button>
+                            <button class="sub-toggle-btn active" data-metric="marketingSpend" style="--toggle-color: #f59e0b;">
+                                <span class="sub-toggle-indicator" style="background: #f59e0b;"></span>
                                 Marketing Spend
                             </button>
-                            <button class="sub-toggle-btn active" data-metric="cpnu" style="--toggle-color: #22c55e;">
-                                <span class="sub-toggle-indicator" style="background: #22c55e;"></span>
+                            <button class="sub-toggle-btn" data-metric="marketingSpendBudget" style="--toggle-color: #fcd34d;">
+                                <span class="sub-toggle-indicator" style="background: #fcd34d;"></span>
+                                Spend Budget
+                            </button>
+                            <button class="sub-toggle-btn active" data-metric="cpnu" style="--toggle-color: #10b981;">
+                                <span class="sub-toggle-indicator" style="background: #10b981;"></span>
                                 CPNU
+                            </button>
+                            <button class="sub-toggle-btn" data-metric="cpnuBudget" style="--toggle-color: #10b981;">
+                                <span class="sub-toggle-indicator" style="background: #10b981; opacity: 0.5;"></span>
+                                CPNU Budget
                             </button>
                         </div>
                         <button class="sub-reset-btn" onclick="resetSubscribersToggles()">Reset</button>
@@ -2904,8 +2916,11 @@
         // ============================================
         let subscribersToggles = {
             newUsers: true,
+            newUsersBudget: false,
             marketingSpend: true,
-            cpnu: true
+            marketingSpendBudget: false,
+            cpnu: true,
+            cpnuBudget: false
         };
 
         function loadSubscribersToggles() {
@@ -2934,63 +2949,101 @@
         function getSubscribersChartData() {
             let labels = monthLabelsShort;
             let signupsActual = [];
+            let signupsBudget = [];
             let spendActual = [];
+            let spendBudget = [];
             let cpnuActual = [];
+            let cpnuBudget = [];
 
             monthNames.forEach(month => {
                 signupsActual.push(monthlyData[month].signups / 1000);
+                signupsBudget.push(monthlyBudget[month].signups / 1000);
                 spendActual.push(monthlyData[month].spend / 1000);
+                spendBudget.push(monthlyBudget[month].spend / 1000);
                 cpnuActual.push(monthlyData[month].cpnu);
+                cpnuBudget.push(monthlyBudget[month].cpnu);
             });
 
             return {
                 labels: labels,
                 signupsActual: signupsActual,
+                signupsBudget: signupsBudget,
                 spendActual: spendActual,
-                cpnuActual: cpnuActual
+                spendBudget: spendBudget,
+                cpnuActual: cpnuActual,
+                cpnuBudget: cpnuBudget
             };
         }
 
         function buildSubscribersDatasets(data) {
             const datasets = [];
 
+            // New Users Actual - Indigo
             if (subscribersToggles.newUsers) {
                 datasets.push({
                     label: 'New Users (K)',
                     data: data.signupsActual,
                     type: 'bar',
-                    backgroundColor: '#3b82f6',
-                    borderRadius: 4,
-                    yAxisID: 'y',
-                    order: 2
-                });
-            }
-
-            if (subscribersToggles.marketingSpend) {
-                datasets.push({
-                    label: 'Marketing Spend ($K)',
-                    data: data.spendActual,
-                    type: 'bar',
-                    backgroundColor: '#f97316',
+                    backgroundColor: '#6366f1',
                     borderRadius: 4,
                     yAxisID: 'y',
                     order: 3
                 });
             }
 
+            // New Users Budget - Light Indigo
+            if (subscribersToggles.newUsersBudget) {
+                datasets.push({
+                    label: 'New Users Budget (K)',
+                    data: data.signupsBudget,
+                    type: 'bar',
+                    backgroundColor: '#a5b4fc',
+                    borderRadius: 4,
+                    yAxisID: 'y',
+                    order: 4
+                });
+            }
+
+            // Marketing Spend Actual - Amber
+            if (subscribersToggles.marketingSpend) {
+                datasets.push({
+                    label: 'Marketing Spend ($K)',
+                    data: data.spendActual,
+                    type: 'bar',
+                    backgroundColor: '#f59e0b',
+                    borderRadius: 4,
+                    yAxisID: 'y',
+                    order: 5
+                });
+            }
+
+            // Marketing Spend Budget - Light Amber
+            if (subscribersToggles.marketingSpendBudget) {
+                datasets.push({
+                    label: 'Spend Budget ($K)',
+                    data: data.spendBudget,
+                    type: 'bar',
+                    backgroundColor: '#fcd34d',
+                    borderRadius: 4,
+                    yAxisID: 'y',
+                    order: 6
+                });
+            }
+
+            // CPNU Actual - Emerald (solid line)
             if (subscribersToggles.cpnu) {
                 datasets.push({
                     label: 'CPNU ($)',
                     data: data.cpnuActual,
                     type: 'line',
-                    borderColor: '#22c55e',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     borderWidth: 3,
                     fill: false,
                     tension: 0.4,
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    pointBackgroundColor: '#22c55e',
+                    pointBackgroundColor: '#10b981',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     yAxisID: 'y1',
@@ -2998,11 +3051,33 @@
                 });
             }
 
+            // CPNU Budget - Emerald (dashed line)
+            if (subscribersToggles.cpnuBudget) {
+                datasets.push({
+                    label: 'CPNU Budget ($)',
+                    data: data.cpnuBudget,
+                    type: 'line',
+                    borderColor: '#10b981',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [6, 4],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1,
+                    yAxisID: 'y1',
+                    order: 2
+                });
+            }
+
             return datasets;
         }
 
         function needsCpnuAxis() {
-            return subscribersToggles.cpnu;
+            return subscribersToggles.cpnu || subscribersToggles.cpnuBudget;
         }
 
         function createMarketingEfficiencyChart() {
@@ -3129,7 +3204,14 @@
         }
 
         function resetSubscribersToggles() {
-            subscribersToggles = { newUsers: true, marketingSpend: true, cpnu: true };
+            subscribersToggles = {
+                newUsers: true,
+                newUsersBudget: false,
+                marketingSpend: true,
+                marketingSpendBudget: false,
+                cpnu: true,
+                cpnuBudget: false
+            };
             updateSubscribersToggleButtons();
             updateMarketingChart();
             saveSubscribersToggles();
