@@ -3982,8 +3982,6 @@
             }
 
             console.log('Applying budget data from scenario:', scenario);
-            console.log('scenarioData.budget:', scenarioData.budget);
-            console.log('scenarioData.monthlyBudget:', scenarioData.monthlyBudget);
 
             // Update aggregated budget data (Q1, Q2, Q3, Q4, H1, H2, Yearly)
             if (scenarioData.budget) {
@@ -3995,9 +3993,20 @@
                 monthlyBudget = scenarioData.monthlyBudget;
             }
 
+            // Update revenue breakdown budget data for category filters
+            if (scenarioData.revenueBreakdown && scenarioData.revenueBreakdown.budget) {
+                revenueBreakdown.budget = scenarioData.revenueBreakdown.budget;
+                console.log('Revenue breakdown budget updated:', revenueBreakdown.budget);
+            }
+
+            // Update opexData if available
+            if (scenarioData.opexData) {
+                opexData = scenarioData.opexData;
+            }
+
             console.log('Budget data updated for scenario:', scenario);
-            console.log('New data.budget:', data.budget);
-            console.log('New monthlyBudget January:', monthlyBudget?.January);
+            console.log('New monthlyBudget January revenue:', monthlyBudget?.January?.revenue);
+            console.log('New monthlyBudget January contributionMargin:', monthlyBudget?.January?.contributionMargin);
         }
 
         /**
@@ -4768,15 +4777,28 @@
          * Update contribution margin chart if it exists
          */
         function updateContributionMarginChart() {
-            if (charts.contributionMargin) {
-                // Recalculate contribution margin for current year
-                const actualData = monthNames.map(m => (monthlyData[m]?.revenue || 0) / 1000);
-                const budgetData = monthNames.map(m => (monthlyBudget[m]?.revenue || 0) / 1000);
+            if (!charts.contributionMargin) return;
 
-                charts.contributionMargin.data.datasets[0].data = actualData;
-                charts.contributionMargin.data.datasets[1].data = budgetData;
-                charts.contributionMargin.update();
+            // Get contribution margin data from monthlyData and monthlyBudget
+            const actualData = monthNames.map(m => (monthlyData[m]?.contributionMargin || 0) / 1000);
+            const budgetData = monthNames.map(m => (monthlyBudget[m]?.contributionMargin || 0) / 1000);
+
+            // Update chart title to reflect current year
+            const titleEl = document.getElementById('contributionMarginTitle');
+            if (titleEl) {
+                const scenarioText = currentYear === 2026 ? ` (${getPrimaryScenario()})` : '';
+                titleEl.textContent = `Monthly Contribution Margin: Actual vs Budget${scenarioText} (${currentYear})`;
             }
+
+            // Update datasets
+            charts.contributionMargin.data.datasets[0].data = actualData;
+            charts.contributionMargin.data.datasets[0].label = `Actual ${currentYear}`;
+            charts.contributionMargin.data.datasets[1].data = budgetData;
+            charts.contributionMargin.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
+
+            charts.contributionMargin.update();
+
+            console.log('Contribution Margin updated - Actual:', actualData, 'Budget:', budgetData);
         }
 
         // ============================================
