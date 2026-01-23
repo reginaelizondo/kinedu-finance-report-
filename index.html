@@ -1031,6 +1031,12 @@
             font-weight: 500;
         }
 
+        .opex-header-stats {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+        }
+
         .opex-header-total {
             text-align: right;
         }
@@ -1067,6 +1073,34 @@
         .opex-header-total-variance.over {
             background: rgba(239, 68, 68, 0.2);
             color: #fca5a5;
+        }
+
+        .opex-header-avg {
+            text-align: right;
+            padding-left: 32px;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .opex-header-avg-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .opex-header-avg-value {
+            color: #93c5fd;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .opex-header-avg-sublabel {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 2px;
         }
 
         .opex-content {
@@ -2577,10 +2611,17 @@
                             <div class="opex-header-title">Operating Expenses</div>
                             <div class="opex-header-period" id="opexHeaderPeriod">January 2025</div>
                         </div>
-                        <div class="opex-header-total">
-                            <div class="opex-header-total-label">Total Actual</div>
-                            <div class="opex-header-total-value" id="opexHeaderTotal">$0K</div>
-                            <div class="opex-header-total-variance under" id="opexHeaderVariance">$0K under budget</div>
+                        <div class="opex-header-stats">
+                            <div class="opex-header-total">
+                                <div class="opex-header-total-label">Total Actual</div>
+                                <div class="opex-header-total-value" id="opexHeaderTotal">$0K</div>
+                                <div class="opex-header-total-variance under" id="opexHeaderVariance">$0K under budget</div>
+                            </div>
+                            <div class="opex-header-avg">
+                                <div class="opex-header-avg-label">Monthly Avg</div>
+                                <div class="opex-header-avg-value" id="opexHeaderAvg">$0K</div>
+                                <div class="opex-header-avg-sublabel">per month</div>
+                            </div>
                         </div>
                     </div>
                     <div class="opex-content">
@@ -8149,9 +8190,26 @@
             const totalIsUnder = totalVarianceDollar <= 0;
             const totalBudgetUsedPercent = totalBudget > 0 ? ((totalActual / totalBudget) * 100).toFixed(0) : 0;
 
+            // Calculate number of months for average
+            let numMonths = 1;
+            if (customRangeActive) {
+                numMonths = customRangeTo - customRangeFrom + 1;
+            } else if (currentGranularity === 'monthly') {
+                numMonths = 1;
+            } else if (currentGranularity === 'quarterly') {
+                numMonths = 3;
+            } else if (currentGranularity === 'semester') {
+                numMonths = 6;
+            } else if (currentGranularity === 'yearly') {
+                numMonths = 12;
+            }
+
+            const monthlyAvg = totalActual / numMonths;
+
             const headerTotal = document.getElementById('opexHeaderTotal');
             const headerVariance = document.getElementById('opexHeaderVariance');
             const headerPeriod = document.getElementById('opexHeaderPeriod');
+            const headerAvg = document.getElementById('opexHeaderAvg');
 
             if (headerTotal) {
                 headerTotal.textContent = `$${(totalActual / 1000).toFixed(0)}K`;
@@ -8167,6 +8225,10 @@
 
             if (headerPeriod) {
                 headerPeriod.textContent = getOpexPeriodText();
+            }
+
+            if (headerAvg) {
+                headerAvg.textContent = `$${(monthlyAvg / 1000).toFixed(0)}K`;
             }
         }
 
