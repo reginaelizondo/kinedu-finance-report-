@@ -6969,7 +6969,17 @@
                 return (arpu && cac && cac > 0) ? (arpu / cac) : null;
             });
 
-            // Calculate Contribution Margin as ARPU - CAC (in dollars)
+            // Calculate Contribution Margin as floating bars [CAC, ARPU]
+            // This creates bars that visually span from CAC (bottom) to ARPU (top)
+            const cmFloatingBars = actualArpu.map((arpu, i) => {
+                const cac = actualCac[i];
+                if (arpu && cac) {
+                    return [cac, arpu]; // [min, max] for floating bar
+                }
+                return null;
+            });
+
+            // Simple contribution margin value for tooltip
             const cmActual = actualArpu.map((arpu, i) => (arpu && actualCac[i]) ? arpu - actualCac[i] : 0);
             const cmBudget = budgetArpu.map((arpu, i) => (arpu && budgetCac[i]) ? arpu - budgetCac[i] : 0);
 
@@ -6980,7 +6990,8 @@
                 actualCac: actualCac,
                 budgetCac: budgetCac,
                 arpuCacRatio: ratioData,
-                contributionMargin: cmActual,
+                contributionMargin: cmFloatingBars,
+                contributionMarginValue: cmActual,
                 contributionMarginBudget: cmBudget
             };
         }
@@ -7090,19 +7101,21 @@
                 });
             }
 
-            // Contribution Margin - Purple (efficiency metric)
+            // Contribution Margin - Purple floating bars (from CAC to ARPU)
             if (unitEconomicsToggles.contributionMargin) {
                 datasets.push({
                     label: 'Cont. Margin ($)',
                     data: data.contributionMargin,
                     type: 'bar',
-                    backgroundColor: function(context) {
-                        const value = context.raw;
-                        return value >= 0 ? '#A78BFA' : '#C4B5FD';
-                    },
+                    backgroundColor: 'rgba(167, 139, 250, 0.6)',
+                    borderColor: '#8B5CF6',
+                    borderWidth: 1,
                     borderRadius: 4,
+                    borderSkipped: false,
                     yAxisID: 'y',
-                    order: 10
+                    order: 10,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8
                 });
             }
 
@@ -7150,6 +7163,16 @@
                             callbacks: {
                                 label: function(context) {
                                     const label = context.dataset.label;
+                                    const raw = context.raw;
+
+                                    // Handle floating bar (Contribution Margin)
+                                    if (label.includes('Cont. Margin') && Array.isArray(raw)) {
+                                        const cac = raw[0];
+                                        const arpu = raw[1];
+                                        const margin = arpu - cac;
+                                        return `${label}: $${margin.toFixed(2)} (ARPU $${arpu.toFixed(2)} - CAC $${cac.toFixed(2)})`;
+                                    }
+
                                     const value = context.parsed.y;
                                     if (label.includes('Ratio')) {
                                         return label + ': ' + value.toFixed(2) + 'x';
