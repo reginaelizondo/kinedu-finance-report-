@@ -1083,6 +1083,11 @@
             color: #ef4444;
         }
 
+        .opex-status-icon.neutral {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
         .opex-chart-section {
             padding: 24px;
             display: flex;
@@ -7256,10 +7261,21 @@
             const periodData = getOpexDataForPeriod();
             if (!periodData || periodData.length === 0) return;
 
+            // Category colors matching the donut chart
+            const categoryColors = {
+                'Servers': '#3B82F6',
+                'Salaries & Wages': '#8B5CF6',
+                'External Services': '#F59E0B',
+                'Travel': '#10B981',
+                'Services': '#EC4899',
+                'Other': '#6B7280',
+                'CAPEX': '#EA580C'
+            };
+
             let totalBudget = 0;
             let totalActual = 0;
 
-            // Calculate totals first
+            // Calculate totals first (excluding zero items)
             periodData.forEach(item => {
                 totalBudget += item.budget;
                 totalActual += item.actual;
@@ -7270,21 +7286,53 @@
 
             const items = periodData.map(item => {
                 const varianceDollar = item.actual - item.budget;
-                const variancePercent = item.budget > 0 ? Math.abs((varianceDollar / item.budget) * 100).toFixed(0) : 0;
-                const isUnder = varianceDollar <= 0;
+                const categoryColor = categoryColors[item.category] || '#6B7280';
+
+                // Determine status: neutral (both 0), under budget, or over budget
+                let status, variancePercent, varianceIcon, statusIcon;
+
+                if (item.actual === 0 && item.budget === 0) {
+                    // Both are zero - neutral/gray
+                    status = 'neutral';
+                    variancePercent = 0;
+                    varianceIcon = '—';
+                    statusIcon = '—';
+                } else if (item.budget === 0) {
+                    // No budget but has actual - treat as over if actual > 0
+                    status = item.actual > 0 ? 'over' : 'neutral';
+                    variancePercent = item.actual > 0 ? 100 : 0;
+                    varianceIcon = item.actual > 0 ? '↑' : '—';
+                    statusIcon = item.actual > 0 ? '!' : '—';
+                } else if (item.actual <= item.budget) {
+                    // Under or at budget - green
+                    status = 'under';
+                    variancePercent = Math.abs((varianceDollar / item.budget) * 100).toFixed(0);
+                    varianceIcon = '↓';
+                    statusIcon = '✓';
+                } else {
+                    // Over budget - red
+                    status = 'over';
+                    variancePercent = Math.abs((varianceDollar / item.budget) * 100).toFixed(0);
+                    varianceIcon = '↑';
+                    statusIcon = '!';
+                }
 
                 // Scale bar width relative to the largest expense (largest = 100%)
                 const barWidth = maxActual > 0 ? Math.min((Math.abs(item.actual) / maxActual) * 100, 100) : 0;
 
-                // Color based on budget comparison: GREEN if under/at budget, RED if over budget
-                const barColor = isUnder ? '#10B981' : '#EF4444';
+                // Bar uses category color, with border indicating status
+                const borderColor = status === 'under' ? '#10B981' : status === 'over' ? '#EF4444' : '#9CA3AF';
+
+                // Hide items where both actual and budget are 0 (show very faint)
+                const isZero = item.actual === 0 && item.budget === 0;
+                const itemOpacity = isZero ? '0.4' : '1';
 
                 return `
-                    <div class="opex-item">
+                    <div class="opex-item" style="opacity: ${itemOpacity}">
                         <div class="opex-item-info">
                             <div class="opex-item-category">${item.category}</div>
                             <div class="opex-item-bar">
-                                <div class="opex-item-bar-fill" style="width: ${barWidth}%; background: ${barColor};"></div>
+                                <div class="opex-item-bar-fill" style="width: ${barWidth}%; background: ${categoryColor}; border-right: 3px solid ${borderColor};"></div>
                             </div>
                         </div>
                         <div class="opex-item-amounts">
@@ -7292,13 +7340,13 @@
                             <div class="opex-item-budget">Budget: $${(item.budget / 1000).toFixed(0)}K</div>
                         </div>
                         <div class="opex-item-variance">
-                            <span class="opex-variance-badge ${isUnder ? 'under' : 'over'}">
-                                ${isUnder ? '↓' : '↑'} ${variancePercent}%
+                            <span class="opex-variance-badge ${status}">
+                                ${varianceIcon} ${variancePercent}%
                             </span>
                         </div>
                         <div class="opex-item-status">
-                            <span class="opex-status-icon ${isUnder ? 'under' : 'over'}">
-                                ${isUnder ? '✓' : '!'}
+                            <span class="opex-status-icon ${status}">
+                                ${statusIcon}
                             </span>
                         </div>
                     </div>
