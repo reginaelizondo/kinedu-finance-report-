@@ -895,6 +895,76 @@
         .platform-dot.ios { background: #3B82F6; }
         .platform-dot.android { background: #10B981; }
 
+        /* Marketing Spend Toggle Styles */
+        .marketing-spend-toggle-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .marketing-spend-toggle-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .marketing-spend-toggle-btn {
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .marketing-spend-toggle-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .marketing-spend-toggle-btn.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        .marketing-breakdown-toggle {
+            display: inline-flex;
+            gap: 4px;
+            margin-left: 12px;
+            padding-left: 12px;
+            border-left: 1px solid #cbd5e1;
+        }
+
+        .marketing-breakdown-btn {
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .marketing-breakdown-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .marketing-breakdown-btn.active {
+            background: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+        }
+
         .ebitda-filters {
             display: flex;
             gap: 12px;
@@ -2316,17 +2386,7 @@
 
         <!-- Content -->
         <div class="content">
-            <!-- Contribution Margin Chart -->
-            <div class="section">
-                <h2 class="section-title">Contribution Margin Analysis</h2>
-                <div class="chart-container">
-                    <div class="chart-title" id="contributionMarginTitle">Monthly Contribution Margin: Actual vs Budget</div>
-                    <div class="chart-toggles" id="toggles-contributionMargin"></div>
-                    <canvas id="contributionMarginChart" height="80"></canvas>
-                </div>
-            </div>
-
-            <!-- Revenue & EBITDA Charts -->
+            <!-- Financial Performance Section -->
             <div class="section">
                 <h2 class="section-title">Financial Performance</h2>
                 <div class="chart-container">
@@ -2368,6 +2428,23 @@
                         </span>
                     </div>
                     <canvas id="ebitdaChart" height="80"></canvas>
+                </div>
+                <!-- Contribution Margin Chart -->
+                <div class="chart-container">
+                    <div class="chart-title" id="contributionMarginTitle">Monthly Contribution Margin: Actual vs Budget</div>
+                    <!-- Marketing Spend toggle (only visible for 2026) -->
+                    <div class="marketing-spend-toggle-container" id="marketingSpendToggleContainer" style="display: none;">
+                        <span class="marketing-spend-toggle-label">View:</span>
+                        <button class="marketing-spend-toggle-btn active" id="marketingSpendOff" onclick="toggleMarketingSpendView('off')">Margin Only</button>
+                        <button class="marketing-spend-toggle-btn" id="marketingSpendOn" onclick="toggleMarketingSpendView('on')">With Marketing Spend</button>
+                        <!-- Sub-toggle for Meta/Others breakdown -->
+                        <div class="marketing-breakdown-toggle" id="marketingBreakdownToggle" style="display: none;">
+                            <button class="marketing-breakdown-btn active" id="spendTotal" onclick="toggleMarketingBreakdown('total')">Total Spend</button>
+                            <button class="marketing-breakdown-btn" id="spendBreakdown" onclick="toggleMarketingBreakdown('breakdown')">Meta / Others</button>
+                        </div>
+                    </div>
+                    <div class="chart-toggles" id="toggles-contributionMargin"></div>
+                    <canvas id="contributionMarginChart" height="80"></canvas>
                 </div>
             </div>
 
@@ -2643,6 +2720,11 @@
 
         // iOS/Android breakdown toggle for Subscription Sales
         let showPlatformBreakdown = false;
+
+        // Marketing Spend toggle for Contribution Margin (2026 only)
+        let showMarketingSpend = false;
+        let marketingBreakdownMode = 'total'; // 'total' or 'breakdown'
+
         let scenarioStates = {
             optimistic: false,
             conservative: true,  // Default for 2026
@@ -3366,9 +3448,11 @@
                 const scenariosRow = document.getElementById('scenariosRow');
                 const compareRow = document.getElementById('compareRow');
                 const statusScenario = document.getElementById('statusScenario');
+                const marketingSpendToggle = document.getElementById('marketingSpendToggleContainer');
                 if (scenariosRow) scenariosRow.classList.add('visible');
                 if (compareRow) compareRow.classList.add('visible');
                 if (statusScenario) statusScenario.classList.add('visible');
+                if (marketingSpendToggle) marketingSpendToggle.style.display = 'inline-flex';
 
                 // Set scenario buttons - conservative active by default
                 document.querySelectorAll('.scenario-btn').forEach(btn => {
@@ -4117,10 +4201,14 @@
             const compareRow = document.getElementById('compareRow');
             const statusScenario = document.getElementById('statusScenario');
 
+            // Show/hide Marketing Spend toggle (only for 2026)
+            const marketingSpendToggle = document.getElementById('marketingSpendToggleContainer');
+
             if (year === 2026) {
                 if (scenariosRow) scenariosRow.classList.add('visible');
                 if (compareRow) compareRow.classList.add('visible');
                 if (statusScenario) statusScenario.classList.add('visible');
+                if (marketingSpendToggle) marketingSpendToggle.style.display = 'inline-flex';
 
                 // Load 2026 data if not already loaded
                 if (!data2026Loaded) {
@@ -4132,6 +4220,11 @@
                 if (scenariosRow) scenariosRow.classList.remove('visible');
                 if (compareRow) compareRow.classList.remove('visible');
                 if (statusScenario) statusScenario.classList.remove('visible');
+                if (marketingSpendToggle) marketingSpendToggle.style.display = 'none';
+
+                // Reset marketing spend view when switching to 2025
+                showMarketingSpend = false;
+                marketingBreakdownMode = 'total';
 
                 // Restore 2025 data
                 restore2025Data();
@@ -6062,6 +6155,244 @@
                 androidActual,
                 androidBudget
             };
+        }
+
+        // ============================================
+        // MARKETING SPEND TOGGLE FOR CONTRIBUTION MARGIN
+        // ============================================
+
+        function toggleMarketingSpendView(mode) {
+            showMarketingSpend = (mode === 'on');
+
+            // Update toggle button states
+            document.getElementById('marketingSpendOff').classList.toggle('active', !showMarketingSpend);
+            document.getElementById('marketingSpendOn').classList.toggle('active', showMarketingSpend);
+
+            // Show/hide Meta/Others sub-toggle
+            const breakdownToggle = document.getElementById('marketingBreakdownToggle');
+            if (breakdownToggle) {
+                breakdownToggle.style.display = showMarketingSpend ? 'inline-flex' : 'none';
+            }
+
+            // Reset breakdown mode when turning off
+            if (!showMarketingSpend) {
+                marketingBreakdownMode = 'total';
+                document.getElementById('spendTotal')?.classList.add('active');
+                document.getElementById('spendBreakdown')?.classList.remove('active');
+            }
+
+            // Update chart
+            updateContributionMarginWithSpend();
+        }
+
+        function toggleMarketingBreakdown(mode) {
+            marketingBreakdownMode = mode;
+
+            // Update toggle button states
+            document.getElementById('spendTotal').classList.toggle('active', mode === 'total');
+            document.getElementById('spendBreakdown').classList.toggle('active', mode === 'breakdown');
+
+            // Update chart
+            updateContributionMarginWithSpend();
+        }
+
+        function getMarketingSpendData() {
+            let spendActual = [];
+            let spendBudget = [];
+            let metaActual = [];
+            let metaBudget = [];
+            let othersActual = [];
+            let othersBudget = [];
+
+            monthNames.forEach(month => {
+                const mData = monthlyData?.[month] || {};
+                const mBudget = monthlyBudget?.[month] || {};
+
+                const metaA = mData.mktSpendMeta || 0;
+                const othersA = mData.mktSpendOthers || 0;
+                const metaB = mBudget.mktSpendMeta || 0;
+                const othersB = mBudget.mktSpendOthers || 0;
+
+                spendActual.push(metaA + othersA);
+                spendBudget.push(metaB + othersB);
+                metaActual.push(metaA);
+                metaBudget.push(metaB);
+                othersActual.push(othersA);
+                othersBudget.push(othersB);
+            });
+
+            return {
+                spendActual,
+                spendBudget,
+                metaActual,
+                metaBudget,
+                othersActual,
+                othersBudget
+            };
+        }
+
+        function updateContributionMarginWithSpend() {
+            if (!charts.contributionMargin) return;
+
+            const chart = charts.contributionMargin;
+
+            // Get contribution margin data
+            const marginActual = monthNames.map(m => (monthlyData[m]?.contributionMargin || 0) / 1000);
+            const marginBudget = monthNames.map(m => (monthlyBudget[m]?.contributionMargin || 0) / 1000);
+
+            if (!showMarketingSpend) {
+                // Simple view: just bars for Margin Actual and Budget
+                chart.data.datasets = [{
+                    label: `Margin Actual ${currentYear}`,
+                    data: marginActual,
+                    backgroundColor: function(context) {
+                        const value = context.raw;
+                        return value >= 0 ? '#1e3a5f' : '#ef4444';
+                    },
+                    borderRadius: 4,
+                    order: 2
+                }, {
+                    label: currentYear === 2026 ? `Margin Budget (${getPrimaryScenario()})` : 'Margin Budget',
+                    data: marginBudget,
+                    backgroundColor: '#94a3b8',
+                    borderRadius: 4,
+                    order: 3
+                }];
+                chart.options.scales.x.stacked = false;
+                chart.options.scales.y.stacked = false;
+            } else {
+                // With Marketing Spend view
+                const spendData = getMarketingSpendData();
+
+                if (marketingBreakdownMode === 'total') {
+                    // Show total spend as bars + margin as lines
+                    chart.data.datasets = [
+                        // Spend bars
+                        {
+                            type: 'bar',
+                            label: 'Spend Actual',
+                            data: spendData.spendActual.map(v => v / 1000),
+                            backgroundColor: '#7c3aed',
+                            borderRadius: 4,
+                            order: 2
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Spend Budget',
+                            data: spendData.spendBudget.map(v => v / 1000),
+                            backgroundColor: '#c4b5fd',
+                            borderRadius: 4,
+                            order: 3
+                        },
+                        // Contribution Margin as lines
+                        {
+                            type: 'line',
+                            label: `Margin Actual ${currentYear}`,
+                            data: marginActual,
+                            borderColor: '#1e3a5f',
+                            backgroundColor: 'rgba(30, 58, 95, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#1e3a5f',
+                            fill: false,
+                            order: 1
+                        },
+                        {
+                            type: 'line',
+                            label: currentYear === 2026 ? `Margin Budget (${getPrimaryScenario()})` : 'Margin Budget',
+                            data: marginBudget,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#94a3b8',
+                            fill: false,
+                            order: 1
+                        }
+                    ];
+                    chart.options.scales.x.stacked = false;
+                    chart.options.scales.y.stacked = false;
+                } else {
+                    // Meta/Others breakdown as stacked bars + margin as lines
+                    chart.data.datasets = [
+                        // Meta Actual (stacked)
+                        {
+                            type: 'bar',
+                            label: 'Meta Actual',
+                            data: spendData.metaActual.map(v => v / 1000),
+                            backgroundColor: '#3B82F6',
+                            borderRadius: 0,
+                            stack: 'actual',
+                            order: 2
+                        },
+                        // Others Actual (stacked)
+                        {
+                            type: 'bar',
+                            label: 'Others Actual',
+                            data: spendData.othersActual.map(v => v / 1000),
+                            backgroundColor: '#10B981',
+                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+                            stack: 'actual',
+                            order: 2
+                        },
+                        // Meta Budget (stacked)
+                        {
+                            type: 'bar',
+                            label: 'Meta Budget',
+                            data: spendData.metaBudget.map(v => v / 1000),
+                            backgroundColor: '#93C5FD',
+                            borderRadius: 0,
+                            stack: 'budget',
+                            order: 3
+                        },
+                        // Others Budget (stacked)
+                        {
+                            type: 'bar',
+                            label: 'Others Budget',
+                            data: spendData.othersBudget.map(v => v / 1000),
+                            backgroundColor: '#6EE7B7',
+                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+                            stack: 'budget',
+                            order: 3
+                        },
+                        // Contribution Margin as lines
+                        {
+                            type: 'line',
+                            label: `Margin Actual ${currentYear}`,
+                            data: marginActual,
+                            borderColor: '#1e3a5f',
+                            backgroundColor: 'rgba(30, 58, 95, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#1e3a5f',
+                            fill: false,
+                            order: 1
+                        },
+                        {
+                            type: 'line',
+                            label: currentYear === 2026 ? `Margin Budget (${getPrimaryScenario()})` : 'Margin Budget',
+                            data: marginBudget,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#94a3b8',
+                            fill: false,
+                            order: 1
+                        }
+                    ];
+                    chart.options.scales.x.stacked = true;
+                    chart.options.scales.y.stacked = true;
+                }
+            }
+
+            chart.update();
         }
 
         function updateRevenueBreakdown(filter) {
