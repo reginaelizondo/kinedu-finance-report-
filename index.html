@@ -1094,11 +1094,10 @@
         }
 
         .opex-item {
-            display: grid;
-            grid-template-columns: 1fr auto auto auto;
-            gap: 16px;
-            align-items: center;
-            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 18px 0;
             border-bottom: 1px solid #f1f5f9;
         }
 
@@ -1106,16 +1105,154 @@
             border-bottom: none;
         }
 
-        .opex-item-info {
+        .opex-item-header {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .opex-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .opex-item-category {
             font-size: 14px;
             font-weight: 600;
             color: #1e293b;
+        }
+
+        .opex-item-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .opex-item-amounts {
+            text-align: right;
+        }
+
+        .opex-item-amounts-inline {
+            font-size: 14px;
+            color: #1e293b;
+        }
+
+        .opex-item-amounts-inline .actual {
+            font-weight: 700;
+        }
+
+        .opex-item-amounts-inline .separator {
+            color: #94a3b8;
+            margin: 0 4px;
+        }
+
+        .opex-item-amounts-inline .budget {
+            color: #64748b;
+        }
+
+        .opex-item-percentage {
+            min-width: 55px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .opex-item-percentage.under {
+            color: #22c55e;
+        }
+
+        .opex-item-percentage.over {
+            color: #ef4444;
+        }
+
+        .opex-item-percentage.neutral {
+            color: #64748b;
+        }
+
+        /* Progress bar container */
+        .opex-progress-container {
+            position: relative;
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: visible;
+        }
+
+        .opex-progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .opex-progress-fill.under {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+
+        .opex-progress-fill.over {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .opex-progress-fill.neutral {
+            background: linear-gradient(90deg, #94a3b8, #cbd5e1);
+        }
+
+        /* Overflow indicator for over budget */
+        .opex-overflow-indicator {
+            position: absolute;
+            right: -2px;
+            top: -3px;
+            bottom: -3px;
+            width: 4px;
+            background: #ef4444;
+            border-radius: 2px;
+            box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+            animation: pulse-overflow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-overflow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Status badge */
+        .opex-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .opex-status-badge.under {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .opex-status-badge.over {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .opex-status-badge.neutral {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .opex-status-badge .badge-icon {
+            font-size: 10px;
+        }
+
+        /* Legacy classes for compatibility */
+        .opex-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .opex-item-bar {
@@ -1142,22 +1279,6 @@
 
         .opex-item-bar-fill.neutral {
             background: linear-gradient(90deg, #94a3b8, #cbd5e1);
-        }
-
-        .opex-item-amounts {
-            text-align: right;
-            min-width: 80px;
-        }
-
-        .opex-item-actual {
-            font-size: 15px;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .opex-item-budget {
-            font-size: 12px;
-            color: #64748b;
         }
 
         .opex-item-variance {
@@ -1241,7 +1362,7 @@
 
         .opex-chart-wrapper {
             width: 100%;
-            max-width: 320px;
+            max-width: 360px;
             position: relative;
         }
 
@@ -1254,13 +1375,13 @@
         }
 
         .opex-chart-center-value {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: #1e293b;
         }
 
         .opex-chart-center-label {
-            font-size: 11px;
+            font-size: 12px;
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -7927,83 +8048,95 @@
             let totalBudget = 0;
             let totalActual = 0;
 
-            // Calculate totals first (excluding zero items)
+            // Calculate totals first
             periodData.forEach(item => {
                 totalBudget += item.budget;
                 totalActual += item.actual;
             });
 
-            // Find the maximum actual value for scaling bars proportionally
-            const maxActual = Math.max(...periodData.map(item => Math.abs(item.actual)));
-
             const items = periodData.map(item => {
-                const varianceDollar = item.actual - item.budget;
                 const categoryColor = categoryColors[item.category] || '#6B7280';
-
-                // Determine status: neutral (both ~0), under budget, or over budget
-                let status, variancePercent, varianceIcon, statusIcon;
 
                 // Use threshold for "zero" (less than $500 is effectively 0 when showing in K)
                 const isActualZero = Math.abs(item.actual) < 500;
                 const isBudgetZero = Math.abs(item.budget) < 500;
 
+                // Calculate percentage of budget used: Actual / Budget × 100
+                let budgetUsedPercent = 0;
+                let status = 'neutral';
+                let statusText = '';
+                let statusIcon = '—';
+
                 if (isActualZero && isBudgetZero) {
-                    // Both are effectively zero - neutral/gray
+                    // Both are effectively zero
+                    budgetUsedPercent = 0;
                     status = 'neutral';
-                    variancePercent = 0;
-                    varianceIcon = '—';
+                    statusText = 'No activity';
                     statusIcon = '—';
                 } else if (isBudgetZero && !isActualZero) {
-                    // No budget but has actual spending - treat as over
+                    // No budget but has actual spending - treat as 100%+ over
+                    budgetUsedPercent = 100;
                     status = 'over';
-                    variancePercent = 100;
-                    varianceIcon = '↑';
+                    statusText = 'No budget';
                     statusIcon = '!';
-                } else if (item.actual <= item.budget) {
-                    // Under or at budget - green
-                    status = 'under';
-                    variancePercent = Math.abs((varianceDollar / item.budget) * 100).toFixed(0);
-                    varianceIcon = '↓';
-                    statusIcon = '✓';
                 } else {
-                    // Over budget - red
-                    status = 'over';
-                    variancePercent = Math.abs((varianceDollar / item.budget) * 100).toFixed(0);
-                    varianceIcon = '↑';
-                    statusIcon = '!';
+                    // Calculate percentage
+                    budgetUsedPercent = (item.actual / item.budget) * 100;
+
+                    if (budgetUsedPercent <= 100) {
+                        // Under or at budget
+                        status = 'under';
+                        const underPercent = (100 - budgetUsedPercent).toFixed(0);
+                        statusText = `${underPercent}% under`;
+                        statusIcon = '✓';
+                    } else {
+                        // Over budget
+                        status = 'over';
+                        const overPercent = (budgetUsedPercent - 100).toFixed(0);
+                        statusText = `${overPercent}% over`;
+                        statusIcon = '!';
+                    }
                 }
 
-                // Scale bar width relative to the largest expense (largest = 100%)
-                const barWidth = maxActual > 0 ? Math.min((Math.abs(item.actual) / maxActual) * 100, 100) : 0;
-
-                // Bar uses category color, with border indicating status
-                const borderColor = status === 'under' ? '#10B981' : status === 'over' ? '#EF4444' : '#9CA3AF';
+                // Bar width: capped at 100%, the fill represents % of budget used
+                const barWidth = Math.min(budgetUsedPercent, 100);
+                const isOverBudget = budgetUsedPercent > 100;
 
                 // Hide items where both actual and budget are 0 (show very faint)
-                const isZero = item.actual === 0 && item.budget === 0;
-                const itemOpacity = isZero ? '0.4' : '1';
+                const isZero = isActualZero && isBudgetZero;
+                const itemOpacity = isZero ? '0.5' : '1';
+
+                // Format amounts
+                const actualK = (item.actual / 1000).toFixed(0);
+                const budgetK = (item.budget / 1000).toFixed(0);
 
                 return `
                     <div class="opex-item" style="opacity: ${itemOpacity}">
-                        <div class="opex-item-info">
-                            <div class="opex-item-category">${item.category}</div>
-                            <div class="opex-item-bar">
-                                <div class="opex-item-bar-fill" style="width: ${barWidth}%; background: ${categoryColor}; border-right: 3px solid ${borderColor};"></div>
+                        <div class="opex-item-header">
+                            <div class="opex-item-left">
+                                <span class="opex-item-category" style="color: ${categoryColor}">${item.category}</span>
+                            </div>
+                            <div class="opex-item-right">
+                                <div class="opex-item-amounts">
+                                    <span class="opex-item-amounts-inline">
+                                        <span class="actual">$${actualK}K</span>
+                                        <span class="separator">/</span>
+                                        <span class="budget">$${budgetK}K</span>
+                                    </span>
+                                </div>
+                                <div class="opex-item-percentage ${status}">
+                                    ${budgetUsedPercent.toFixed(0)}%
+                                </div>
+                                <div class="opex-status-badge ${status}">
+                                    <span class="badge-icon">${status === 'under' ? '↓' : status === 'over' ? '↑' : '—'}</span>
+                                    ${statusText}
+                                </div>
                             </div>
                         </div>
-                        <div class="opex-item-amounts">
-                            <div class="opex-item-actual">$${(item.actual / 1000).toFixed(0)}K</div>
-                            <div class="opex-item-budget">Budget: $${(item.budget / 1000).toFixed(0)}K</div>
-                        </div>
-                        <div class="opex-item-variance">
-                            <span class="opex-variance-badge ${status}">
-                                ${varianceIcon} ${variancePercent}%
-                            </span>
-                        </div>
-                        <div class="opex-item-status">
-                            <span class="opex-status-icon ${status}">
-                                ${statusIcon}
-                            </span>
+                        <div class="opex-progress-container">
+                            <div class="opex-progress-fill ${status}" style="width: ${barWidth}%; background: ${status === 'neutral' ? '#94a3b8' : categoryColor};">
+                                ${isOverBudget ? '<div class="opex-overflow-indicator"></div>' : ''}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -8014,6 +8147,7 @@
             // Update header values
             const totalVarianceDollar = totalActual - totalBudget;
             const totalIsUnder = totalVarianceDollar <= 0;
+            const totalBudgetUsedPercent = totalBudget > 0 ? ((totalActual / totalBudget) * 100).toFixed(0) : 0;
 
             const headerTotal = document.getElementById('opexHeaderTotal');
             const headerVariance = document.getElementById('opexHeaderVariance');
