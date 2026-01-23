@@ -2970,21 +2970,22 @@
             }
 
             // Extract OpEx data by row index from P&L_2025_CASH
-            // Row 14 (idx 13): Servers
-            // Row 34 (idx 33): Salaries & Wages
-            // Row 35 (idx 34): External Services
-            // Row 36 (idx 35): Travel Expenses
-            // Row 37 (idx 36): Services
-            // Row 38 (idx 37): Other
-            // Row 39 (idx 38): CAPEX
+            // Columns D-O (indices 3-14) for months Jan-Dec
+            // Row 15 (idx 14): Servers
+            // Row 19 (idx 18): Salaries & Wages
+            // Row 20 (idx 19): External Services
+            // Row 21 (idx 20): Travel Expenses
+            // Row 22 (idx 21): Services
+            // Row 23 (idx 22): Other
+            // Row 33 (idx 32): CAPEX
 
-            const serversRow = rows[13];      // Row 14: Servers
-            const salariesRow2 = rows[33];    // Row 34: Salaries & Wages
-            const extServicesRow = rows[34];  // Row 35: External Services
-            const travelRow2 = rows[35];      // Row 36: Travel Expenses
-            const servicesRow2 = rows[36];    // Row 37: Services
-            const otherRow2 = rows[37];       // Row 38: Other
-            const capexRow = rows[38];        // Row 39: CAPEX
+            const serversRow = rows[14];      // Row 15: Servers
+            const salariesRow2 = rows[18];    // Row 19: Salaries & Wages
+            const extServicesRow = rows[19];  // Row 20: External Services
+            const travelRow2 = rows[20];      // Row 21: Travel Expenses
+            const servicesRow2 = rows[21];    // Row 22: Services
+            const otherRow2 = rows[22];       // Row 23: Other
+            const capexRow = rows[32];        // Row 33: CAPEX
 
             // Fill monthly OpEx data
             monthNames.forEach((month, i) => {
@@ -3081,22 +3082,22 @@
                 }
             });
 
-            // Extract OpEx budget data by row index from P&L_2025_BUDGET
-            // Row 14 (idx 13): Servers
-            // Row 34 (idx 33): Salaries & Wages
-            // Row 35 (idx 34): External Services
-            // Row 36 (idx 35): Travel Expenses
-            // Row 37 (idx 36): Services
-            // Row 38 (idx 37): Other
-            // Row 39 (idx 38): CAPEX
+            // Extract OpEx budget data by row index from P&L_2025_CASH_BUDGET
+            // Columns C-N (indices 2-13) for months Jan-Dec
+            // Row 17 (idx 16): Servers
+            // Row 27 (idx 26): Salaries & Wages
+            // Row 28 (idx 27): External Services
+            // Row 29 (idx 28): Travel Expenses
+            // Row 30 (idx 29): Services
+            // Row 31 (idx 30): Other
+            // Note: CAPEX not in budget sheet
 
-            const serversRowBudget = rows[13];
-            const salariesRowBudget = rows[33];
-            const extServicesRowBudget = rows[34];
-            const travelRowBudget = rows[35];
-            const servicesRowBudget = rows[36];
-            const otherRowBudget = rows[37];
-            const capexRowBudget = rows[38];
+            const serversRowBudget = rows[16];    // Row 17: Servers
+            const salariesRowBudget = rows[26];   // Row 27: Salaries & Wages
+            const extServicesRowBudget = rows[27]; // Row 28: External Services
+            const travelRowBudget = rows[28];     // Row 29: Travel
+            const servicesRowBudget = rows[29];   // Row 30: Services
+            const otherRowBudget = rows[30];      // Row 31: Other
 
             // Fill monthly OpEx budget data
             monthNames.forEach((month, i) => {
@@ -3108,7 +3109,7 @@
                 monthlyBudget[month].travel = Math.abs(parseNumber(travelRowBudget?.[colIdx])) || 0;
                 monthlyBudget[month].services = Math.abs(parseNumber(servicesRowBudget?.[colIdx])) || 0;
                 monthlyBudget[month].otherOpex = Math.abs(parseNumber(otherRowBudget?.[colIdx])) || 0;
-                monthlyBudget[month].capex = Math.abs(parseNumber(capexRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].capex = 0; // CAPEX not in budget sheet
 
                 // Also add contribution margin to monthly budget
                 if (contribMarginRow) {
