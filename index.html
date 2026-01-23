@@ -831,6 +831,70 @@
             border-style: solid;
         }
 
+        /* Platform (iOS/Android) Toggle Styles */
+        .platform-toggle-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .platform-toggle-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .platform-toggle-btn {
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .platform-toggle-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .platform-toggle-btn.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
+        .platform-breakdown-info {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #f0f9ff, #f0fdf4);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .platform-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .platform-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .platform-dot.ios { background: #3B82F6; }
+        .platform-dot.android { background: #10B981; }
+
         .ebitda-filters {
             display: flex;
             gap: 12px;
@@ -2279,10 +2343,18 @@
                             <span class="badge-arrow">↑</span>
                             <span class="badge-value">+0%</span>
                         </span>
+                        <!-- iOS/Android breakdown toggle (only visible for subscriptions) -->
+                        <div class="platform-toggle-container" id="platformToggleContainer" style="display: none;">
+                            <span class="platform-toggle-label">View:</span>
+                            <button class="platform-toggle-btn active" id="platformCombined" onclick="togglePlatformBreakdown(false)">Combined</button>
+                            <button class="platform-toggle-btn" id="platformSplit" onclick="togglePlatformBreakdown(true)">iOS / Android</button>
+                        </div>
                     </div>
                     <div class="chart-toggles" id="toggles-revenue"></div>
                     <canvas id="revenueChart" height="80"></canvas>
                     <div class="revenue-breakdown" id="revenueBreakdown"></div>
+                    <!-- Platform breakdown info -->
+                    <div class="platform-breakdown-info" id="platformBreakdownInfo" style="display: none;"></div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
@@ -2552,8 +2624,9 @@
         };
 
         let currentRevenueFilter = 'all';
-        let currentGranularity = 'yearly';
-        let currentPeriod = 'YTD';
+        // Default to current month view
+        let currentGranularity = 'monthly';
+        let currentPeriod = monthNames[new Date().getMonth()]; // Current month (e.g., 'January')
         let charts = {};
 
         // Custom Range variables
@@ -2565,8 +2638,11 @@
         let showRevenueCagrTrend = false;
         let showEbitdaCagrTrend = false;
 
-        // Multi-year and scenario state
-        let currentYear = 2025;
+        // Multi-year and scenario state - default to current year (2026)
+        let currentYear = new Date().getFullYear();
+
+        // iOS/Android breakdown toggle for Subscription Sales
+        let showPlatformBreakdown = false;
         let scenarioStates = {
             optimistic: false,
             conservative: true,  // Default for 2026
@@ -2728,6 +2804,10 @@
                 const arpu = parseNumber(rowMap['ARPU (new subscriptions)']?.[i] || 0);
                 const conversion = parseNumber(rowMap['Conversion Rate']?.[i] || 0);
 
+                // iOS/Android split percentages (Row 43: iOS Split, Row 44: Android Split)
+                const iosSplit = parseNumber(rowMap['New Users IOS Split']?.[i] || 0.65);
+                const aosSplit = parseNumber(rowMap['New Users aOS Split']?.[i] || 0.35);
+
                 monthlyData[month] = {
                     spend: spend,
                     signups: signups,
@@ -2736,6 +2816,8 @@
                     subs: subs,
                     arpu: arpu,
                     conversion: conversion,
+                    iosSplit: iosSplit,
+                    aosSplit: aosSplit,
                     revenue: 0, // Will be filled from P&L
                     ebitda: 0,
                     ltvCac: arpu > 0 && cac > 0 ? (arpu * 12) / cac : 0,
@@ -5586,16 +5668,34 @@
         function updateRevenueChart() {
             if (!charts.revenue) return;
 
-            const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
-
             // Update chart title
             document.getElementById('revenueChartTitle').textContent = getRevenueChartTitle();
+
+            // Check if we should show platform breakdown (iOS/Android stacked bars)
+            if (showPlatformBreakdown && currentRevenueFilter === 'subscriptions') {
+                updateRevenueChartWithPlatformBreakdown();
+                return;
+            }
+
+            const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
+
+            // Reset to non-stacked mode
+            charts.revenue.options.scales.x.stacked = false;
+            charts.revenue.options.scales.y.stacked = false;
+
+            // Reset datasets to 2 (Actual and Budget)
+            charts.revenue.data.datasets = charts.revenue.data.datasets.slice(0, 2);
 
             charts.revenue.data.labels = revenueData.labels;
             charts.revenue.data.datasets[0].data = revenueData.actual;
             charts.revenue.data.datasets[0].label = `Actual ${currentYear}`;
+            charts.revenue.data.datasets[0].backgroundColor = '#1e3a5f';
+            charts.revenue.data.datasets[0].stack = undefined;
+
             charts.revenue.data.datasets[1].data = revenueData.budget;
             charts.revenue.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
+            charts.revenue.data.datasets[1].backgroundColor = '#94a3b8';
+            charts.revenue.data.datasets[1].stack = undefined;
 
             // Remove extra scenario datasets if any
             while (charts.revenue.data.datasets.length > 2) {
@@ -5621,6 +5721,52 @@
             charts.revenue.update();
 
             updateRevenueBreakdown(currentRevenueFilter);
+        }
+
+        function updateRevenueChartWithPlatformBreakdown() {
+            const platformData = getPlatformSubscriptionData();
+
+            // Enable stacked mode
+            charts.revenue.options.scales.x.stacked = true;
+            charts.revenue.options.scales.y.stacked = true;
+
+            // Create 4 datasets: iOS Actual, Android Actual, iOS Budget, Android Budget
+            charts.revenue.data.labels = monthLabelsShort;
+            charts.revenue.data.datasets = [
+                {
+                    label: 'iOS Actual',
+                    data: platformData.iosActual.map(v => v / 1000),
+                    backgroundColor: '#3B82F6',
+                    stack: 'actual',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Android Actual',
+                    data: platformData.androidActual.map(v => v / 1000),
+                    backgroundColor: '#10B981',
+                    stack: 'actual',
+                    borderRadius: 4
+                },
+                {
+                    label: 'iOS Budget',
+                    data: platformData.iosBudget.map(v => v / 1000),
+                    backgroundColor: '#93C5FD',
+                    stack: 'budget',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Android Budget',
+                    data: platformData.androidBudget.map(v => v / 1000),
+                    backgroundColor: '#6EE7B7',
+                    stack: 'budget',
+                    borderRadius: 4
+                }
+            ];
+
+            charts.revenue.update();
+
+            // Update platform breakdown info
+            updatePlatformBreakdownInfo();
         }
 
         /**
@@ -5768,19 +5914,124 @@
 
             // Update button states
             document.querySelectorAll('.revenue-filter-btn').forEach(btn => {
-                btn.classList.remove('active');
+                if (!btn.classList.contains('cagr-trend-btn')) {
+                    btn.classList.remove('active');
+                }
             });
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
 
-            // Update chart with new filter and current granularity
-            const revenueData = getRevenueDataForGranularity(filter);
-            charts.revenue.data.labels = revenueData.labels;
-            charts.revenue.data.datasets[0].data = revenueData.actual;
-            charts.revenue.data.datasets[1].data = revenueData.budget;
-            charts.revenue.update();
+            // Show/hide platform toggle based on filter
+            const platformToggle = document.getElementById('platformToggleContainer');
+            if (platformToggle) {
+                platformToggle.style.display = filter === 'subscriptions' ? 'inline-flex' : 'none';
+            }
+
+            // Reset platform breakdown when switching away from subscriptions
+            if (filter !== 'subscriptions') {
+                showPlatformBreakdown = false;
+                document.getElementById('platformCombined')?.classList.add('active');
+                document.getElementById('platformSplit')?.classList.remove('active');
+                document.getElementById('platformBreakdownInfo').style.display = 'none';
+            }
+
+            // Update chart
+            updateRevenueChart();
 
             // Update breakdown
             updateRevenueBreakdown(filter);
+        }
+
+        function togglePlatformBreakdown(showSplit) {
+            showPlatformBreakdown = showSplit;
+
+            // Update toggle button states
+            document.getElementById('platformCombined').classList.toggle('active', !showSplit);
+            document.getElementById('platformSplit').classList.toggle('active', showSplit);
+
+            // Update chart
+            updateRevenueChart();
+
+            // Update platform breakdown info
+            updatePlatformBreakdownInfo();
+        }
+
+        function updatePlatformBreakdownInfo() {
+            const container = document.getElementById('platformBreakdownInfo');
+            if (!container) return;
+
+            if (!showPlatformBreakdown || currentRevenueFilter !== 'subscriptions') {
+                container.style.display = 'none';
+                return;
+            }
+
+            // Get platform data
+            const platformData = getPlatformSubscriptionData();
+            const totalActual = platformData.iosActual.reduce((a, b) => a + b, 0) + platformData.androidActual.reduce((a, b) => a + b, 0);
+            const iosTotal = platformData.iosActual.reduce((a, b) => a + b, 0);
+            const androidTotal = platformData.androidActual.reduce((a, b) => a + b, 0);
+
+            const iosPercent = totalActual > 0 ? ((iosTotal / totalActual) * 100).toFixed(0) : 0;
+            const androidPercent = totalActual > 0 ? ((androidTotal / totalActual) * 100).toFixed(0) : 0;
+
+            container.style.display = 'flex';
+            container.innerHTML = `
+                <div class="platform-info-item">
+                    <span class="platform-dot ios"></span>
+                    <span><strong>iOS:</strong> $${(iosTotal / 1000).toFixed(0)}K (${iosPercent}%)</span>
+                </div>
+                <div class="platform-info-item">
+                    <span class="platform-dot android"></span>
+                    <span><strong>Android:</strong> $${(androidTotal / 1000).toFixed(0)}K (${androidPercent}%)</span>
+                </div>
+            `;
+        }
+
+        function getPlatformSubscriptionData() {
+            let iosActual = [];
+            let iosbudget = [];
+            let androidActual = [];
+            let androidBudget = [];
+
+            if (currentYear === 2026) {
+                // 2026: Use direct iOS/Android data from P&L
+                monthNames.forEach(month => {
+                    const mData = monthlyData?.[month] || {};
+                    const mBudget = monthlyBudget?.[month] || {};
+
+                    iosActual.push(mData.subscriptionsIOS || 0);
+                    androidActual.push(mData.subscriptionsAOS || 0);
+                    iosbudget.push(mBudget.subscriptionsIOS || 0);
+                    androidBudget.push(mBudget.subscriptionsAOS || 0);
+                });
+            } else {
+                // 2025: Calculate using split percentages from KPI
+                // Get split percentages (stored in monthlyData from KPI parsing)
+                monthNames.forEach(month => {
+                    const mData = monthlyData?.[month] || {};
+                    const mBudget = monthlyBudget?.[month] || {};
+
+                    // Use iosSplit and aosSplit if available, otherwise default 65/35
+                    const iosSplit = mData.iosSplit || 0.65;
+                    const aosSplit = mData.aosSplit || 0.35;
+
+                    const totalActual = mData.subscriptions || 0;
+                    const totalBudget = mBudget.subscriptions || 0;
+
+                    iosActual.push(totalActual * iosSplit);
+                    androidActual.push(totalActual * aosSplit);
+                    iosbudget.push(totalBudget * iosSplit);
+                    androidBudget.push(totalBudget * aosSplit);
+                });
+            }
+
+            return {
+                iosActual,
+                iosBudget: iosbudget,
+                androidActual,
+                androidBudget
+            };
         }
 
         function updateRevenueBreakdown(filter) {
