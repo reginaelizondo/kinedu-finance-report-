@@ -3944,22 +3944,60 @@
         }
 
         /**
-         * Toggle a budget scenario
+         * Toggle a budget scenario (radio button behavior - only one active at a time)
          */
         function toggleScenario(scenario) {
-            scenarioStates[scenario] = !scenarioStates[scenario];
+            // Radio button behavior: deactivate all others, activate selected
+            scenarioStates.optimistic = false;
+            scenarioStates.conservative = false;
+            scenarioStates.pessimistic = false;
+            scenarioStates[scenario] = true;
 
-            // Update button style (works with both old and new class names)
+            // Update all button styles
+            document.getElementById('scenarioOptimistic').classList.remove('active');
+            document.getElementById('scenarioConservative').classList.remove('active');
+            document.getElementById('scenarioPessimistic').classList.remove('active');
+
             const btn = document.getElementById('scenario' + scenario.charAt(0).toUpperCase() + scenario.slice(1));
-            if (btn) btn.classList.toggle('active', scenarioStates[scenario]);
+            if (btn) btn.classList.add('active');
 
             // Update scenario indicator text
             updateScenarioIndicator();
 
-            // Update all visualizations
-            if (currentYear === 2026) {
+            // Update Budget data from the selected scenario and refresh all charts
+            if (currentYear === 2026 && data2026Loaded) {
+                applyScenarioBudgetData(scenario);
                 updateAllChartsAndKPIs();
             }
+        }
+
+        /**
+         * Apply budget data from selected scenario to the active data variables
+         */
+        function applyScenarioBudgetData(scenario) {
+            const scenarioData = data2026[scenario];
+            if (!scenarioData) {
+                console.error('No data for scenario:', scenario);
+                return;
+            }
+
+            console.log('Applying budget data from scenario:', scenario);
+            console.log('scenarioData.budget:', scenarioData.budget);
+            console.log('scenarioData.monthlyBudget:', scenarioData.monthlyBudget);
+
+            // Update aggregated budget data (Q1, Q2, Q3, Q4, H1, H2, Yearly)
+            if (scenarioData.budget) {
+                data.budget = scenarioData.budget;
+            }
+
+            // Update monthly budget data - assign reference directly
+            if (scenarioData.monthlyBudget) {
+                monthlyBudget = scenarioData.monthlyBudget;
+            }
+
+            console.log('Budget data updated for scenario:', scenario);
+            console.log('New data.budget:', data.budget);
+            console.log('New monthlyBudget January:', monthlyBudget?.January);
         }
 
         /**
