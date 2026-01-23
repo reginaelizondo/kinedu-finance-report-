@@ -2435,10 +2435,10 @@
                     <!-- Marketing Spend toggle (only visible for 2026) -->
                     <div class="marketing-spend-toggle-container" id="marketingSpendToggleContainer" style="display: none;">
                         <span class="marketing-spend-toggle-label">View:</span>
-                        <button class="marketing-spend-toggle-btn active" id="marketingSpendOff" onclick="toggleMarketingSpendView('off')">Margin Only</button>
-                        <button class="marketing-spend-toggle-btn" id="marketingSpendOn" onclick="toggleMarketingSpendView('on')">With Marketing Spend</button>
+                        <button class="marketing-spend-toggle-btn" id="marketingSpendOff" onclick="toggleMarketingSpendView('off')">Margin Only</button>
+                        <button class="marketing-spend-toggle-btn active" id="marketingSpendOn" onclick="toggleMarketingSpendView('on')">With Marketing Spend</button>
                         <!-- Sub-toggle for Meta/Others breakdown -->
-                        <div class="marketing-breakdown-toggle" id="marketingBreakdownToggle" style="display: none;">
+                        <div class="marketing-breakdown-toggle" id="marketingBreakdownToggle" style="display: inline-flex;">
                             <button class="marketing-breakdown-btn active" id="spendTotal" onclick="toggleMarketingBreakdown('total')">Total Spend</button>
                             <button class="marketing-breakdown-btn" id="spendBreakdown" onclick="toggleMarketingBreakdown('breakdown')">Meta / Others</button>
                         </div>
@@ -2722,7 +2722,7 @@
         let showPlatformBreakdown = false;
 
         // Marketing Spend toggle for Contribution Margin (2026 only)
-        let showMarketingSpend = false;
+        let showMarketingSpend = true;  // Default to "With Marketing Spend" for 2026
         let marketingBreakdownMode = 'total'; // 'total' or 'breakdown'
 
         let scenarioStates = {
@@ -5122,6 +5122,12 @@
         function updateContributionMarginChart() {
             if (!charts.contributionMargin) return;
 
+            // If 2026 and marketing spend view is enabled, use the specialized update function
+            if (currentYear === 2026 && showMarketingSpend) {
+                updateContributionMarginWithSpend();
+                return;
+            }
+
             // Get contribution margin data from monthlyData and monthlyBudget
             const actualData = monthNames.map(m => (monthlyData[m]?.contributionMargin || 0) / 1000);
             const budgetData = monthNames.map(m => (monthlyBudget[m]?.contributionMargin || 0) / 1000);
@@ -5132,11 +5138,23 @@
                 titleEl.textContent = 'Monthly Contribution Margin: Actual vs Budget';
             }
 
-            // Update datasets
-            charts.contributionMargin.data.datasets[0].data = actualData;
-            charts.contributionMargin.data.datasets[0].label = `Actual ${currentYear}`;
-            charts.contributionMargin.data.datasets[1].data = budgetData;
-            charts.contributionMargin.data.datasets[1].label = currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget';
+            // Reset to standard bar chart (non-stacked)
+            charts.contributionMargin.data.datasets = [{
+                label: `Actual ${currentYear}`,
+                data: actualData,
+                backgroundColor: function(context) {
+                    const value = context.raw;
+                    return value >= 0 ? '#1e3a5f' : '#ef4444';
+                },
+                borderRadius: 4
+            }, {
+                label: currentYear === 2026 ? `Budget (${getPrimaryScenario()})` : 'Budget',
+                data: budgetData,
+                backgroundColor: '#94a3b8',
+                borderRadius: 4
+            }];
+            charts.contributionMargin.options.scales.x.stacked = false;
+            charts.contributionMargin.options.scales.y.stacked = false;
 
             charts.contributionMargin.update();
 
