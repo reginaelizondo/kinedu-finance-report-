@@ -2213,21 +2213,21 @@
                 <!-- 1. Year Selector -->
                 <div class="year-selector-container">
                     <div class="year-selector">
-                        <button class="year-btn active" id="yearBtn2025" onclick="setYear(2025)">2025</button>
-                        <button class="year-btn" id="yearBtn2026" onclick="setYear(2026)">2026</button>
+                        <button class="year-btn" id="yearBtn2025" onclick="setYear(2025)">2025</button>
+                        <button class="year-btn active" id="yearBtn2026" onclick="setYear(2026)">2026</button>
                     </div>
                 </div>
 
                 <!-- 2. Time Granularity + Period Selector -->
                 <div class="granularity-row">
                     <div class="granularity-selector">
-                        <button class="granularity-btn" onclick="setGranularity('monthly')">Monthly</button>
+                        <button class="granularity-btn active" onclick="setGranularity('monthly')">Monthly</button>
                         <button class="granularity-btn" onclick="setGranularity('quarterly')">Quarterly</button>
                         <button class="granularity-btn" onclick="setGranularity('semester')">Semester</button>
-                        <button class="granularity-btn active" onclick="setGranularity('yearly')">Yearly</button>
+                        <button class="granularity-btn" onclick="setGranularity('yearly')">Yearly</button>
                     </div>
                     <select class="period-dropdown" id="periodDropdown" onchange="setPeriod(this.value)">
-                        <option value="YTD">Year to Date 2025</option>
+                        <option value="January">January 2026</option>
                     </select>
                 </div>
 
@@ -3350,6 +3350,32 @@
 
         function initializeDashboard() {
             try {
+                // Sync UI buttons with initial state (2026, monthly, January, conservative)
+                document.getElementById('yearBtn2025').classList.remove('active');
+                document.getElementById('yearBtn2026').classList.add('active');
+
+                document.querySelectorAll('.granularity-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === 'Monthly') btn.classList.add('active');
+                });
+
+                // Update header for 2026
+                document.getElementById('headerSubtitle').textContent = 'Financial Performance 2026';
+
+                // Show scenario controls for 2026
+                const scenariosRow = document.getElementById('scenariosRow');
+                const compareRow = document.getElementById('compareRow');
+                const statusScenario = document.getElementById('statusScenario');
+                if (scenariosRow) scenariosRow.classList.add('visible');
+                if (compareRow) compareRow.classList.add('visible');
+                if (statusScenario) statusScenario.classList.add('visible');
+
+                // Set scenario buttons - conservative active by default
+                document.querySelectorAll('.scenario-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.id === 'scenarioConservative') btn.classList.add('active');
+                });
+
                 updateDropdownOptions();
                 updateKPIs();
                 updateQuarterDrillDown();
@@ -3362,6 +3388,9 @@
                 createOpexTable();
                 createOpexDonutChart();
                 updateAllInsights();
+
+                // Load 2026 data (this will be the default view)
+                load2026Data();
             } catch (error) {
                 console.error('Error initializing dashboard:', error);
             }
