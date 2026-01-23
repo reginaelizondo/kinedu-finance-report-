@@ -2534,6 +2534,7 @@
         let contributionMarginActual = [];
         let contributionMarginBudget = [];
         let dataLoadedTime = null;
+        let runwayMonths = 0; // Runway in months (read from P&L or calculated)
 
         // Constants
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -2934,6 +2935,21 @@
                 { category: "Other", budget: totalOther, actual: totalOther },
                 { category: "CAPEX", budget: totalCapex, actual: totalCapex }
             ];
+
+            // Read Runway directly from P&L 2025 - Row 36 (idx 35)
+            // The value is already calculated in the sheet, just read the last month with data
+            const runwayRow = rows[35];
+            if (runwayRow) {
+                // Find the last non-empty value (most recent month)
+                for (let i = 14; i >= 3; i--) {
+                    const val = parseNumber(runwayRow[i]);
+                    if (val > 0) {
+                        runwayMonths = val;
+                        console.log('2025 Runway from P&L Row 36:', runwayMonths);
+                        break;
+                    }
+                }
+            }
         }
 
         // Parse P&L Budget CSV
@@ -4643,6 +4659,57 @@
                 { category: 'Other', budget: opexTotals.other, actual: opexTotals.other },
                 { category: 'CAPEX', budget: opexTotals.capex, actual: opexTotals.capex }
             ];
+
+            // Calculate Runway for 2026 ACTUAL only
+            // Row 47 (idx 46): Saldo Inicial (cash balance)
+            // Row 39 (idx 38): Cash Flow (for burn rate calculation)
+            if (scenario === 'actual') {
+                const saldoInicialRow = parsed[46];  // Row 47: Saldo Inicial
+                const cashFlowRow = parsed[38];      // Row 39: Cash Flow
+
+                // Find the last month with data and get Saldo Inicial
+                let saldoInicial = 0;
+                let totalCashFlow = 0;
+                let monthsWithCashFlow = 0;
+
+                for (let i = 14; i >= 3; i--) {
+                    const saldo = parseNumber(saldoInicialRow?.[i]);
+                    if (saldo !== 0) {
+                        saldoInicial = saldo;
+                        break;
+                    }
+                }
+
+                // Calculate average burn rate from Cash Flow (negative values)
+                for (let i = 3; i <= 14; i++) {
+                    const cf = parseNumber(cashFlowRow?.[i]);
+                    if (cf !== 0) {
+                        totalCashFlow += cf;
+                        monthsWithCashFlow++;
+                    }
+                }
+
+                const avgCashFlow = monthsWithCashFlow > 0 ? totalCashFlow / monthsWithCashFlow : 0;
+
+                // Calculate runway
+                if (avgCashFlow < 0) {
+                    // Negative cash flow = burning cash
+                    runwayMonths = Math.round(saldoInicial / Math.abs(avgCashFlow));
+                } else if (avgCashFlow > 0) {
+                    // Positive cash flow = profitable, set high runway
+                    runwayMonths = 999; // Infinite runway (profitable)
+                } else {
+                    runwayMonths = 0;
+                }
+
+                console.log('2026 Runway calculation:');
+                console.log('  Saldo Inicial:', saldoInicial);
+                console.log('  Avg Cash Flow:', avgCashFlow);
+                console.log('  Runway months:', runwayMonths);
+
+                // Store in data2026 for later use
+                data2026.actual.runway = runwayMonths;
+            }
         }
 
         /**
@@ -4958,6 +5025,38 @@
             };
         }
 
+        // Helper functions for Runway display
+        function getRunwayDisplay() {
+            // For 2026, get runway from data2026.actual.runway if available
+            const runway = currentYear === 2026 ? (data2026?.actual?.runway || runwayMonths) : runwayMonths;
+
+            if (runway >= 999) {
+                return '∞ (Profitable)';
+            } else if (runway > 0) {
+                return `${runway} months`;
+            } else {
+                return 'N/A';
+            }
+        }
+
+        function getRunwayDescription() {
+            const runway = currentYear === 2026 ? (data2026?.actual?.runway || runwayMonths) : runwayMonths;
+
+            if (currentYear === 2026) {
+                if (runway >= 999) {
+                    return 'Positive cash flow - company is profitable';
+                } else if (runway > 12) {
+                    return 'Based on Saldo Inicial / Avg Cash Flow';
+                } else if (runway > 0) {
+                    return `Warning: Only ${runway} months of runway remaining`;
+                }
+                return 'Calculated from P&L 2026 data';
+            } else {
+                // 2025 - read directly from P&L
+                return 'Read directly from P&L 2025 Row 36';
+            }
+        }
+
         function updateKPIs() {
             console.log('======= updateKPIs called =======');
             const { real, budget } = getDataForPeriod();
@@ -5051,9 +5150,9 @@
                 <!-- Row 2 -->
                 <div class="kpi-card-new">
                     <div class="kpi-card-label">Estimated Runway</div>
-                    <div class="kpi-card-value">${real.burnRate > 0 ? '4-10m' : 'Profitable'}</div>
+                    <div class="kpi-card-value">${getRunwayDisplay()}</div>
                     <div class="kpi-card-comparison neutral">
-                        Based on current burn rate vs budget expectations
+                        ${getRunwayDescription()}
                     </div>
                 </div>
                 <div class="kpi-card-new">
