@@ -2881,27 +2881,58 @@
                 revenueBreakdown.actual.partnership.Q4 = parseNumber(partnershipRow[9]) + parseNumber(partnershipRow[10]) + parseNumber(partnershipRow[11]);
             }
 
-            // Calculate OpEx from P&L
-            let totalSalaries = 0, totalServices = 0, totalOther = 0;
-            rows.forEach(row => {
-                const combined = row.join(' ').toLowerCase();
-                if (combined.includes('salaries') && combined.includes('sueldos')) {
-                    for (let i = 3; i < 15; i++) totalSalaries += Math.abs(parseNumber(row[i]));
-                }
-                if (combined.includes('external services') && combined.includes('servicios externos')) {
-                    for (let i = 3; i < 15; i++) totalServices += Math.abs(parseNumber(row[i]));
-                }
-                if (combined.includes('services') && combined.includes('servicios') && !combined.includes('external')) {
-                    for (let i = 3; i < 15; i++) totalOther += Math.abs(parseNumber(row[i]));
-                }
+            // Extract OpEx data by row index from P&L_2025_CASH
+            // Row 14 (idx 13): Servers
+            // Row 34 (idx 33): Salaries & Wages
+            // Row 35 (idx 34): External Services
+            // Row 36 (idx 35): Travel Expenses
+            // Row 37 (idx 36): Services
+            // Row 38 (idx 37): Other
+            // Row 39 (idx 38): CAPEX
+
+            const serversRow = rows[13];      // Row 14: Servers
+            const salariesRow2 = rows[33];    // Row 34: Salaries & Wages
+            const extServicesRow = rows[34];  // Row 35: External Services
+            const travelRow2 = rows[35];      // Row 36: Travel Expenses
+            const servicesRow2 = rows[36];    // Row 37: Services
+            const otherRow2 = rows[37];       // Row 38: Other
+            const capexRow = rows[38];        // Row 39: CAPEX
+
+            // Fill monthly OpEx data
+            monthNames.forEach((month, i) => {
+                const colIdx = i + 3; // Data starts at column D (index 3)
+
+                monthlyData[month].servers = Math.abs(parseNumber(serversRow?.[colIdx])) || 0;
+                monthlyData[month].salaries = Math.abs(parseNumber(salariesRow2?.[colIdx])) || 0;
+                monthlyData[month].externalServices = Math.abs(parseNumber(extServicesRow?.[colIdx])) || 0;
+                monthlyData[month].travel = Math.abs(parseNumber(travelRow2?.[colIdx])) || 0;
+                monthlyData[month].services = Math.abs(parseNumber(servicesRow2?.[colIdx])) || 0;
+                monthlyData[month].otherOpex = Math.abs(parseNumber(otherRow2?.[colIdx])) || 0;
+                monthlyData[month].capex = Math.abs(parseNumber(capexRow?.[colIdx])) || 0;
+            });
+
+            // Calculate yearly totals for opexData (for compatibility)
+            let totalServers = 0, totalSalaries = 0, totalExtServices = 0;
+            let totalTravel = 0, totalServices = 0, totalOther = 0, totalCapex = 0;
+
+            monthNames.forEach(month => {
+                totalServers += monthlyData[month].servers || 0;
+                totalSalaries += monthlyData[month].salaries || 0;
+                totalExtServices += monthlyData[month].externalServices || 0;
+                totalTravel += monthlyData[month].travel || 0;
+                totalServices += monthlyData[month].services || 0;
+                totalOther += monthlyData[month].otherOpex || 0;
+                totalCapex += monthlyData[month].capex || 0;
             });
 
             opexData = [
-                { category: "Salaries & Payroll", budget: 983000, actual: totalSalaries || 1042000 },
-                { category: "Technology & Software", budget: 450000, actual: 428000 },
-                { category: "Services & Contractors", budget: 145000, actual: totalServices || 183000 },
-                { category: "Operations & Admin", budget: 320000, actual: 305000 },
-                { category: "Other Expenses", budget: 180000, actual: 168000 }
+                { category: "Servers", budget: totalServers, actual: totalServers },
+                { category: "Salaries & Wages", budget: totalSalaries, actual: totalSalaries },
+                { category: "External Services", budget: totalExtServices, actual: totalExtServices },
+                { category: "Travel", budget: totalTravel, actual: totalTravel },
+                { category: "Services", budget: totalServices, actual: totalServices },
+                { category: "Other", budget: totalOther, actual: totalOther },
+                { category: "CAPEX", budget: totalCapex, actual: totalCapex }
             ];
         }
 
@@ -2944,6 +2975,41 @@
                 if (netIncomeRow) {
                     monthlyBudget[month].ebitda = parseNumber(netIncomeRow[i]);
                     monthlyBudget[month].burnRate = parseNumber(netIncomeRow[i]) < 0 ? Math.abs(parseNumber(netIncomeRow[i])) : -parseNumber(netIncomeRow[i]);
+                }
+            });
+
+            // Extract OpEx budget data by row index from P&L_2025_BUDGET
+            // Row 14 (idx 13): Servers
+            // Row 34 (idx 33): Salaries & Wages
+            // Row 35 (idx 34): External Services
+            // Row 36 (idx 35): Travel Expenses
+            // Row 37 (idx 36): Services
+            // Row 38 (idx 37): Other
+            // Row 39 (idx 38): CAPEX
+
+            const serversRowBudget = rows[13];
+            const salariesRowBudget = rows[33];
+            const extServicesRowBudget = rows[34];
+            const travelRowBudget = rows[35];
+            const servicesRowBudget = rows[36];
+            const otherRowBudget = rows[37];
+            const capexRowBudget = rows[38];
+
+            // Fill monthly OpEx budget data
+            monthNames.forEach((month, i) => {
+                const colIdx = i + 2; // Budget data starts at column C (index 2)
+
+                monthlyBudget[month].servers = Math.abs(parseNumber(serversRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].salaries = Math.abs(parseNumber(salariesRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].externalServices = Math.abs(parseNumber(extServicesRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].travel = Math.abs(parseNumber(travelRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].services = Math.abs(parseNumber(servicesRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].otherOpex = Math.abs(parseNumber(otherRowBudget?.[colIdx])) || 0;
+                monthlyBudget[month].capex = Math.abs(parseNumber(capexRowBudget?.[colIdx])) || 0;
+
+                // Also add contribution margin to monthly budget
+                if (contribMarginRow) {
+                    monthlyBudget[month].contributionMargin = parseNumber(contribMarginRow[i]);
                 }
             });
 
@@ -7094,43 +7160,32 @@
             let totalBudget = 0;
             let totalActual = 0;
 
-            // Calculate totals first for percentage bars
+            // Calculate totals first
             periodData.forEach(item => {
                 totalBudget += item.budget;
                 totalActual += item.actual;
             });
 
-            // Category colors for visual distinction
-            const categoryColors = {
-                'Marketing': '#3B82F6',
-                'R&D': '#8B5CF6',
-                'G&A': '#F59E0B',
-                'Salaries': '#10B981',
-                'Salaries & Payroll': '#3B82F6',
-                'Technology & Software': '#8B5CF6',
-                'Services & Contractors': '#F59E0B',
-                'Operations & Admin': '#10B981',
-                'Other': '#6B7280',
-                'Other Expenses': '#6B7280'
-            };
-
-            // Find the maximum actual value for scaling bars
-            const maxActual = Math.max(...periodData.map(item => item.actual));
+            // Find the maximum actual value for scaling bars proportionally
+            const maxActual = Math.max(...periodData.map(item => Math.abs(item.actual)));
 
             const items = periodData.map(item => {
                 const varianceDollar = item.actual - item.budget;
                 const variancePercent = item.budget > 0 ? Math.abs((varianceDollar / item.budget) * 100).toFixed(0) : 0;
                 const isUnder = varianceDollar <= 0;
-                // Scale bar width relative to the largest expense (so largest = 100%)
-                const barWidth = maxActual > 0 ? Math.min((item.actual / maxActual) * 100, 100) : 0;
-                const barColor = categoryColors[item.category] || '#64748b';
+
+                // Scale bar width relative to the largest expense (largest = 100%)
+                const barWidth = maxActual > 0 ? Math.min((Math.abs(item.actual) / maxActual) * 100, 100) : 0;
+
+                // Color based on budget comparison: GREEN if under/at budget, RED if over budget
+                const barColor = isUnder ? '#10B981' : '#EF4444';
 
                 return `
                     <div class="opex-item">
                         <div class="opex-item-info">
                             <div class="opex-item-category">${item.category}</div>
                             <div class="opex-item-bar">
-                                <div class="opex-item-bar-fill ${isUnder ? 'under' : 'over'}" style="width: ${barWidth}%; background: linear-gradient(90deg, ${barColor}, ${barColor}dd);"></div>
+                                <div class="opex-item-bar-fill" style="width: ${barWidth}%; background: ${barColor};"></div>
                             </div>
                         </div>
                         <div class="opex-item-amounts">
@@ -7224,27 +7279,20 @@
         }
 
         function getOpexDataForPeriod() {
-            // Calculate the scaling factor based on the current period
-            let scaleFactor = 1;
+            // Determine which months to include based on current filters
             let monthsIncluded = [];
 
-            // Handle custom range first
             if (customRangeActive) {
-                const numMonths = customRangeTo - customRangeFrom + 1;
-                scaleFactor = numMonths / 12;
                 monthsIncluded = getCustomRangeMonths();
             } else {
                 switch(currentGranularity) {
                     case 'monthly':
-                        scaleFactor = 1 / 12;
                         monthsIncluded = [currentPeriod];
                         break;
                     case 'quarterly':
-                        scaleFactor = 3 / 12;
                         monthsIncluded = quarterMonths[currentPeriod] || [];
                         break;
                     case 'semester':
-                        scaleFactor = 6 / 12;
                         if (currentPeriod === 'H1') {
                             monthsIncluded = ['January', 'February', 'March', 'April', 'May', 'June'];
                         } else {
@@ -7253,17 +7301,51 @@
                         break;
                     case 'yearly':
                     default:
-                        scaleFactor = 1;
                         monthsIncluded = monthNames;
                         break;
                 }
             }
 
-            // Scale the annual OpEx data to the selected period
-            return opexData.map(item => ({
-                category: item.category,
-                actual: Math.round(item.actual * scaleFactor),
-                budget: Math.round(item.budget * scaleFactor)
+            // Initialize OpEx categories with all 7 categories
+            const opexCategories = {
+                'Servers': { actual: 0, budget: 0 },
+                'Salaries & Wages': { actual: 0, budget: 0 },
+                'External Services': { actual: 0, budget: 0 },
+                'Travel': { actual: 0, budget: 0 },
+                'Services': { actual: 0, budget: 0 },
+                'Other': { actual: 0, budget: 0 },
+                'CAPEX': { actual: 0, budget: 0 }
+            };
+
+            // Sum values from monthlyData (Actual) and monthlyBudget (Budget) for selected months
+            monthsIncluded.forEach(month => {
+                const mData = monthlyData?.[month] || {};
+                const mBudget = monthlyBudget?.[month] || {};
+
+                // Actual values from monthlyData
+                opexCategories['Servers'].actual += Math.abs(mData.servers || 0);
+                opexCategories['Salaries & Wages'].actual += Math.abs(mData.salaries || 0);
+                opexCategories['External Services'].actual += Math.abs(mData.externalServices || 0);
+                opexCategories['Travel'].actual += Math.abs(mData.travel || 0);
+                opexCategories['Services'].actual += Math.abs(mData.services || 0);
+                opexCategories['Other'].actual += Math.abs(mData.otherOpex || 0);
+                opexCategories['CAPEX'].actual += Math.abs(mData.capex || 0);
+
+                // Budget values from monthlyBudget
+                opexCategories['Servers'].budget += Math.abs(mBudget.servers || 0);
+                opexCategories['Salaries & Wages'].budget += Math.abs(mBudget.salaries || 0);
+                opexCategories['External Services'].budget += Math.abs(mBudget.externalServices || 0);
+                opexCategories['Travel'].budget += Math.abs(mBudget.travel || 0);
+                opexCategories['Services'].budget += Math.abs(mBudget.services || 0);
+                opexCategories['Other'].budget += Math.abs(mBudget.otherOpex || 0);
+                opexCategories['CAPEX'].budget += Math.abs(mBudget.capex || 0);
+            });
+
+            // Convert to array format for the chart/table
+            return Object.entries(opexCategories).map(([category, values]) => ({
+                category: category,
+                actual: Math.round(values.actual),
+                budget: Math.round(values.budget)
             }));
         }
 
@@ -7274,8 +7356,8 @@
             const periodData = getOpexDataForPeriod();
             if (!periodData || periodData.length === 0) return;
 
-            // Category colors matching the item bars
-            const colors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#6B7280'];
+            // 7 category colors for: Servers, Salaries, External Services, Travel, Services, Other, CAPEX
+            const colors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899', '#6B7280', '#F97316'];
 
             // Calculate total for center label
             const total = periodData.reduce((sum, item) => sum + item.actual, 0);
