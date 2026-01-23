@@ -2256,7 +2256,7 @@
             <div class="section">
                 <h2 class="section-title">Contribution Margin Analysis</h2>
                 <div class="chart-container">
-                    <div class="chart-title">Monthly Contribution Margin: Actual vs Budget (2025)</div>
+                    <div class="chart-title" id="contributionMarginTitle">Monthly Contribution Margin: Actual vs Budget</div>
                     <div class="chart-toggles" id="toggles-contributionMargin"></div>
                     <canvas id="contributionMarginChart" height="80"></canvas>
                 </div>
@@ -4921,11 +4921,10 @@
             const actualData = monthNames.map(m => (monthlyData[m]?.contributionMargin || 0) / 1000);
             const budgetData = monthNames.map(m => (monthlyBudget[m]?.contributionMargin || 0) / 1000);
 
-            // Update chart title to reflect current year
+            // Update chart title (without year)
             const titleEl = document.getElementById('contributionMarginTitle');
             if (titleEl) {
-                const scenarioText = currentYear === 2026 ? ` (${getPrimaryScenario()})` : '';
-                titleEl.textContent = `Monthly Contribution Margin: Actual vs Budget${scenarioText} (${currentYear})`;
+                titleEl.textContent = 'Monthly Contribution Margin: Actual vs Budget';
             }
 
             // Update datasets
