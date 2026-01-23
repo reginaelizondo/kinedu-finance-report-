@@ -7046,14 +7046,23 @@
                 'R&D': '#8B5CF6',
                 'G&A': '#F59E0B',
                 'Salaries': '#10B981',
-                'Other': '#6B7280'
+                'Salaries & Payroll': '#3B82F6',
+                'Technology & Software': '#8B5CF6',
+                'Services & Contractors': '#F59E0B',
+                'Operations & Admin': '#10B981',
+                'Other': '#6B7280',
+                'Other Expenses': '#6B7280'
             };
+
+            // Find the maximum actual value for scaling bars
+            const maxActual = Math.max(...periodData.map(item => item.actual));
 
             const items = periodData.map(item => {
                 const varianceDollar = item.actual - item.budget;
                 const variancePercent = item.budget > 0 ? Math.abs((varianceDollar / item.budget) * 100).toFixed(0) : 0;
                 const isUnder = varianceDollar <= 0;
-                const barWidth = totalActual > 0 ? Math.min((item.actual / totalActual) * 100, 100) : 0;
+                // Scale bar width relative to the largest expense (so largest = 100%)
+                const barWidth = maxActual > 0 ? Math.min((item.actual / maxActual) * 100, 100) : 0;
                 const barColor = categoryColors[item.category] || '#64748b';
 
                 return `
