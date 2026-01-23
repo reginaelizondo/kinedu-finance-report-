@@ -1107,7 +1107,7 @@
 
         .opex-chart-wrapper {
             width: 100%;
-            max-width: 280px;
+            max-width: 320px;
             position: relative;
         }
 
@@ -7288,21 +7288,25 @@
                 const varianceDollar = item.actual - item.budget;
                 const categoryColor = categoryColors[item.category] || '#6B7280';
 
-                // Determine status: neutral (both 0), under budget, or over budget
+                // Determine status: neutral (both ~0), under budget, or over budget
                 let status, variancePercent, varianceIcon, statusIcon;
 
-                if (item.actual === 0 && item.budget === 0) {
-                    // Both are zero - neutral/gray
+                // Use threshold for "zero" (less than $500 is effectively 0 when showing in K)
+                const isActualZero = Math.abs(item.actual) < 500;
+                const isBudgetZero = Math.abs(item.budget) < 500;
+
+                if (isActualZero && isBudgetZero) {
+                    // Both are effectively zero - neutral/gray
                     status = 'neutral';
                     variancePercent = 0;
                     varianceIcon = '—';
                     statusIcon = '—';
-                } else if (item.budget === 0) {
-                    // No budget but has actual - treat as over if actual > 0
-                    status = item.actual > 0 ? 'over' : 'neutral';
-                    variancePercent = item.actual > 0 ? 100 : 0;
-                    varianceIcon = item.actual > 0 ? '↑' : '—';
-                    statusIcon = item.actual > 0 ? '!' : '—';
+                } else if (isBudgetZero && !isActualZero) {
+                    // No budget but has actual spending - treat as over
+                    status = 'over';
+                    variancePercent = 100;
+                    varianceIcon = '↑';
+                    statusIcon = '!';
                 } else if (item.actual <= item.budget) {
                     // Under or at budget - green
                     status = 'under';
