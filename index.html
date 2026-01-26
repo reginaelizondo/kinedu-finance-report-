@@ -3046,7 +3046,7 @@
                     <div class="revenue-filters">
                         <button class="revenue-filter-btn active" onclick="filterRevenue('all')">All Revenue</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('subscriptions')">Subscription Sales</button>
-                        <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Off App Sales</button>
+                        <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Stripe Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
                         <button class="revenue-filter-btn cagr-trend-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
                             CAGR Trend
@@ -5250,7 +5250,7 @@
          * Revenue:
          * - Row 4 (idx 3): Subscriptions IOS
          * - Row 5 (idx 4): Subscriptions aOS
-         * - Row 6 (idx 5): Off App Sales
+         * - Row 6 (idx 5): Stripe Sales
          * - Row 7 (idx 6): Partnerships
          * Marketing:
          * - Row 18 (idx 17): Marketing Spend (Meta)
@@ -5274,7 +5274,7 @@
          * - Row 9 (idx 8): Subscription Sales (total)
          * - Row 36 (idx 35): Subscription IOS (detail)
          * - Row 37 (idx 36): Subscription aOS (detail)
-         * - Row 10 (idx 9): Off App Sales
+         * - Row 10 (idx 9): Stripe Sales
          * - Row 11 (idx 10): Partnerships
          * - Row 14 (idx 13): Gross Revenue
          * - Row 16 (idx 15): Net Revenue
@@ -5433,7 +5433,7 @@
                     const subsIOS = parsed[3] ? parseNumber(parsed[3][colIdx]) : 0;      // Row 4: Subscriptions IOS
                     const subsAOS = parsed[4] ? parseNumber(parsed[4][colIdx]) : 0;      // Row 5: Subscriptions aOS
                     const subsTotal = subsIOS + subsAOS;
-                    const offApp = parsed[5] ? parseNumber(parsed[5][colIdx]) : 0;       // Row 6: Off App Sales
+                    const offApp = parsed[5] ? parseNumber(parsed[5][colIdx]) : 0;       // Row 6: Stripe Sales
                     const partnership = parsed[6] ? parseNumber(parsed[6][colIdx]) : 0;  // Row 7: Partnerships
 
                     // Marketing
@@ -7107,7 +7107,7 @@
                         <div class="revenue-breakdown-value">${subsPercent}%</div>
                     </div>
                     <div class="revenue-breakdown-item">
-                        <div class="revenue-breakdown-label">Off App Sales</div>
+                        <div class="revenue-breakdown-label">Stripe Sales</div>
                         <div class="revenue-breakdown-value">${offPercent}%</div>
                     </div>
                     <div class="revenue-breakdown-item">
@@ -7129,7 +7129,7 @@
 
                 const categoryNames = {
                     'subscriptions': 'Subscription Sales',
-                    'offapp': 'Off App Sales',
+                    'offapp': 'Stripe Sales',
                     'partnership': 'Partnership'
                 };
 
