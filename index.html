@@ -3181,7 +3181,7 @@
                         <div class="sacq-toggle-group">
                             <button class="sacq-toggle-btn active" data-metric="actualSubs" style="--toggle-color: #1E40AF;">
                                 <span class="sacq-toggle-indicator" style="background: #1E40AF;"></span>
-                                Actual Subscribers
+                                New Subscribers
                             </button>
                             <button class="sacq-toggle-btn" data-metric="budgetSubs" style="--toggle-color: #9CA3AF;">
                                 <span class="sacq-toggle-indicator" style="background: #9CA3AF;"></span>
@@ -7984,10 +7984,10 @@
         function buildSubscriberAcqDatasets(data) {
             const datasets = [];
 
-            // Actual Subscribers - Blue (Actual = Blue)
+            // New Subscribers - Blue (Actual = Blue)
             if (subscriberAcqToggles.actualSubs) {
                 datasets.push({
-                    label: 'Actual Subscribers',
+                    label: 'New Subscribers',
                     data: data.actualSubs,
                     type: 'bar',
                     backgroundColor: '#1E40AF',
