@@ -712,6 +712,20 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
 
+        .chart-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+
+        .chart-canvas-wrapper canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
         .chart-title {
             font-size: 20px;
             font-weight: 600;
@@ -2422,6 +2436,10 @@
                 border-radius: 10px;
             }
 
+            .chart-canvas-wrapper {
+                height: 280px;
+            }
+
             .chart-title {
                 font-size: 16px;
                 margin-bottom: 12px;
@@ -2618,6 +2636,10 @@
 
         /* Medium phones and small tablets */
         @media (max-width: 768px) {
+            .chart-canvas-wrapper {
+                height: 320px;
+            }
+
             .header {
                 padding: 24px 20px 18px;
             }
@@ -3041,7 +3063,7 @@
                         </div>
                     </div>
                     <div class="chart-toggles" id="toggles-revenue"></div>
-                    <canvas id="revenueChart" height="80"></canvas>
+                    <div class="chart-canvas-wrapper"><canvas id="revenueChart"></canvas></div>
                     <div class="revenue-breakdown" id="revenueBreakdown"></div>
                     <!-- Platform breakdown info -->
                     <div class="platform-breakdown-info" id="platformBreakdownInfo" style="display: none;"></div>
@@ -3057,7 +3079,7 @@
                             <span class="badge-value">+0%</span>
                         </span>
                     </div>
-                    <canvas id="ebitdaChart" height="80"></canvas>
+                    <div class="chart-canvas-wrapper"><canvas id="ebitdaChart"></canvas></div>
                 </div>
                 <!-- Contribution Margin Chart -->
                 <div class="chart-container">
@@ -3074,7 +3096,7 @@
                         </div>
                     </div>
                     <div class="chart-toggles" id="toggles-contributionMargin"></div>
-                    <canvas id="contributionMarginChart" height="80"></canvas>
+                    <div class="chart-canvas-wrapper"><canvas id="contributionMarginChart"></canvas></div>
                 </div>
             </div>
 
@@ -3146,7 +3168,7 @@
                         </div>
                         <button class="sub-reset-btn" onclick="resetSubscribersToggles()">Reset</button>
                     </div>
-                    <canvas id="subscribersChart" height="100"></canvas>
+                    <div class="chart-canvas-wrapper"><canvas id="subscribersChart"></canvas></div>
                     <div id="marketingInsight" class="insight-callout">
                         <span class="insight-emoji">📊</span> Loading marketing insights...
                     </div>
@@ -3176,7 +3198,7 @@
                         </div>
                         <button class="sacq-reset-btn" onclick="resetSubscriberAcqToggles()">Reset</button>
                     </div>
-                    <canvas id="subscriberAcquisitionChart" height="100"></canvas>
+                    <div class="chart-canvas-wrapper"><canvas id="subscriberAcquisitionChart"></canvas></div>
                     <div id="subscriberAcqInsight" class="insight-callout">
                         <span class="insight-emoji">📊</span> Loading subscriber acquisition insights...
                     </div>
@@ -3217,7 +3239,7 @@
                         </div>
                         <button class="ue-reset-btn" onclick="resetUnitEconomicsToggles()">Reset</button>
                     </div>
-                    <canvas id="unitEconomicsChart" height="100"></canvas>
+                    <div class="chart-canvas-wrapper"><canvas id="unitEconomicsChart"></canvas></div>
                     <div id="unitEconomicsInsight" class="insight-callout">
                         <span class="insight-emoji">📊</span> Loading unit economics insights...
                     </div>
@@ -6160,7 +6182,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: true,
@@ -6376,7 +6398,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: true,
@@ -7236,7 +7258,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: true,
@@ -7775,7 +7797,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     interaction: {
                         mode: 'index',
                         intersect: false
@@ -8055,7 +8077,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     interaction: {
                         mode: 'index',
                         intersect: false
@@ -8408,7 +8430,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     interaction: {
                         mode: 'index',
                         intersect: false
@@ -8851,7 +8873,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     cutout: '65%',
                     plugins: {
                         legend: {
