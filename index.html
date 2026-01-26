@@ -298,6 +298,55 @@
             display: inline;
         }
 
+        /* Global Apply / Reset Buttons */
+        .global-actions-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .global-apply-btn {
+            padding: 10px 32px;
+            border: none;
+            background: #22c55e;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 26px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .global-apply-btn:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+
+        .global-apply-btn:active {
+            transform: translateY(0);
+        }
+
+        .global-reset-btn {
+            padding: 10px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 26px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .global-reset-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #fca5a5;
+        }
+
         /* Year Selector */
         .year-selector-container {
             display: flex;
@@ -2358,6 +2407,21 @@
                 justify-content: center;
             }
 
+            .global-actions-row {
+                width: 100%;
+            }
+
+            .global-apply-btn {
+                flex: 1;
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .global-reset-btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+
             .status-display {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -2989,8 +3053,6 @@
                             <option value="10">November</option>
                             <option value="11" selected>December</option>
                         </select>
-                        <button class="range-btn apply-btn" id="applyRangeBtn" onclick="applyCustomRange()">Apply</button>
-                        <button class="range-btn reset-btn" id="resetRangeBtn" onclick="resetCustomRange()">Reset</button>
                         <span class="range-error" id="rangeError">From must be before To</span>
                     </div>
                 </div>
@@ -3011,7 +3073,13 @@
                     <label class="compare-label-small" for="compareCheckbox">Compare vs 2025 Actual</label>
                 </div>
 
-                <!-- 6. Status Display (info style) -->
+                <!-- 6. Global Apply / Reset -->
+                <div class="global-actions-row">
+                    <button class="global-apply-btn" id="globalApplyBtn" onclick="applyAllFilters()">Apply Filters</button>
+                    <button class="global-reset-btn" id="globalResetBtn" onclick="resetAllFilters()">Reset</button>
+                </div>
+
+                <!-- 7. Status Display (info style) -->
                 <div class="status-display" id="statusDisplay">
                     Showing: <strong id="statusPeriod">Year to Date 2025</strong>
                     <span class="status-scenario" id="statusScenario">
@@ -4736,15 +4804,12 @@
             const fromVal = parseInt(document.getElementById('rangeFrom').value);
             const toVal = parseInt(document.getElementById('rangeTo').value);
             const errorEl = document.getElementById('rangeError');
-            const applyBtn = document.getElementById('applyRangeBtn');
 
             if (fromVal > toVal) {
                 errorEl.classList.add('visible');
-                applyBtn.disabled = true;
                 return false;
             } else {
                 errorEl.classList.remove('visible');
-                applyBtn.disabled = false;
                 return true;
             }
         }
@@ -4800,7 +4865,6 @@
 
             // Clear error
             document.getElementById('rangeError').classList.remove('visible');
-            document.getElementById('applyRangeBtn').disabled = false;
 
             // Close the custom range panel
             document.getElementById('customRangeContainer').classList.remove('visible');
@@ -4826,6 +4890,91 @@
             updateOpexDonutChart();
             updateOpexTable();
             updateAllInsights();
+        }
+
+        // ============================================
+        // GLOBAL APPLY / RESET FUNCTIONS
+        // ============================================
+
+        /**
+         * Apply ALL selected filters globally and refresh everything.
+         * Reads current UI state for: year, granularity, period, custom range.
+         */
+        function applyAllFilters() {
+            // 1. If custom range panel is open and has valid range, activate it
+            const customContainer = document.getElementById('customRangeContainer');
+            if (customContainer.classList.contains('visible')) {
+                if (!validateRange()) return;
+                const fromVal = parseInt(document.getElementById('rangeFrom').value);
+                const toVal = parseInt(document.getElementById('rangeTo').value);
+                customRangeFrom = fromVal;
+                customRangeTo = toVal;
+                customRangeActive = true;
+
+                // Deactivate granularity buttons when custom range is used
+                document.querySelectorAll('.granularity-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById('customRangeToggle').classList.add('active');
+                customContainer.classList.remove('visible');
+            }
+
+            // 2. Flash the button to confirm action
+            const btn = document.getElementById('globalApplyBtn');
+            btn.textContent = 'Applied ✓';
+            btn.style.background = '#16a34a';
+            setTimeout(() => {
+                btn.textContent = 'Apply Filters';
+                btn.style.background = '';
+            }, 1200);
+
+            // 3. Refresh everything
+            updatePeriodIndicator();
+            updateAllChartsAndKPIs();
+        }
+
+        /**
+         * Reset ALL filters to defaults and refresh.
+         */
+        function resetAllFilters() {
+            // 1. Reset year to current year
+            const defaultYear = new Date().getFullYear();
+            if (currentYear !== defaultYear) {
+                setYear(defaultYear);
+            }
+
+            // 2. Reset granularity to Yearly
+            currentGranularity = 'yearly';
+            currentPeriod = 'YTD';
+            document.querySelectorAll('.granularity-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === 'Yearly') {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 3. Reset custom range
+            customRangeActive = false;
+            customRangeFrom = 0;
+            customRangeTo = 11;
+            document.getElementById('rangeFrom').value = '0';
+            document.getElementById('rangeTo').value = '11';
+            document.getElementById('rangeError').classList.remove('visible');
+            document.getElementById('customRangeContainer').classList.remove('visible');
+            document.getElementById('customRangeToggle').classList.remove('active');
+            document.getElementById('customRangeActive').classList.remove('visible');
+
+            // 4. Update dropdown and refresh
+            updateDropdownOptions();
+            updatePeriodIndicator();
+            updateAllChartsAndKPIs();
+
+            // 5. Flash the reset button
+            const btn = document.getElementById('globalResetBtn');
+            btn.textContent = 'Reset ✓';
+            setTimeout(() => {
+                btn.textContent = 'Reset';
+            }, 1200);
         }
 
         function getCustomRangeMonths() {
