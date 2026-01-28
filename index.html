@@ -7540,54 +7540,54 @@
         // ============================================
 
         /**
-         * Calculate compound growth rate based on period type
-         * Returns { rate: number, label: string, periods: number }
+         * Calculate growth rate for the growth line
+         * Handles both positive and negative values (like EBITDA)
+         * Returns { rate: number, label: string, firstValue, lastValue, firstIndex, lastIndex }
          */
-        function calculateCompoundGrowthRate(dataArray, periodType) {
+        function calculateGrowthLineData(dataArray, periodType) {
             if (!dataArray || dataArray.length < 2) return null;
 
-            // Filter out null/undefined values and get first/last valid values
-            const validData = dataArray.filter(v => v !== null && v !== undefined && v > 0);
-            if (validData.length < 2) return null;
+            // Find first and last non-null values with their indices
+            let firstValue = null, lastValue = null;
+            let firstIndex = -1, lastIndex = -1;
 
-            const firstValue = validData[0];
-            const lastValue = validData[validData.length - 1];
-            const periods = validData.length - 1;
+            for (let i = 0; i < dataArray.length; i++) {
+                if (dataArray[i] !== null && dataArray[i] !== undefined) {
+                    if (firstValue === null) {
+                        firstValue = dataArray[i];
+                        firstIndex = i;
+                    }
+                    lastValue = dataArray[i];
+                    lastIndex = i;
+                }
+            }
 
-            if (firstValue <= 0 || periods <= 0) return null;
+            if (firstValue === null || lastValue === null || firstIndex === lastIndex) return null;
 
-            // Calculate compound growth rate: (endValue/startValue)^(1/periods) - 1
-            const compoundRate = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
+            const periods = lastIndex - firstIndex;
+            let rate, label;
 
-            let label, periodLabel;
-            switch(periodType) {
-                case 'monthly':
-                    label = 'CAGR';
-                    periodLabel = '/mo';
-                    break;
-                case 'quarterly':
-                    label = 'CAGR';
-                    periodLabel = '/qtr';
-                    break;
-                case 'semester':
-                    label = 'CAGR';
-                    periodLabel = '/sem';
-                    break;
-                case 'yearly':
-                    label = 'CAGR';
-                    periodLabel = '/yr';
-                    break;
-                default:
-                    label = 'CAGR';
-                    periodLabel = '';
+            // For values that are both positive, use CAGR
+            if (firstValue > 0 && lastValue > 0) {
+                rate = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
+                label = 'CAGR';
+            } else {
+                // For mixed or negative values, show total change
+                if (firstValue !== 0) {
+                    rate = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
+                } else {
+                    rate = lastValue > 0 ? 100 : -100;
+                }
+                label = 'Change';
             }
 
             return {
-                rate: compoundRate,
+                rate: rate,
                 label: label,
-                periodLabel: periodLabel,
                 firstValue: firstValue,
                 lastValue: lastValue,
+                firstIndex: firstIndex,
+                lastIndex: lastIndex,
                 periods: periods
             };
         }
@@ -7727,30 +7727,17 @@
 
                 if (!showGrowthLine || !actualData || actualData.length < 2) return;
 
-                // Get compound growth rate
-                const growthInfo = calculateCompoundGrowthRate(actualData, currentGranularity);
+                // Get growth line data
+                const growthInfo = calculateGrowthLineData(actualData, currentGranularity);
                 if (!growthInfo) return;
 
                 const ctx = chart.ctx;
                 const meta = chart.getDatasetMeta(0);
                 if (!meta || !meta.data || meta.data.length < 2) return;
 
-                // Find first and last valid data points
-                let firstBarIndex = 0;
-                let lastBarIndex = meta.data.length - 1;
-
-                for (let i = 0; i < actualData.length; i++) {
-                    if (actualData[i] !== null && actualData[i] !== undefined && actualData[i] > 0) {
-                        firstBarIndex = i;
-                        break;
-                    }
-                }
-                for (let i = actualData.length - 1; i >= 0; i--) {
-                    if (actualData[i] !== null && actualData[i] !== undefined && actualData[i] > 0) {
-                        lastBarIndex = i;
-                        break;
-                    }
-                }
+                // Use the indices from growthInfo
+                const firstBarIndex = growthInfo.firstIndex;
+                const lastBarIndex = growthInfo.lastIndex;
 
                 const firstBar = meta.data[firstBarIndex];
                 const lastBar = meta.data[lastBarIndex];
