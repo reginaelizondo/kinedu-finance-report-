@@ -7541,27 +7541,31 @@
 
         /**
          * Calculate growth rate for the growth line
-         * Handles both positive and negative values (like EBITDA)
+         * Only considers ACTUAL data (non-zero values), ignoring future budget-only months
          * Returns { rate: number, label: string, firstValue, lastValue, firstIndex, lastIndex }
          */
         function calculateGrowthLineData(dataArray, periodType) {
             if (!dataArray || dataArray.length < 2) return null;
 
-            // Find first and last non-null values with their indices
+            // Find first and last non-null AND non-zero values (actual data only)
+            // Zero values typically mean no actual data yet (future months)
             let firstValue = null, lastValue = null;
             let firstIndex = -1, lastIndex = -1;
 
             for (let i = 0; i < dataArray.length; i++) {
-                if (dataArray[i] !== null && dataArray[i] !== undefined) {
+                const val = dataArray[i];
+                // Consider a value as "actual" if it's not null, not undefined, and not zero
+                if (val !== null && val !== undefined && val !== 0) {
                     if (firstValue === null) {
-                        firstValue = dataArray[i];
+                        firstValue = val;
                         firstIndex = i;
                     }
-                    lastValue = dataArray[i];
+                    lastValue = val;
                     lastIndex = i;
                 }
             }
 
+            // Need at least 2 data points
             if (firstValue === null || lastValue === null || firstIndex === lastIndex) return null;
 
             const periods = lastIndex - firstIndex;
@@ -7573,11 +7577,7 @@
                 label = 'CAGR';
             } else {
                 // For mixed or negative values, show total change
-                if (firstValue !== 0) {
-                    rate = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
-                } else {
-                    rate = lastValue > 0 ? 100 : -100;
-                }
+                rate = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
                 label = 'Change';
             }
 
