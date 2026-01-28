@@ -1995,7 +1995,7 @@
             }
         }
 
-        /* CAGR Trend Toggle */
+        /* CAGR Growth Line Toggle */
         .cagr-toggle-container {
             display: flex;
             align-items: center;
@@ -2574,7 +2574,7 @@
                 margin-top: 6px;
             }
 
-            /* --- CAGR toggle --- */
+            /* --- Trend line toggle --- */
             .cagr-toggle-container {
                 margin-left: 0;
                 padding-left: 0;
@@ -3117,7 +3117,7 @@
                         <button class="revenue-filter-btn" onclick="filterRevenue('offapp')">Stripe Sales</button>
                         <button class="revenue-filter-btn" onclick="filterRevenue('partnership')">Partnership</button>
                         <button class="revenue-filter-btn cagr-trend-btn" id="revenueCagrToggle" onclick="toggleRevenueCagr()">
-                            CAGR Trend
+                            CAGR
                         </button>
                         <span class="cagr-badge hidden" id="revenueCagrBadge">
                             <span class="badge-arrow">↑</span>
@@ -3140,7 +3140,7 @@
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
                     <div class="ebitda-filters">
                         <button class="revenue-filter-btn cagr-trend-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
-                            CAGR Trend
+                            CAGR
                         </button>
                         <span class="cagr-badge hidden" id="ebitdaCagrBadge">
                             <span class="badge-arrow">↑</span>
@@ -3439,7 +3439,7 @@
         let customRangeFrom = 0;  // Month index (0 = January)
         let customRangeTo = 11;   // Month index (11 = December)
 
-        // CAGR Trend toggle states
+        // Trend line toggle states
         let showRevenueCagrTrend = false;
         let showEbitdaCagrTrend = false;
 
@@ -6052,38 +6052,45 @@
 
         // Helper functions for Runway display
         function getRunwayForPeriod() {
-            // Determine the month(s) for the current period
             let monthKey;
+            console.log('getRunwayForPeriod: year=' + currentYear + ' gran=' + currentGranularity + ' period=' + currentPeriod);
+            console.log('runwayByMonth keys:', Object.keys(runwayByMonth));
+            console.log('runwayByMonth:', JSON.stringify(runwayByMonth));
+
             if (currentYear === 2026) {
                 if (currentGranularity === 'monthly') {
                     monthKey = '2026_' + currentPeriod;
                 } else if (currentGranularity === 'quarterly') {
-                    // Use last month of quarter
                     const qMonths = quarterMonths[currentPeriod];
                     if (qMonths) monthKey = '2026_' + qMonths[qMonths.length - 1];
                 } else {
-                    // Yearly - use last month with data
-                    return data2026?.actual?.runway || 0;
+                    const fallback = data2026?.actual?.runway || 0;
+                    console.log('2026 yearly fallback:', fallback);
+                    return fallback;
                 }
-                return runwayByMonth[monthKey] || data2026?.actual?.runway || 0;
+                const val = runwayByMonth[monthKey];
+                console.log('2026 monthKey=' + monthKey + ' val=' + val + ' fallback=' + (data2026?.actual?.runway));
+                // Use val if it exists and is non-zero, otherwise fallback
+                if (val !== undefined && val !== 0) return val;
+                return data2026?.actual?.runway || 0;
             } else {
-                // 2025
                 if (currentGranularity === 'monthly') {
                     monthKey = currentPeriod;
                 } else if (currentGranularity === 'quarterly') {
                     const qMonths = quarterMonths[currentPeriod];
                     if (qMonths) monthKey = qMonths[qMonths.length - 1];
                 } else {
-                    // Yearly - use last month with data
                     return runwayMonths;
                 }
                 const val = runwayByMonth[monthKey];
+                console.log('2025 monthKey=' + monthKey + ' val=' + val + ' fallback=' + runwayMonths);
                 return val !== undefined ? val : runwayMonths;
             }
         }
 
         function getRunwayDisplay() {
             const runway = getRunwayForPeriod();
+            console.log('getRunwayDisplay: runway=' + runway);
 
             if (runway >= 999) {
                 return '∞ (Profitable)';
@@ -6667,9 +6674,9 @@
 
             // Remove extra scenario datasets if any
             while (charts.revenue.data.datasets.length > 2) {
-                // Keep CAGR trendline if it exists
+                // Keep trendline if it exists
                 const lastDataset = charts.revenue.data.datasets[charts.revenue.data.datasets.length - 1];
-                if (lastDataset.label === 'CAGR Trend') break;
+                if (lastDataset.label === 'CAGR') break;
                 charts.revenue.data.datasets.pop();
             }
 
@@ -6683,8 +6690,8 @@
                 add2025ComparisonDataset(charts.revenue, 'revenue');
             }
 
-            // Handle CAGR trend line
-            updateRevenueCagrTrendline();
+            // Handle trend line
+            updateRevenueTrendline();
 
             charts.revenue.update();
 
@@ -7508,7 +7515,7 @@
             // Remove extra scenario datasets if any
             while (charts.ebitda.data.datasets.length > 2) {
                 const lastDataset = charts.ebitda.data.datasets[charts.ebitda.data.datasets.length - 1];
-                if (lastDataset.label === 'CAGR Trend') break;
+                if (lastDataset.label === 'CAGR') break;
                 charts.ebitda.data.datasets.pop();
             }
 
@@ -7522,67 +7529,118 @@
                 add2025ComparisonDataset(charts.ebitda, 'ebitda');
             }
 
-            // Handle CAGR trend line
-            updateEbitdaCagrTrendline();
+            // Handle trend line
+            updateEbitdaTrendline();
 
             charts.ebitda.update();
         }
 
         // ============================================
-        // CAGR TREND CALCULATIONS AND DISPLAY
+        // GROWTH LINE CALCULATIONS AND DISPLAY
         // ============================================
 
         /**
-         * Calculate growth rate based on data series
-         * Returns the period-over-period growth rate
+         * Calculate compound growth rate based on period type
+         * Returns { rate: number, label: string, periods: number }
          */
-        function calculateGrowthRate(dataArray) {
+        function calculateCompoundGrowthRate(dataArray, periodType) {
             if (!dataArray || dataArray.length < 2) return null;
 
-            const firstValue = dataArray[0];
-            const lastValue = dataArray[dataArray.length - 1];
-            const periods = dataArray.length - 1;
+            // Filter out null/undefined values and get first/last valid values
+            const validData = dataArray.filter(v => v !== null && v !== undefined && v > 0);
+            if (validData.length < 2) return null;
 
-            // Handle edge cases
-            if (firstValue === 0 || firstValue === null || firstValue === undefined) return null;
-            if (lastValue === null || lastValue === undefined) return null;
+            const firstValue = validData[0];
+            const lastValue = validData[validData.length - 1];
+            const periods = validData.length - 1;
 
-            // For negative values (like EBITDA losses), we need special handling
-            if (firstValue < 0 && lastValue < 0) {
-                // Both negative - check if loss is decreasing (improving)
-                const ratio = lastValue / firstValue;
-                if (ratio <= 0) return null;
-                const cagr = (Math.pow(ratio, 1 / periods) - 1) * 100;
-                return cagr;
-            } else if (firstValue < 0 && lastValue >= 0) {
-                // Went from loss to profit - can't calculate traditional CAGR
-                return null;
-            } else if (firstValue > 0 && lastValue < 0) {
-                // Went from profit to loss - can't calculate traditional CAGR
-                return null;
+            if (firstValue <= 0 || periods <= 0) return null;
+
+            // Calculate compound growth rate: (endValue/startValue)^(1/periods) - 1
+            const compoundRate = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
+
+            let label, periodLabel;
+            switch(periodType) {
+                case 'monthly':
+                    label = 'CAGR';
+                    periodLabel = '/mo';
+                    break;
+                case 'quarterly':
+                    label = 'CAGR';
+                    periodLabel = '/qtr';
+                    break;
+                case 'semester':
+                    label = 'CAGR';
+                    periodLabel = '/sem';
+                    break;
+                case 'yearly':
+                    label = 'CAGR';
+                    periodLabel = '/yr';
+                    break;
+                default:
+                    label = 'CAGR';
+                    periodLabel = '';
             }
 
-            // Normal case: both positive
-            const cagr = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
-            return cagr;
+            return {
+                rate: compoundRate,
+                label: label,
+                periodLabel: periodLabel,
+                firstValue: firstValue,
+                lastValue: lastValue,
+                periods: periods
+            };
         }
 
         /**
-         * Generate trendline data based on CAGR
+         * Calculate growth for badge (last vs previous period)
+         * Returns { value: number, label: string }
          */
-        function generateTrendlineData(startValue, growthRate, periods) {
-            const trendData = [];
-            for (let i = 0; i < periods; i++) {
-                const value = startValue * Math.pow(1 + growthRate / 100, i);
-                trendData.push(value);
+        function calculateGrowthForPeriod(dataArray, periodType) {
+            if (!dataArray || dataArray.length < 2) return null;
+
+            // Filter out null/undefined values
+            const validData = dataArray.filter(v => v !== null && v !== undefined);
+            if (validData.length < 2) return null;
+
+            const lastValue = validData[validData.length - 1];
+            const previousValue = validData[validData.length - 2];
+            const firstValue = validData[0];
+
+            // Handle division by zero
+            if (previousValue === 0 || firstValue === 0) return null;
+
+            let growth, label;
+
+            switch(periodType) {
+                case 'monthly':
+                    growth = ((lastValue / previousValue) - 1) * 100;
+                    label = 'MoM Growth';
+                    break;
+                case 'quarterly':
+                    growth = ((lastValue / previousValue) - 1) * 100;
+                    label = 'QoQ Growth';
+                    break;
+                case 'semester':
+                    growth = ((lastValue / previousValue) - 1) * 100;
+                    label = 'SoS Growth';
+                    break;
+                case 'yearly':
+                    growth = ((lastValue / previousValue) - 1) * 100;
+                    label = 'YoY Growth';
+                    break;
+                default:
+                    growth = ((lastValue / firstValue) - 1) * 100;
+                    label = 'YTD Growth';
             }
-            return trendData;
+
+            return { value: growth, label: label };
         }
 
         /**
-         * Get the period label for CAGR display
+         * Get the period label for growth display
          */
-        function getCagrPeriodLabel() {
+        function getGrowthPeriodLabel() {
             if (customRangeActive) {
                 const months = getCustomRangeMonths();
                 if (months.length <= 1) return 'Growth';
@@ -7595,32 +7653,38 @@
                 case 'quarterly':
                     return 'QoQ Growth';
                 case 'semester':
-                    return 'Semester Growth';
+                    return 'SoS Growth';
                 case 'yearly':
+                    return 'YoY Growth';
                 default:
-                    return 'CAGR';
+                    return 'YTD Growth';
             }
         }
 
         /**
-         * Update CAGR badge display
+         * Update growth badge display
          */
-        function updateCagrBadge(badgeId, cagrValue, show) {
+        function updateGrowthBadge(badgeId, dataArray, show) {
             const badge = document.getElementById(badgeId);
             if (!badge) return;
 
-            if (!show || cagrValue === null) {
+            const growthResult = calculateGrowthForPeriod(dataArray, currentGranularity);
+
+            if (!show || growthResult === null) {
                 badge.classList.add('hidden');
                 return;
             }
 
             badge.classList.remove('hidden');
 
+            const growthValue = growthResult.value;
+            const label = growthResult.label;
+
             // Update badge class based on value
             badge.classList.remove('positive', 'negative', 'neutral');
-            if (cagrValue > 0) {
+            if (growthValue > 0) {
                 badge.classList.add('positive');
-            } else if (cagrValue < 0) {
+            } else if (growthValue < 0) {
                 badge.classList.add('negative');
             } else {
                 badge.classList.add('neutral');
@@ -7631,18 +7695,166 @@
             const valueEl = badge.querySelector('.badge-value');
 
             if (arrowEl) {
-                arrowEl.textContent = cagrValue >= 0 ? '↑' : '↓';
+                arrowEl.textContent = growthValue >= 0 ? '↑' : '↓';
             }
 
             if (valueEl) {
-                const label = getCagrPeriodLabel();
-                const sign = cagrValue >= 0 ? '+' : '';
-                valueEl.textContent = `${label}: ${sign}${cagrValue.toFixed(1)}%`;
+                const sign = growthValue >= 0 ? '+' : '';
+                valueEl.textContent = `${label}: ${sign}${growthValue.toFixed(1)}%`;
             }
         }
 
         /**
-         * Toggle Revenue CAGR trend visibility
+         * Chart.js plugin to draw growth line with arrow and CAGR label
+         */
+        const growthLinePlugin = {
+            id: 'growthLinePlugin',
+            afterDatasetsDraw: (chart) => {
+                // Check if this chart should show growth line
+                const chartId = chart.canvas.id;
+                let showGrowthLine = false;
+                let actualData = null;
+
+                if (chartId === 'revenueChart' && showRevenueCagrTrend) {
+                    showGrowthLine = true;
+                    const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
+                    actualData = revenueData.actual;
+                } else if (chartId === 'ebitdaChart' && showEbitdaCagrTrend) {
+                    showGrowthLine = true;
+                    const ebitdaData = getEbitdaDataForGranularity();
+                    actualData = ebitdaData.actual;
+                }
+
+                if (!showGrowthLine || !actualData || actualData.length < 2) return;
+
+                // Get compound growth rate
+                const growthInfo = calculateCompoundGrowthRate(actualData, currentGranularity);
+                if (!growthInfo) return;
+
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(0);
+                if (!meta || !meta.data || meta.data.length < 2) return;
+
+                // Find first and last valid data points
+                let firstBarIndex = 0;
+                let lastBarIndex = meta.data.length - 1;
+
+                for (let i = 0; i < actualData.length; i++) {
+                    if (actualData[i] !== null && actualData[i] !== undefined && actualData[i] > 0) {
+                        firstBarIndex = i;
+                        break;
+                    }
+                }
+                for (let i = actualData.length - 1; i >= 0; i--) {
+                    if (actualData[i] !== null && actualData[i] !== undefined && actualData[i] > 0) {
+                        lastBarIndex = i;
+                        break;
+                    }
+                }
+
+                const firstBar = meta.data[firstBarIndex];
+                const lastBar = meta.data[lastBarIndex];
+
+                if (!firstBar || !lastBar) return;
+
+                // Get Y scale to convert values to pixels
+                const yScale = chart.scales.y;
+                const startY = yScale.getPixelForValue(growthInfo.firstValue);
+                const endY = yScale.getPixelForValue(growthInfo.lastValue);
+                const startX = firstBar.x;
+                const endX = lastBar.x;
+
+                ctx.save();
+
+                // Draw the growth line (solid, not dashed)
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = '#DC2626'; // Red color like Excel
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([8, 4]); // Dashed line
+                ctx.stroke();
+                ctx.setLineDash([]); // Reset
+
+                // Draw arrow head at the end
+                const arrowLength = 12;
+                const arrowAngle = Math.atan2(endY - startY, endX - startX);
+
+                ctx.beginPath();
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - arrowLength * Math.cos(arrowAngle - Math.PI / 6),
+                    endY - arrowLength * Math.sin(arrowAngle - Math.PI / 6)
+                );
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - arrowLength * Math.cos(arrowAngle + Math.PI / 6),
+                    endY - arrowLength * Math.sin(arrowAngle + Math.PI / 6)
+                );
+                ctx.strokeStyle = '#DC2626';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+
+                // Draw CAGR label bubble in the middle of the line
+                const midX = (startX + endX) / 2;
+                const midY = (startY + endY) / 2 - 25; // Offset above the line
+
+                const sign = growthInfo.rate >= 0 ? '+' : '';
+                const labelText = `${growthInfo.label}`;
+                const valueText = `${sign}${growthInfo.rate.toFixed(1)}%`;
+
+                // Measure text for bubble size
+                ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, sans-serif';
+                const labelWidth = ctx.measureText(labelText).width;
+                ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, sans-serif';
+                const valueWidth = ctx.measureText(valueText).width;
+                const textWidth = Math.max(labelWidth, valueWidth);
+
+                const bubbleWidth = textWidth + 20;
+                const bubbleHeight = 38;
+                const bubbleX = midX - bubbleWidth / 2;
+                const bubbleY = midY - bubbleHeight / 2;
+
+                // Draw bubble background
+                ctx.beginPath();
+                const radius = 8;
+                ctx.moveTo(bubbleX + radius, bubbleY);
+                ctx.lineTo(bubbleX + bubbleWidth - radius, bubbleY);
+                ctx.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY, bubbleX + bubbleWidth, bubbleY + radius);
+                ctx.lineTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight - radius);
+                ctx.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight, bubbleX + bubbleWidth - radius, bubbleY + bubbleHeight);
+                ctx.lineTo(bubbleX + radius, bubbleY + bubbleHeight);
+                ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleHeight, bubbleX, bubbleY + bubbleHeight - radius);
+                ctx.lineTo(bubbleX, bubbleY + radius);
+                ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
+                ctx.closePath();
+
+                ctx.fillStyle = '#DC2626'; // Red background
+                ctx.fill();
+                ctx.strokeStyle = '#B91C1C';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Draw label text
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                ctx.font = 'bold 10px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.fillText(labelText, midX, midY - 7);
+
+                ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.fillText(valueText, midX, midY + 8);
+
+                ctx.restore();
+            }
+        };
+
+        // Register the growth line plugin
+        Chart.register(growthLinePlugin);
+
+        /**
+         * Toggle Revenue growth line visibility
          */
         function toggleRevenueCagr() {
             showRevenueCagrTrend = !showRevenueCagrTrend;
@@ -7652,12 +7864,12 @@
                 btn.classList.toggle('active', showRevenueCagrTrend);
             }
 
-            updateRevenueCagrTrendline();
+            updateRevenueGrowthLine();
             charts.revenue.update();
         }
 
         /**
-         * Toggle EBITDA CAGR trend visibility
+         * Toggle EBITDA growth line visibility
          */
         function toggleEbitdaCagr() {
             showEbitdaCagrTrend = !showEbitdaCagrTrend;
@@ -7667,104 +7879,56 @@
                 btn.classList.toggle('active', showEbitdaCagrTrend);
             }
 
-            updateEbitdaCagrTrendline();
+            updateEbitdaGrowthLine();
             charts.ebitda.update();
         }
 
         /**
-         * Update Revenue chart trendline
+         * Update Revenue chart growth line
          */
-        function updateRevenueCagrTrendline() {
+        function updateRevenueGrowthLine() {
             if (!charts.revenue) return;
 
             const revenueData = getRevenueDataForGranularity(currentRevenueFilter);
             const actualData = revenueData.actual;
 
-            // Remove existing trendline dataset if exists
-            const trendlineIndex = charts.revenue.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
+            // Remove existing growth line dataset if exists (for legend cleanup)
+            const trendlineIndex = charts.revenue.data.datasets.findIndex(ds => ds.label === 'CAGR' || ds.label === 'Growth Line');
             if (trendlineIndex !== -1) {
                 charts.revenue.data.datasets.splice(trendlineIndex, 1);
             }
 
-            // Calculate CAGR
-            const cagr = calculateGrowthRate(actualData);
+            // Update badge with period growth calculation
+            updateGrowthBadge('revenueCagrBadge', actualData, showRevenueCagrTrend);
+        }
 
-            // Update badge
-            updateCagrBadge('revenueCagrBadge', cagr, showRevenueCagrTrend);
-
-            if (!showRevenueCagrTrend || cagr === null || actualData.length < 2) {
-                return;
-            }
-
-            // Generate trendline data
-            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
-
-            // Add trendline dataset
-            charts.revenue.data.datasets.push({
-                label: 'CAGR Trend',
-                data: trendlineData,
-                type: 'line',
-                borderColor: '#5BA4E6',
-                backgroundColor: 'rgba(91, 164, 230, 0.1)',
-                borderWidth: 2,
-                borderDash: [6, 4],
-                pointBackgroundColor: '#5BA4E6',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                fill: false,
-                tension: 0.1,
-                order: 0 // Draw on top
-            });
+        // Alias for backwards compatibility
+        function updateRevenueTrendline() {
+            updateRevenueGrowthLine();
         }
 
         /**
-         * Update EBITDA chart trendline
+         * Update EBITDA chart growth line
          */
-        function updateEbitdaCagrTrendline() {
+        function updateEbitdaGrowthLine() {
             if (!charts.ebitda) return;
 
             const ebitdaData = getEbitdaDataForGranularity();
             const actualData = ebitdaData.actual;
 
-            // Remove existing trendline dataset if exists
-            const trendlineIndex = charts.ebitda.data.datasets.findIndex(ds => ds.label === 'CAGR Trend');
+            // Remove existing growth line dataset if exists (for legend cleanup)
+            const trendlineIndex = charts.ebitda.data.datasets.findIndex(ds => ds.label === 'CAGR' || ds.label === 'Growth Line');
             if (trendlineIndex !== -1) {
                 charts.ebitda.data.datasets.splice(trendlineIndex, 1);
             }
 
-            // Calculate CAGR
-            const cagr = calculateGrowthRate(actualData);
+            // Update badge with period growth calculation
+            updateGrowthBadge('ebitdaCagrBadge', actualData, showEbitdaCagrTrend);
+        }
 
-            // Update badge
-            updateCagrBadge('ebitdaCagrBadge', cagr, showEbitdaCagrTrend);
-
-            if (!showEbitdaCagrTrend || cagr === null || actualData.length < 2) {
-                return;
-            }
-
-            // Generate trendline data
-            const trendlineData = generateTrendlineData(actualData[0], cagr, actualData.length);
-
-            // Add trendline dataset
-            charts.ebitda.data.datasets.push({
-                label: 'CAGR Trend',
-                data: trendlineData,
-                type: 'line',
-                borderColor: '#5BA4E6',
-                backgroundColor: 'rgba(91, 164, 230, 0.1)',
-                borderWidth: 2,
-                borderDash: [6, 4],
-                pointBackgroundColor: '#5BA4E6',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                fill: false,
-                tension: 0.1,
-                order: 0 // Draw on top
-            });
+        // Alias for backwards compatibility
+        function updateEbitdaTrendline() {
+            updateEbitdaGrowthLine();
         }
 
         // ============================================
