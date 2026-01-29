@@ -3152,6 +3152,15 @@
                 <!-- Contribution Margin Chart -->
                 <div class="chart-container">
                     <div class="chart-title" id="contributionMarginTitle">Monthly Contribution Margin: Actual vs Budget</div>
+                    <div class="ebitda-filters">
+                        <button class="revenue-filter-btn cagr-trend-btn" id="contributionMarginCagrToggle" onclick="toggleContributionMarginCagr()">
+                            Growth Line
+                        </button>
+                        <span class="cagr-badge hidden" id="contributionMarginCagrBadge">
+                            <span class="badge-arrow">↑</span>
+                            <span class="badge-value">+0%</span>
+                        </span>
+                    </div>
                     <!-- Marketing Spend toggle (only visible for 2026) -->
                     <div class="marketing-spend-toggle-container" id="marketingSpendToggleContainer" style="display: none;">
                         <span class="marketing-spend-toggle-label">View:</span>
@@ -3442,6 +3451,7 @@
         // Trend line toggle states
         let showRevenueCagrTrend = false;
         let showEbitdaCagrTrend = false;
+        let showContributionMarginCagrTrend = false;
 
         // Multi-year and scenario state - default to current year (2026)
         let currentYear = new Date().getFullYear();
@@ -7753,6 +7763,9 @@
                     showGrowthLine = true;
                     const ebitdaData = getEbitdaDataForGranularity();
                     actualData = ebitdaData.actual;
+                } else if (chartId === 'contributionMarginChart' && showContributionMarginCagrTrend) {
+                    showGrowthLine = true;
+                    actualData = monthNames.map(m => monthlyData[m]?.contributionMargin || 0);
                 }
 
                 if (!showGrowthLine || !actualData || actualData.length < 2) return;
@@ -7944,6 +7957,35 @@
         // Alias for backwards compatibility
         function updateEbitdaTrendline() {
             updateEbitdaGrowthLine();
+        }
+
+        /**
+         * Toggle Contribution Margin growth line visibility
+         */
+        function toggleContributionMarginCagr() {
+            showContributionMarginCagrTrend = !showContributionMarginCagrTrend;
+
+            const btn = document.getElementById('contributionMarginCagrToggle');
+            if (btn) {
+                btn.classList.toggle('active', showContributionMarginCagrTrend);
+            }
+
+            updateContributionMarginGrowthLine();
+            if (charts.contributionMargin) {
+                charts.contributionMargin.update();
+            }
+        }
+
+        /**
+         * Update Contribution Margin chart growth line
+         */
+        function updateContributionMarginGrowthLine() {
+            if (!charts.contributionMargin) return;
+
+            const actualData = monthNames.map(m => monthlyData[m]?.contributionMargin || 0);
+
+            // Update badge with period growth calculation
+            updateGrowthBadge('contributionMarginCagrBadge', actualData, showContributionMarginCagrTrend);
         }
 
         // ============================================
