@@ -7543,62 +7543,98 @@
         // ============================================
 
         /**
+         * Get the index of the selected period based on granularity
+         */
+        function getSelectedPeriodIndex() {
+            switch(currentGranularity) {
+                case 'monthly':
+                    return monthNames.indexOf(currentPeriod);
+                case 'quarterly':
+                    const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+                    return quarters.indexOf(currentPeriod);
+                case 'semester':
+                    const semesters = ['H1', 'H2'];
+                    return semesters.indexOf(currentPeriod);
+                case 'yearly':
+                    return 0; // Only one year
+                default:
+                    return -1;
+            }
+        }
+
+        /**
          * Calculate growth rate for the growth line
-         * Only considers ACTUAL data (non-zero values), ignoring future budget-only months
-         * Returns { rate: number, label: string, firstValue, lastValue, firstIndex, lastIndex }
+         * Shows growth from SELECTED period to NEXT period
+         * Returns { rate: number, label: string, selectedValue, nextValue, selectedIndex, nextIndex }
          */
         function calculateGrowthLineData(dataArray, periodType) {
             if (!dataArray || dataArray.length < 2) return null;
 
-            // Find all non-null AND non-zero values (actual data only)
-            // Zero values typically mean no actual data yet (future months)
-            let firstValue = null, lastValue = null, secondLastValue = null;
-            let firstIndex = -1, lastIndex = -1, secondLastIndex = -1;
+            // Get selected period index
+            const selectedIndex = getSelectedPeriodIndex();
+            if (selectedIndex < 0) return null;
 
-            for (let i = 0; i < dataArray.length; i++) {
-                const val = dataArray[i];
-                // Consider a value as "actual" if it's not null, not undefined, and not zero
-                if (val !== null && val !== undefined && val !== 0) {
-                    if (firstValue === null) {
-                        firstValue = val;
-                        firstIndex = i;
+            // Next period index
+            const nextIndex = selectedIndex + 1;
+
+            // Check bounds
+            if (nextIndex >= dataArray.length) {
+                // If December/Q4/H2 selected, show previous to selected instead
+                if (selectedIndex > 0) {
+                    const prevIndex = selectedIndex - 1;
+                    const prevValue = dataArray[prevIndex];
+                    const selectedValue = dataArray[selectedIndex];
+
+                    if (prevValue === null || prevValue === undefined || prevValue === 0) return null;
+                    if (selectedValue === null || selectedValue === undefined || selectedValue === 0) return null;
+
+                    const rate = ((selectedValue - prevValue) / Math.abs(prevValue)) * 100;
+
+                    let label;
+                    switch(periodType) {
+                        case 'monthly': label = 'MoM'; break;
+                        case 'quarterly': label = 'QoQ'; break;
+                        case 'semester': label = 'SoS'; break;
+                        case 'yearly': label = 'YoY'; break;
+                        default: label = 'Growth';
                     }
-                    // Track second-to-last and last values
-                    secondLastValue = lastValue;
-                    secondLastIndex = lastIndex;
-                    lastValue = val;
-                    lastIndex = i;
+
+                    return {
+                        rate: rate,
+                        label: label,
+                        selectedValue: prevValue,
+                        nextValue: selectedValue,
+                        selectedIndex: prevIndex,
+                        nextIndex: selectedIndex
+                    };
                 }
+                return null;
             }
 
-            // Need at least 2 data points
-            if (firstValue === null || lastValue === null || firstIndex === lastIndex) return null;
-            if (secondLastValue === null) return null;
+            const selectedValue = dataArray[selectedIndex];
+            const nextValue = dataArray[nextIndex];
 
-            // Calculate growth from second-to-last to last period (not compound average)
-            let rate, label;
+            // Need valid values for both periods
+            if (selectedValue === null || selectedValue === undefined || selectedValue === 0) return null;
+            if (nextValue === null || nextValue === undefined || nextValue === 0) return null;
 
-            // Calculate simple period-over-period growth
-            if (secondLastValue !== 0) {
-                rate = ((lastValue - secondLastValue) / Math.abs(secondLastValue)) * 100;
-            } else {
-                rate = 0;
-            }
+            // Calculate growth: (next / selected - 1) * 100
+            const rate = ((nextValue - selectedValue) / Math.abs(selectedValue)) * 100;
 
             // Use correct terminology based on granularity
-            // CAGR only applies to multi-year periods
+            let label;
             switch(periodType) {
                 case 'monthly':
-                    label = 'MoM Growth';
+                    label = 'MoM';
                     break;
                 case 'quarterly':
-                    label = 'QoQ Growth';
+                    label = 'QoQ';
                     break;
                 case 'semester':
-                    label = 'SoS Growth';
+                    label = 'SoS';
                     break;
                 case 'yearly':
-                    label = 'YoY Growth';
+                    label = 'YoY';
                     break;
                 default:
                     label = 'Growth';
@@ -7607,56 +7643,27 @@
             return {
                 rate: rate,
                 label: label,
-                firstValue: firstValue,
-                lastValue: lastValue,
-                firstIndex: firstIndex,
-                lastIndex: lastIndex
+                selectedValue: selectedValue,
+                nextValue: nextValue,
+                selectedIndex: selectedIndex,
+                nextIndex: nextIndex
             };
         }
 
         /**
-         * Calculate growth for badge (last vs previous period)
+         * Calculate growth for badge (selected period to next period)
+         * Uses same logic as the growth line
          * Returns { value: number, label: string }
          */
         function calculateGrowthForPeriod(dataArray, periodType) {
-            if (!dataArray || dataArray.length < 2) return null;
+            // Use the same calculation as the growth line
+            const growthInfo = calculateGrowthLineData(dataArray, periodType);
+            if (!growthInfo) return null;
 
-            // Filter out null/undefined values
-            const validData = dataArray.filter(v => v !== null && v !== undefined);
-            if (validData.length < 2) return null;
-
-            const lastValue = validData[validData.length - 1];
-            const previousValue = validData[validData.length - 2];
-            const firstValue = validData[0];
-
-            // Handle division by zero
-            if (previousValue === 0 || firstValue === 0) return null;
-
-            let growth, label;
-
-            switch(periodType) {
-                case 'monthly':
-                    growth = ((lastValue / previousValue) - 1) * 100;
-                    label = 'MoM Growth';
-                    break;
-                case 'quarterly':
-                    growth = ((lastValue / previousValue) - 1) * 100;
-                    label = 'QoQ Growth';
-                    break;
-                case 'semester':
-                    growth = ((lastValue / previousValue) - 1) * 100;
-                    label = 'SoS Growth';
-                    break;
-                case 'yearly':
-                    growth = ((lastValue / previousValue) - 1) * 100;
-                    label = 'YoY Growth';
-                    break;
-                default:
-                    growth = ((lastValue / firstValue) - 1) * 100;
-                    label = 'YTD Growth';
-            }
-
-            return { value: growth, label: label };
+            return {
+                value: growthInfo.rate,
+                label: growthInfo.label + ' Growth'
+            };
         }
 
         /**
@@ -7727,8 +7734,8 @@
         }
 
         /**
-         * Chart.js plugin to draw growth line connecting actual values period by period
-         * Shows the real growth path with average growth rate in bubble
+         * Chart.js plugin to draw growth line from SELECTED period to NEXT period
+         * Color: Green if positive, Red if negative
          */
         const growthLinePlugin = {
             id: 'growthLinePlugin',
@@ -7750,7 +7757,7 @@
 
                 if (!showGrowthLine || !actualData || actualData.length < 2) return;
 
-                // Get growth line data
+                // Get growth line data (selected period to next period)
                 const growthInfo = calculateGrowthLineData(actualData, currentGranularity);
                 if (!growthInfo) return;
 
@@ -7758,91 +7765,72 @@
                 const meta = chart.getDatasetMeta(0);
                 if (!meta || !meta.data || meta.data.length < 2) return;
 
-                // Use the indices from growthInfo
-                const firstBarIndex = growthInfo.firstIndex;
-                const lastBarIndex = growthInfo.lastIndex;
+                // Get the bars for selected and next period
+                const selectedBar = meta.data[growthInfo.selectedIndex];
+                const nextBar = meta.data[growthInfo.nextIndex];
 
-                const firstBar = meta.data[firstBarIndex];
-                const lastBar = meta.data[lastBarIndex];
-
-                if (!firstBar || !lastBar) return;
+                if (!selectedBar || !nextBar) return;
 
                 // Get Y scale to convert values to pixels
                 const yScale = chart.scales.y;
+                const startX = selectedBar.x;
+                const startY = yScale.getPixelForValue(growthInfo.selectedValue);
+                const endX = nextBar.x;
+                const endY = yScale.getPixelForValue(growthInfo.nextValue);
+
+                // Determine color based on growth (green = positive, red = negative)
+                const isPositive = growthInfo.rate >= 0;
+                const lineColor = isPositive ? '#16A34A' : '#DC2626'; // Green or Red
+                const bubbleColor = isPositive ? '#16A34A' : '#DC2626';
+                const bubbleBorder = isPositive ? '#15803D' : '#B91C1C';
 
                 ctx.save();
 
-                // Collect valid data points for the line
-                const dataPoints = [];
-                for (let i = firstBarIndex; i <= lastBarIndex; i++) {
-                    const val = actualData[i];
-                    if (val !== null && val !== undefined && val !== 0) {
-                        const bar = meta.data[i];
-                        dataPoints.push({
-                            x: bar.x,
-                            y: yScale.getPixelForValue(val),
-                            value: val
-                        });
-                    }
-                }
-
-                if (dataPoints.length < 2) {
-                    ctx.restore();
-                    return;
-                }
-
-                // Draw dashed red line connecting all actual values
+                // Draw the line from selected to next period
                 ctx.beginPath();
-                ctx.moveTo(dataPoints[0].x, dataPoints[0].y);
-                for (let i = 1; i < dataPoints.length; i++) {
-                    ctx.lineTo(dataPoints[i].x, dataPoints[i].y);
-                }
-                ctx.strokeStyle = '#DC2626'; // Red color
-                ctx.lineWidth = 2.5;
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = 3;
                 ctx.setLineDash([8, 4]); // Dashed line
                 ctx.stroke();
                 ctx.setLineDash([]); // Reset
 
                 // Draw arrow head at the end
-                const lastPoint = dataPoints[dataPoints.length - 1];
-                const secondLastPoint = dataPoints[dataPoints.length - 2];
-                const arrowLength = 12;
-                const arrowAngle = Math.atan2(lastPoint.y - secondLastPoint.y, lastPoint.x - secondLastPoint.x);
+                const arrowLength = 14;
+                const arrowAngle = Math.atan2(endY - startY, endX - startX);
 
                 ctx.beginPath();
-                ctx.moveTo(lastPoint.x, lastPoint.y);
+                ctx.moveTo(endX, endY);
                 ctx.lineTo(
-                    lastPoint.x - arrowLength * Math.cos(arrowAngle - Math.PI / 6),
-                    lastPoint.y - arrowLength * Math.sin(arrowAngle - Math.PI / 6)
+                    endX - arrowLength * Math.cos(arrowAngle - Math.PI / 6),
+                    endY - arrowLength * Math.sin(arrowAngle - Math.PI / 6)
                 );
-                ctx.moveTo(lastPoint.x, lastPoint.y);
+                ctx.moveTo(endX, endY);
                 ctx.lineTo(
-                    lastPoint.x - arrowLength * Math.cos(arrowAngle + Math.PI / 6),
-                    lastPoint.y - arrowLength * Math.sin(arrowAngle + Math.PI / 6)
+                    endX - arrowLength * Math.cos(arrowAngle + Math.PI / 6),
+                    endY - arrowLength * Math.sin(arrowAngle + Math.PI / 6)
                 );
-                ctx.strokeStyle = '#DC2626';
-                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = 3;
                 ctx.stroke();
 
                 // Draw label bubble in the middle of the line
-                const midIndex = Math.floor(dataPoints.length / 2);
-                const midPoint = dataPoints[midIndex];
-                const midX = midPoint.x;
-                const midY = midPoint.y - 35; // Offset above the point
+                const midX = (startX + endX) / 2;
+                const midY = (startY + endY) / 2 - 30; // Offset above the line
 
                 const sign = growthInfo.rate >= 0 ? '+' : '';
-                const labelText = `${growthInfo.label}`;
+                const labelText = `${growthInfo.label}:`;
                 const valueText = `${sign}${growthInfo.rate.toFixed(1)}%`;
 
                 // Measure text for bubble size
-                ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, sans-serif';
                 const labelWidth = ctx.measureText(labelText).width;
-                ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, sans-serif';
                 const valueWidth = ctx.measureText(valueText).width;
-                const textWidth = Math.max(labelWidth, valueWidth);
+                const textWidth = labelWidth + valueWidth + 8;
 
-                const bubbleWidth = textWidth + 20;
-                const bubbleHeight = 38;
+                const bubbleWidth = textWidth + 24;
+                const bubbleHeight = 32;
                 const bubbleX = midX - bubbleWidth / 2;
                 const bubbleY = midY - bubbleHeight / 2;
 
@@ -7860,22 +7848,18 @@
                 ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
                 ctx.closePath();
 
-                ctx.fillStyle = '#DC2626'; // Red background
+                ctx.fillStyle = bubbleColor;
                 ctx.fill();
-                ctx.strokeStyle = '#B91C1C';
+                ctx.strokeStyle = bubbleBorder;
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // Draw label text
+                // Draw label text (single line: "MoM: +XX.X%")
                 ctx.fillStyle = 'white';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-
-                ctx.font = 'bold 10px -apple-system, BlinkMacSystemFont, sans-serif';
-                ctx.fillText(labelText, midX, midY - 7);
-
-                ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, sans-serif';
-                ctx.fillText(valueText, midX, midY + 8);
+                ctx.font = 'bold 13px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.fillText(`${labelText} ${valueText}`, midX, midY);
 
                 ctx.restore();
             }
