@@ -3751,7 +3751,7 @@
                 });
             }
 
-            // Fill monthly revenue and EBITDA
+            // Fill monthly revenue, EBITDA, and Contribution Margin
             monthNames.forEach((month, i) => {
                 if (grossSalesRow) {
                     monthlyData[month].revenue = parseNumber(grossSalesRow[i]);
@@ -3759,6 +3759,9 @@
                 if (ebitdaRow) {
                     monthlyData[month].ebitda = parseNumber(ebitdaRow[i]);
                     monthlyData[month].burnRate = Math.abs(parseNumber(ebitdaRow[i]));
+                }
+                if (contribMarginRow) {
+                    monthlyData[month].contributionMargin = parseNumber(contribMarginRow[i]);
                 }
             });
 
@@ -7547,10 +7550,10 @@
         function calculateGrowthLineData(dataArray, periodType) {
             if (!dataArray || dataArray.length < 2) return null;
 
-            // Find first and last non-null AND non-zero values (actual data only)
+            // Find all non-null AND non-zero values (actual data only)
             // Zero values typically mean no actual data yet (future months)
-            let firstValue = null, lastValue = null;
-            let firstIndex = -1, lastIndex = -1;
+            let firstValue = null, lastValue = null, secondLastValue = null;
+            let firstIndex = -1, lastIndex = -1, secondLastIndex = -1;
 
             for (let i = 0; i < dataArray.length; i++) {
                 const val = dataArray[i];
@@ -7560,6 +7563,9 @@
                         firstValue = val;
                         firstIndex = i;
                     }
+                    // Track second-to-last and last values
+                    secondLastValue = lastValue;
+                    secondLastIndex = lastIndex;
                     lastValue = val;
                     lastIndex = i;
                 }
@@ -7567,36 +7573,35 @@
 
             // Need at least 2 data points
             if (firstValue === null || lastValue === null || firstIndex === lastIndex) return null;
+            if (secondLastValue === null) return null;
 
-            const periods = lastIndex - firstIndex;
+            // Calculate growth from second-to-last to last period (not compound average)
             let rate, label;
 
-            // For values that are both positive, calculate compound growth
-            if (firstValue > 0 && lastValue > 0) {
-                rate = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
-                // Use correct terminology based on granularity
-                // CAGR only applies to multi-year periods
-                switch(periodType) {
-                    case 'monthly':
-                        label = 'MoM Growth';
-                        break;
-                    case 'quarterly':
-                        label = 'QoQ Growth';
-                        break;
-                    case 'semester':
-                        label = 'SoS Growth';
-                        break;
-                    case 'yearly':
-                        // Only use CAGR for yearly data with multiple years
-                        label = periods > 1 ? 'CAGR' : 'YoY Growth';
-                        break;
-                    default:
-                        label = 'Growth';
-                }
+            // Calculate simple period-over-period growth
+            if (secondLastValue !== 0) {
+                rate = ((lastValue - secondLastValue) / Math.abs(secondLastValue)) * 100;
             } else {
-                // For mixed or negative values, show total change
-                rate = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
-                label = 'Change';
+                rate = 0;
+            }
+
+            // Use correct terminology based on granularity
+            // CAGR only applies to multi-year periods
+            switch(periodType) {
+                case 'monthly':
+                    label = 'MoM Growth';
+                    break;
+                case 'quarterly':
+                    label = 'QoQ Growth';
+                    break;
+                case 'semester':
+                    label = 'SoS Growth';
+                    break;
+                case 'yearly':
+                    label = 'YoY Growth';
+                    break;
+                default:
+                    label = 'Growth';
             }
 
             return {
