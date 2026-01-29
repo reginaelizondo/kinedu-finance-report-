@@ -7578,20 +7578,20 @@
                 // CAGR only applies to multi-year periods
                 switch(periodType) {
                     case 'monthly':
-                        label = 'Avg MoM';
+                        label = 'MoM Growth';
                         break;
                     case 'quarterly':
-                        label = 'Avg QoQ';
+                        label = 'QoQ Growth';
                         break;
                     case 'semester':
-                        label = 'Avg SoS';
+                        label = 'SoS Growth';
                         break;
                     case 'yearly':
                         // Only use CAGR for yearly data with multiple years
-                        label = periods > 1 ? 'CAGR' : 'YoY';
+                        label = periods > 1 ? 'CAGR' : 'YoY Growth';
                         break;
                     default:
-                        label = 'Avg Growth';
+                        label = 'Growth';
                 }
             } else {
                 // For mixed or negative values, show total change
@@ -7723,9 +7723,8 @@
         }
 
         /**
-         * Chart.js plugin to draw growth lines:
-         * 1. Solid line connecting actual values period by period (shows real growth path)
-         * 2. Dashed line from first to last showing overall/average growth
+         * Chart.js plugin to draw growth line connecting actual values period by period
+         * Shows the real growth path with average growth rate in bubble
          */
         const growthLinePlugin = {
             id: 'growthLinePlugin',
@@ -7769,57 +7768,31 @@
 
                 ctx.save();
 
-                // ============================================
-                // 1. Draw solid line connecting actual values period by period
-                // ============================================
-                ctx.beginPath();
-                let firstPoint = true;
+                // Collect valid data points for the line
+                const dataPoints = [];
                 for (let i = firstBarIndex; i <= lastBarIndex; i++) {
                     const val = actualData[i];
                     if (val !== null && val !== undefined && val !== 0) {
                         const bar = meta.data[i];
-                        const x = bar.x;
-                        const y = yScale.getPixelForValue(val);
-                        if (firstPoint) {
-                            ctx.moveTo(x, y);
-                            firstPoint = false;
-                        } else {
-                            ctx.lineTo(x, y);
-                        }
-                    }
-                }
-                ctx.strokeStyle = '#6366F1'; // Indigo/purple color for actual path
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Draw small circles at each data point
-                for (let i = firstBarIndex; i <= lastBarIndex; i++) {
-                    const val = actualData[i];
-                    if (val !== null && val !== undefined && val !== 0) {
-                        const bar = meta.data[i];
-                        const x = bar.x;
-                        const y = yScale.getPixelForValue(val);
-                        ctx.beginPath();
-                        ctx.arc(x, y, 4, 0, Math.PI * 2);
-                        ctx.fillStyle = '#6366F1';
-                        ctx.fill();
-                        ctx.strokeStyle = 'white';
-                        ctx.lineWidth = 1.5;
-                        ctx.stroke();
+                        dataPoints.push({
+                            x: bar.x,
+                            y: yScale.getPixelForValue(val),
+                            value: val
+                        });
                     }
                 }
 
-                // ============================================
-                // 2. Draw dashed line from first to last (overall growth)
-                // ============================================
-                const startY = yScale.getPixelForValue(growthInfo.firstValue);
-                const endY = yScale.getPixelForValue(growthInfo.lastValue);
-                const startX = firstBar.x;
-                const endX = lastBar.x;
+                if (dataPoints.length < 2) {
+                    ctx.restore();
+                    return;
+                }
 
+                // Draw dashed red line connecting all actual values
                 ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(endX, endY);
+                ctx.moveTo(dataPoints[0].x, dataPoints[0].y);
+                for (let i = 1; i < dataPoints.length; i++) {
+                    ctx.lineTo(dataPoints[i].x, dataPoints[i].y);
+                }
                 ctx.strokeStyle = '#DC2626'; // Red color
                 ctx.lineWidth = 2.5;
                 ctx.setLineDash([8, 4]); // Dashed line
@@ -7827,27 +7800,31 @@
                 ctx.setLineDash([]); // Reset
 
                 // Draw arrow head at the end
+                const lastPoint = dataPoints[dataPoints.length - 1];
+                const secondLastPoint = dataPoints[dataPoints.length - 2];
                 const arrowLength = 12;
-                const arrowAngle = Math.atan2(endY - startY, endX - startX);
+                const arrowAngle = Math.atan2(lastPoint.y - secondLastPoint.y, lastPoint.x - secondLastPoint.x);
 
                 ctx.beginPath();
-                ctx.moveTo(endX, endY);
+                ctx.moveTo(lastPoint.x, lastPoint.y);
                 ctx.lineTo(
-                    endX - arrowLength * Math.cos(arrowAngle - Math.PI / 6),
-                    endY - arrowLength * Math.sin(arrowAngle - Math.PI / 6)
+                    lastPoint.x - arrowLength * Math.cos(arrowAngle - Math.PI / 6),
+                    lastPoint.y - arrowLength * Math.sin(arrowAngle - Math.PI / 6)
                 );
-                ctx.moveTo(endX, endY);
+                ctx.moveTo(lastPoint.x, lastPoint.y);
                 ctx.lineTo(
-                    endX - arrowLength * Math.cos(arrowAngle + Math.PI / 6),
-                    endY - arrowLength * Math.sin(arrowAngle + Math.PI / 6)
+                    lastPoint.x - arrowLength * Math.cos(arrowAngle + Math.PI / 6),
+                    lastPoint.y - arrowLength * Math.sin(arrowAngle + Math.PI / 6)
                 );
                 ctx.strokeStyle = '#DC2626';
                 ctx.lineWidth = 2.5;
                 ctx.stroke();
 
-                // Draw label bubble in the middle of the dashed line
-                const midX = (startX + endX) / 2;
-                const midY = (startY + endY) / 2 - 25; // Offset above the line
+                // Draw label bubble in the middle of the line
+                const midIndex = Math.floor(dataPoints.length / 2);
+                const midPoint = dataPoints[midIndex];
+                const midX = midPoint.x;
+                const midY = midPoint.y - 35; // Offset above the point
 
                 const sign = growthInfo.rate >= 0 ? '+' : '';
                 const labelText = `${growthInfo.label}`;
