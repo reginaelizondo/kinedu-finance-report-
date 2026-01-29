@@ -3140,7 +3140,7 @@
                     <div class="chart-title" id="ebitdaChartTitle">Quarterly EBITDA: Actual vs Budget</div>
                     <div class="ebitda-filters">
                         <button class="revenue-filter-btn cagr-trend-btn" id="ebitdaCagrToggle" onclick="toggleEbitdaCagr()">
-                            CAGR
+                            Growth Line
                         </button>
                         <span class="cagr-badge hidden" id="ebitdaCagrBadge">
                             <span class="badge-arrow">↑</span>
@@ -7571,10 +7571,28 @@
             const periods = lastIndex - firstIndex;
             let rate, label;
 
-            // For values that are both positive, use CAGR
+            // For values that are both positive, calculate compound growth
             if (firstValue > 0 && lastValue > 0) {
                 rate = (Math.pow(lastValue / firstValue, 1 / periods) - 1) * 100;
-                label = 'CAGR';
+                // Use correct terminology based on granularity
+                // CAGR only applies to multi-year periods
+                switch(periodType) {
+                    case 'monthly':
+                        label = 'Avg MoM';
+                        break;
+                    case 'quarterly':
+                        label = 'Avg QoQ';
+                        break;
+                    case 'semester':
+                        label = 'Avg SoS';
+                        break;
+                    case 'yearly':
+                        // Only use CAGR for yearly data with multiple years
+                        label = periods > 1 ? 'CAGR' : 'YoY';
+                        break;
+                    default:
+                        label = 'Avg Growth';
+                }
             } else {
                 // For mixed or negative values, show total change
                 rate = ((lastValue - firstValue) / Math.abs(firstValue)) * 100;
@@ -7705,7 +7723,9 @@
         }
 
         /**
-         * Chart.js plugin to draw growth line with arrow and CAGR label
+         * Chart.js plugin to draw growth lines:
+         * 1. Solid line connecting actual values period by period (shows real growth path)
+         * 2. Dashed line from first to last showing overall/average growth
          */
         const growthLinePlugin = {
             id: 'growthLinePlugin',
@@ -7746,18 +7766,61 @@
 
                 // Get Y scale to convert values to pixels
                 const yScale = chart.scales.y;
+
+                ctx.save();
+
+                // ============================================
+                // 1. Draw solid line connecting actual values period by period
+                // ============================================
+                ctx.beginPath();
+                let firstPoint = true;
+                for (let i = firstBarIndex; i <= lastBarIndex; i++) {
+                    const val = actualData[i];
+                    if (val !== null && val !== undefined && val !== 0) {
+                        const bar = meta.data[i];
+                        const x = bar.x;
+                        const y = yScale.getPixelForValue(val);
+                        if (firstPoint) {
+                            ctx.moveTo(x, y);
+                            firstPoint = false;
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                }
+                ctx.strokeStyle = '#6366F1'; // Indigo/purple color for actual path
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw small circles at each data point
+                for (let i = firstBarIndex; i <= lastBarIndex; i++) {
+                    const val = actualData[i];
+                    if (val !== null && val !== undefined && val !== 0) {
+                        const bar = meta.data[i];
+                        const x = bar.x;
+                        const y = yScale.getPixelForValue(val);
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = '#6366F1';
+                        ctx.fill();
+                        ctx.strokeStyle = 'white';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    }
+                }
+
+                // ============================================
+                // 2. Draw dashed line from first to last (overall growth)
+                // ============================================
                 const startY = yScale.getPixelForValue(growthInfo.firstValue);
                 const endY = yScale.getPixelForValue(growthInfo.lastValue);
                 const startX = firstBar.x;
                 const endX = lastBar.x;
 
-                ctx.save();
-
-                // Draw the growth line (solid, not dashed)
                 ctx.beginPath();
                 ctx.moveTo(startX, startY);
                 ctx.lineTo(endX, endY);
-                ctx.strokeStyle = '#DC2626'; // Red color like Excel
+                ctx.strokeStyle = '#DC2626'; // Red color
                 ctx.lineWidth = 2.5;
                 ctx.setLineDash([8, 4]); // Dashed line
                 ctx.stroke();
@@ -7782,7 +7845,7 @@
                 ctx.lineWidth = 2.5;
                 ctx.stroke();
 
-                // Draw CAGR label bubble in the middle of the line
+                // Draw label bubble in the middle of the dashed line
                 const midX = (startX + endX) / 2;
                 const midY = (startY + endY) / 2 - 25; // Offset above the line
 
