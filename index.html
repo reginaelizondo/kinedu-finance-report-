@@ -347,12 +347,20 @@
             color: #fca5a5;
         }
 
+        /* Year & Accounting Selectors Container */
+        .year-accounting-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
         /* Year Selector */
         .year-selector-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
         }
 
         .year-selector {
@@ -382,6 +390,53 @@
 
         .year-btn.active {
             background: white;
+            color: #1e3a5f;
+        }
+
+        /* Accounting Method Selector (CASH / ACC) */
+        .accounting-selector-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .accounting-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .accounting-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 26px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .accounting-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .accounting-btn.active {
+            background: #f59e0b;
+            color: #1e3a5f;
+        }
+
+        .accounting-btn.cash-btn.active {
+            background: #22c55e;
+            color: white;
+        }
+
+        .accounting-btn.acc-btn.active {
+            background: #f59e0b;
             color: #1e3a5f;
         }
 
@@ -2376,6 +2431,16 @@
                 font-size: 13px;
             }
 
+            .year-accounting-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .accounting-btn {
+                padding: 6px 14px;
+                font-size: 11px;
+            }
+
             .custom-range-wrapper {
                 flex-direction: column;
                 align-items: stretch;
@@ -2996,11 +3061,19 @@
 
             <!-- All Filters Container -->
             <div class="time-filters-container">
-                <!-- 1. Year Selector -->
-                <div class="year-selector-container">
-                    <div class="year-selector">
-                        <button class="year-btn" id="yearBtn2025" onclick="setYear(2025)">2025</button>
-                        <button class="year-btn active" id="yearBtn2026" onclick="setYear(2026)">2026</button>
+                <!-- 1. Year Selector + Accounting Method -->
+                <div class="year-accounting-row">
+                    <div class="year-selector-container">
+                        <div class="year-selector">
+                            <button class="year-btn" id="yearBtn2025" onclick="setYear(2025)">2025</button>
+                            <button class="year-btn active" id="yearBtn2026" onclick="setYear(2026)">2026</button>
+                        </div>
+                    </div>
+                    <div class="accounting-selector-container">
+                        <div class="accounting-selector">
+                            <button class="accounting-btn cash-btn active" id="accBtnCash" onclick="setAccountingMethod('cash')">CASH</button>
+                            <button class="accounting-btn acc-btn" id="accBtnAcc" onclick="setAccountingMethod('acc')">ACC</button>
+                        </div>
                     </div>
                 </div>
 
@@ -3481,6 +3554,52 @@
 
         // 2025 Data backup for comparison
         let data2025Backup = null;
+
+        // ============================================
+        // ACCOUNTING METHOD (CASH / ACC)
+        // ============================================
+        let currentAccountingMethod = 'cash'; // 'cash' or 'acc'
+        let cashDataBackup = null; // Backup CASH data when switching to ACC
+        let accDataLoaded = false;
+
+        // ACC 2026 Data storage (mirrors data2026 structure)
+        let data2026ACC = {
+            actual: { real: {}, monthlyData: {}, monthlyBudget: {}, revenueBreakdown: { actual: {}, budget: {} }, opexData: [] },
+            conservative: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {}, revenueBreakdown: { actual: {}, budget: {} }, opexData: [] }
+        };
+
+        // ACC P&L Actual Data (from published Google Sheets, converted MXN→USD, TC=17.2532)
+        const ACC_ACTUAL_PL = {
+            January: { mrr: 439179, partnerships: 17258, otherRevenue: 145, comissions: -118578, totalRevenue: 338004, servers: 7196, grossProfit: 330807, paidAcquisition: 216357, contributionProfit: 114450, salesMarketing: 44002, rAndD: 50126, content: 22312, gAndA: 18859, totalOpex: 135298, ebitda: -20848, netIncome: -78327 },
+            February: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            March: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            April: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            May: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            June: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            July: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            August: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            September: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            October: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            November: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
+            December: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 }
+        };
+
+        // ACC P&L Budget Data (from Excel "Budget 2026 ACC pt3 - final", sheet "Results ACCMRR", in USD)
+        // OpEx from rows: 33=Sales&Mkt, 34=R&D, 35=Content, 36=G&A (all months same: flat budget)
+        const ACC_BUDGET_PL = {
+            January:   { mrr: 439037, offApp: 15000, partnerships: 7000, grossRevenue: 461037, comissions: -131711, netRevenue: 329326, servers: -8400, grossMargin: 320926, mktMeta: -180000, mktOthers: -25000, contributionMargin: 124326, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -36216, netIncome: -36216 },
+            February:  { mrr: 456599, offApp: 15000, partnerships: 7000, grossRevenue: 478599, comissions: -136980, netRevenue: 341619, servers: -8400, grossMargin: 333219, mktMeta: -180000, mktOthers: -25000, contributionMargin: 136619, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -23923, netIncome: -23923 },
+            March:     { mrr: 474863, offApp: 15000, partnerships: 7000, grossRevenue: 496863, comissions: -142459, netRevenue: 354404, servers: -8400, grossMargin: 346004, mktMeta: -180000, mktOthers: -25000, contributionMargin: 149404, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -11138, netIncome: -11138 },
+            April:     { mrr: 493857, offApp: 15000, partnerships: 7000, grossRevenue: 515857, comissions: -148157, netRevenue: 367700, servers: -8400, grossMargin: 359300, mktMeta: -205712, mktOthers: -25000, contributionMargin: 136988, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -23554, netIncome: -23554 },
+            May:       { mrr: 513611, offApp: 15000, partnerships: 7000, grossRevenue: 535611, comissions: -154083, netRevenue: 381528, servers: -8400, grossMargin: 373128, mktMeta: -205712, mktOthers: -25000, contributionMargin: 150816, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -9726, netIncome: -9726 },
+            June:      { mrr: 534156, offApp: 15000, partnerships: 7000, grossRevenue: 556156, comissions: -160247, netRevenue: 395909, servers: -8400, grossMargin: 387509, mktMeta: -205712, mktOthers: -25000, contributionMargin: 165197, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 4655, netIncome: 4655 },
+            July:      { mrr: 555522, offApp: 15000, partnerships: 7000, grossRevenue: 577522, comissions: -166657, netRevenue: 410865, servers: -8400, grossMargin: 402465, mktMeta: -223600, mktOthers: -25000, contributionMargin: 162265, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 1723, netIncome: 1723 },
+            August:    { mrr: 577743, offApp: 15000, partnerships: 7000, grossRevenue: 599743, comissions: -173323, netRevenue: 426420, servers: -8400, grossMargin: 418020, mktMeta: -223600, mktOthers: -25000, contributionMargin: 177820, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 17278, netIncome: 17278 },
+            September: { mrr: 600853, offApp: 15000, partnerships: 7000, grossRevenue: 622853, comissions: -180256, netRevenue: 442597, servers: -8400, grossMargin: 434197, mktMeta: -223600, mktOthers: -25000, contributionMargin: 193997, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 33455, netIncome: 33455 },
+            October:   { mrr: 624887, offApp: 15000, partnerships: 7000, grossRevenue: 646887, comissions: -187466, netRevenue: 459421, servers: -8400, grossMargin: 451021, mktMeta: -241488, mktOthers: -25000, contributionMargin: 192933, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 32390, netIncome: 32390 },
+            November:  { mrr: 649882, offApp: 15000, partnerships: 7000, grossRevenue: 671882, comissions: -194965, netRevenue: 476918, servers: -8400, grossMargin: 468518, mktMeta: -241488, mktOthers: -25000, contributionMargin: 210430, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 49887, netIncome: 49887 },
+            December:  { mrr: 675877, offApp: 15000, partnerships: 7000, grossRevenue: 697877, comissions: -202763, netRevenue: 495114, servers: -8400, grossMargin: 486714, mktMeta: -241488, mktOthers: -25000, contributionMargin: 228626, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 68084, netIncome: 68084 }
+        };
 
         // ============================================
         // CSV PARSING UTILITIES
@@ -4201,7 +4320,7 @@
                 });
 
                 // Update header for 2026
-                document.getElementById('headerSubtitle').textContent = 'Financial Performance 2026';
+                document.getElementById('headerSubtitle').textContent = 'Financial Performance 2026 (CASH)';
 
                 // Show scenario controls for 2026
                 const scenariosRow = document.getElementById('scenariosRow');
@@ -4813,6 +4932,10 @@
                 }
             }
 
+            // Append accounting method label
+            const methodLabel = currentAccountingMethod === 'cash' ? 'CASH' : 'ACC';
+            displayText += ` (${methodLabel})`;
+
             // Update the period text
             if (statusPeriod) {
                 statusPeriod.textContent = displayText;
@@ -4820,7 +4943,7 @@
 
             // Update scenario indicator visibility for 2026
             if (statusScenario) {
-                if (currentYear === 2026) {
+                if (currentYear === 2026 && currentAccountingMethod === 'cash') {
                     statusScenario.classList.add('visible');
                     updateScenarioIndicator();
                 } else {
@@ -5034,7 +5157,8 @@
             document.getElementById('yearBtn2026').classList.toggle('active', year === 2026);
 
             // Update header subtitle
-            document.getElementById('headerSubtitle').textContent = `Financial Performance ${year}`;
+            const methodLabel = currentAccountingMethod === 'cash' ? 'CASH' : 'ACC';
+            document.getElementById('headerSubtitle').textContent = `Financial Performance ${year} (${methodLabel})`;
 
             // Show/hide scenario controls (new compact layout)
             const scenariosRow = document.getElementById('scenariosRow');
@@ -5045,16 +5169,30 @@
             const marketingSpendToggle = document.getElementById('marketingSpendToggleContainer');
 
             if (year === 2026) {
-                if (scenariosRow) scenariosRow.classList.add('visible');
+                // Show/hide scenario controls based on accounting method
+                if (currentAccountingMethod === 'cash') {
+                    if (scenariosRow) scenariosRow.classList.add('visible');
+                } else {
+                    if (scenariosRow) scenariosRow.style.display = 'none';
+                }
                 if (compareRow) compareRow.classList.add('visible');
-                if (statusScenario) statusScenario.classList.add('visible');
+                if (statusScenario && currentAccountingMethod === 'cash') statusScenario.classList.add('visible');
                 if (marketingSpendToggle) marketingSpendToggle.style.display = 'inline-flex';
 
                 // Load 2026 data if not already loaded
                 if (!data2026Loaded) {
-                    load2026Data();
+                    load2026Data().then(() => {
+                        // After CASH data loads, if we're in ACC mode, load ACC data
+                        if (currentAccountingMethod === 'acc') {
+                            loadACCData();
+                        }
+                    });
                 } else {
-                    applyYearData();
+                    if (currentAccountingMethod === 'acc') {
+                        loadACCData();
+                    } else {
+                        applyYearData();
+                    }
                 }
             } else {
                 if (scenariosRow) scenariosRow.classList.remove('visible');
@@ -5073,6 +5211,303 @@
             // Update dropdown options for the year
             updateDropdownOptions();
             updatePeriodIndicator();
+        }
+
+        // ============================================
+        // ACCOUNTING METHOD TOGGLE (CASH / ACC)
+        // ============================================
+
+        /**
+         * Switch between CASH and ACC (Accrual) accounting methods
+         */
+        function setAccountingMethod(method) {
+            if (currentAccountingMethod === method) return;
+
+            console.log('Switching accounting method from', currentAccountingMethod, 'to', method);
+            currentAccountingMethod = method;
+
+            // Update button styles
+            document.getElementById('accBtnCash').classList.toggle('active', method === 'cash');
+            document.getElementById('accBtnAcc').classList.toggle('active', method === 'acc');
+
+            // Update header subtitle
+            const methodLabel = method === 'cash' ? 'CASH' : 'ACC';
+            document.getElementById('headerSubtitle').textContent = `Financial Performance ${currentYear} (${methodLabel})`;
+
+            if (method === 'acc') {
+                // Backup current CASH data if not already backed up
+                if (!cashDataBackup) {
+                    cashDataBackup = {
+                        data2026: JSON.parse(JSON.stringify(data2026)),
+                        data: JSON.parse(JSON.stringify(data)),
+                        monthlyData: JSON.parse(JSON.stringify(monthlyData)),
+                        monthlyBudget: JSON.parse(JSON.stringify(monthlyBudget)),
+                        revenueBreakdown: JSON.parse(JSON.stringify(revenueBreakdown)),
+                        opexData: JSON.parse(JSON.stringify(opexData)),
+                        contributionMarginActual: [...contributionMarginActual],
+                        contributionMarginBudget: [...contributionMarginBudget]
+                    };
+                }
+
+                // Load ACC data
+                loadACCData();
+            } else {
+                // Restore CASH data
+                restoreCashData();
+            }
+
+            // Hide scenario controls when in ACC mode (only 1 scenario for ACC budget)
+            const scenariosRow = document.getElementById('scenariosRow');
+            if (method === 'acc') {
+                if (scenariosRow) scenariosRow.style.display = 'none';
+            } else {
+                if (currentYear === 2026 && scenariosRow) {
+                    scenariosRow.style.display = '';
+                    scenariosRow.classList.add('visible');
+                }
+            }
+
+            updatePeriodIndicator();
+        }
+
+        /**
+         * Load ACC data into the dashboard data structures
+         */
+        function loadACCData() {
+            console.log('Loading ACC data for year:', currentYear);
+
+            if (currentYear === 2026) {
+                // Populate ACC Actual monthly data
+                monthNames.forEach((month) => {
+                    const accActual = ACC_ACTUAL_PL[month];
+                    const accBudget = ACC_BUDGET_PL[month];
+
+                    // ACC Actual (OpEx: row27=Sales&Mkt, row34=R&D, row40=Content, row46=G&A)
+                    data2026ACC.actual.monthlyData[month] = {
+                        // Keep existing KPI data (signups, CAC, ARPU, etc.)
+                        ...(data2026.actual.monthlyData[month] || {}),
+                        // Override with ACC P&L data
+                        subscriptions: accActual.mrr,
+                        offapp: 0,
+                        partnership: accActual.partnerships,
+                        revenue: accActual.mrr + accActual.partnerships + accActual.otherRevenue,
+                        netRevenue: accActual.totalRevenue,
+                        mktSpendMeta: accActual.paidAcquisition,
+                        mktSpendOthers: 0,
+                        spend: accActual.paidAcquisition,
+                        contributionMargin: accActual.contributionProfit,
+                        servers: accActual.servers,
+                        // Total Operating Expenses (row 57 from ACC actual)
+                        totalOpex: accActual.totalOpex,
+                        operatingProfit: accActual.ebitda,
+                        ebitda: accActual.ebitda,
+                        netIncome: accActual.netIncome,
+                        burnRate: Math.abs(accActual.netIncome)
+                    };
+
+                    // ACC Budget (OpEx: row33=Sales&Mkt, row34=R&D, row35=Content, row36=G&A)
+                    data2026ACC.conservative.monthlyBudget[month] = {
+                        // Keep existing KPI data
+                        ...(data2026.conservative.monthlyBudget[month] || {}),
+                        // Override with ACC Budget P&L data
+                        subscriptions: accBudget.mrr,
+                        offapp: accBudget.offApp,
+                        partnership: accBudget.partnerships,
+                        revenue: accBudget.grossRevenue,
+                        netRevenue: accBudget.netRevenue,
+                        mktSpendMeta: Math.abs(accBudget.mktMeta),
+                        mktSpendOthers: Math.abs(accBudget.mktOthers),
+                        spend: Math.abs(accBudget.mktMeta) + Math.abs(accBudget.mktOthers),
+                        contributionMargin: accBudget.contributionMargin,
+                        servers: Math.abs(accBudget.servers),
+                        // Total Operating Expenses from ACC Budget
+                        totalOpex: Math.abs(accBudget.totalOpex),
+                        operatingProfit: accBudget.operatingProfit,
+                        ebitda: accBudget.netIncome,
+                        netIncome: accBudget.netIncome,
+                        burnRate: Math.abs(accBudget.netIncome)
+                    };
+                });
+
+                // Now aggregate quarterly/yearly data for ACC
+                aggregateACCData();
+
+                // Apply ACC data to the active view
+                monthlyData = data2026ACC.actual.monthlyData;
+                monthlyBudget = data2026ACC.conservative.monthlyBudget;
+                data.real = data2026ACC.actual.real;
+                data.budget = data2026ACC.conservative.budget;
+
+                // Update revenue breakdown for ACC
+                revenueBreakdown.actual = {};
+                revenueBreakdown.budget = {};
+                ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                    const qMonths = quarterMonths[q];
+                    revenueBreakdown.actual.subscriptions = revenueBreakdown.actual.subscriptions || {};
+                    revenueBreakdown.actual.offapp = revenueBreakdown.actual.offapp || {};
+                    revenueBreakdown.actual.partnership = revenueBreakdown.actual.partnership || {};
+                    revenueBreakdown.budget.subscriptions = revenueBreakdown.budget.subscriptions || {};
+                    revenueBreakdown.budget.offapp = revenueBreakdown.budget.offapp || {};
+                    revenueBreakdown.budget.partnership = revenueBreakdown.budget.partnership || {};
+
+                    let subsA = 0, offA = 0, partA = 0, subsB = 0, offB = 0, partB = 0;
+                    qMonths.forEach(m => {
+                        const aData = data2026ACC.actual.monthlyData[m];
+                        const bData = data2026ACC.conservative.monthlyBudget[m];
+                        subsA += aData ? (aData.subscriptions || 0) : 0;
+                        offA += aData ? (aData.offapp || 0) : 0;
+                        partA += aData ? (aData.partnership || 0) : 0;
+                        subsB += bData ? (bData.subscriptions || 0) : 0;
+                        offB += bData ? (bData.offapp || 0) : 0;
+                        partB += bData ? (bData.partnership || 0) : 0;
+                    });
+                    revenueBreakdown.actual.subscriptions[q] = subsA;
+                    revenueBreakdown.actual.offapp[q] = offA;
+                    revenueBreakdown.actual.partnership[q] = partA;
+                    revenueBreakdown.budget.subscriptions[q] = subsB;
+                    revenueBreakdown.budget.offapp[q] = offB;
+                    revenueBreakdown.budget.partnership[q] = partB;
+                });
+
+                // Update contribution margin arrays
+                contributionMarginActual = monthNames.map(m => data2026ACC.actual.monthlyData[m]?.contributionMargin || 0);
+                contributionMarginBudget = monthNames.map(m => data2026ACC.conservative.monthlyBudget[m]?.contributionMargin || 0);
+
+                // Update OpEx data — ACC uses only Total Operating Expenses
+                let totalOpexActual = 0, totalOpexBudget = 0;
+                monthNames.forEach(m => {
+                    const dA = data2026ACC.actual.monthlyData[m];
+                    const dB = data2026ACC.conservative.monthlyBudget[m];
+                    if (dA) totalOpexActual += Math.abs(dA.totalOpex || 0);
+                    if (dB) totalOpexBudget += Math.abs(dB.totalOpex || 0);
+                });
+                opexData = [
+                    { category: 'Total Operating Expenses', budget: totalOpexBudget, actual: totalOpexActual }
+                ];
+
+                accDataLoaded = true;
+                console.log('ACC data loaded and applied');
+            }
+
+            updateAllChartsAndKPIs();
+        }
+
+        /**
+         * Aggregate ACC 2026 monthly data into quarterly, semester, yearly
+         */
+        function aggregateACCData() {
+            const scenarioConfigs = [
+                { key: 'actual', source: data2026ACC.actual.monthlyData, target: data2026ACC.actual, isActual: true },
+                { key: 'conservative', source: data2026ACC.conservative.monthlyBudget, target: data2026ACC.conservative, isActual: false }
+            ];
+
+            scenarioConfigs.forEach(({ key, source, target, isActual }) => {
+                if (!target.real) target.real = {};
+                if (!target.budget) target.budget = {};
+
+                // Quarters
+                ['Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+                    const qMonths = quarterMonths[q];
+                    let qData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+                    let count = 0;
+
+                    qMonths.forEach(m => {
+                        if (source[m] && (source[m].revenue || source[m].subs)) {
+                            qData.revenue += source[m].revenue || 0;
+                            qData.ebitda += source[m].ebitda || 0;
+                            qData.subs += source[m].subs || 0;
+                            qData.spend += source[m].spend || 0;
+                            qData.arpu += source[m].arpu || 0;
+                            qData.cac += source[m].cac || 0;
+                            qData.conversion += source[m].conversion || 0;
+                            qData.ltvCac += source[m].ltvCac || 0;
+                            count++;
+                        }
+                    });
+                    if (count > 0) {
+                        qData.arpu = qData.arpu / count;
+                        qData.cac = qData.cac / count;
+                        qData.conversion = qData.conversion / count;
+                        qData.ltvCac = qData.ltvCac / count;
+                    }
+                    qData.burnRate = Math.abs(qData.ebitda);
+
+                    if (isActual) {
+                        target.real[q] = qData;
+                    } else {
+                        target.budget[q] = qData;
+                    }
+                });
+
+                // Semesters
+                ['H1', 'H2'].forEach(h => {
+                    const hMonths = h === 'H1'
+                        ? ['January', 'February', 'March', 'April', 'May', 'June']
+                        : ['July', 'August', 'September', 'October', 'November', 'December'];
+                    let hData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+                    let count = 0;
+                    hMonths.forEach(m => {
+                        if (source[m] && (source[m].revenue || source[m].subs)) {
+                            hData.revenue += source[m].revenue || 0;
+                            hData.ebitda += source[m].ebitda || 0;
+                            hData.subs += source[m].subs || 0;
+                            hData.spend += source[m].spend || 0;
+                            hData.arpu += source[m].arpu || 0;
+                            hData.cac += source[m].cac || 0;
+                            hData.conversion += source[m].conversion || 0;
+                            hData.ltvCac += source[m].ltvCac || 0;
+                            count++;
+                        }
+                    });
+                    if (count > 0) { hData.arpu /= count; hData.cac /= count; hData.conversion /= count; hData.ltvCac /= count; }
+                    hData.burnRate = Math.abs(hData.ebitda);
+                    if (isActual) { target.real[h] = hData; } else { target.budget[h] = hData; }
+                });
+
+                // Yearly
+                let yearData = { revenue: 0, ebitda: 0, subs: 0, spend: 0, arpu: 0, cac: 0, conversion: 0, ltvCac: 0, burnRate: 0 };
+                let count = 0;
+                monthNames.forEach(m => {
+                    if (source[m] && (source[m].revenue || source[m].subs)) {
+                        yearData.revenue += source[m].revenue || 0;
+                        yearData.ebitda += source[m].ebitda || 0;
+                        yearData.subs += source[m].subs || 0;
+                        yearData.spend += source[m].spend || 0;
+                        yearData.arpu += source[m].arpu || 0;
+                        yearData.cac += source[m].cac || 0;
+                        yearData.conversion += source[m].conversion || 0;
+                        yearData.ltvCac += source[m].ltvCac || 0;
+                        count++;
+                    }
+                });
+                if (count > 0) { yearData.arpu /= count; yearData.cac /= count; yearData.conversion /= count; yearData.ltvCac /= count; }
+                yearData.burnRate = Math.abs(yearData.ebitda);
+                if (isActual) { target.real['YEAR'] = yearData; } else { target.budget['YEAR'] = yearData; }
+            });
+        }
+
+        /**
+         * Restore CASH data from backup
+         */
+        function restoreCashData() {
+            if (!cashDataBackup) return;
+
+            console.log('Restoring CASH data...');
+            data2026 = JSON.parse(JSON.stringify(cashDataBackup.data2026));
+            data = JSON.parse(JSON.stringify(cashDataBackup.data));
+            monthlyData = JSON.parse(JSON.stringify(cashDataBackup.monthlyData));
+            monthlyBudget = JSON.parse(JSON.stringify(cashDataBackup.monthlyBudget));
+            revenueBreakdown = JSON.parse(JSON.stringify(cashDataBackup.revenueBreakdown));
+            opexData = JSON.parse(JSON.stringify(cashDataBackup.opexData));
+            contributionMarginActual = [...cashDataBackup.contributionMarginActual];
+            contributionMarginBudget = [...cashDataBackup.contributionMarginBudget];
+
+            // If we're on 2026, re-apply the year data
+            if (currentYear === 2026 && data2026Loaded) {
+                applyYearData();
+            }
+
+            updateAllChartsAndKPIs();
         }
 
         /**
@@ -8961,7 +9396,7 @@
             const periodData = getOpexDataForPeriod();
             if (!periodData || periodData.length === 0) return;
 
-            // Category colors matching the donut chart
+            // Category colors matching the donut chart (CASH + ACC labels)
             const categoryColors = {
                 'Servers': '#3B82F6',
                 'Salaries & Wages': '#8B5CF6',
@@ -8969,7 +9404,9 @@
                 'Travel': '#10B981',
                 'Services': '#EC4899',
                 'Other': '#6B7280',
-                'CAPEX': '#EA580C'
+                'CAPEX': '#EA580C',
+                // ACC category
+                'Total Operating Expenses': '#8B5CF6'
             };
 
             let totalBudget = 0;
@@ -9191,8 +9628,11 @@
                 }
             }
 
-            // Initialize OpEx categories with all 7 categories
-            const opexCategories = {
+            // Initialize OpEx categories based on accounting method
+            const isACC = currentAccountingMethod === 'acc';
+            const opexCategories = isACC ? {
+                'Total Operating Expenses': { actual: 0, budget: 0 }
+            } : {
                 'Servers': { actual: 0, budget: 0 },
                 'Salaries & Wages': { actual: 0, budget: 0 },
                 'External Services': { actual: 0, budget: 0 },
@@ -9207,23 +9647,28 @@
                 const mData = monthlyData?.[month] || {};
                 const mBudget = monthlyBudget?.[month] || {};
 
-                // Actual values from monthlyData
-                opexCategories['Servers'].actual += Math.abs(mData.servers || 0);
-                opexCategories['Salaries & Wages'].actual += Math.abs(mData.salaries || 0);
-                opexCategories['External Services'].actual += Math.abs(mData.externalServices || 0);
-                opexCategories['Travel'].actual += Math.abs(mData.travel || 0);
-                opexCategories['Services'].actual += Math.abs(mData.services || 0);
-                opexCategories['Other'].actual += Math.abs(mData.otherOpex || 0);
-                opexCategories['CAPEX'].actual += Math.abs(mData.capex || 0);
+                if (isACC) {
+                    // ACC mode: single Total Operating Expenses
+                    opexCategories['Total Operating Expenses'].actual += Math.abs(mData.totalOpex || 0);
+                    opexCategories['Total Operating Expenses'].budget += Math.abs(mBudget.totalOpex || 0);
+                } else {
+                    // CASH mode: use CASH OpEx categories
+                    opexCategories['Servers'].actual += Math.abs(mData.servers || 0);
+                    opexCategories['Salaries & Wages'].actual += Math.abs(mData.salaries || 0);
+                    opexCategories['External Services'].actual += Math.abs(mData.externalServices || 0);
+                    opexCategories['Travel'].actual += Math.abs(mData.travel || 0);
+                    opexCategories['Services'].actual += Math.abs(mData.services || 0);
+                    opexCategories['Other'].actual += Math.abs(mData.otherOpex || 0);
+                    opexCategories['CAPEX'].actual += Math.abs(mData.capex || 0);
 
-                // Budget values from monthlyBudget
-                opexCategories['Servers'].budget += Math.abs(mBudget.servers || 0);
-                opexCategories['Salaries & Wages'].budget += Math.abs(mBudget.salaries || 0);
-                opexCategories['External Services'].budget += Math.abs(mBudget.externalServices || 0);
-                opexCategories['Travel'].budget += Math.abs(mBudget.travel || 0);
-                opexCategories['Services'].budget += Math.abs(mBudget.services || 0);
-                opexCategories['Other'].budget += Math.abs(mBudget.otherOpex || 0);
-                opexCategories['CAPEX'].budget += Math.abs(mBudget.capex || 0);
+                    opexCategories['Servers'].budget += Math.abs(mBudget.servers || 0);
+                    opexCategories['Salaries & Wages'].budget += Math.abs(mBudget.salaries || 0);
+                    opexCategories['External Services'].budget += Math.abs(mBudget.externalServices || 0);
+                    opexCategories['Travel'].budget += Math.abs(mBudget.travel || 0);
+                    opexCategories['Services'].budget += Math.abs(mBudget.services || 0);
+                    opexCategories['Other'].budget += Math.abs(mBudget.otherOpex || 0);
+                    opexCategories['CAPEX'].budget += Math.abs(mBudget.capex || 0);
+                }
             });
 
             // Convert to array format for the chart/table
@@ -9328,8 +9773,14 @@
 
             const periodData = getOpexDataForPeriod();
 
-            // Update chart data
+            // Update chart labels and data (labels change between CASH/ACC modes)
+            charts.opexDonut.data.labels = periodData.map(item => item.category);
             charts.opexDonut.data.datasets[0].data = periodData.map(item => item.actual);
+            // Update colors to match the number of categories (5 for ACC, 7 for CASH)
+            const donutColors = currentAccountingMethod === 'acc'
+                ? ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899']
+                : ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899', '#6B7280', '#F97316'];
+            charts.opexDonut.data.datasets[0].backgroundColor = donutColors;
             charts.opexDonut.update();
 
             // Update the list view as well
