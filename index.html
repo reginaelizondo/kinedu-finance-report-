@@ -3568,37 +3568,69 @@
             conservative: { real: {}, budget: {}, monthlyData: {}, monthlyBudget: {}, revenueBreakdown: { actual: {}, budget: {} }, opexData: [] }
         };
 
-        // ACC P&L Actual Data (from published Google Sheets, converted MXN→USD, TC=17.2532)
+        // ACC P&L Actual Data (from published Google Sheet 'P&L Cons USD')
+        // Row 7=MRR, 8=Partnerships, 10=GrossRevenue, 12=Commissions, 13=NetRevenue
+        // Row 16=Servers, 20=GrossProfit, 23=PaidAcq(META), 24=UGC(others), 25=TotalCAC
+        // Row 27=ContributionProfit, 59=TotalOpex, 61=EBITDA
         const ACC_ACTUAL_PL = {
-            January: { mrr: 439179, partnerships: 17258, otherRevenue: 145, comissions: -118578, totalRevenue: 338004, servers: 7196, grossProfit: 330807, paidAcquisition: 216357, contributionProfit: 114450, salesMarketing: 44002, rAndD: 50126, content: 22312, gAndA: 18859, totalOpex: 135298, ebitda: -20848, netIncome: -78327 },
-            February: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            March: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            April: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            May: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            June: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            July: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            August: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            September: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            October: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            November: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 },
-            December: { mrr: 0, partnerships: 0, otherRevenue: 0, comissions: 0, totalRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, contributionProfit: 0, salesMarketing: 0, rAndD: 0, content: 0, gAndA: 0, totalOpex: 0, ebitda: 0, netIncome: 0 }
+            January:   { mrr: 437842, partnerships: 17258, grossRevenue: 455245, commissions: -112566, netRevenue: 342679, servers: 7196, grossProfit: 335483, paidAcquisition: 216357, mktOthers: 10233, totalCAC: 226590, contributionProfit: 108893, totalOpex: 138933, ebitda: -30040 },
+            February:  { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            March:     { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            April:     { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            May:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            June:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            July:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            August:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            September: { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            October:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            November:  { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+            December:  { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 }
         };
 
-        // ACC P&L Budget Data (from Excel "Budget 2026 ACC pt3 - final", sheet "Results ACCMRR", in USD)
-        // OpEx from rows: 33=Sales&Mkt, 34=R&D, 35=Content, 36=G&A (all months same: flat budget)
-        const ACC_BUDGET_PL = {
-            January:   { mrr: 439037, offApp: 15000, partnerships: 7000, grossRevenue: 461037, comissions: -131711, netRevenue: 329326, servers: -8400, grossMargin: 320926, mktMeta: -180000, mktOthers: -25000, contributionMargin: 124326, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -36216, netIncome: -36216 },
-            February:  { mrr: 456599, offApp: 15000, partnerships: 7000, grossRevenue: 478599, comissions: -136980, netRevenue: 341619, servers: -8400, grossMargin: 333219, mktMeta: -180000, mktOthers: -25000, contributionMargin: 136619, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -23923, netIncome: -23923 },
-            March:     { mrr: 474863, offApp: 15000, partnerships: 7000, grossRevenue: 496863, comissions: -142459, netRevenue: 354404, servers: -8400, grossMargin: 346004, mktMeta: -180000, mktOthers: -25000, contributionMargin: 149404, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -11138, netIncome: -11138 },
-            April:     { mrr: 493857, offApp: 15000, partnerships: 7000, grossRevenue: 515857, comissions: -148157, netRevenue: 367700, servers: -8400, grossMargin: 359300, mktMeta: -205712, mktOthers: -25000, contributionMargin: 136988, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -23554, netIncome: -23554 },
-            May:       { mrr: 513611, offApp: 15000, partnerships: 7000, grossRevenue: 535611, comissions: -154083, netRevenue: 381528, servers: -8400, grossMargin: 373128, mktMeta: -205712, mktOthers: -25000, contributionMargin: 150816, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: -9726, netIncome: -9726 },
-            June:      { mrr: 534156, offApp: 15000, partnerships: 7000, grossRevenue: 556156, comissions: -160247, netRevenue: 395909, servers: -8400, grossMargin: 387509, mktMeta: -205712, mktOthers: -25000, contributionMargin: 165197, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 4655, netIncome: 4655 },
-            July:      { mrr: 555522, offApp: 15000, partnerships: 7000, grossRevenue: 577522, comissions: -166657, netRevenue: 410865, servers: -8400, grossMargin: 402465, mktMeta: -223600, mktOthers: -25000, contributionMargin: 162265, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 1723, netIncome: 1723 },
-            August:    { mrr: 577743, offApp: 15000, partnerships: 7000, grossRevenue: 599743, comissions: -173323, netRevenue: 426420, servers: -8400, grossMargin: 418020, mktMeta: -223600, mktOthers: -25000, contributionMargin: 177820, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 17278, netIncome: 17278 },
-            September: { mrr: 600853, offApp: 15000, partnerships: 7000, grossRevenue: 622853, comissions: -180256, netRevenue: 442597, servers: -8400, grossMargin: 434197, mktMeta: -223600, mktOthers: -25000, contributionMargin: 193997, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 33455, netIncome: 33455 },
-            October:   { mrr: 624887, offApp: 15000, partnerships: 7000, grossRevenue: 646887, comissions: -187466, netRevenue: 459421, servers: -8400, grossMargin: 451021, mktMeta: -241488, mktOthers: -25000, contributionMargin: 192933, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 32390, netIncome: 32390 },
-            November:  { mrr: 649882, offApp: 15000, partnerships: 7000, grossRevenue: 671882, comissions: -194965, netRevenue: 476918, servers: -8400, grossMargin: 468518, mktMeta: -241488, mktOthers: -25000, contributionMargin: 210430, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 49887, netIncome: 49887 },
-            December:  { mrr: 675877, offApp: 15000, partnerships: 7000, grossRevenue: 697877, comissions: -202763, netRevenue: 495114, servers: -8400, grossMargin: 486714, mktMeta: -241488, mktOthers: -25000, contributionMargin: 228626, salesMarketing: -25918, rAndD: -52249, content: -34202, gAndA: -39773, totalOpex: -152142, operatingProfit: 68084, netIncome: 68084 }
+        // ACC Budget - 3 Scenarios (from Drive CSVs)
+        // Row 4=MRR, 5=partnerships, 6=grossRevenue, 7=commissions, 8=netRevenue
+        // Row 12=servers, 13=grossMargin, 16=META, 17=mktOthers, 19=contMargin, 24=totalOpex, 25=opProfit
+        const ACC_BUDGET_OPTIMISTIC = {
+            January:   { mrr: 439037, partnerships: 7000, grossRevenue: 446037, commissions: -131711, netRevenue: 314326, servers: -8400, grossMargin: 305926, paidAcquisition: 200000, mktOthers: 25000, contributionMargin: 89326, totalOpex: 152911, operatingProfit: -71985 },
+            February:  { mrr: 469770, partnerships: 7000, grossRevenue: 476770, commissions: -140931, netRevenue: 335839, servers: -8400, grossMargin: 327439, paidAcquisition: 200000, mktOthers: 25000, contributionMargin: 110839, totalOpex: 152911, operatingProfit: -50472 },
+            March:     { mrr: 502654, partnerships: 7000, grossRevenue: 509654, commissions: -150796, netRevenue: 358858, servers: -8400, grossMargin: 350458, paidAcquisition: 200000, mktOthers: 25000, contributionMargin: 133858, totalOpex: 152911, operatingProfit: -27453 },
+            April:     { mrr: 537839, partnerships: 7000, grossRevenue: 544839, commissions: -161352, netRevenue: 383488, servers: -8400, grossMargin: 375088, paidAcquisition: 225492, mktOthers: 25000, contributionMargin: 132996, totalOpex: 152911, operatingProfit: -28315 },
+            May:       { mrr: 575488, partnerships: 7000, grossRevenue: 582488, commissions: -172646, netRevenue: 409842, servers: -8400, grossMargin: 401442, paidAcquisition: 225492, mktOthers: 25000, contributionMargin: 159350, totalOpex: 152911, operatingProfit: -1961 },
+            June:      { mrr: 615772, partnerships: 7000, grossRevenue: 622772, commissions: -184732, netRevenue: 438041, servers: -8400, grossMargin: 429641, paidAcquisition: 225492, mktOthers: 25000, contributionMargin: 187549, totalOpex: 152911, operatingProfit: 26238 },
+            July:      { mrr: 658876, partnerships: 7000, grossRevenue: 665876, commissions: -197663, netRevenue: 468213, servers: -8400, grossMargin: 459813, paidAcquisition: 245100, mktOthers: 25000, contributionMargin: 198113, totalOpex: 152911, operatingProfit: 36803 },
+            August:    { mrr: 704998, partnerships: 7000, grossRevenue: 711998, commissions: -211499, netRevenue: 500498, servers: -8400, grossMargin: 492098, paidAcquisition: 245100, mktOthers: 25000, contributionMargin: 230398, totalOpex: 152911, operatingProfit: 69088 },
+            September: { mrr: 754348, partnerships: 7000, grossRevenue: 761347, commissions: -226304, netRevenue: 535043, servers: -8400, grossMargin: 526643, paidAcquisition: 245100, mktOthers: 25000, contributionMargin: 264943, totalOpex: 152911, operatingProfit: 103633 },
+            October:   { mrr: 807152, partnerships: 7000, grossRevenue: 814152, commissions: -242146, netRevenue: 572006, servers: -8400, grossMargin: 563606, paidAcquisition: 264708, mktOthers: 25000, contributionMargin: 282298, totalOpex: 152911, operatingProfit: 120988 },
+            November:  { mrr: 863652, partnerships: 7000, grossRevenue: 870652, commissions: -259096, netRevenue: 611557, servers: -8400, grossMargin: 603157, paidAcquisition: 264708, mktOthers: 25000, contributionMargin: 321849, totalOpex: 152911, operatingProfit: 160538 },
+            December:  { mrr: 924108, partnerships: 7000, grossRevenue: 931108, commissions: -277232, netRevenue: 653876, servers: -8400, grossMargin: 645476, paidAcquisition: 264708, mktOthers: 25000, contributionMargin: 364168, totalOpex: 152911, operatingProfit: 202857 }
+        };
+        const ACC_BUDGET_CONSERVATIVE = {
+            January:   { mrr: 439037, partnerships: 7000, grossRevenue: 446037, commissions: -131711, netRevenue: 314326, servers: -8400, grossMargin: 305926, paidAcquisition: 180000, mktOthers: 25000, contributionMargin: 109326, totalOpex: 152911, operatingProfit: -51985 },
+            February:  { mrr: 456599, partnerships: 7000, grossRevenue: 463599, commissions: -136980, netRevenue: 326619, servers: -8400, grossMargin: 318219, paidAcquisition: 180000, mktOthers: 25000, contributionMargin: 121619, totalOpex: 152911, operatingProfit: -39692 },
+            March:     { mrr: 474863, partnerships: 7000, grossRevenue: 481863, commissions: -142459, netRevenue: 339404, servers: -8400, grossMargin: 331004, paidAcquisition: 180000, mktOthers: 25000, contributionMargin: 134404, totalOpex: 152911, operatingProfit: -26907 },
+            April:     { mrr: 493857, partnerships: 7000, grossRevenue: 500857, commissions: -148157, netRevenue: 352700, servers: -8400, grossMargin: 344300, paidAcquisition: 205712, mktOthers: 25000, contributionMargin: 121988, totalOpex: 152911, operatingProfit: -39323 },
+            May:       { mrr: 513611, partnerships: 7000, grossRevenue: 520611, commissions: -154083, netRevenue: 366528, servers: -8400, grossMargin: 358128, paidAcquisition: 205712, mktOthers: 25000, contributionMargin: 135816, totalOpex: 152911, operatingProfit: -25495 },
+            June:      { mrr: 534156, partnerships: 7000, grossRevenue: 541156, commissions: -160247, netRevenue: 380909, servers: -8400, grossMargin: 372509, paidAcquisition: 205712, mktOthers: 25000, contributionMargin: 150197, totalOpex: 152911, operatingProfit: -11114 },
+            July:      { mrr: 555522, partnerships: 7000, grossRevenue: 562522, commissions: -166657, netRevenue: 395865, servers: -8400, grossMargin: 387465, paidAcquisition: 223600, mktOthers: 25000, contributionMargin: 147265, totalOpex: 152911, operatingProfit: -14045 },
+            August:    { mrr: 577743, partnerships: 7000, grossRevenue: 584743, commissions: -173323, netRevenue: 411420, servers: -8400, grossMargin: 403020, paidAcquisition: 223600, mktOthers: 25000, contributionMargin: 162820, totalOpex: 152911, operatingProfit: 1509 },
+            September: { mrr: 600853, partnerships: 7000, grossRevenue: 607853, commissions: -180256, netRevenue: 427597, servers: -8400, grossMargin: 419197, paidAcquisition: 223600, mktOthers: 25000, contributionMargin: 178997, totalOpex: 152911, operatingProfit: 17686 },
+            October:   { mrr: 624887, partnerships: 7000, grossRevenue: 631887, commissions: -187466, netRevenue: 444421, servers: -8400, grossMargin: 436021, paidAcquisition: 241488, mktOthers: 25000, contributionMargin: 177933, totalOpex: 152911, operatingProfit: 16622 },
+            November:  { mrr: 649882, partnerships: 7000, grossRevenue: 656882, commissions: -194965, netRevenue: 461918, servers: -8400, grossMargin: 453518, paidAcquisition: 241488, mktOthers: 25000, contributionMargin: 195430, totalOpex: 152911, operatingProfit: 34119 },
+            December:  { mrr: 675877, partnerships: 7000, grossRevenue: 682877, commissions: -202763, netRevenue: 480114, servers: -8400, grossMargin: 471714, paidAcquisition: 241488, mktOthers: 25000, contributionMargin: 213626, totalOpex: 152911, operatingProfit: 52316 }
+        };
+        const ACC_BUDGET_PESSIMISTIC = {
+            January:   { mrr: 439037, partnerships: 7000, grossRevenue: 446037, commissions: -131711, netRevenue: 314326, servers: -8400, grossMargin: 305926, paidAcquisition: 150000, mktOthers: 25000, contributionMargin: 139326, totalOpex: 152911, operatingProfit: -21985 },
+            February:  { mrr: 449135, partnerships: 7000, grossRevenue: 456135, commissions: -134740, netRevenue: 321394, servers: -8400, grossMargin: 312994, paidAcquisition: 150000, mktOthers: 25000, contributionMargin: 146394, totalOpex: 152911, operatingProfit: -14916 },
+            March:     { mrr: 459465, partnerships: 7000, grossRevenue: 466465, commissions: -137840, netRevenue: 328626, servers: -8400, grossMargin: 320226, paidAcquisition: 150000, mktOthers: 25000, contributionMargin: 153626, totalOpex: 152911, operatingProfit: -7685 },
+            April:     { mrr: 470033, partnerships: 7000, grossRevenue: 477033, commissions: -141010, netRevenue: 336023, servers: -8400, grossMargin: 327623, paidAcquisition: 176042, mktOthers: 25000, contributionMargin: 134981, totalOpex: 152911, operatingProfit: -26330 },
+            May:       { mrr: 480844, partnerships: 7000, grossRevenue: 487844, commissions: -144253, netRevenue: 343590, servers: -8400, grossMargin: 335190, paidAcquisition: 176042, mktOthers: 25000, contributionMargin: 142548, totalOpex: 152911, operatingProfit: -18762 },
+            June:      { mrr: 491903, partnerships: 7000, grossRevenue: 498903, commissions: -147571, netRevenue: 351332, servers: -8400, grossMargin: 342932, paidAcquisition: 176042, mktOthers: 25000, contributionMargin: 150290, totalOpex: 152911, operatingProfit: -11021 },
+            July:      { mrr: 503217, partnerships: 7000, grossRevenue: 510217, commissions: -150965, netRevenue: 359252, servers: -8400, grossMargin: 350852, paidAcquisition: 191350, mktOthers: 25000, contributionMargin: 142902, totalOpex: 152911, operatingProfit: -18409 },
+            August:    { mrr: 514791, partnerships: 7000, grossRevenue: 521791, commissions: -154437, netRevenue: 367353, servers: -8400, grossMargin: 358953, paidAcquisition: 191350, mktOthers: 25000, contributionMargin: 151003, totalOpex: 152911, operatingProfit: -10307 },
+            September: { mrr: 526631, partnerships: 7000, grossRevenue: 533631, commissions: -157989, netRevenue: 375642, servers: -8400, grossMargin: 367242, paidAcquisition: 191350, mktOthers: 25000, contributionMargin: 159292, totalOpex: 152911, operatingProfit: -2019 },
+            October:   { mrr: 538743, partnerships: 7000, grossRevenue: 545743, commissions: -161623, netRevenue: 384120, servers: -8400, grossMargin: 375720, paidAcquisition: 206658, mktOthers: 25000, contributionMargin: 152462, totalOpex: 152911, operatingProfit: -8848 },
+            November:  { mrr: 551134, partnerships: 7000, grossRevenue: 558134, commissions: -165340, netRevenue: 392794, servers: -8400, grossMargin: 384394, paidAcquisition: 206658, mktOthers: 25000, contributionMargin: 161136, totalOpex: 152911, operatingProfit: -174 },
+            December:  { mrr: 563811, partnerships: 7000, grossRevenue: 570811, commissions: -169143, netRevenue: 401667, servers: -8400, grossMargin: 393267, paidAcquisition: 206658, mktOthers: 25000, contributionMargin: 170009, totalOpex: 152911, operatingProfit: 8699 }
         };
 
         // ============================================
@@ -5256,15 +5288,26 @@
                 restoreCashData();
             }
 
-            // Hide scenario controls when in ACC mode (only 1 scenario for ACC budget)
+            // Show scenario controls in both CASH and ACC modes for 2026
             const scenariosRow = document.getElementById('scenariosRow');
-            if (method === 'acc') {
-                if (scenariosRow) scenariosRow.style.display = 'none';
-            } else {
-                if (currentYear === 2026 && scenariosRow) {
-                    scenariosRow.style.display = '';
-                    scenariosRow.classList.add('visible');
+            if (currentYear === 2026 && scenariosRow) {
+                scenariosRow.style.display = '';
+                scenariosRow.classList.add('visible');
+            }
+
+            // Update revenue filter buttons for ACC vs CASH
+            const revFilterBtns = document.querySelectorAll('.revenue-filter-btn');
+            revFilterBtns.forEach(btn => {
+                const onclick = btn.getAttribute('onclick') || '';
+                if (onclick.includes("'subscriptions'")) {
+                    btn.textContent = method === 'acc' ? 'MRR' : 'Subscription Sales';
+                } else if (onclick.includes("'offapp'")) {
+                    btn.style.display = method === 'acc' ? 'none' : '';
                 }
+            });
+            // If currently filtering by offapp and switching to ACC, reset to 'all'
+            if (method === 'acc' && currentRevenueFilter === 'offapp') {
+                filterRevenue('all');
             }
 
             updatePeriodIndicator();
@@ -5276,56 +5319,59 @@
         function loadACCData() {
             console.log('Loading ACC data for year:', currentYear);
 
+            // Map scenario name to ACC budget constant
+            const accBudgetSources = {
+                optimistic: ACC_BUDGET_OPTIMISTIC,
+                conservative: ACC_BUDGET_CONSERVATIVE,
+                pessimistic: ACC_BUDGET_PESSIMISTIC
+            };
+
             if (currentYear === 2026) {
+                // Determine which budget scenario to use (same as CASH selector)
+                const scenarioName = getPrimaryScenario ? getPrimaryScenario() : 'conservative';
+                const accBudgetSource = accBudgetSources[scenarioName] || ACC_BUDGET_CONSERVATIVE;
+
                 // Populate ACC Actual monthly data
                 monthNames.forEach((month) => {
                     const accActual = ACC_ACTUAL_PL[month];
-                    const accBudget = ACC_BUDGET_PL[month];
+                    const accBudget = accBudgetSource[month];
 
-                    // ACC Actual (OpEx: row27=Sales&Mkt, row34=R&D, row40=Content, row46=G&A)
+                    // ACC Actual
                     data2026ACC.actual.monthlyData[month] = {
-                        // Keep existing KPI data (signups, CAC, ARPU, etc.)
                         ...(data2026.actual.monthlyData[month] || {}),
-                        // Override with ACC P&L data
                         subscriptions: accActual.mrr,
                         offapp: 0,
                         partnership: accActual.partnerships,
-                        revenue: accActual.mrr + accActual.partnerships + accActual.otherRevenue,
-                        netRevenue: accActual.totalRevenue,
+                        revenue: accActual.grossRevenue,
+                        netRevenue: accActual.netRevenue,
                         mktSpendMeta: accActual.paidAcquisition,
-                        mktSpendOthers: 0,
-                        spend: accActual.paidAcquisition,
+                        mktSpendOthers: accActual.mktOthers,
+                        spend: accActual.paidAcquisition + accActual.mktOthers,
                         contributionMargin: accActual.contributionProfit,
                         servers: accActual.servers,
-                        // Total Operating Expenses (row 57 from ACC actual)
                         totalOpex: accActual.totalOpex,
                         operatingProfit: accActual.ebitda,
                         ebitda: accActual.ebitda,
-                        netIncome: accActual.netIncome,
-                        burnRate: Math.abs(accActual.netIncome)
+                        burnRate: Math.abs(accActual.ebitda)
                     };
 
-                    // ACC Budget (OpEx: row33=Sales&Mkt, row34=R&D, row35=Content, row36=G&A)
+                    // ACC Budget (selected scenario)
                     data2026ACC.conservative.monthlyBudget[month] = {
-                        // Keep existing KPI data
                         ...(data2026.conservative.monthlyBudget[month] || {}),
-                        // Override with ACC Budget P&L data
                         subscriptions: accBudget.mrr,
-                        offapp: accBudget.offApp,
+                        offapp: 0,
                         partnership: accBudget.partnerships,
                         revenue: accBudget.grossRevenue,
                         netRevenue: accBudget.netRevenue,
-                        mktSpendMeta: Math.abs(accBudget.mktMeta),
-                        mktSpendOthers: Math.abs(accBudget.mktOthers),
-                        spend: Math.abs(accBudget.mktMeta) + Math.abs(accBudget.mktOthers),
+                        mktSpendMeta: accBudget.paidAcquisition,
+                        mktSpendOthers: accBudget.mktOthers,
+                        spend: accBudget.paidAcquisition + accBudget.mktOthers,
                         contributionMargin: accBudget.contributionMargin,
                         servers: Math.abs(accBudget.servers),
-                        // Total Operating Expenses from ACC Budget
-                        totalOpex: Math.abs(accBudget.totalOpex),
+                        totalOpex: accBudget.totalOpex,
                         operatingProfit: accBudget.operatingProfit,
-                        ebitda: accBudget.netIncome,
-                        netIncome: accBudget.netIncome,
-                        burnRate: Math.abs(accBudget.netIncome)
+                        ebitda: accBudget.operatingProfit,
+                        burnRate: Math.abs(accBudget.operatingProfit)
                     };
                 });
 
@@ -5533,8 +5579,13 @@
 
             // Update Budget data from the selected scenario and refresh all charts
             if (currentYear === 2026 && data2026Loaded) {
-                applyScenarioBudgetData(scenario);
-                updateAllChartsAndKPIs();
+                if (currentAccountingMethod === 'acc') {
+                    // In ACC mode, reload ACC data with the new scenario
+                    loadACCData();
+                } else {
+                    applyScenarioBudgetData(scenario);
+                    updateAllChartsAndKPIs();
+                }
             }
         }
 
@@ -6895,8 +6946,16 @@
                         actualData.push((monthlyData[month]?.revenue || 0) / 1000);
                         budgetData.push((monthlyBudget[month]?.revenue || 0) / 1000);
                     });
+                } else if (currentAccountingMethod === 'acc') {
+                    // ACC mode: use monthly data directly
+                    const filterFieldMap = { subscriptions: 'subscriptions', offapp: 'offapp', partnership: 'partnership' };
+                    const field = filterFieldMap[filter] || filter;
+                    months.forEach(month => {
+                        actualData.push((monthlyData[month]?.[field] || 0) / 1000);
+                        budgetData.push((monthlyBudget[month]?.[field] || 0) / 1000);
+                    });
                 } else {
-                    // For category filters, approximate from quarterly data
+                    // CASH mode: approximate from quarterly data
                     months.forEach(month => {
                         const monthIdx = monthNames.indexOf(month);
                         const q = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'][monthIdx];
@@ -6915,8 +6974,16 @@
                             actualData.push((monthlyData[month]?.revenue || 0) / 1000);
                             budgetData.push((monthlyBudget[month]?.revenue || 0) / 1000);
                         });
+                    } else if (currentAccountingMethod === 'acc') {
+                        // ACC mode: use monthly data directly (don't approximate from quarterly)
+                        const filterFieldMap = { subscriptions: 'subscriptions', offapp: 'offapp', partnership: 'partnership' };
+                        const field = filterFieldMap[filter] || filter;
+                        monthNames.forEach(month => {
+                            actualData.push((monthlyData[month]?.[field] || 0) / 1000);
+                            budgetData.push((monthlyBudget[month]?.[field] || 0) / 1000);
+                        });
                     } else {
-                        // For category filters, calculate monthly from quarterly (approximate)
+                        // CASH mode: calculate monthly from quarterly (approximate)
                         const quarters = ['Q1', 'Q1', 'Q1', 'Q2', 'Q2', 'Q2', 'Q3', 'Q3', 'Q3', 'Q4', 'Q4', 'Q4'];
                         quarters.forEach((q, i) => {
                             actualData.push((revenueBreakdown.actual?.[filter]?.[q] || 0) / 3000);
@@ -7724,20 +7791,34 @@
                 const offPercent = (offActual / totalActual * 100).toFixed(1);
                 const partPercent = (partActual / totalActual * 100).toFixed(1);
 
-                container.innerHTML = `
-                    <div class="revenue-breakdown-item">
-                        <div class="revenue-breakdown-label">Subscriptions</div>
-                        <div class="revenue-breakdown-value">${subsPercent}%</div>
-                    </div>
-                    <div class="revenue-breakdown-item">
-                        <div class="revenue-breakdown-label">Stripe Sales</div>
-                        <div class="revenue-breakdown-value">${offPercent}%</div>
-                    </div>
-                    <div class="revenue-breakdown-item">
-                        <div class="revenue-breakdown-label">Partnership</div>
-                        <div class="revenue-breakdown-value">${partPercent}%</div>
-                    </div>
-                `;
+                if (currentAccountingMethod === 'acc') {
+                    // ACC mode: MRR + Partnership only (no Stripe Sales)
+                    container.innerHTML = `
+                        <div class="revenue-breakdown-item">
+                            <div class="revenue-breakdown-label">MRR</div>
+                            <div class="revenue-breakdown-value">${subsPercent}%</div>
+                        </div>
+                        <div class="revenue-breakdown-item">
+                            <div class="revenue-breakdown-label">Partnership</div>
+                            <div class="revenue-breakdown-value">${partPercent}%</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="revenue-breakdown-item">
+                            <div class="revenue-breakdown-label">Subscriptions</div>
+                            <div class="revenue-breakdown-value">${subsPercent}%</div>
+                        </div>
+                        <div class="revenue-breakdown-item">
+                            <div class="revenue-breakdown-label">Stripe Sales</div>
+                            <div class="revenue-breakdown-value">${offPercent}%</div>
+                        </div>
+                        <div class="revenue-breakdown-item">
+                            <div class="revenue-breakdown-label">Partnership</div>
+                            <div class="revenue-breakdown-value">${partPercent}%</div>
+                        </div>
+                    `;
+                }
             } else {
                 // Show specific category info
                 const actual = revenueBreakdown.actual?.[filter];
@@ -7750,7 +7831,10 @@
                 const totalBudget = (budget.Q1 || 0) + (budget.Q2 || 0) + (budget.Q3 || 0) + (budget.Q4 || 0);
                 const variance = totalBudget > 0 ? ((totalActual - totalBudget) / totalBudget * 100).toFixed(1) : 0;
 
-                const categoryNames = {
+                const categoryNames = currentAccountingMethod === 'acc' ? {
+                    'subscriptions': 'MRR',
+                    'partnership': 'Partnership'
+                } : {
                     'subscriptions': 'Subscription Sales',
                     'offapp': 'Stripe Sales',
                     'partnership': 'Partnership'
