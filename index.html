@@ -1539,6 +1539,188 @@
             letter-spacing: 0.5px;
         }
 
+        /* ACC OpEx Redesign */
+        .opex-acc-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 8px 0;
+        }
+
+        .opex-acc-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .opex-acc-metric {
+            text-align: center;
+            padding: 24px 16px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .opex-acc-metric.actual-card {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+            border: 1px solid #bfdbfe;
+        }
+
+        .opex-acc-metric.budget-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+        }
+
+        .opex-acc-metric-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .opex-acc-metric.actual-card .opex-acc-metric-label {
+            color: #3b82f6;
+        }
+
+        .opex-acc-metric.budget-card .opex-acc-metric-label {
+            color: #94a3b8;
+        }
+
+        .opex-acc-metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .opex-acc-metric-value.actual { color: #1e3a5f; }
+        .opex-acc-metric-value.budget { color: #94a3b8; }
+
+        .opex-acc-progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opex-acc-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .opex-acc-progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .opex-acc-progress-pct {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .opex-acc-progress-bar {
+            height: 14px;
+            background: #e2e8f0;
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .opex-acc-progress-fill {
+            height: 100%;
+            border-radius: 7px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .opex-acc-variance {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .opex-acc-variance.under {
+            background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+            color: #15803d;
+        }
+
+        .opex-acc-variance.over {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+        }
+
+        .opex-acc-variance-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .opex-acc-variance.under .opex-acc-variance-icon {
+            background: rgba(21, 128, 61, 0.15);
+        }
+
+        .opex-acc-variance.over .opex-acc-variance-icon {
+            background: rgba(220, 38, 38, 0.15);
+        }
+
+        /* ACC Gauge */
+        .opex-acc-gauge-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 240px;
+            height: 240px;
+        }
+
+        .opex-acc-gauge-center {
+            position: absolute;
+            text-align: center;
+        }
+
+        .opex-acc-gauge-pct {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .opex-acc-gauge-sublabel {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        .opex-acc-gauge-amount {
+            font-size: 13px;
+            font-weight: 500;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 1200px) {
+            .opex-acc-gauge-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .opex-acc-gauge-pct {
+                font-size: 32px;
+            }
+        }
+
         /* Legacy styles for backward compatibility */
         .opex-container {
             display: none;
@@ -9473,6 +9655,51 @@
         // ============================================
         // OPEX TABLE
         // ============================================
+        function updateOpexHeader(totalActual, totalBudget) {
+            const totalVarianceDollar = totalActual - totalBudget;
+            const totalIsUnder = totalVarianceDollar <= 0;
+
+            let numMonths = 1;
+            if (customRangeActive) {
+                numMonths = customRangeTo - customRangeFrom + 1;
+            } else if (currentGranularity === 'monthly') {
+                numMonths = 1;
+            } else if (currentGranularity === 'quarterly') {
+                numMonths = 3;
+            } else if (currentGranularity === 'semester') {
+                numMonths = 6;
+            } else if (currentGranularity === 'yearly') {
+                numMonths = 12;
+            }
+
+            const monthlyAvg = totalActual / numMonths;
+
+            const headerTotal = document.getElementById('opexHeaderTotal');
+            const headerVariance = document.getElementById('opexHeaderVariance');
+            const headerPeriod = document.getElementById('opexHeaderPeriod');
+            const headerAvg = document.getElementById('opexHeaderAvg');
+
+            if (headerTotal) {
+                headerTotal.textContent = `$${(totalActual / 1000).toFixed(0)}K`;
+            }
+
+            if (headerVariance) {
+                const absVariance = Math.abs(totalVarianceDollar / 1000).toFixed(0);
+                headerVariance.textContent = totalIsUnder
+                    ? `$${absVariance}K under budget`
+                    : `$${absVariance}K over budget`;
+                headerVariance.className = `opex-header-total-variance ${totalIsUnder ? 'under' : 'over'}`;
+            }
+
+            if (headerPeriod) {
+                headerPeriod.textContent = getOpexPeriodText();
+            }
+
+            if (headerAvg) {
+                headerAvg.textContent = `$${(monthlyAvg / 1000).toFixed(0)}K`;
+            }
+        }
+
         function createOpexTable() {
             const opexList = document.getElementById('opexList');
             if (!opexList) return;
@@ -9501,6 +9728,102 @@
                 totalBudget += item.budget;
                 totalActual += item.actual;
             });
+
+            // ACC mode: redesigned layout with gauge
+            if (currentAccountingMethod === 'acc') {
+                const item = periodData[0];
+                const budgetUsedPct = item.budget > 0 ? (item.actual / item.budget * 100) : 0;
+                const isUnder = item.actual <= item.budget;
+                const variance = Math.abs(item.actual - item.budget);
+                const actualK = (item.actual / 1000).toFixed(0);
+                const budgetK = (item.budget / 1000).toFixed(0);
+                const varianceK = (variance / 1000).toFixed(0);
+
+                opexList.innerHTML = `
+                    <div class="opex-acc-summary">
+                        <div class="opex-acc-metrics">
+                            <div class="opex-acc-metric actual-card">
+                                <div class="opex-acc-metric-label">Actual Spend</div>
+                                <div class="opex-acc-metric-value actual">$${actualK}K</div>
+                            </div>
+                            <div class="opex-acc-metric budget-card">
+                                <div class="opex-acc-metric-label">Budget</div>
+                                <div class="opex-acc-metric-value budget">$${budgetK}K</div>
+                            </div>
+                        </div>
+                        <div class="opex-acc-progress-section">
+                            <div class="opex-acc-progress-header">
+                                <span class="opex-acc-progress-label">Budget Utilized</span>
+                                <span class="opex-acc-progress-pct" style="color: ${isUnder ? '#22c55e' : '#ef4444'}">${budgetUsedPct.toFixed(0)}%</span>
+                            </div>
+                            <div class="opex-acc-progress-bar">
+                                <div class="opex-acc-progress-fill" style="width: ${Math.min(budgetUsedPct, 100)}%; background: ${isUnder ? 'linear-gradient(90deg, #22c55e, #4ade80)' : 'linear-gradient(90deg, #ef4444, #f87171)'}"></div>
+                            </div>
+                        </div>
+                        <div class="opex-acc-variance ${isUnder ? 'under' : 'over'}">
+                            <div class="opex-acc-variance-icon">${isUnder ? '✓' : '⚠'}</div>
+                            <span>$${varianceK}K ${isUnder ? 'under' : 'over'} budget</span>
+                        </div>
+                    </div>
+                `;
+
+                // Replace donut with circular gauge
+                const canvas = document.getElementById('opexDonutChart');
+                if (canvas) canvas.style.display = 'none';
+
+                let gaugeDiv = document.getElementById('opexAccGauge');
+                if (!gaugeDiv) {
+                    gaugeDiv = document.createElement('div');
+                    gaugeDiv.id = 'opexAccGauge';
+                    canvas.parentNode.appendChild(gaugeDiv);
+                }
+                gaugeDiv.style.display = 'flex';
+                gaugeDiv.style.alignItems = 'center';
+                gaugeDiv.style.justifyContent = 'center';
+
+                const r = 85;
+                const circumference = 2 * Math.PI * r;
+                const pctClamped = Math.min(budgetUsedPct, 100);
+                const offset = circumference * (1 - pctClamped / 100);
+                const gaugeColor = isUnder ? '#22c55e' : '#ef4444';
+                const gaugeColorEnd = isUnder ? '#4ade80' : '#f87171';
+
+                gaugeDiv.innerHTML = `
+                    <div class="opex-acc-gauge-wrapper">
+                        <svg viewBox="0 0 200 200" width="240" height="240">
+                            <defs>
+                                <linearGradient id="opexGaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="${gaugeColor}" />
+                                    <stop offset="100%" stop-color="${gaugeColorEnd}" />
+                                </linearGradient>
+                                <filter id="gaugeShadow">
+                                    <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="${gaugeColor}" flood-opacity="0.3"/>
+                                </filter>
+                            </defs>
+                            <circle cx="100" cy="100" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="14" />
+                            <circle cx="100" cy="100" r="${r}" fill="none" stroke="url(#opexGaugeGrad)" stroke-width="14"
+                                stroke-dasharray="${circumference.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"
+                                stroke-linecap="round" transform="rotate(-90 100 100)"
+                                filter="url(#gaugeShadow)"
+                                style="transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);" />
+                        </svg>
+                        <div class="opex-acc-gauge-center">
+                            <div class="opex-acc-gauge-pct" style="color: ${gaugeColor}">${budgetUsedPct.toFixed(0)}%</div>
+                            <div class="opex-acc-gauge-sublabel">Budget Used</div>
+                            <div class="opex-acc-gauge-amount">$${actualK}K of $${budgetK}K</div>
+                        </div>
+                    </div>
+                `;
+
+                updateOpexHeader(totalActual, totalBudget);
+                return;
+            }
+
+            // CASH mode: restore canvas, hide gauge
+            const canvasEl = document.getElementById('opexDonutChart');
+            if (canvasEl) canvasEl.style.display = '';
+            const gaugeDivEl = document.getElementById('opexAccGauge');
+            if (gaugeDivEl) gaugeDivEl.style.display = 'none';
 
             const items = periodData.map(item => {
                 const categoryColor = categoryColors[item.category] || '#6B7280';
@@ -9592,51 +9915,8 @@
 
             opexList.innerHTML = items;
 
-            // Update header values
-            const totalVarianceDollar = totalActual - totalBudget;
-            const totalIsUnder = totalVarianceDollar <= 0;
-            const totalBudgetUsedPercent = totalBudget > 0 ? ((totalActual / totalBudget) * 100).toFixed(0) : 0;
-
-            // Calculate number of months for average
-            let numMonths = 1;
-            if (customRangeActive) {
-                numMonths = customRangeTo - customRangeFrom + 1;
-            } else if (currentGranularity === 'monthly') {
-                numMonths = 1;
-            } else if (currentGranularity === 'quarterly') {
-                numMonths = 3;
-            } else if (currentGranularity === 'semester') {
-                numMonths = 6;
-            } else if (currentGranularity === 'yearly') {
-                numMonths = 12;
-            }
-
-            const monthlyAvg = totalActual / numMonths;
-
-            const headerTotal = document.getElementById('opexHeaderTotal');
-            const headerVariance = document.getElementById('opexHeaderVariance');
-            const headerPeriod = document.getElementById('opexHeaderPeriod');
-            const headerAvg = document.getElementById('opexHeaderAvg');
-
-            if (headerTotal) {
-                headerTotal.textContent = `$${(totalActual / 1000).toFixed(0)}K`;
-            }
-
-            if (headerVariance) {
-                const absVariance = Math.abs(totalVarianceDollar / 1000).toFixed(0);
-                headerVariance.textContent = totalIsUnder
-                    ? `$${absVariance}K under budget`
-                    : `$${absVariance}K over budget`;
-                headerVariance.className = `opex-header-total-variance ${totalIsUnder ? 'under' : 'over'}`;
-            }
-
-            if (headerPeriod) {
-                headerPeriod.textContent = getOpexPeriodText();
-            }
-
-            if (headerAvg) {
-                headerAvg.textContent = `$${(monthlyAvg / 1000).toFixed(0)}K`;
-            }
+            // Update header
+            updateOpexHeader(totalActual, totalBudget);
         }
 
         // ============================================
@@ -9853,17 +10133,20 @@
         }
 
         function updateOpexDonutChart() {
+            // ACC mode: gauge is handled by createOpexTable
+            if (currentAccountingMethod === 'acc') {
+                createOpexTable();
+                return;
+            }
+
             if (!charts.opexDonut) return;
 
             const periodData = getOpexDataForPeriod();
 
-            // Update chart labels and data (labels change between CASH/ACC modes)
+            // Update chart labels and data
             charts.opexDonut.data.labels = periodData.map(item => item.category);
             charts.opexDonut.data.datasets[0].data = periodData.map(item => item.actual);
-            // Update colors to match the number of categories (5 for ACC, 7 for CASH)
-            const donutColors = currentAccountingMethod === 'acc'
-                ? ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899']
-                : ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899', '#6B7280', '#F97316'];
+            const donutColors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899', '#6B7280', '#F97316'];
             charts.opexDonut.data.datasets[0].backgroundColor = donutColors;
             charts.opexDonut.update();
 

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinedu - Investor Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
+            min-height: 100vh;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            color: white;
+            padding: 48px 48px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .hero-branding { display: flex; align-items: center; gap: 16px; }
+        .hero-logo { height: 48px; }
+        .hero-title-group {}
+        .hero-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .hero-subtitle {
+            font-size: 13px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .ctrl-btn {
+            padding: 8px 18px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .ctrl-btn:hover { color: white; background: rgba(255, 255, 255, 0.1); }
+        .ctrl-btn.active {
+            background: white;
+            color: #1e3a5f;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .ctrl-btn.active-acc {
+            background: #f59e0b;
+            color: #1e3a5f;
+        }
+        .ctrl-btn.active-cash {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 20px 18px;
+            transition: all 0.3s ease;
+        }
+        .kpi-card:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+        .kpi-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+        .kpi-trend {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .kpi-trend.positive { color: #4ade80; }
+        .kpi-trend.negative { color: #fca5a5; }
+        .kpi-trend.neutral { color: #94a3b8; }
+
+        /* Content Sections */
+        .content { padding: 32px 48px 48px; }
+        .section { margin-bottom: 40px; }
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .section-header {
+            padding: 24px 28px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e3a5f;
+            letter-spacing: -0.3px;
+        }
+        .chart-wrapper {
+            padding: 16px 28px 28px;
+            height: 380px;
+        }
+
+        /* P&L Table */
+        .pl-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 28px 28px;
+        }
+        .pl-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .pl-table th, .pl-table td {
+            padding: 10px 14px;
+            text-align: right;
+            white-space: nowrap;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .pl-table th {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #f8fafc;
+            position: sticky;
+            top: 0;
+        }
+        .pl-table .row-label {
+            text-align: left;
+            font-weight: 500;
+            color: #334155;
+            position: sticky;
+            left: 0;
+            background: white;
+            z-index: 1;
+            min-width: 180px;
+        }
+        .pl-table .subtotal td {
+            font-weight: 700;
+            color: #1e3a5f;
+            border-top: 2px solid #1e3a5f;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .pl-table .subtotal .row-label { font-weight: 700; color: #1e3a5f; }
+        .pl-table .section-label td {
+            font-weight: 700;
+            color: #64748b;
+            text-align: left;
+            padding-top: 18px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: none;
+        }
+        .pl-table .ebitda-row td {
+            font-weight: 800;
+            font-size: 14px;
+            border-top: 3px double #1e3a5f;
+        }
+        .val-negative { color: #ef4444; }
+        .val-positive { color: #22c55e; }
+        .val-zero { color: #cbd5e1; }
+        .pl-year-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3a5f;
+            padding: 20px 28px 8px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 24px 48px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        .footer a { color: #3b82f6; text-decoration: none; }
+
+        /* Status pill */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            margin-top: 16px;
+        }
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero { padding: 32px 24px; }
+            .content { padding: 24px; }
+            .hero-top { flex-direction: column; align-items: flex-start; }
+            .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+            .chart-wrapper { height: 320px; }
+        }
+        @media (max-width: 768px) {
+            .hero { padding: 24px 16px; }
+            .content { padding: 16px; }
+            .hero-branding { flex-wrap: wrap; }
+            .hero-logo { height: 36px; }
+            .hero-title { font-size: 20px; }
+            .hero-subtitle { font-size: 11px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .kpi-card { padding: 14px 12px; }
+            .kpi-value { font-size: 22px; }
+            .chart-wrapper { height: 280px; padding: 12px 16px 20px; }
+            .section-header { padding: 16px 16px 0; }
+            .pl-table-wrapper { padding: 0 16px 16px; }
+            .controls { gap: 10px; }
+            .ctrl-btn { padding: 6px 12px; font-size: 12px; }
+            .footer { padding: 20px 16px; }
+        }
+        @media (max-width: 480px) {
+            .hero-branding { gap: 10px; }
+            .hero-logo { height: 32px; }
+            .hero-title { font-size: 18px; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .kpi-card { padding: 12px 10px; }
+            .kpi-label { font-size: 9px; }
+            .kpi-value { font-size: 20px; }
+            .kpi-trend { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Header -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-top">
+                    <div class="hero-branding">
+                        <img class="hero-logo" src="logo kinedu.png" alt="Kinedu">
+                        <div class="hero-title-group">
+                            <div class="hero-title">Investor Dashboard</div>
+                            <div class="hero-subtitle" id="heroSubtitle">Accrual (ACC) Accounting | 2026</div>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <button class="ctrl-btn" id="btn2025" onclick="setView('2025')">2025</button>
+                            <button class="ctrl-btn active" id="btn2026" onclick="setView('2026')">2026</button>
+                            <button class="ctrl-btn" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
+                        </div>
+                        <div class="control-group">
+                            <button class="ctrl-btn active-cash" id="btnCash" onclick="setMethod('cash')">CASH</button>
+                            <button class="ctrl-btn active-acc" id="btnAcc" onclick="setMethod('acc')">ACC</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="kpi-grid" id="kpiGrid"></div>
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Showing: 2026 ACC</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Revenue Chart -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Monthly Revenue</div>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="revenueChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- P&L Table -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">P&L Summary</div>
+                    </div>
+                    <div id="plTableContainer"></div>
+                </div>
+            </div>
+
+            <!-- EBITDA Chart -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">EBITDA Trend</div>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="ebitdaChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Contribution Margin Chart -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Contribution Margin</div>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="contribChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Margin Analysis -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Margin Analysis (%)</div>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="marginChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Kinedu Investor Dashboard &mdash; Actuals Only (No Budget) &mdash; Last updated: March 2026
+            <br><a href="index.html">Go to Full Dashboard</a>
+        </div>
+    </div>
+
+<script>
+// ============================================
+// DATA CONSTANTS
+// ============================================
+const ACC_2025 = {
+    January:     { mrr: 316097, partnerships: 23181, grossRevenue: 356248, commissions: -95305, netRevenue: 260943, servers: 7773, grossProfit: 253170, paidAcquisition: 190362, mktOthers: 0, totalCAC: 190362, contributionProfit: 62808, totalOpex: 120767, ebitda: -57959 },
+    February:    { mrr: 272577, partnerships: 5378, grossRevenue: 292987, commissions: -74511, netRevenue: 218476, servers: 6857, grossProfit: 211619, paidAcquisition: 144891, mktOthers: 0, totalCAC: 144891, contributionProfit: 66728, totalOpex: 115657, ebitda: -48929 },
+    March:       { mrr: 266337, partnerships: 5580, grossRevenue: 288811, commissions: -76847, netRevenue: 211964, servers: 7083, grossProfit: 204882, paidAcquisition: 142857, mktOthers: 0, totalCAC: 142857, contributionProfit: 62025, totalOpex: 128275, ebitda: -66250 },
+    April:       { mrr: 225100, partnerships: 5713, grossRevenue: 251323, commissions: -65167, netRevenue: 186156, servers: 6999, grossProfit: 179156, paidAcquisition: 133450, mktOthers: 0, totalCAC: 133450, contributionProfit: 45706, totalOpex: 119669, ebitda: -73963 },
+    May:         { mrr: 199736, partnerships: 5064, grossRevenue: 220845, commissions: -58716, netRevenue: 162129, servers: 7179, grossProfit: 154950, paidAcquisition: 110610, mktOthers: 0, totalCAC: 110610, contributionProfit: 44340, totalOpex: 132941, ebitda: -88601 },
+    June:        { mrr: 258139, partnerships: 4857, grossRevenue: 282991, commissions: -78938, netRevenue: 204053, servers: 7040, grossProfit: 197013, paidAcquisition: 143472, mktOthers: 0, totalCAC: 143472, contributionProfit: 53541, totalOpex: 126225, ebitda: -72684 },
+    July:        { mrr: 313080, partnerships: 5556, grossRevenue: 339214, commissions: -95524, netRevenue: 243690, servers: 7164, grossProfit: 236526, paidAcquisition: 161447, mktOthers: 0, totalCAC: 161447, contributionProfit: 75079, totalOpex: 128674, ebitda: -53595 },
+    August:      { mrr: 357519, partnerships: 6949, grossRevenue: 382979, commissions: -113551, netRevenue: 269428, servers: 7179, grossProfit: 262250, paidAcquisition: 163858, mktOthers: 0, totalCAC: 163858, contributionProfit: 98392, totalOpex: 129904, ebitda: -31512 },
+    September:   { mrr: 414830, partnerships: 6423, grossRevenue: 443780, commissions: -136126, netRevenue: 307654, servers: 7199, grossProfit: 300455, paidAcquisition: 198413, mktOthers: 0, totalCAC: 198413, contributionProfit: 102042, totalOpex: 141360, ebitda: -39318 },
+    October:     { mrr: 434970, partnerships: 6707, grossRevenue: 457737, commissions: -143508, netRevenue: 314229, servers: 7475, grossProfit: 306753, paidAcquisition: 207847, mktOthers: 0, totalCAC: 207847, contributionProfit: 98907, totalOpex: 133781, ebitda: -34874 },
+    November:    { mrr: 426259, partnerships: 6939, grossRevenue: 451110, commissions: -139153, netRevenue: 311957, servers: 6708, grossProfit: 305249, paidAcquisition: 185532, mktOthers: 0, totalCAC: 185532, contributionProfit: 119718, totalOpex: 137636, ebitda: -17919 },
+    December:    { mrr: 399453, partnerships: 9419, grossRevenue: 432691, commissions: -127751, netRevenue: 304940, servers: 7296, grossProfit: 297644, paidAcquisition: 213921, mktOthers: 0, totalCAC: 213921, contributionProfit: 83724, totalOpex: 135587, ebitda: -51863 }
+};
+
+const ACC_2026 = {
+    January:     { mrr: 437842, partnerships: 17258, grossRevenue: 455245, commissions: -112566, netRevenue: 342679, servers: 7196, grossProfit: 335483, paidAcquisition: 216357, mktOthers: 10233, totalCAC: 226590, contributionProfit: 108893, totalOpex: 138933, ebitda: -30040 },
+    February:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    March:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    April:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    May:         { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    June:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    July:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    August:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    September:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    October:     { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    November:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    December:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 }
+};
+
+const CASH_2025 = {
+    January:     { mrr: 399489, partnerships: 13560, grossRevenue: 432515, commissions: -107484, netRevenue: 325031, servers: 1466, grossProfit: 323565, paidAcquisition: 154272, mktOthers: 0, totalCAC: 154272, contributionProfit: 169293, totalOpex: 178488, ebitda: -9195 },
+    February:    { mrr: 54588, partnerships: 31689, grossRevenue: 102874, commissions: -14739, netRevenue: 88135, servers: 8311, grossProfit: 79824, paidAcquisition: 145270, mktOthers: 0, totalCAC: 145270, contributionProfit: -65446, totalOpex: 106471, ebitda: -171917 },
+    March:       { mrr: 310391, partnerships: 1011, grossRevenue: 326913, commissions: -83806, netRevenue: 243107, servers: 7787, grossProfit: 235320, paidAcquisition: 193404, mktOthers: 0, totalCAC: 193404, contributionProfit: 41916, totalOpex: 141606, ebitda: -99689 },
+    April:       { mrr: 244677, partnerships: 304, grossRevenue: 264902, commissions: -66063, netRevenue: 198839, servers: 6908, grossProfit: 191931, paidAcquisition: 144324, mktOthers: 0, totalCAC: 144324, contributionProfit: 47607, totalOpex: 106695, ebitda: -59088 },
+    May:         { mrr: 224858, partnerships: 360, grossRevenue: 243906, commissions: -60712, netRevenue: 183194, servers: 7123, grossProfit: 176072, paidAcquisition: 141155, mktOthers: 0, totalCAC: 141155, contributionProfit: 34916, totalOpex: 116140, ebitda: -81224 },
+    June:        { mrr: 235315, partnerships: 22150, grossRevenue: 275780, commissions: -63540, netRevenue: 212240, servers: 7211, grossProfit: 205030, paidAcquisition: 132987, mktOthers: 0, totalCAC: 132987, contributionProfit: 72042, totalOpex: 125064, ebitda: -53022 },
+    July:        { mrr: 170055, partnerships: 7411, grossRevenue: 201068, commissions: -45911, netRevenue: 155157, servers: 5823, grossProfit: 149334, paidAcquisition: 113216, mktOthers: 0, totalCAC: 113216, contributionProfit: 36118, totalOpex: 130392, ebitda: -94274 },
+    August:      { mrr: 225730, partnerships: 3493, grossRevenue: 245616, commissions: -60952, netRevenue: 184664, servers: 8503, grossProfit: 176161, paidAcquisition: 156120, mktOthers: 0, totalCAC: 156120, contributionProfit: 20041, totalOpex: 124379, ebitda: -104338 },
+    September:   { mrr: 296960, partnerships: 5830, grossRevenue: 324796, commissions: -63133, netRevenue: 261663, servers: 7178, grossProfit: 254485, paidAcquisition: 158868, mktOthers: 0, totalCAC: 158868, contributionProfit: 95617, totalOpex: 151367, ebitda: -55750 },
+    October:     { mrr: 274248, partnerships: 11033, grossRevenue: 303938, commissions: -58305, netRevenue: 245633, servers: 7194, grossProfit: 238439, paidAcquisition: 153194, mktOthers: 0, totalCAC: 153194, contributionProfit: 85246, totalOpex: 110745, ebitda: -25500 },
+    November:    { mrr: 334229, partnerships: 12135, grossRevenue: 362561, commissions: -75125, netRevenue: 287436, servers: 7199, grossProfit: 280237, paidAcquisition: 204168, mktOthers: 0, totalCAC: 204168, contributionProfit: 76068, totalOpex: 104997, ebitda: -28929 },
+    December:    { mrr: 423731, partnerships: 790, grossRevenue: 445209, commissions: -102028, netRevenue: 343181, servers: 7489, grossProfit: 335692, paidAcquisition: 204844, mktOthers: 0, totalCAC: 204844, contributionProfit: 130848, totalOpex: 172595, ebitda: -41747 }
+};
+
+const CASH_2026 = {
+    January:     { mrr: 437842, partnerships: 17258, grossRevenue: 455245, commissions: -112566, netRevenue: 342679, servers: 7196, grossProfit: 335483, paidAcquisition: 216357, mktOthers: 10233, totalCAC: 226590, contributionProfit: 108893, totalOpex: 138933, ebitda: -30040 },
+    February:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    March:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    April:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    May:         { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    June:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    July:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    August:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    September:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    October:     { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    November:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    December:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 }
+};
+
+// ============================================
+// STATE
+// ============================================
+let currentView = '2026';
+let currentMethod = 'acc';
+const charts = {};
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const monthShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ============================================
+// DATA ACCESSOR
+// ============================================
+function getSource(year, method) {
+    if (method === 'acc') return year === '2025' ? ACC_2025 : ACC_2026;
+    return year === '2025' ? CASH_2025 : CASH_2026;
+}
+
+function getDataForView() {
+    let labels = [], data = [];
+    if (currentView === '2025') {
+        labels = [...monthShort];
+        data = monthNames.map(m => getSource('2025', currentMethod)[m]);
+    } else if (currentView === '2026') {
+        labels = [...monthShort];
+        data = monthNames.map(m => getSource('2026', currentMethod)[m]);
+    } else {
+        labels = monthShort.map(m => m + " '25").concat(monthShort.map(m => m + " '26"));
+        data = monthNames.map(m => getSource('2025', currentMethod)[m])
+               .concat(monthNames.map(m => getSource('2026', currentMethod)[m]));
+    }
+    return { labels, data };
+}
+
+function hasData(d) { return d && d.grossRevenue !== 0; }
+
+// ============================================
+// FORMATTING
+// ============================================
+function fmtK(v) {
+    if (v === 0 || v === undefined) return '$0';
+    const abs = Math.abs(v);
+    if (abs >= 1000000) return (v < 0 ? '-' : '') + '$' + (abs / 1000000).toFixed(1) + 'M';
+    return (v < 0 ? '-' : '') + '$' + Math.round(abs / 1000) + 'K';
+}
+
+function fmtTableVal(v, isZeroMonth) {
+    if (isZeroMonth) return '<span class="val-zero">&mdash;</span>';
+    if (v === 0) return '$0';
+    const cls = v < 0 ? 'val-negative' : '';
+    const abs = Math.abs(v);
+    const formatted = abs >= 1000 ? '$' + Math.round(abs / 1000).toLocaleString() + 'K' : '$' + Math.round(abs);
+    return `<span class="${cls}">${v < 0 ? '-' : ''}${formatted}</span>`;
+}
+
+// ============================================
+// CONTROLS
+// ============================================
+function setView(view) {
+    currentView = view;
+    document.getElementById('btn2025').className = 'ctrl-btn' + (view === '2025' ? ' active' : '');
+    document.getElementById('btn2026').className = 'ctrl-btn' + (view === '2026' ? ' active' : '');
+    document.getElementById('btnCombined').className = 'ctrl-btn' + (view === 'combined' ? ' active' : '');
+    updateAll();
+}
+
+function setMethod(method) {
+    currentMethod = method;
+    document.getElementById('btnCash').className = 'ctrl-btn' + (method === 'cash' ? ' active-cash' : '');
+    document.getElementById('btnAcc').className = 'ctrl-btn' + (method === 'acc' ? ' active-acc' : '');
+    updateAll();
+}
+
+function updateSubtitle() {
+    const methodLabel = currentMethod === 'acc' ? 'Accrual (ACC)' : 'Cash (CASH)';
+    const viewLabel = currentView === 'combined' ? '2025 + 2026' : currentView;
+    document.getElementById('heroSubtitle').textContent = `${methodLabel} Accounting | ${viewLabel}`;
+    document.getElementById('statusText').textContent = `Showing: ${viewLabel} ${currentMethod.toUpperCase()}`;
+}
+
+// ============================================
+// KPI CARDS
+// ============================================
+function renderKPIs() {
+    const { data } = getDataForView();
+    const withData = data.filter(hasData);
+
+    const sum = (field) => withData.reduce((s, d) => s + (d[field] || 0), 0);
+
+    // MoM trend: last month vs previous
+    function trend(field) {
+        if (withData.length < 2) return { pct: 0, dir: 'neutral' };
+        const last = withData[withData.length - 1][field] || 0;
+        const prev = withData[withData.length - 2][field] || 0;
+        if (prev === 0) return { pct: 0, dir: 'neutral' };
+        const pct = ((last - prev) / Math.abs(prev) * 100);
+        return { pct, dir: pct >= 0 ? 'positive' : 'negative' };
+    }
+
+    const kpis = [
+        { label: 'Gross Revenue', value: sum('grossRevenue'), field: 'grossRevenue' },
+        { label: 'Net Revenue', value: sum('netRevenue'), field: 'netRevenue' },
+        { label: 'Gross Margin', value: sum('grossProfit'), field: 'grossProfit' },
+        { label: 'Contribution Margin', value: sum('contributionProfit'), field: 'contributionProfit' },
+        { label: 'Total OpEx', value: -sum('totalOpex'), field: 'totalOpex', invertTrend: true },
+        { label: 'EBITDA', value: sum('ebitda'), field: 'ebitda' }
+    ];
+
+    const grid = document.getElementById('kpiGrid');
+    grid.innerHTML = kpis.map(kpi => {
+        const t = trend(kpi.field);
+        const trendClass = kpi.invertTrend ? (t.dir === 'positive' ? 'negative' : t.dir === 'negative' ? 'positive' : 'neutral') : t.dir;
+        const arrow = t.dir === 'positive' ? '&#9650;' : t.dir === 'negative' ? '&#9660;' : '';
+        const ebitdaColor = kpi.field === 'ebitda' ? (kpi.value >= 0 ? 'color: #4ade80;' : 'color: #fca5a5;') : '';
+        return `
+            <div class="kpi-card">
+                <div class="kpi-label">${kpi.label}</div>
+                <div class="kpi-value" style="${ebitdaColor}">${fmtK(kpi.value)}</div>
+                <div class="kpi-trend ${trendClass}">
+                    ${arrow} ${t.pct !== 0 ? Math.abs(t.pct).toFixed(1) + '% MoM' : 'Single month'}
+                </div>
+            </div>`;
+    }).join('');
+}
+
+// ============================================
+// CHARTS
+// ============================================
+function destroyCharts() {
+    Object.keys(charts).forEach(k => { if (charts[k]) { charts[k].destroy(); delete charts[k]; }});
+}
+
+function chartDefaults() {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(30, 58, 95, 0.95)',
+                padding: 12,
+                titleFont: { size: 13, weight: '600' },
+                bodyFont: { size: 12 },
+                cornerRadius: 8,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: false,
+                grid: { color: '#f1f5f9', drawBorder: false },
+                border: { display: false },
+                ticks: { color: '#94a3b8', font: { size: 11 }, callback: v => '$' + v + 'K' }
+            },
+            x: {
+                grid: { display: false },
+                border: { display: false },
+                ticks: {
+                    color: '#94a3b8',
+                    font: { size: currentView === 'combined' ? 9 : 11 },
+                    maxRotation: currentView === 'combined' ? 45 : 0
+                }
+            }
+        }
+    };
+}
+
+function createRevenueChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const values = data.map(d => hasData(d) ? d.grossRevenue / 1000 : null);
+
+    charts.revenue = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Gross Revenue',
+                data: values,
+                backgroundColor: '#1e3a5f',
+                borderRadius: 6,
+                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                skipNull: true
+            }]
+        },
+        options: {
+            ...chartDefaults(),
+            plugins: {
+                ...chartDefaults().plugins,
+                tooltip: {
+                    ...chartDefaults().plugins.tooltip,
+                    callbacks: { label: ctx => `Revenue: $${ctx.parsed.y?.toFixed(0)}K` }
+                }
+            },
+            scales: {
+                ...chartDefaults().scales,
+                y: { ...chartDefaults().scales.y, beginAtZero: true }
+            }
+        }
+    });
+}
+
+function createEbitdaChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('ebitdaChart').getContext('2d');
+    const values = data.map(d => hasData(d) ? d.ebitda / 1000 : null);
+
+    charts.ebitda = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'EBITDA',
+                data: values,
+                backgroundColor: values.map(v => v !== null ? (v >= 0 ? '#22c55e' : '#ef4444') : 'transparent'),
+                borderRadius: 6,
+                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                skipNull: true
+            }]
+        },
+        options: {
+            ...chartDefaults(),
+            plugins: {
+                ...chartDefaults().plugins,
+                tooltip: {
+                    ...chartDefaults().plugins.tooltip,
+                    callbacks: { label: ctx => `EBITDA: $${ctx.parsed.y?.toFixed(0)}K` }
+                }
+            }
+        }
+    });
+}
+
+function createContribChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('contribChart').getContext('2d');
+    const values = data.map(d => hasData(d) ? d.contributionProfit / 1000 : null);
+
+    charts.contrib = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Contribution Margin',
+                data: values,
+                backgroundColor: values.map(v => v !== null ? (v >= 0 ? '#1e3a5f' : '#ef4444') : 'transparent'),
+                borderRadius: 6,
+                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                skipNull: true
+            }]
+        },
+        options: {
+            ...chartDefaults(),
+            plugins: {
+                ...chartDefaults().plugins,
+                tooltip: {
+                    ...chartDefaults().plugins.tooltip,
+                    callbacks: { label: ctx => `Contrib. Margin: $${ctx.parsed.y?.toFixed(0)}K` }
+                }
+            }
+        }
+    });
+}
+
+function createMarginChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('marginChart').getContext('2d');
+    const grossPct = data.map(d => hasData(d) ? (d.grossProfit / d.grossRevenue * 100) : null);
+    const contribPct = data.map(d => hasData(d) ? (d.contributionProfit / d.grossRevenue * 100) : null);
+
+    const opts = chartDefaults();
+    opts.scales.y.ticks.callback = v => v + '%';
+    opts.scales.y.beginAtZero = false;
+    opts.plugins.legend = {
+        display: true,
+        position: 'top',
+        labels: { color: '#64748b', font: { size: 12, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 20 }
+    };
+
+    charts.margin = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Gross Margin %',
+                    data: grossPct,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                    borderWidth: 2.5,
+                    pointRadius: currentView === 'combined' ? 2 : 4,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
+                    fill: true,
+                    spanGaps: false
+                },
+                {
+                    label: 'Contribution Margin %',
+                    data: contribPct,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                    borderWidth: 2.5,
+                    pointRadius: currentView === 'combined' ? 2 : 4,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
+                    fill: true,
+                    spanGaps: false
+                }
+            ]
+        },
+        options: {
+            ...opts,
+            plugins: {
+                ...opts.plugins,
+                tooltip: {
+                    ...opts.plugins.tooltip,
+                    callbacks: {
+                        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}%`
+                    }
+                }
+            }
+        }
+    });
+}
+
+// ============================================
+// P&L TABLE
+// ============================================
+function renderPLTable() {
+    const container = document.getElementById('plTableContainer');
+
+    if (currentView === 'combined') {
+        container.innerHTML =
+            '<div class="pl-year-header">2025 Full Year</div>' +
+            buildPLTable('2025') +
+            '<div class="pl-year-header" style="margin-top:16px;">2026 Year to Date</div>' +
+            buildPLTable('2026');
+    } else {
+        container.innerHTML = buildPLTable(currentView);
+    }
+}
+
+function buildPLTable(year) {
+    const source = getSource(year, currentMethod);
+    const dataArr = monthNames.map(m => source[m]);
+    const activeMonths = dataArr.filter(hasData);
+
+    const plRows = [
+        { label: 'Revenue', isSection: true },
+        { label: 'Subscriptions (MRR)', field: 'mrr' },
+        { label: 'Partnerships', field: 'partnerships' },
+        { label: 'Gross Revenue', field: 'grossRevenue', isSubtotal: true },
+        { label: 'Cost of Revenue', isSection: true },
+        { label: 'Commissions', field: 'commissions' },
+        { label: 'Servers', field: 'servers', negate: true },
+        { label: 'Gross Margin', field: 'grossProfit', isSubtotal: true },
+        { label: 'Customer Acquisition', isSection: true },
+        { label: 'Acquisition Spend', field: 'totalCAC', negate: true },
+        { label: 'Contribution Margin', field: 'contributionProfit', isSubtotal: true },
+        { label: 'Operating Expenses', isSection: true },
+        { label: 'Total OpEx', field: 'totalOpex', negate: true },
+        { label: 'EBITDA', field: 'ebitda', isSubtotal: true, isEbitda: true }
+    ];
+
+    // Header
+    let html = '<div class="pl-table-wrapper"><table class="pl-table"><thead><tr>';
+    html += '<th class="row-label"></th>';
+    monthShort.forEach(m => { html += `<th>${m}</th>`; });
+    html += '<th><strong>YTD</strong></th>';
+    html += '</tr></thead><tbody>';
+
+    plRows.forEach(row => {
+        if (row.isSection) {
+            html += `<tr class="section-label"><td colspan="${14}">${row.label}</td></tr>`;
+            return;
+        }
+        const cls = row.isSubtotal ? (row.isEbitda ? 'ebitda-row subtotal' : 'subtotal') : '';
+        html += `<tr class="${cls}">`;
+        html += `<td class="row-label">${row.label}</td>`;
+        let ytd = 0;
+        dataArr.forEach(d => {
+            const isZero = !hasData(d);
+            let val = d[row.field] || 0;
+            if (row.negate && val > 0) val = -val;
+            if (!isZero) ytd += val;
+            html += `<td>${fmtTableVal(val, isZero)}</td>`;
+        });
+        // YTD
+        const ytdCls = row.isEbitda ? (ytd >= 0 ? 'val-positive' : 'val-negative') : (ytd < 0 ? 'val-negative' : '');
+        const ytdAbs = Math.abs(ytd);
+        const ytdFmt = ytdAbs >= 1000000
+            ? '$' + (ytdAbs / 1000000).toFixed(1) + 'M'
+            : '$' + Math.round(ytdAbs / 1000) + 'K';
+        html += `<td><strong class="${ytdCls}">${ytd < 0 ? '-' : ''}${ytdFmt}</strong></td>`;
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    return html;
+}
+
+// ============================================
+// UPDATE ALL
+// ============================================
+function updateAll() {
+    updateSubtitle();
+    renderKPIs();
+    destroyCharts();
+    createRevenueChart();
+    createEbitdaChart();
+    createContribChart();
+    createMarginChart();
+    renderPLTable();
+}
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    updateAll();
+});
+</script>
+</body>
+</html>
