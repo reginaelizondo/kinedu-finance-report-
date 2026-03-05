@@ -7,11 +7,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
+        html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: #1a1a1a;
             background: #f0f2f5;
+            overflow-x: hidden;
+            width: 100%;
         }
         .container {
             max-width: 1400px;
@@ -19,6 +21,7 @@
             background: white;
             box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Hero Header */
@@ -106,7 +109,7 @@
         /* KPI Grid */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 16px;
             margin-top: 32px;
         }
@@ -280,35 +283,61 @@
             .hero { padding: 32px 24px; }
             .content { padding: 24px; }
             .hero-top { flex-direction: column; align-items: flex-start; }
-            .kpi-grid { grid-template-columns: repeat(3, 1fr); }
             .chart-wrapper { height: 320px; }
         }
         @media (max-width: 768px) {
-            .hero { padding: 24px 16px; }
+            .hero { padding: 20px 16px; }
             .content { padding: 16px; }
-            .hero-branding { flex-wrap: wrap; }
+            .hero-top { gap: 12px; margin-bottom: 16px; }
+            .hero-branding { flex-direction: column; align-items: flex-start; gap: 8px; }
             .hero-logo { height: 36px; }
-            .hero-title { font-size: 20px; }
-            .hero-subtitle { font-size: 11px; }
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .kpi-card { padding: 14px 12px; }
-            .kpi-value { font-size: 22px; }
-            .chart-wrapper { height: 280px; padding: 12px 16px 20px; }
+            .hero-title { font-size: 22px; }
+            .hero-subtitle { font-size: 12px; }
+            .controls { gap: 8px; width: 100%; }
+            .control-group { min-width: 0; }
+            .ctrl-btn { padding: 7px 14px; font-size: 12px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+            .kpi-card { padding: 16px 14px; }
+            .kpi-label { font-size: 10px; letter-spacing: 0.4px; }
+            .kpi-value { font-size: 24px; }
+            .kpi-trend { font-size: 11px; }
+            .chart-wrapper { height: 280px; padding: 12px 12px 20px; }
             .section-header { padding: 16px 16px 0; }
-            .pl-table-wrapper { padding: 0 16px 16px; }
-            .controls { gap: 10px; }
-            .ctrl-btn { padding: 6px 12px; font-size: 12px; }
-            .footer { padding: 20px 16px; }
+            .section-title { font-size: 16px; }
+            .pl-table-wrapper { padding: 0 12px 16px; }
+            .pl-table { font-size: 12px; }
+            .pl-table th, .pl-table td { padding: 8px 10px; }
+            .pl-table .row-label { min-width: 130px; font-size: 12px; }
+            .pl-year-header { padding: 16px 16px 6px; font-size: 14px; }
+            .footer { padding: 20px 16px; font-size: 12px; }
+            .status-pill { font-size: 11px; padding: 5px 12px; }
+            .section { margin-bottom: 24px; }
         }
         @media (max-width: 480px) {
-            .hero-branding { gap: 10px; }
+            .hero { padding: 18px 14px; }
+            .content { padding: 10px; }
             .hero-logo { height: 32px; }
-            .hero-title { font-size: 18px; }
-            .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .kpi-card { padding: 12px 10px; }
-            .kpi-label { font-size: 9px; }
-            .kpi-value { font-size: 20px; }
-            .kpi-trend { font-size: 11px; }
+            .hero-title { font-size: 19px; }
+            .hero-subtitle { font-size: 11px; }
+            .controls { flex-direction: column; gap: 6px; }
+            .control-group { width: 100%; justify-content: center; }
+            .ctrl-btn { padding: 8px 10px; font-size: 12px; flex: 1; text-align: center; }
+            .kpi-grid { gap: 8px; margin-top: 14px; }
+            .kpi-card { padding: 14px 12px; border-radius: 10px; }
+            .kpi-label { font-size: 9px; letter-spacing: 0.3px; margin-bottom: 3px; }
+            .kpi-value { font-size: 20px; margin-bottom: 3px; }
+            .kpi-trend { font-size: 10px; }
+            .chart-wrapper { height: 240px; padding: 8px 8px 16px; }
+            .section-header { padding: 12px 12px 0; }
+            .section-title { font-size: 15px; }
+            .pl-table-wrapper { padding: 0 8px 12px; }
+            .pl-table { font-size: 11px; }
+            .pl-table th, .pl-table td { padding: 6px 8px; }
+            .pl-table .row-label { min-width: 110px; font-size: 11px; }
+            .pl-year-header { padding: 12px 12px 4px; font-size: 13px; }
+            .section-card { border-radius: 12px; }
+            .section { margin-bottom: 16px; }
+            .footer { padding: 16px 14px; font-size: 11px; }
         }
     </style>
 </head>
