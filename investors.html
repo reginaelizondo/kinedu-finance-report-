@@ -1090,9 +1090,39 @@ function createMetricChart() {
 // ============================================
 // KPI DATA (Marketing & Subscriber metrics)
 // ============================================
+const KPI_ACTUAL_2025 = {
+    January:   { spend: 190695, signups: 146460, cpnu: 1.30, subs: 5520, conversion: 3.77 },
+    February:  { spend: 145796, signups: 92515,  cpnu: 1.58, subs: 4485, conversion: 4.85 },
+    March:     { spend: 141134, signups: 80208,  cpnu: 1.76, subs: 4478, conversion: 5.58 },
+    April:     { spend: 132684, signups: 69762,  cpnu: 1.90, subs: 3813, conversion: 5.47 },
+    May:       { spend: 109575, signups: 67580,  cpnu: 1.62, subs: 3418, conversion: 5.06 },
+    June:      { spend: 142115, signups: 75696,  cpnu: 1.88, subs: 4437, conversion: 5.86 },
+    July:      { spend: 159674, signups: 83777,  cpnu: 1.91, subs: 5263, conversion: 6.28 },
+    August:    { spend: 161528, signups: 100670, cpnu: 1.60, subs: 6849, conversion: 6.80 },
+    September: { spend: 196720, signups: 113628, cpnu: 1.73, subs: 8087, conversion: 7.12 },
+    October:   { spend: 207847, signups: 113475, cpnu: 1.83, subs: 8594, conversion: 7.57 },
+    November:  { spend: 185532, signups: 105163, cpnu: 1.76, subs: 8125, conversion: 7.73 },
+    December:  { spend: 213921, signups: 99934,  cpnu: 2.14, subs: 8357, conversion: 8.36 }
+};
+
+const KPI_BUDGET_2025 = {
+    January:   { spend: 184000, signups: 125641, cpnu: 1.46, subs: 5822, conversion: 4.63 },
+    February:  { spend: 184000, signups: 125641, cpnu: 1.46, subs: 5822, conversion: 4.63 },
+    March:     { spend: 184000, signups: 125641, cpnu: 1.46, subs: 5822, conversion: 4.63 },
+    April:     { spend: 215400, signups: 151958, cpnu: 1.42, subs: 7452, conversion: 4.90 },
+    May:       { spend: 215400, signups: 151958, cpnu: 1.42, subs: 7452, conversion: 4.90 },
+    June:      { spend: 215400, signups: 151958, cpnu: 1.42, subs: 7452, conversion: 4.90 },
+    July:      { spend: 256300, signups: 196455, cpnu: 1.30, subs: 9623, conversion: 4.90 },
+    August:    { spend: 256300, signups: 196455, cpnu: 1.30, subs: 9623, conversion: 4.90 },
+    September: { spend: 256300, signups: 196455, cpnu: 1.30, subs: 9623, conversion: 4.90 },
+    October:   { spend: 257500, signups: 222045, cpnu: 1.16, subs: 10587, conversion: 4.77 },
+    November:  { spend: 257500, signups: 222045, cpnu: 1.16, subs: 10587, conversion: 4.77 },
+    December:  { spend: 257500, signups: 222045, cpnu: 1.16, subs: 10587, conversion: 4.77 }
+};
+
 const KPI_ACTUAL_2026 = {
     January:   { spend: 216357, signups: 120882, cpnu: 1.79, subs: 9464, conversion: 7.83 },
-    February:  { spend: 169668, signups: 82816, cpnu: 2.05, subs: 6994, conversion: 8.45 },
+    February:  { spend: 169668, signups: 82816,  cpnu: 2.05, subs: 6994, conversion: 8.45 },
     March:     { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
     April:     { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
     May:       { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
@@ -1123,19 +1153,21 @@ const KPI_BUDGET_2026 = {
 function hasKPIData(d) { return d && d.signups > 0; }
 
 function getKPIDataForView() {
-    // KPI data only available for 2026
     const labels12 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     if (currentView === '2025') {
-        return { labels: labels12, actual: monthNames.map(() => ({ spend:0, signups:0, cpnu:0, subs:0, conversion:0 })), budget: monthNames.map(() => ({ spend:0, signups:0, cpnu:0, subs:0, conversion:0 })) };
+        return {
+            labels: labels12,
+            actual: monthNames.map(m => KPI_ACTUAL_2025[m]),
+            budget: monthNames.map(m => KPI_BUDGET_2025[m])
+        };
     }
     if (currentView === 'combined') {
         const lbl25 = labels12.map(m => m + ' \'25');
         const lbl26 = labels12.map(m => m + ' \'26');
-        const empty = monthNames.map(() => ({ spend:0, signups:0, cpnu:0, subs:0, conversion:0 }));
         return {
             labels: [...lbl25, ...lbl26],
-            actual: [...empty, ...monthNames.map(m => KPI_ACTUAL_2026[m])],
-            budget: [...empty, ...monthNames.map(m => KPI_BUDGET_2026[m])]
+            actual: [...monthNames.map(m => KPI_ACTUAL_2025[m]), ...monthNames.map(m => KPI_ACTUAL_2026[m])],
+            budget: [...monthNames.map(m => KPI_BUDGET_2025[m]), ...monthNames.map(m => KPI_BUDGET_2026[m])]
         };
     }
     return {
