@@ -491,44 +491,43 @@
                     <div class="chart-wrapper"><canvas id="marginChart"></canvas></div>
                 </div>
             </div>
-            <!-- Revenue & Profitability Breakdown (Interactive) -->
+            <!-- Marketing Efficiency & User Acquisition (Interactive) -->
             <div class="section">
                 <div class="section-card">
                     <div class="section-header">
-                        <div class="section-title">Revenue & Profitability Breakdown</div>
+                        <div class="section-title">Marketing Efficiency & User Acquisition</div>
                     </div>
-                    <div class="inv-toggle-bar" id="toggles-profitability">
+                    <div class="inv-toggle-bar" id="toggles-marketing">
                         <div class="inv-toggle-group">
-                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="mrr" style="--tc:#3b82f6;"><span class="inv-toggle-dot" style="background:#3b82f6;"></span>MRR</button>
-                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="partnerships" style="--tc:#22c55e;"><span class="inv-toggle-dot" style="background:#22c55e;"></span>Partnerships</button>
-                            <button class="inv-toggle-btn" data-chart="profitability" data-metric="commissions" style="--tc:#f97316;"><span class="inv-toggle-dot" style="background:#f97316;"></span>Commissions</button>
-                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="grossProfit" style="--tc:#0ea5e9;"><span class="inv-toggle-dot" style="background:#0ea5e9;"></span>Gross Profit</button>
-                            <button class="inv-toggle-btn" data-chart="profitability" data-metric="contribProfit" style="--tc:#8b5cf6;"><span class="inv-toggle-dot" style="background:#8b5cf6;"></span>Contribution</button>
-                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="ebitda" style="--tc:#ef4444;"><span class="inv-toggle-dot" style="background:#ef4444;"></span>EBITDA</button>
+                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="newUsers" style="--tc:#3B82F6;"><span class="inv-toggle-dot" style="background:#3B82F6;"></span>New Users</button>
+                            <button class="inv-toggle-btn" data-chart="marketing" data-metric="newUsersBudget" style="--tc:#9CA3AF;"><span class="inv-toggle-dot" style="background:#9CA3AF;"></span>New Users Budget</button>
+                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="marketingSpend" style="--tc:#F59E0B;"><span class="inv-toggle-dot" style="background:#F59E0B;"></span>Marketing Spend</button>
+                            <button class="inv-toggle-btn" data-chart="marketing" data-metric="spendBudget" style="--tc:#D1D5DB;"><span class="inv-toggle-dot" style="background:#D1D5DB;"></span>Spend Budget</button>
+                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="cpnu" style="--tc:#8B5CF6;"><span class="inv-toggle-dot" style="background:#8B5CF6;"></span>CPNU</button>
+                            <button class="inv-toggle-btn" data-chart="marketing" data-metric="cpnuBudget" style="--tc:#A78BFA;"><span class="inv-toggle-dot" style="background:#A78BFA;"></span>CPNU Budget</button>
                         </div>
-                        <button class="inv-reset-btn" onclick="resetInvToggles('profitability')">Reset</button>
+                        <button class="inv-reset-btn" onclick="resetInvToggles('marketing')">Reset</button>
                     </div>
-                    <div class="chart-wrapper" style="height:420px;"><canvas id="profitabilityChart"></canvas></div>
+                    <div class="chart-wrapper" style="height:420px;"><canvas id="marketingChart"></canvas></div>
                 </div>
             </div>
 
-            <!-- Efficiency & Unit Economics (Interactive) -->
+            <!-- Subscriber Acquisition & Conversion (Interactive) -->
             <div class="section">
                 <div class="section-card">
                     <div class="section-header">
-                        <div class="section-title">Efficiency & Unit Economics</div>
+                        <div class="section-title">Subscriber Acquisition & Conversion</div>
                     </div>
-                    <div class="inv-toggle-bar" id="toggles-efficiency">
+                    <div class="inv-toggle-bar" id="toggles-subscribers">
                         <div class="inv-toggle-group">
-                            <button class="inv-toggle-btn active" data-chart="efficiency" data-metric="grossMarginPct" style="--tc:#3b82f6;"><span class="inv-toggle-dot" style="background:#3b82f6;"></span>Gross Margin %</button>
-                            <button class="inv-toggle-btn active" data-chart="efficiency" data-metric="contribMarginPct" style="--tc:#8b5cf6;"><span class="inv-toggle-dot" style="background:#8b5cf6;"></span>Contribution %</button>
-                            <button class="inv-toggle-btn" data-chart="efficiency" data-metric="ebitdaMarginPct" style="--tc:#ef4444;"><span class="inv-toggle-dot" style="background:#ef4444;"></span>EBITDA Margin %</button>
-                            <button class="inv-toggle-btn" data-chart="efficiency" data-metric="opexPct" style="--tc:#f59e0b;"><span class="inv-toggle-dot" style="background:#f59e0b;"></span>OpEx % of Rev</button>
-                            <button class="inv-toggle-btn" data-chart="efficiency" data-metric="cacRatio" style="--tc:#14b8a6;"><span class="inv-toggle-dot" style="background:#14b8a6;"></span>Revenue / CAC</button>
+                            <button class="inv-toggle-btn active" data-chart="subscribers" data-metric="actualSubs" style="--tc:#1E40AF;"><span class="inv-toggle-dot" style="background:#1E40AF;"></span>New Subscribers</button>
+                            <button class="inv-toggle-btn" data-chart="subscribers" data-metric="budgetSubs" style="--tc:#9CA3AF;"><span class="inv-toggle-dot" style="background:#9CA3AF;"></span>Budget Subscribers</button>
+                            <button class="inv-toggle-btn active" data-chart="subscribers" data-metric="conversionRate" style="--tc:#10B981;"><span class="inv-toggle-dot" style="background:#10B981;"></span>Conversion Rate</button>
+                            <button class="inv-toggle-btn" data-chart="subscribers" data-metric="conversionRateBudget" style="--tc:#34D399;"><span class="inv-toggle-dot" style="background:#34D399;"></span>Conv. Rate Budget</button>
                         </div>
-                        <button class="inv-reset-btn" onclick="resetInvToggles('efficiency')">Reset</button>
+                        <button class="inv-reset-btn" onclick="resetInvToggles('subscribers')">Reset</button>
                     </div>
-                    <div class="chart-wrapper" style="height:420px;"><canvas id="efficiencyChart"></canvas></div>
+                    <div class="chart-wrapper" style="height:420px;"><canvas id="subscribersChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -1089,145 +1088,233 @@ function createMetricChart() {
 }
 
 // ============================================
-// INTERACTIVE CHARTS: Revenue & Profitability + Efficiency
+// KPI DATA (Marketing & Subscriber metrics)
 // ============================================
-const profitMetrics = {
-    mrr:          { label: 'MRR',          color: '#3b82f6', type: 'bar', calc: d => d.mrr / 1000 },
-    partnerships: { label: 'Partnerships', color: '#22c55e', type: 'bar', calc: d => d.partnerships / 1000 },
-    commissions:  { label: 'Commissions',  color: '#f97316', type: 'bar', calc: d => Math.abs(d.commissions) / 1000 },
-    grossProfit:  { label: 'Gross Profit', color: '#0ea5e9', type: 'line', calc: d => d.grossProfit / 1000 },
-    contribProfit:{ label: 'Contribution', color: '#8b5cf6', type: 'line', calc: d => d.contributionProfit / 1000 },
-    ebitda:       { label: 'EBITDA',       color: '#ef4444', type: 'line', calc: d => d.ebitda / 1000 }
+const KPI_ACTUAL_2026 = {
+    January:   { spend: 216357, signups: 120882, cpnu: 1.79, subs: 9464, conversion: 7.83 },
+    February:  { spend: 169668, signups: 82816, cpnu: 2.05, subs: 6994, conversion: 8.45 },
+    March:     { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    April:     { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    May:       { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    June:      { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    July:      { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    August:    { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    September: { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    October:   { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    November:  { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    December:  { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 }
 };
 
-const effMetrics = {
-    grossMarginPct:   { label: 'Gross Margin %',  color: '#3b82f6', unit: '%', calc: d => d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null },
-    contribMarginPct: { label: 'Contribution %',  color: '#8b5cf6', unit: '%', calc: d => d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null },
-    ebitdaMarginPct:  { label: 'EBITDA Margin %', color: '#ef4444', unit: '%', calc: d => d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null },
-    opexPct:          { label: 'OpEx % of Rev',   color: '#f59e0b', unit: '%', calc: d => d.grossRevenue ? (Math.abs(d.totalOpex) / d.grossRevenue * 100) : null },
-    cacRatio:         { label: 'Revenue / CAC',   color: '#14b8a6', unit: 'x', calc: d => d.totalCAC ? (d.grossRevenue / Math.abs(d.totalCAC)) : null, yAxis: 'y1' }
+const KPI_BUDGET_2026 = {
+    January:   { spend: 180000, signups: 119400, cpnu: 1.51, subs: 7923, conversion: 6.64 },
+    February:  { spend: 180000, signups: 119400, cpnu: 1.51, subs: 7923, conversion: 6.64 },
+    March:     { spend: 180000, signups: 119400, cpnu: 1.51, subs: 7923, conversion: 6.64 },
+    April:     { spend: 205712, signups: 135163, cpnu: 1.52, subs: 9043, conversion: 6.69 },
+    May:       { spend: 205712, signups: 135163, cpnu: 1.52, subs: 9043, conversion: 6.69 },
+    June:      { spend: 205712, signups: 135163, cpnu: 1.52, subs: 9043, conversion: 6.69 },
+    July:      { spend: 223600, signups: 146917, cpnu: 1.52, subs: 9976, conversion: 6.79 },
+    August:    { spend: 223600, signups: 146917, cpnu: 1.52, subs: 9976, conversion: 6.79 },
+    September: { spend: 223600, signups: 146917, cpnu: 1.52, subs: 9976, conversion: 6.79 },
+    October:   { spend: 241488, signups: 158670, cpnu: 1.52, subs: 10774, conversion: 6.79 },
+    November:  { spend: 241488, signups: 158670, cpnu: 1.52, subs: 10774, conversion: 6.79 },
+    December:  { spend: 241488, signups: 158670, cpnu: 1.52, subs: 10774, conversion: 6.79 }
 };
 
+function hasKPIData(d) { return d && d.signups > 0; }
+
+function getKPIDataForView() {
+    // KPI data only available for 2026
+    const labels12 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    if (currentView === '2025') {
+        return { labels: labels12, actual: monthNames.map(() => ({ spend:0, signups:0, cpnu:0, subs:0, conversion:0 })), budget: monthNames.map(() => ({ spend:0, signups:0, cpnu:0, subs:0, conversion:0 })) };
+    }
+    if (currentView === 'combined') {
+        const lbl25 = labels12.map(m => m + ' \'25');
+        const lbl26 = labels12.map(m => m + ' \'26');
+        const empty = monthNames.map(() => ({ spend:0, signups:0, cpnu:0, subs:0, conversion:0 }));
+        return {
+            labels: [...lbl25, ...lbl26],
+            actual: [...empty, ...monthNames.map(m => KPI_ACTUAL_2026[m])],
+            budget: [...empty, ...monthNames.map(m => KPI_BUDGET_2026[m])]
+        };
+    }
+    return {
+        labels: labels12,
+        actual: monthNames.map(m => KPI_ACTUAL_2026[m]),
+        budget: monthNames.map(m => KPI_BUDGET_2026[m])
+    };
+}
+
+// ============================================
+// INTERACTIVE CHARTS: Marketing & Subscribers
+// ============================================
 function getActiveInvMetrics(chartId) {
     return Array.from(document.querySelectorAll(`.inv-toggle-btn[data-chart="${chartId}"].active`)).map(b => b.dataset.metric);
 }
 
-function createProfitabilityChart() {
-    const { labels, data } = getDataForView();
-    const ctx = document.getElementById('profitabilityChart').getContext('2d');
-    const activeKeys = getActiveInvMetrics('profitability');
+function createMarketingChart() {
+    const { labels, actual, budget } = getKPIDataForView();
+    const ctx = document.getElementById('marketingChart').getContext('2d');
+    const activeKeys = getActiveInvMetrics('marketing');
     const ptR = currentView === 'combined' ? 2 : 4;
-    const barW = currentView === 'combined' ? 18 : 40;
+    const barW = currentView === 'combined' ? 14 : 35;
 
+    // Prepare data arrays
+    const signupsActual = actual.map(d => hasKPIData(d) ? d.signups / 1000 : 0);
+    const signupsBudget = budget.map(d => d.signups > 0 ? d.signups / 1000 : 0);
+    const spendActual   = actual.map(d => hasKPIData(d) ? d.spend / 1000 : 0);
+    const spendBudget   = budget.map(d => d.spend > 0 ? d.spend / 1000 : 0);
+    const cpnuActual    = actual.map(d => hasKPIData(d) && d.cpnu > 0 ? d.cpnu : null);
+    const cpnuBudget    = budget.map(d => d.cpnu > 0 ? d.cpnu : null);
+
+    const metricMap = {
+        newUsers:        { label: 'New Users (K)', data: signupsActual, type: 'bar', color: '#3B82F6', yAxis: 'y' },
+        newUsersBudget:  { label: 'New Users Budget (K)', data: signupsBudget, type: 'bar', color: '#9CA3AF', yAxis: 'y' },
+        marketingSpend:  { label: 'Marketing Spend ($K)', data: spendActual, type: 'bar', color: '#F59E0B', yAxis: 'y' },
+        spendBudget:     { label: 'Spend Budget ($K)', data: spendBudget, type: 'bar', color: '#D1D5DB', yAxis: 'y' },
+        cpnu:            { label: 'CPNU ($)', data: cpnuActual, type: 'line', color: '#8B5CF6', yAxis: 'y1' },
+        cpnuBudget:      { label: 'CPNU Budget ($)', data: cpnuBudget, type: 'line', color: '#A78BFA', yAxis: 'y1', dash: [5,5] }
+    };
+
+    const needsCpnuAxis = activeKeys.some(k => k === 'cpnu' || k === 'cpnuBudget');
     const datasets = [];
     activeKeys.forEach(key => {
-        const m = profitMetrics[key];
+        const m = metricMap[key];
         if (!m) return;
-        const values = data.map(d => hasData(d) ? m.calc(d) : null);
         if (m.type === 'bar') {
             datasets.push({
-                label: m.label, data: values, type: 'bar',
+                label: m.label, data: m.data, type: 'bar',
                 backgroundColor: m.color + 'cc', borderColor: m.color,
                 borderWidth: 1, borderRadius: 4, maxBarThickness: barW,
-                order: 2, skipNull: true
+                order: 2, yAxisID: 'y'
             });
         } else {
             datasets.push({
-                label: m.label, data: values, type: 'line',
+                label: m.label, data: m.data, type: 'line',
                 borderColor: m.color, backgroundColor: m.color + '15',
                 borderWidth: 2.5, pointRadius: ptR, pointBackgroundColor: m.color,
-                pointHoverRadius: 6, tension: 0.3, fill: false, spanGaps: false, order: 1
+                pointHoverRadius: 6, tension: 0.3, fill: false, spanGaps: false,
+                borderDash: m.dash || [], order: 1, yAxisID: 'y1'
             });
         }
     });
 
     const opts = chartDefaults();
     opts.plugins.legend = { display: true, position: 'top', labels: { color: '#64748b', font: { size: 11, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 16 } };
-    opts.plugins.tooltip = { ...opts.plugins.tooltip, callbacks: { label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(0)}K` } };
+    opts.plugins.tooltip = { ...opts.plugins.tooltip, mode: 'index', intersect: false, callbacks: {
+        label: ctx => {
+            const ds = ctx.dataset;
+            if (ds.yAxisID === 'y1') return `${ds.label}: $${ctx.parsed.y?.toFixed(2)}`;
+            return `${ds.label}: ${ctx.parsed.y?.toFixed(0)}K`;
+        }
+    }};
     opts.scales.y.beginAtZero = true;
+    opts.scales.y.ticks.callback = v => v >= 1000 ? (v/1000).toFixed(0) + 'M' : v + 'K';
+    if (needsCpnuAxis) {
+        opts.scales.y1 = {
+            position: 'right', grid: { display: false }, beginAtZero: true,
+            ticks: { color: '#8B5CF6', font: { size: 11 }, callback: v => '$' + v.toFixed(2) },
+            title: { display: true, text: 'CPNU ($)', color: '#8B5CF6', font: { size: 11, weight: '600' } }
+        };
+    }
 
-    charts.profitability = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: opts });
+    charts.marketing = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: opts });
 }
 
-function createEfficiencyChart() {
-    const { labels, data } = getDataForView();
-    const ctx = document.getElementById('efficiencyChart').getContext('2d');
-    const activeKeys = getActiveInvMetrics('efficiency');
+function createSubscribersChart() {
+    const { labels, actual, budget } = getKPIDataForView();
+    const ctx = document.getElementById('subscribersChart').getContext('2d');
+    const activeKeys = getActiveInvMetrics('subscribers');
     const ptR = currentView === 'combined' ? 2 : 4;
-    const hasRatio = activeKeys.includes('cacRatio');
-    const hasPct = activeKeys.some(k => k !== 'cacRatio');
+    const barW = currentView === 'combined' ? 14 : 35;
 
+    const subsActual  = actual.map(d => hasKPIData(d) ? d.subs : 0);
+    const subsBudget  = budget.map(d => d.subs > 0 ? d.subs : 0);
+    const convActual  = actual.map(d => hasKPIData(d) && d.conversion > 0 ? d.conversion : null);
+    const convBudget  = budget.map(d => d.conversion > 0 ? d.conversion : null);
+
+    const metricMap = {
+        actualSubs:           { label: 'New Subscribers', data: subsActual, type: 'bar', color: '#1E40AF', yAxis: 'y' },
+        budgetSubs:           { label: 'Budget Subscribers', data: subsBudget, type: 'bar', color: '#9CA3AF', yAxis: 'y' },
+        conversionRate:       { label: 'Conversion Rate', data: convActual, type: 'line', color: '#10B981', yAxis: 'y1' },
+        conversionRateBudget: { label: 'Conv. Rate Budget', data: convBudget, type: 'line', color: '#34D399', yAxis: 'y1', dash: [5,5] }
+    };
+
+    const needsConvAxis = activeKeys.some(k => k === 'conversionRate' || k === 'conversionRateBudget');
     const datasets = [];
     activeKeys.forEach(key => {
-        const m = effMetrics[key];
+        const m = metricMap[key];
         if (!m) return;
-        const values = data.map(d => hasData(d) ? m.calc(d) : null);
-        datasets.push({
-            label: m.label, data: values,
-            borderColor: m.color, backgroundColor: m.color + '15',
-            borderWidth: 2.5, pointRadius: ptR, pointBackgroundColor: m.color,
-            pointHoverRadius: 6, tension: 0.3, fill: false, spanGaps: false,
-            yAxisID: m.yAxis || 'y'
-        });
+        if (m.type === 'bar') {
+            datasets.push({
+                label: m.label, data: m.data, type: 'bar',
+                backgroundColor: m.color + 'cc', borderColor: m.color,
+                borderWidth: 1, borderRadius: 4, maxBarThickness: barW,
+                order: 2, yAxisID: 'y'
+            });
+        } else {
+            datasets.push({
+                label: m.label, data: m.data, type: 'line',
+                borderColor: m.color, backgroundColor: m.color + '15',
+                borderWidth: 2.5, pointRadius: ptR, pointBackgroundColor: m.color,
+                pointHoverRadius: 6, tension: 0.3, fill: false, spanGaps: false,
+                borderDash: m.dash || [], order: 1, yAxisID: 'y1'
+            });
+        }
     });
 
     const opts = chartDefaults();
     opts.plugins.legend = { display: true, position: 'top', labels: { color: '#64748b', font: { size: 11, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 16 } };
-    opts.plugins.tooltip = { ...opts.plugins.tooltip, callbacks: {
+    opts.plugins.tooltip = { ...opts.plugins.tooltip, mode: 'index', intersect: false, callbacks: {
         label: ctx => {
-            const key = activeKeys[ctx.datasetIndex];
-            const m = effMetrics[key];
-            return m && m.unit === 'x' ? `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2)}x` : `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}%`;
+            const ds = ctx.dataset;
+            if (ds.yAxisID === 'y1') return `${ds.label}: ${ctx.parsed.y?.toFixed(2)}%`;
+            return `${ds.label}: ${ctx.parsed.y?.toLocaleString()}`;
         }
     }};
-    opts.scales.y.beginAtZero = false;
-    opts.scales.y.ticks.callback = v => v.toFixed(0) + '%';
-    if (!hasPct) opts.scales.y.display = false;
-    if (hasRatio) {
+    opts.scales.y.beginAtZero = true;
+    opts.scales.y.ticks.callback = v => v >= 1000 ? (v/1000).toFixed(1) + 'K' : v;
+    if (needsConvAxis) {
         opts.scales.y1 = {
-            position: 'right', grid: { display: false },
-            ticks: { color: '#14b8a6', font: { size: 11 }, callback: v => v.toFixed(1) + 'x' },
-            title: { display: true, text: 'Revenue / CAC', color: '#14b8a6', font: { size: 11, weight: '600' } }
+            position: 'right', grid: { display: false }, beginAtZero: false,
+            ticks: { color: '#10B981', font: { size: 11 }, callback: v => v.toFixed(1) + '%' },
+            title: { display: true, text: 'Conversion Rate', color: '#10B981', font: { size: 11, weight: '600' } }
         };
     }
 
-    charts.efficiency = new Chart(ctx, { type: 'line', data: { labels, datasets }, options: opts });
+    charts.subscribers = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: opts });
 }
 
 // Toggle click handler for interactive charts
 document.addEventListener('click', function(e) {
     const btn = e.target.closest('.inv-toggle-btn');
     if (!btn) return;
-    // Prevent deselecting all
     const chartId = btn.dataset.chart;
     const active = document.querySelectorAll(`.inv-toggle-btn[data-chart="${chartId}"].active`);
     if (btn.classList.contains('active') && active.length <= 1) return;
-
     btn.classList.toggle('active');
-    if (chartId === 'profitability') {
-        if (charts.profitability) { charts.profitability.destroy(); delete charts.profitability; }
-        createProfitabilityChart();
-    } else if (chartId === 'efficiency') {
-        if (charts.efficiency) { charts.efficiency.destroy(); delete charts.efficiency; }
-        createEfficiencyChart();
-    }
+    rebuildInvChart(chartId);
 });
 
+function rebuildInvChart(chartId) {
+    if (chartId === 'marketing') {
+        if (charts.marketing) { charts.marketing.destroy(); delete charts.marketing; }
+        createMarketingChart();
+    } else if (chartId === 'subscribers') {
+        if (charts.subscribers) { charts.subscribers.destroy(); delete charts.subscribers; }
+        createSubscribersChart();
+    }
+}
+
 function resetInvToggles(chartId) {
-    const defaults = chartId === 'profitability'
-        ? ['mrr', 'partnerships', 'grossProfit', 'ebitda']
-        : ['grossMarginPct', 'contribMarginPct'];
+    const defaults = chartId === 'marketing'
+        ? ['newUsers', 'marketingSpend', 'cpnu']
+        : ['actualSubs', 'conversionRate'];
     document.querySelectorAll(`.inv-toggle-btn[data-chart="${chartId}"]`).forEach(btn => {
         if (defaults.includes(btn.dataset.metric)) btn.classList.add('active');
         else btn.classList.remove('active');
     });
-    if (chartId === 'profitability') {
-        if (charts.profitability) { charts.profitability.destroy(); delete charts.profitability; }
-        createProfitabilityChart();
-    } else {
-        if (charts.efficiency) { charts.efficiency.destroy(); delete charts.efficiency; }
-        createEfficiencyChart();
-    }
+    rebuildInvChart(chartId);
 }
 
 function updateAll() {
@@ -1239,8 +1326,8 @@ function updateAll() {
     createEbitdaChart();
     createContribChart();
     createMarginChart();
-    createProfitabilityChart();
-    createEfficiencyChart();
+    createMarketingChart();
+    createSubscribersChart();
     renderPLTable();
 }
 
