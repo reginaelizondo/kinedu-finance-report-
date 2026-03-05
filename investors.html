@@ -259,6 +259,25 @@
         }
         .footer a { color: #3b82f6; text-decoration: none; }
 
+        /* Metric buttons */
+        .ctrl-btn-metric {
+            padding: 6px 14px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .ctrl-btn-metric:hover { background: #e2e8f0; color: #1e3a5f; }
+        .ctrl-btn-metric.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+
         /* Status pill */
         .status-pill {
             display: inline-flex;
@@ -383,6 +402,23 @@
                         <div class="section-title">Monthly Revenue</div>
                     </div>
                     <div class="chart-wrapper"><canvas id="revenueChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Unit Economics Chart -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Key Metrics</div>
+                    </div>
+                    <div style="padding: 8px 28px 0; display: flex; gap: 6px; flex-wrap: wrap;" id="metricBtns">
+                        <button class="ctrl-btn-metric active" onclick="setMetric('grossMarginPct')">Gross Margin %</button>
+                        <button class="ctrl-btn-metric" onclick="setMetric('contribMarginPct')">Contribution %</button>
+                        <button class="ctrl-btn-metric" onclick="setMetric('ebitdaMarginPct')">EBITDA Margin %</button>
+                        <button class="ctrl-btn-metric" onclick="setMetric('cacRatio')">Revenue / CAC</button>
+                        <button class="ctrl-btn-metric" onclick="setMetric('opexPct')">OpEx % of Rev</button>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="metricChart"></canvas></div>
                 </div>
             </div>
 
@@ -828,11 +864,34 @@ function renderPLTable() {
     const container = document.getElementById('plTableContainer');
 
     if (currentView === 'combined') {
+        // Build combined summary row
+        const { data } = getDataForView();
+        const withData = data.filter(hasData);
+        const sum = (field) => withData.reduce((s, d) => s + (d[field] || 0), 0);
+        const fK = (v) => {
+            const a = Math.abs(v);
+            const fmt = a >= 1000000 ? '$' + (a/1000000).toFixed(1) + 'M' : '$' + Math.round(a/1000) + 'K';
+            return v < 0 ? '-' + fmt : fmt;
+        };
+        const combinedSummary = `
+            <div style="background:#1e3a5f;color:white;border-radius:12px;padding:20px 24px;margin-top:20px;">
+                <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Combined Total (2025 + 2026)</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Gross Revenue</div><div style="font-size:20px;font-weight:700;">${fK(sum('grossRevenue'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Net Revenue</div><div style="font-size:20px;font-weight:700;">${fK(sum('netRevenue'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Gross Margin</div><div style="font-size:20px;font-weight:700;">${fK(sum('grossProfit'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Contribution</div><div style="font-size:20px;font-weight:700;">${fK(sum('contributionProfit'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Total OpEx</div><div style="font-size:20px;font-weight:700;">${fK(-Math.abs(sum('totalOpex')))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">EBITDA</div><div style="font-size:20px;font-weight:700;color:${sum('ebitda') >= 0 ? '#4ade80' : '#fca5a5'};">${fK(sum('ebitda'))}</div></div>
+                </div>
+            </div>`;
+
         container.innerHTML =
             '<div class="pl-year-header">2025 Full Year</div>' +
             buildPLTable('2025') +
             '<div class="pl-year-header" style="margin-top:16px;">2026 Year to Date</div>' +
-            buildPLTable('2026');
+            buildPLTable('2026') +
+            combinedSummary;
     } else {
         container.innerHTML = buildPLTable(currentView);
     }
@@ -900,11 +959,71 @@ function buildPLTable(year) {
 // ============================================
 // UPDATE ALL
 // ============================================
+// ============================================
+// KEY METRICS CHART
+// ============================================
+let currentMetric = 'grossMarginPct';
+
+const metricDefs = {
+    grossMarginPct:    { label: 'Gross Margin %',        unit: '%', calc: d => d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null, color: '#3b82f6' },
+    contribMarginPct:  { label: 'Contribution Margin %', unit: '%', calc: d => d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null, color: '#8b5cf6' },
+    ebitdaMarginPct:   { label: 'EBITDA Margin %',       unit: '%', calc: d => d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null, color: '#ef4444' },
+    cacRatio:          { label: 'Revenue / CAC Ratio',    unit: 'x', calc: d => d.totalCAC ? (d.grossRevenue / Math.abs(d.totalCAC)) : null, color: '#f59e0b' },
+    opexPct:           { label: 'OpEx % of Revenue',      unit: '%', calc: d => d.grossRevenue ? (Math.abs(d.totalOpex) / d.grossRevenue * 100) : null, color: '#14b8a6' }
+};
+
+function setMetric(m) {
+    currentMetric = m;
+    document.querySelectorAll('.ctrl-btn-metric').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.ctrl-btn-metric[onclick*="${m}"]`)?.classList.add('active');
+    if (charts.metric) { charts.metric.destroy(); delete charts.metric; }
+    createMetricChart();
+}
+
+function createMetricChart() {
+    const { labels, data } = getDataForView();
+    const def = metricDefs[currentMetric];
+    const vals = data.map(d => hasData(d) ? def.calc(d) : null);
+    const ctx = document.getElementById('metricChart').getContext('2d');
+
+    const opts = chartDefaults();
+    opts.scales.y.beginAtZero = def.unit === '%' ? false : true;
+    opts.scales.y.ticks.callback = v => def.unit === '%' ? v.toFixed(0) + '%' : v.toFixed(1) + 'x';
+    opts.plugins.tooltip.callbacks = {
+        label: ctx => {
+            const v = ctx.parsed.y;
+            return def.label + ': ' + (def.unit === '%' ? v.toFixed(1) + '%' : v.toFixed(2) + 'x');
+        }
+    };
+
+    charts.metric = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: def.label,
+                data: vals,
+                borderColor: def.color,
+                backgroundColor: def.color + '15',
+                borderWidth: 2.5,
+                pointRadius: currentView === 'combined' ? 3 : 5,
+                pointBackgroundColor: def.color,
+                pointHoverRadius: 7,
+                tension: 0.3,
+                fill: true,
+                spanGaps: false
+            }]
+        },
+        options: opts
+    });
+}
+
 function updateAll() {
     updateSubtitle();
     renderKPIs();
     destroyCharts();
     createRevenueChart();
+    createMetricChart();
     createEbitdaChart();
     createContribChart();
     createMarginChart();

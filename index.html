@@ -3349,6 +3349,7 @@
         <!-- Consolidated KPIs Section -->
         <div class="kpi-section">
             <h2 class="section-title">Key Performance Indicators</h2>
+            <div id="kpiDateRange" style="font-size: 13px; color: #64748b; margin: 4px 0 12px; font-weight: 500;"></div>
             <div class="kpi-grid-8" id="consolidatedKPIs">
                 <!-- KPIs will be populated by JavaScript -->
             </div>
@@ -6809,6 +6810,32 @@
             const kpiGrid = document.getElementById('consolidatedKPIs');
             if (!kpiGrid) return;
 
+            // Update date range indicator
+            const kpiDateRange = document.getElementById('kpiDateRange');
+            if (kpiDateRange) {
+                let rangeText = '';
+                const yr = currentYear;
+                if (customRangeActive) {
+                    const months = getCustomRangeMonths();
+                    if (months.length > 0) {
+                        rangeText = `Showing accumulated totals for ${months[0]} ${yr} – ${months[months.length - 1]} ${yr} (${months.length} month${months.length > 1 ? 's' : ''})`;
+                    }
+                } else if (currentGranularity === 'monthly') {
+                    rangeText = `Showing: ${currentPeriod} ${yr}`;
+                } else if (currentGranularity === 'quarterly') {
+                    const qMap = { Q1: ['Jan','Mar'], Q2: ['Apr','Jun'], Q3: ['Jul','Sep'], Q4: ['Oct','Dec'] };
+                    const r = qMap[currentPeriod] || ['',''];
+                    rangeText = `Showing accumulated totals for ${r[0]} ${yr} – ${r[1]} ${yr} (3 months)`;
+                } else if (currentGranularity === 'semester') {
+                    const sMap = { H1: ['Jan','Jun',6], H2: ['Jul','Dec',6] };
+                    const r = sMap[currentPeriod] || ['','',0];
+                    rangeText = `Showing accumulated totals for ${r[0]} ${yr} – ${r[1]} ${yr} (${r[2]} months)`;
+                } else {
+                    rangeText = `Showing accumulated totals for Jan ${yr} – Dec ${yr} (12 months)`;
+                }
+                kpiDateRange.textContent = rangeText;
+            }
+
             // Helper function to safely calculate variance percentage
             const safeVariance = (actual, budgetVal) => {
                 if (!budgetVal || budgetVal === 0) return 0;
@@ -8410,8 +8437,19 @@
 
             const growthResult = calculateGrowthForPeriod(dataArray, currentGranularity);
 
-            if (!show || growthResult === null) {
+            if (!show) {
                 badge.classList.add('hidden');
+                return;
+            }
+
+            if (growthResult === null) {
+                badge.classList.remove('hidden');
+                badge.classList.remove('positive', 'negative', 'neutral');
+                badge.classList.add('neutral');
+                const arrowEl = badge.querySelector('.badge-arrow');
+                const valueEl = badge.querySelector('.badge-value');
+                if (arrowEl) arrowEl.textContent = '—';
+                if (valueEl) valueEl.textContent = 'Need 2+ periods with data';
                 return;
             }
 
