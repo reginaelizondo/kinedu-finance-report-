@@ -259,24 +259,58 @@
         }
         .footer a { color: #3b82f6; text-decoration: none; }
 
-        /* Metric buttons */
-        .ctrl-btn-metric {
-            padding: 6px 14px;
-            border: 1px solid #e2e8f0;
+        /* Toggle bar for interactive charts */
+        .toggle-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
             background: #f8fafc;
-            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+        .toggle-group { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+        .toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #94a3b8;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             border-radius: 6px;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
-        .ctrl-btn-metric:hover { background: #e2e8f0; color: #1e3a5f; }
-        .ctrl-btn-metric.active {
-            background: #1e3a5f;
+        .toggle-btn:hover { background: #f1f5f9; color: #475569; }
+        .toggle-btn.active {
+            background: var(--tc, #3b82f6);
             color: white;
-            border-color: #1e3a5f;
+            border-color: var(--tc, #3b82f6);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.12);
         }
+        .toggle-btn.active .toggle-dot { background: white !important; }
+        .toggle-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .toggle-reset {
+            padding: 5px 12px;
+            border: 1px dashed #cbd5e1;
+            background: transparent;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .toggle-reset:hover { background: #f1f5f9; color: #64748b; border-color: #94a3b8; }
 
         /* Status pill */
         .status-pill {
@@ -405,20 +439,44 @@
                 </div>
             </div>
 
-            <!-- Unit Economics Chart -->
+            <!-- Revenue & Profitability (Interactive) -->
             <div class="section">
                 <div class="section-card">
                     <div class="section-header">
-                        <div class="section-title">Key Metrics</div>
+                        <div class="section-title">Revenue & Profitability</div>
                     </div>
-                    <div style="padding: 8px 28px 0; display: flex; gap: 6px; flex-wrap: wrap;" id="metricBtns">
-                        <button class="ctrl-btn-metric active" onclick="setMetric('grossMarginPct')">Gross Margin %</button>
-                        <button class="ctrl-btn-metric" onclick="setMetric('contribMarginPct')">Contribution %</button>
-                        <button class="ctrl-btn-metric" onclick="setMetric('ebitdaMarginPct')">EBITDA Margin %</button>
-                        <button class="ctrl-btn-metric" onclick="setMetric('cacRatio')">Revenue / CAC</button>
-                        <button class="ctrl-btn-metric" onclick="setMetric('opexPct')">OpEx % of Rev</button>
+                    <div class="toggle-bar" id="toggles-profitability">
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-chart="profitability" data-metric="mrr" style="--tc:#3b82f6;"><span class="toggle-dot" style="background:#3b82f6;"></span>MRR</button>
+                            <button class="toggle-btn active" data-chart="profitability" data-metric="partnerships" style="--tc:#22c55e;"><span class="toggle-dot" style="background:#22c55e;"></span>Partnerships</button>
+                            <button class="toggle-btn" data-chart="profitability" data-metric="commissions" style="--tc:#f97316;"><span class="toggle-dot" style="background:#f97316;"></span>Commissions</button>
+                            <button class="toggle-btn active" data-chart="profitability" data-metric="grossProfit" style="--tc:#0ea5e9;"><span class="toggle-dot" style="background:#0ea5e9;"></span>Gross Profit</button>
+                            <button class="toggle-btn" data-chart="profitability" data-metric="contribProfit" style="--tc:#8b5cf6;"><span class="toggle-dot" style="background:#8b5cf6;"></span>Contribution</button>
+                            <button class="toggle-btn active" data-chart="profitability" data-metric="ebitda" style="--tc:#ef4444;"><span class="toggle-dot" style="background:#ef4444;"></span>EBITDA</button>
+                        </div>
+                        <button class="toggle-reset" onclick="resetToggles('profitability')">Reset</button>
                     </div>
-                    <div class="chart-wrapper"><canvas id="metricChart"></canvas></div>
+                    <div class="chart-wrapper" style="height:420px;"><canvas id="profitabilityChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Efficiency & Margins (Interactive) -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Efficiency & Unit Economics</div>
+                    </div>
+                    <div class="toggle-bar" id="toggles-efficiency">
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-chart="efficiency" data-metric="grossMarginPct" style="--tc:#3b82f6;"><span class="toggle-dot" style="background:#3b82f6;"></span>Gross Margin %</button>
+                            <button class="toggle-btn active" data-chart="efficiency" data-metric="contribMarginPct" style="--tc:#8b5cf6;"><span class="toggle-dot" style="background:#8b5cf6;"></span>Contribution %</button>
+                            <button class="toggle-btn" data-chart="efficiency" data-metric="ebitdaMarginPct" style="--tc:#ef4444;"><span class="toggle-dot" style="background:#ef4444;"></span>EBITDA Margin %</button>
+                            <button class="toggle-btn" data-chart="efficiency" data-metric="opexPct" style="--tc:#f59e0b;"><span class="toggle-dot" style="background:#f59e0b;"></span>OpEx % of Rev</button>
+                            <button class="toggle-btn" data-chart="efficiency" data-metric="cacRatio" style="--tc:#14b8a6;"><span class="toggle-dot" style="background:#14b8a6;"></span>Revenue / CAC</button>
+                        </div>
+                        <button class="toggle-reset" onclick="resetToggles('efficiency')">Reset</button>
+                    </div>
+                    <div class="chart-wrapper" style="height:420px;"><canvas id="efficiencyChart"></canvas></div>
                 </div>
             </div>
 
@@ -429,36 +487,6 @@
                         <div class="section-title">P&L Summary</div>
                     </div>
                     <div id="plTableContainer"></div>
-                </div>
-            </div>
-
-            <!-- EBITDA Chart -->
-            <div class="section">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">EBITDA Trend</div>
-                    </div>
-                    <div class="chart-wrapper"><canvas id="ebitdaChart"></canvas></div>
-                </div>
-            </div>
-
-            <!-- Contribution Margin Chart -->
-            <div class="section">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">Contribution Margin</div>
-                    </div>
-                    <div class="chart-wrapper"><canvas id="contribChart"></canvas></div>
-                </div>
-            </div>
-
-            <!-- Margin Analysis -->
-            <div class="section">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">Margin Analysis (%)</div>
-                    </div>
-                    <div class="chart-wrapper"><canvas id="marginChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -610,7 +638,40 @@ function updateSubtitle() {
     const methodLabel = currentMethod === 'acc' ? 'Accrual (ACC)' : 'Cash (CASH)';
     const viewLabel = currentView === 'combined' ? '2025 + 2026' : currentView;
     document.getElementById('heroSubtitle').textContent = `${methodLabel} Accounting | ${viewLabel}`;
-    document.getElementById('statusText').textContent = `Showing: ${viewLabel} ${currentMethod.toUpperCase()}`;
+
+    // Build explicit date range for status pill
+    const { data } = getDataForView();
+    const withData = data.filter(hasData);
+    const mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    let rangeText = '';
+    if (withData.length === 0) {
+        rangeText = `${viewLabel} ${currentMethod.toUpperCase()} · No data available`;
+    } else if (currentView === 'combined') {
+        // Find first and last month with data across both years
+        const src25 = getSource('2025', currentMethod);
+        const src26 = getSource('2026', currentMethod);
+        let firstMonth = '', lastMonth = '';
+        for (let i = 0; i < 12; i++) {
+            if (hasData(src25[monthNames[i]])) { if (!firstMonth) firstMonth = mNames[i] + ' 2025'; lastMonth = mNames[i] + ' 2025'; }
+        }
+        for (let i = 0; i < 12; i++) {
+            if (hasData(src26[monthNames[i]])) { if (!firstMonth) firstMonth = mNames[i] + ' 2026'; lastMonth = mNames[i] + ' 2026'; }
+        }
+        rangeText = `${currentMethod.toUpperCase()} · ${firstMonth} – ${lastMonth} (${withData.length} months)`;
+    } else {
+        const yr = currentView;
+        const src = getSource(yr, currentMethod);
+        let firstIdx = -1, lastIdx = -1;
+        for (let i = 0; i < 12; i++) {
+            if (hasData(src[monthNames[i]])) { if (firstIdx === -1) firstIdx = i; lastIdx = i; }
+        }
+        if (firstIdx === lastIdx) {
+            rangeText = `${currentMethod.toUpperCase()} · ${mNames[firstIdx]} ${yr} (1 month)`;
+        } else {
+            rangeText = `${currentMethod.toUpperCase()} · ${mNames[firstIdx]} ${yr} – ${mNames[lastIdx]} ${yr} (${withData.length} months)`;
+        }
+    }
+    document.getElementById('statusText').textContent = rangeText;
 }
 
 // ============================================
@@ -734,127 +795,209 @@ function createRevenueChart() {
     });
 }
 
-function createEbitdaChart() {
-    const { labels, data } = getDataForView();
-    const ctx = document.getElementById('ebitdaChart').getContext('2d');
-    const values = data.map(d => hasData(d) ? d.ebitda / 1000 : null);
+// ============================================
+// INTERACTIVE CHARTS: Revenue & Profitability + Efficiency & Unit Economics
+// ============================================
 
-    charts.ebitda = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'EBITDA',
-                data: values,
-                backgroundColor: values.map(v => v !== null ? (v >= 0 ? '#22c55e' : '#ef4444') : 'transparent'),
-                borderRadius: 6,
-                maxBarThickness: currentView === 'combined' ? 18 : 40,
-                skipNull: true
-            }]
-        },
-        options: {
-            ...chartDefaults(),
-            plugins: {
-                ...chartDefaults().plugins,
-                tooltip: {
-                    ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => `EBITDA: $${ctx.parsed.y?.toFixed(0)}K` }
-                }
-            }
-        }
-    });
+// Metric definitions for the profitability chart (bars = absolute $K values, lines = absolute $K values)
+const profitabilityMetrics = {
+    mrr:          { label: 'MRR',            color: '#3b82f6', type: 'bar', calc: d => d.mrr / 1000 },
+    partnerships: { label: 'Partnerships',   color: '#22c55e', type: 'bar', calc: d => d.partnerships / 1000 },
+    commissions:  { label: 'Commissions',    color: '#f97316', type: 'bar', calc: d => d.commissions / 1000 },
+    grossProfit:  { label: 'Gross Profit',   color: '#0ea5e9', type: 'line', calc: d => d.grossProfit / 1000 },
+    contribProfit:{ label: 'Contribution',   color: '#8b5cf6', type: 'line', calc: d => d.contributionProfit / 1000 },
+    ebitda:       { label: 'EBITDA',         color: '#ef4444', type: 'line', calc: d => d.ebitda / 1000 }
+};
+
+// Metric definitions for the efficiency chart (percentages + ratio)
+const efficiencyMetrics = {
+    grossMarginPct:   { label: 'Gross Margin %',   color: '#3b82f6', unit: '%', calc: d => d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null },
+    contribMarginPct: { label: 'Contribution %',   color: '#8b5cf6', unit: '%', calc: d => d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null },
+    ebitdaMarginPct:  { label: 'EBITDA Margin %',  color: '#ef4444', unit: '%', calc: d => d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null },
+    opexPct:          { label: 'OpEx % of Rev',     color: '#f59e0b', unit: '%', calc: d => d.grossRevenue ? (Math.abs(d.totalOpex) / d.grossRevenue * 100) : null },
+    cacRatio:         { label: 'Revenue / CAC',     color: '#14b8a6', unit: 'x', calc: d => d.totalCAC ? (d.grossRevenue / Math.abs(d.totalCAC)) : null, yAxis: 'y1' }
+};
+
+function getActiveMetrics(chartId) {
+    const btns = document.querySelectorAll(`.toggle-btn[data-chart="${chartId}"].active`);
+    return Array.from(btns).map(b => b.dataset.metric);
 }
 
-function createContribChart() {
+function createProfitabilityChart() {
     const { labels, data } = getDataForView();
-    const ctx = document.getElementById('contribChart').getContext('2d');
-    const values = data.map(d => hasData(d) ? d.contributionProfit / 1000 : null);
+    const ctx = document.getElementById('profitabilityChart').getContext('2d');
+    const activeKeys = getActiveMetrics('profitability');
+    const ptRadius = currentView === 'combined' ? 2 : 4;
+    const barThick = currentView === 'combined' ? 18 : 40;
 
-    charts.contrib = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Contribution Margin',
+    const datasets = [];
+    activeKeys.forEach(key => {
+        const m = profitabilityMetrics[key];
+        if (!m) return;
+        const values = data.map(d => hasData(d) ? m.calc(d) : null);
+
+        if (m.type === 'bar') {
+            datasets.push({
+                label: m.label,
                 data: values,
-                backgroundColor: values.map(v => v !== null ? (v >= 0 ? '#1e3a5f' : '#ef4444') : 'transparent'),
-                borderRadius: 6,
-                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                type: 'bar',
+                backgroundColor: m.color + 'cc',
+                borderColor: m.color,
+                borderWidth: 1,
+                borderRadius: 4,
+                maxBarThickness: barThick,
+                order: 2,
                 skipNull: true
-            }]
-        },
-        options: {
-            ...chartDefaults(),
-            plugins: {
-                ...chartDefaults().plugins,
-                tooltip: {
-                    ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => `Contrib. Margin: $${ctx.parsed.y?.toFixed(0)}K` }
-                }
-            }
+            });
+        } else {
+            datasets.push({
+                label: m.label,
+                data: values,
+                type: 'line',
+                borderColor: m.color,
+                backgroundColor: m.color + '15',
+                borderWidth: 2.5,
+                pointRadius: ptRadius,
+                pointBackgroundColor: m.color,
+                pointHoverRadius: 6,
+                tension: 0.3,
+                fill: false,
+                spanGaps: false,
+                order: 1
+            });
         }
     });
-}
-
-function createMarginChart() {
-    const { labels, data } = getDataForView();
-    const ctx = document.getElementById('marginChart').getContext('2d');
-    const grossPct = data.map(d => hasData(d) ? (d.grossProfit / d.grossRevenue * 100) : null);
-    const contribPct = data.map(d => hasData(d) ? (d.contributionProfit / d.grossRevenue * 100) : null);
 
     const opts = chartDefaults();
-    opts.scales.y.ticks.callback = v => v + '%';
-    opts.scales.y.beginAtZero = false;
     opts.plugins.legend = {
-        display: true,
-        position: 'top',
-        labels: { color: '#64748b', font: { size: 12, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 20 }
+        display: true, position: 'top',
+        labels: { color: '#64748b', font: { size: 11, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 16 }
     };
+    opts.plugins.tooltip = {
+        ...opts.plugins.tooltip,
+        callbacks: { label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(0)}K` }
+    };
+    opts.scales.y.beginAtZero = true;
 
-    charts.margin = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Gross Margin %',
-                    data: grossPct,
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.08)',
-                    borderWidth: 2.5,
-                    pointRadius: currentView === 'combined' ? 2 : 4,
-                    pointHoverRadius: 6,
-                    tension: 0.3,
-                    fill: true,
-                    spanGaps: false
-                },
-                {
-                    label: 'Contribution Margin %',
-                    data: contribPct,
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.08)',
-                    borderWidth: 2.5,
-                    pointRadius: currentView === 'combined' ? 2 : 4,
-                    pointHoverRadius: 6,
-                    tension: 0.3,
-                    fill: true,
-                    spanGaps: false
-                }
-            ]
-        },
-        options: {
-            ...opts,
-            plugins: {
-                ...opts.plugins,
-                tooltip: {
-                    ...opts.plugins.tooltip,
-                    callbacks: {
-                        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}%`
-                    }
-                }
+    charts.profitability = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: opts
+    });
+}
+
+function createEfficiencyChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('efficiencyChart').getContext('2d');
+    const activeKeys = getActiveMetrics('efficiency');
+    const ptRadius = currentView === 'combined' ? 2 : 4;
+
+    const hasRatio = activeKeys.includes('cacRatio');
+    const hasPct = activeKeys.some(k => k !== 'cacRatio');
+
+    const datasets = [];
+    activeKeys.forEach(key => {
+        const m = efficiencyMetrics[key];
+        if (!m) return;
+        const values = data.map(d => hasData(d) ? m.calc(d) : null);
+
+        datasets.push({
+            label: m.label,
+            data: values,
+            borderColor: m.color,
+            backgroundColor: m.color + '15',
+            borderWidth: 2.5,
+            pointRadius: ptRadius,
+            pointBackgroundColor: m.color,
+            pointHoverRadius: 6,
+            tension: 0.3,
+            fill: false,
+            spanGaps: false,
+            yAxisID: m.yAxis || 'y'
+        });
+    });
+
+    const opts = chartDefaults();
+    opts.plugins.legend = {
+        display: true, position: 'top',
+        labels: { color: '#64748b', font: { size: 11, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 16 }
+    };
+    opts.plugins.tooltip = {
+        ...opts.plugins.tooltip,
+        callbacks: {
+            label: ctx => {
+                const key = activeKeys[ctx.datasetIndex];
+                const m = efficiencyMetrics[key];
+                if (m && m.unit === 'x') return `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2)}x`;
+                return `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}%`;
             }
         }
+    };
+
+    // Left Y-axis: percentage
+    opts.scales.y.beginAtZero = false;
+    opts.scales.y.ticks.callback = v => v.toFixed(0) + '%';
+    if (!hasPct) opts.scales.y.display = false;
+
+    // Right Y-axis: ratio (only if cacRatio is active)
+    if (hasRatio) {
+        opts.scales.y1 = {
+            position: 'right',
+            grid: { display: false },
+            ticks: {
+                color: '#14b8a6',
+                font: { size: 11 },
+                callback: v => v.toFixed(1) + 'x'
+            },
+            title: {
+                display: true, text: 'Revenue / CAC',
+                color: '#14b8a6', font: { size: 11, weight: '600' }
+            }
+        };
+    }
+
+    charts.efficiency = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: opts
     });
+}
+
+// Toggle click handler
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.toggle-btn');
+    if (!btn) return;
+    btn.classList.toggle('active');
+    const chartId = btn.dataset.chart;
+    if (chartId === 'profitability') {
+        if (charts.profitability) { charts.profitability.destroy(); delete charts.profitability; }
+        createProfitabilityChart();
+    } else if (chartId === 'efficiency') {
+        if (charts.efficiency) { charts.efficiency.destroy(); delete charts.efficiency; }
+        createEfficiencyChart();
+    }
+});
+
+function resetToggles(chartId) {
+    const btns = document.querySelectorAll(`.toggle-btn[data-chart="${chartId}"]`);
+    btns.forEach((btn, i) => {
+        // Reset to initial state: first few active by default
+        const defaults = chartId === 'profitability'
+            ? ['mrr', 'partnerships', 'grossProfit', 'ebitda']
+            : ['grossMarginPct', 'contribMarginPct'];
+        if (defaults.includes(btn.dataset.metric)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    if (chartId === 'profitability') {
+        if (charts.profitability) { charts.profitability.destroy(); delete charts.profitability; }
+        createProfitabilityChart();
+    } else if (chartId === 'efficiency') {
+        if (charts.efficiency) { charts.efficiency.destroy(); delete charts.efficiency; }
+        createEfficiencyChart();
+    }
 }
 
 // ============================================
@@ -959,74 +1102,13 @@ function buildPLTable(year) {
 // ============================================
 // UPDATE ALL
 // ============================================
-// ============================================
-// KEY METRICS CHART
-// ============================================
-let currentMetric = 'grossMarginPct';
-
-const metricDefs = {
-    grossMarginPct:    { label: 'Gross Margin %',        unit: '%', calc: d => d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null, color: '#3b82f6' },
-    contribMarginPct:  { label: 'Contribution Margin %', unit: '%', calc: d => d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null, color: '#8b5cf6' },
-    ebitdaMarginPct:   { label: 'EBITDA Margin %',       unit: '%', calc: d => d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null, color: '#ef4444' },
-    cacRatio:          { label: 'Revenue / CAC Ratio',    unit: 'x', calc: d => d.totalCAC ? (d.grossRevenue / Math.abs(d.totalCAC)) : null, color: '#f59e0b' },
-    opexPct:           { label: 'OpEx % of Revenue',      unit: '%', calc: d => d.grossRevenue ? (Math.abs(d.totalOpex) / d.grossRevenue * 100) : null, color: '#14b8a6' }
-};
-
-function setMetric(m) {
-    currentMetric = m;
-    document.querySelectorAll('.ctrl-btn-metric').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.ctrl-btn-metric[onclick*="${m}"]`)?.classList.add('active');
-    if (charts.metric) { charts.metric.destroy(); delete charts.metric; }
-    createMetricChart();
-}
-
-function createMetricChart() {
-    const { labels, data } = getDataForView();
-    const def = metricDefs[currentMetric];
-    const vals = data.map(d => hasData(d) ? def.calc(d) : null);
-    const ctx = document.getElementById('metricChart').getContext('2d');
-
-    const opts = chartDefaults();
-    opts.scales.y.beginAtZero = def.unit === '%' ? false : true;
-    opts.scales.y.ticks.callback = v => def.unit === '%' ? v.toFixed(0) + '%' : v.toFixed(1) + 'x';
-    opts.plugins.tooltip.callbacks = {
-        label: ctx => {
-            const v = ctx.parsed.y;
-            return def.label + ': ' + (def.unit === '%' ? v.toFixed(1) + '%' : v.toFixed(2) + 'x');
-        }
-    };
-
-    charts.metric = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: def.label,
-                data: vals,
-                borderColor: def.color,
-                backgroundColor: def.color + '15',
-                borderWidth: 2.5,
-                pointRadius: currentView === 'combined' ? 3 : 5,
-                pointBackgroundColor: def.color,
-                pointHoverRadius: 7,
-                tension: 0.3,
-                fill: true,
-                spanGaps: false
-            }]
-        },
-        options: opts
-    });
-}
-
 function updateAll() {
     updateSubtitle();
     renderKPIs();
     destroyCharts();
     createRevenueChart();
-    createMetricChart();
-    createEbitdaChart();
-    createContribChart();
-    createMarginChart();
+    createProfitabilityChart();
+    createEfficiencyChart();
     renderPLTable();
 }
 
