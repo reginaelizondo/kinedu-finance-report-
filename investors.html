@@ -278,6 +278,36 @@
             border-color: #1e3a5f;
         }
 
+        /* Interactive toggle charts */
+        .inv-toggle-bar {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 28px; background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0; flex-wrap: wrap;
+        }
+        .inv-toggle-group { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+        .inv-toggle-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border: 2px solid #e2e8f0;
+            background: white; color: #94a3b8; font-size: 12px;
+            font-weight: 600; cursor: pointer; border-radius: 20px;
+            transition: all 0.2s ease; user-select: none;
+        }
+        .inv-toggle-btn:hover { border-color: var(--tc, #1e3a5f); color: var(--tc, #1e3a5f); }
+        .inv-toggle-btn.active {
+            background: var(--tc, #3b82f6); color: white;
+            border-color: var(--tc, #3b82f6);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+        }
+        .inv-toggle-btn.active .inv-toggle-dot { background: white !important; }
+        .inv-toggle-dot { width: 10px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+        .inv-reset-btn {
+            padding: 6px 14px; border: 1px dashed #cbd5e1;
+            background: transparent; color: #94a3b8; font-size: 11px;
+            font-weight: 600; cursor: pointer; border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .inv-reset-btn:hover { background: #f1f5f9; color: #64748b; }
+
         /* Status pill */
         .status-pill {
             display: inline-flex;
@@ -459,6 +489,46 @@
                         <div class="section-title">Margin Analysis (%)</div>
                     </div>
                     <div class="chart-wrapper"><canvas id="marginChart"></canvas></div>
+                </div>
+            </div>
+            <!-- Revenue & Profitability Breakdown (Interactive) -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Revenue & Profitability Breakdown</div>
+                    </div>
+                    <div class="inv-toggle-bar" id="toggles-profitability">
+                        <div class="inv-toggle-group">
+                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="mrr" style="--tc:#3b82f6;"><span class="inv-toggle-dot" style="background:#3b82f6;"></span>MRR</button>
+                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="partnerships" style="--tc:#22c55e;"><span class="inv-toggle-dot" style="background:#22c55e;"></span>Partnerships</button>
+                            <button class="inv-toggle-btn" data-chart="profitability" data-metric="commissions" style="--tc:#f97316;"><span class="inv-toggle-dot" style="background:#f97316;"></span>Commissions</button>
+                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="grossProfit" style="--tc:#0ea5e9;"><span class="inv-toggle-dot" style="background:#0ea5e9;"></span>Gross Profit</button>
+                            <button class="inv-toggle-btn" data-chart="profitability" data-metric="contribProfit" style="--tc:#8b5cf6;"><span class="inv-toggle-dot" style="background:#8b5cf6;"></span>Contribution</button>
+                            <button class="inv-toggle-btn active" data-chart="profitability" data-metric="ebitda" style="--tc:#ef4444;"><span class="inv-toggle-dot" style="background:#ef4444;"></span>EBITDA</button>
+                        </div>
+                        <button class="inv-reset-btn" onclick="resetInvToggles('profitability')">Reset</button>
+                    </div>
+                    <div class="chart-wrapper" style="height:420px;"><canvas id="profitabilityChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Efficiency & Unit Economics (Interactive) -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Efficiency & Unit Economics</div>
+                    </div>
+                    <div class="inv-toggle-bar" id="toggles-efficiency">
+                        <div class="inv-toggle-group">
+                            <button class="inv-toggle-btn active" data-chart="efficiency" data-metric="grossMarginPct" style="--tc:#3b82f6;"><span class="inv-toggle-dot" style="background:#3b82f6;"></span>Gross Margin %</button>
+                            <button class="inv-toggle-btn active" data-chart="efficiency" data-metric="contribMarginPct" style="--tc:#8b5cf6;"><span class="inv-toggle-dot" style="background:#8b5cf6;"></span>Contribution %</button>
+                            <button class="inv-toggle-btn" data-chart="efficiency" data-metric="ebitdaMarginPct" style="--tc:#ef4444;"><span class="inv-toggle-dot" style="background:#ef4444;"></span>EBITDA Margin %</button>
+                            <button class="inv-toggle-btn" data-chart="efficiency" data-metric="opexPct" style="--tc:#f59e0b;"><span class="inv-toggle-dot" style="background:#f59e0b;"></span>OpEx % of Rev</button>
+                            <button class="inv-toggle-btn" data-chart="efficiency" data-metric="cacRatio" style="--tc:#14b8a6;"><span class="inv-toggle-dot" style="background:#14b8a6;"></span>Revenue / CAC</button>
+                        </div>
+                        <button class="inv-reset-btn" onclick="resetInvToggles('efficiency')">Reset</button>
+                    </div>
+                    <div class="chart-wrapper" style="height:420px;"><canvas id="efficiencyChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -1018,6 +1088,148 @@ function createMetricChart() {
     });
 }
 
+// ============================================
+// INTERACTIVE CHARTS: Revenue & Profitability + Efficiency
+// ============================================
+const profitMetrics = {
+    mrr:          { label: 'MRR',          color: '#3b82f6', type: 'bar', calc: d => d.mrr / 1000 },
+    partnerships: { label: 'Partnerships', color: '#22c55e', type: 'bar', calc: d => d.partnerships / 1000 },
+    commissions:  { label: 'Commissions',  color: '#f97316', type: 'bar', calc: d => Math.abs(d.commissions) / 1000 },
+    grossProfit:  { label: 'Gross Profit', color: '#0ea5e9', type: 'line', calc: d => d.grossProfit / 1000 },
+    contribProfit:{ label: 'Contribution', color: '#8b5cf6', type: 'line', calc: d => d.contributionProfit / 1000 },
+    ebitda:       { label: 'EBITDA',       color: '#ef4444', type: 'line', calc: d => d.ebitda / 1000 }
+};
+
+const effMetrics = {
+    grossMarginPct:   { label: 'Gross Margin %',  color: '#3b82f6', unit: '%', calc: d => d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null },
+    contribMarginPct: { label: 'Contribution %',  color: '#8b5cf6', unit: '%', calc: d => d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null },
+    ebitdaMarginPct:  { label: 'EBITDA Margin %', color: '#ef4444', unit: '%', calc: d => d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null },
+    opexPct:          { label: 'OpEx % of Rev',   color: '#f59e0b', unit: '%', calc: d => d.grossRevenue ? (Math.abs(d.totalOpex) / d.grossRevenue * 100) : null },
+    cacRatio:         { label: 'Revenue / CAC',   color: '#14b8a6', unit: 'x', calc: d => d.totalCAC ? (d.grossRevenue / Math.abs(d.totalCAC)) : null, yAxis: 'y1' }
+};
+
+function getActiveInvMetrics(chartId) {
+    return Array.from(document.querySelectorAll(`.inv-toggle-btn[data-chart="${chartId}"].active`)).map(b => b.dataset.metric);
+}
+
+function createProfitabilityChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('profitabilityChart').getContext('2d');
+    const activeKeys = getActiveInvMetrics('profitability');
+    const ptR = currentView === 'combined' ? 2 : 4;
+    const barW = currentView === 'combined' ? 18 : 40;
+
+    const datasets = [];
+    activeKeys.forEach(key => {
+        const m = profitMetrics[key];
+        if (!m) return;
+        const values = data.map(d => hasData(d) ? m.calc(d) : null);
+        if (m.type === 'bar') {
+            datasets.push({
+                label: m.label, data: values, type: 'bar',
+                backgroundColor: m.color + 'cc', borderColor: m.color,
+                borderWidth: 1, borderRadius: 4, maxBarThickness: barW,
+                order: 2, skipNull: true
+            });
+        } else {
+            datasets.push({
+                label: m.label, data: values, type: 'line',
+                borderColor: m.color, backgroundColor: m.color + '15',
+                borderWidth: 2.5, pointRadius: ptR, pointBackgroundColor: m.color,
+                pointHoverRadius: 6, tension: 0.3, fill: false, spanGaps: false, order: 1
+            });
+        }
+    });
+
+    const opts = chartDefaults();
+    opts.plugins.legend = { display: true, position: 'top', labels: { color: '#64748b', font: { size: 11, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 16 } };
+    opts.plugins.tooltip = { ...opts.plugins.tooltip, callbacks: { label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y?.toFixed(0)}K` } };
+    opts.scales.y.beginAtZero = true;
+
+    charts.profitability = new Chart(ctx, { type: 'bar', data: { labels, datasets }, options: opts });
+}
+
+function createEfficiencyChart() {
+    const { labels, data } = getDataForView();
+    const ctx = document.getElementById('efficiencyChart').getContext('2d');
+    const activeKeys = getActiveInvMetrics('efficiency');
+    const ptR = currentView === 'combined' ? 2 : 4;
+    const hasRatio = activeKeys.includes('cacRatio');
+    const hasPct = activeKeys.some(k => k !== 'cacRatio');
+
+    const datasets = [];
+    activeKeys.forEach(key => {
+        const m = effMetrics[key];
+        if (!m) return;
+        const values = data.map(d => hasData(d) ? m.calc(d) : null);
+        datasets.push({
+            label: m.label, data: values,
+            borderColor: m.color, backgroundColor: m.color + '15',
+            borderWidth: 2.5, pointRadius: ptR, pointBackgroundColor: m.color,
+            pointHoverRadius: 6, tension: 0.3, fill: false, spanGaps: false,
+            yAxisID: m.yAxis || 'y'
+        });
+    });
+
+    const opts = chartDefaults();
+    opts.plugins.legend = { display: true, position: 'top', labels: { color: '#64748b', font: { size: 11, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 16 } };
+    opts.plugins.tooltip = { ...opts.plugins.tooltip, callbacks: {
+        label: ctx => {
+            const key = activeKeys[ctx.datasetIndex];
+            const m = effMetrics[key];
+            return m && m.unit === 'x' ? `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2)}x` : `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}%`;
+        }
+    }};
+    opts.scales.y.beginAtZero = false;
+    opts.scales.y.ticks.callback = v => v.toFixed(0) + '%';
+    if (!hasPct) opts.scales.y.display = false;
+    if (hasRatio) {
+        opts.scales.y1 = {
+            position: 'right', grid: { display: false },
+            ticks: { color: '#14b8a6', font: { size: 11 }, callback: v => v.toFixed(1) + 'x' },
+            title: { display: true, text: 'Revenue / CAC', color: '#14b8a6', font: { size: 11, weight: '600' } }
+        };
+    }
+
+    charts.efficiency = new Chart(ctx, { type: 'line', data: { labels, datasets }, options: opts });
+}
+
+// Toggle click handler for interactive charts
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.inv-toggle-btn');
+    if (!btn) return;
+    // Prevent deselecting all
+    const chartId = btn.dataset.chart;
+    const active = document.querySelectorAll(`.inv-toggle-btn[data-chart="${chartId}"].active`);
+    if (btn.classList.contains('active') && active.length <= 1) return;
+
+    btn.classList.toggle('active');
+    if (chartId === 'profitability') {
+        if (charts.profitability) { charts.profitability.destroy(); delete charts.profitability; }
+        createProfitabilityChart();
+    } else if (chartId === 'efficiency') {
+        if (charts.efficiency) { charts.efficiency.destroy(); delete charts.efficiency; }
+        createEfficiencyChart();
+    }
+});
+
+function resetInvToggles(chartId) {
+    const defaults = chartId === 'profitability'
+        ? ['mrr', 'partnerships', 'grossProfit', 'ebitda']
+        : ['grossMarginPct', 'contribMarginPct'];
+    document.querySelectorAll(`.inv-toggle-btn[data-chart="${chartId}"]`).forEach(btn => {
+        if (defaults.includes(btn.dataset.metric)) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+    if (chartId === 'profitability') {
+        if (charts.profitability) { charts.profitability.destroy(); delete charts.profitability; }
+        createProfitabilityChart();
+    } else {
+        if (charts.efficiency) { charts.efficiency.destroy(); delete charts.efficiency; }
+        createEfficiencyChart();
+    }
+}
+
 function updateAll() {
     updateSubtitle();
     renderKPIs();
@@ -1027,6 +1239,8 @@ function updateAll() {
     createEbitdaChart();
     createContribChart();
     createMarginChart();
+    createProfitabilityChart();
+    createEfficiencyChart();
     renderPLTable();
 }
 
