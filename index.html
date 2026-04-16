@@ -64,27 +64,121 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        /* Main filter row: Year | Method | Period */
+        .filters-main-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            background: rgba(0, 0, 0, 0.18);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .filter-divider {
+            width: 1px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .period-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Secondary row: Scenario + Compare + Custom Range + Reset */
+        .filters-secondary-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .inline-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            margin-right: 4px;
+        }
+
+        /* Link-style buttons for Custom Range & Reset */
+        .filter-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .filter-link.active {
+            background: rgba(72, 187, 120, 0.25);
+            color: #86efac;
+        }
+
+        .filter-link .link-icon {
+            font-size: 13px;
+        }
+
+        .reset-link:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
         }
 
         .granularity-selector {
             display: flex;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 30px;
-            padding: 4px;
-            gap: 4px;
+            padding: 3px;
+            gap: 2px;
         }
 
         .granularity-btn {
-            padding: 10px 24px;
+            padding: 7px 14px;
             border: none;
             background: transparent;
             color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
             border-radius: 26px;
             cursor: pointer;
             transition: all 0.3s ease;
+            min-width: 32px;
         }
 
         .granularity-btn:hover {
@@ -131,6 +225,11 @@
             align-items: center;
             gap: 12px;
             margin-top: 6px;
+        }
+
+        /* Shrink custom-range panel since it's now below the secondary row */
+        .custom-range-container {
+            padding: 8px 14px !important;
         }
 
         .custom-range-toggle {
@@ -440,17 +539,17 @@
             color: #1e3a5f;
         }
 
-        /* Budget Scenarios Row (2026 only) - Compact inline style */
-        .scenarios-row {
+        /* Budget Scenarios - Inline (2026 only) */
+        .scenarios-row,
+        .scenarios-inline {
             display: none;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
         }
 
-        .scenarios-row.visible {
-            display: flex;
+        .scenarios-row.visible,
+        .scenarios-inline.visible {
+            display: inline-flex;
         }
 
         .scenarios-row-label {
@@ -527,16 +626,24 @@
         }
 
         /* Compare vs 2025 Checkbox - Compact inline */
-        .compare-row {
+        .compare-row,
+        .compare-inline {
             display: none;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            user-select: none;
         }
 
-        .compare-row.visible {
-            display: flex;
+        .compare-row.visible,
+        .compare-inline.visible {
+            display: inline-flex;
+        }
+
+        .compare-inline:hover {
+            color: white;
         }
 
         .compare-checkbox-small {
@@ -3243,106 +3350,112 @@
 
             <!-- All Filters Container -->
             <div class="time-filters-container">
-                <!-- 1. Year Selector + Accounting Method -->
-                <div class="year-accounting-row">
-                    <div class="year-selector-container">
+                <!-- MAIN ROW: Year + Method + Granularity + Period -->
+                <div class="filters-main-row">
+                    <div class="filter-group">
+                        <span class="filter-label">Year</span>
                         <div class="year-selector">
                             <button class="year-btn" id="yearBtn2025" onclick="setYear(2025)">2025</button>
                             <button class="year-btn active" id="yearBtn2026" onclick="setYear(2026)">2026</button>
                         </div>
                     </div>
-                    <div class="accounting-selector-container">
+
+                    <div class="filter-divider"></div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Method</span>
                         <div class="accounting-selector">
                             <button class="accounting-btn cash-btn active" id="accBtnCash" onclick="setAccountingMethod('cash')">CASH</button>
                             <button class="accounting-btn acc-btn" id="accBtnAcc" onclick="setAccountingMethod('acc')">ACC</button>
                         </div>
                     </div>
-                </div>
 
-                <!-- 2. Time Granularity + Period Selector -->
-                <div class="granularity-row">
-                    <div class="granularity-selector">
-                        <button class="granularity-btn active" onclick="setGranularity('monthly')">Monthly</button>
-                        <button class="granularity-btn" onclick="setGranularity('quarterly')">Quarterly</button>
-                        <button class="granularity-btn" onclick="setGranularity('semester')">Semester</button>
-                        <button class="granularity-btn" onclick="setGranularity('yearly')">Yearly</button>
+                    <div class="filter-divider"></div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Period</span>
+                        <div class="period-controls">
+                            <div class="granularity-selector">
+                                <button class="granularity-btn active" onclick="setGranularity('monthly')">M</button>
+                                <button class="granularity-btn" onclick="setGranularity('quarterly')">Q</button>
+                                <button class="granularity-btn" onclick="setGranularity('semester')">S</button>
+                                <button class="granularity-btn" onclick="setGranularity('yearly')">Y</button>
+                            </div>
+                            <select class="period-dropdown" id="periodDropdown" onchange="setPeriod(this.value)">
+                                <option value="January">January 2026</option>
+                            </select>
+                        </div>
                     </div>
-                    <select class="period-dropdown" id="periodDropdown" onchange="setPeriod(this.value)">
-                        <option value="January">January 2026</option>
-                    </select>
                 </div>
 
-                <!-- 3. Custom Date Range Selector -->
-                <div class="custom-range-wrapper">
-                    <button class="custom-range-toggle" id="customRangeToggle" onclick="toggleCustomRange()">
-                        <span>Custom Range</span>
-                        <span class="toggle-icon">▼</span>
+                <!-- SECONDARY ROW: Scenario + Compare + Custom Range + Reset (links-style) -->
+                <div class="filters-secondary-row">
+                    <div class="scenarios-inline" id="scenariosRow">
+                        <span class="inline-label">Scenario</span>
+                        <div class="scenario-toggles-inline">
+                            <button class="scenario-toggle optimistic" id="scenarioOptimistic" onclick="toggleScenario('optimistic')">Optimistic</button>
+                            <button class="scenario-toggle conservative active" id="scenarioConservative" onclick="toggleScenario('conservative')">Conservative</button>
+                            <button class="scenario-toggle pessimistic" id="scenarioPessimistic" onclick="toggleScenario('pessimistic')">Pessimistic</button>
+                        </div>
+                    </div>
+
+                    <label class="compare-inline" id="compareRow">
+                        <input type="checkbox" class="compare-checkbox-small" id="compareCheckbox" onchange="toggleCompareWith2025()">
+                        <span>Compare vs 2025</span>
+                    </label>
+
+                    <button class="filter-link" id="customRangeToggle" onclick="toggleCustomRange()">
+                        <span class="link-icon">📅</span>
+                        <span>Custom range</span>
                     </button>
-                    <div class="custom-range-container" id="customRangeContainer">
-                        <select class="range-dropdown" id="rangeFrom" onchange="validateRange()">
-                            <option value="0">January</option>
-                            <option value="1">February</option>
-                            <option value="2">March</option>
-                            <option value="3">April</option>
-                            <option value="4">May</option>
-                            <option value="5">June</option>
-                            <option value="6">July</option>
-                            <option value="7">August</option>
-                            <option value="8">September</option>
-                            <option value="9">October</option>
-                            <option value="10">November</option>
-                            <option value="11">December</option>
-                        </select>
-                        <span class="custom-range-label">to</span>
-                        <select class="range-dropdown" id="rangeTo" onchange="validateRange()">
-                            <option value="0">January</option>
-                            <option value="1">February</option>
-                            <option value="2">March</option>
-                            <option value="3">April</option>
-                            <option value="4">May</option>
-                            <option value="5">June</option>
-                            <option value="6">July</option>
-                            <option value="7">August</option>
-                            <option value="8">September</option>
-                            <option value="9">October</option>
-                            <option value="10">November</option>
-                            <option value="11" selected>December</option>
-                        </select>
-                        <span class="range-error" id="rangeError">From must be before To</span>
-                    </div>
+
+                    <button class="filter-link reset-link" id="globalResetBtn" onclick="resetAllFilters()">
+                        <span class="link-icon">↻</span>
+                        <span>Reset</span>
+                    </button>
                 </div>
 
-                <!-- 4. Budget Scenarios (only visible for 2026) -->
-                <div class="scenarios-row" id="scenariosRow">
-                    <span class="scenarios-row-label">Budget Scenario:</span>
-                    <div class="scenario-toggles-inline">
-                        <button class="scenario-toggle optimistic" id="scenarioOptimistic" onclick="toggleScenario('optimistic')">Optimistic</button>
-                        <button class="scenario-toggle conservative active" id="scenarioConservative" onclick="toggleScenario('conservative')">Conservative</button>
-                        <button class="scenario-toggle pessimistic" id="scenarioPessimistic" onclick="toggleScenario('pessimistic')">Pessimistic</button>
-                    </div>
+                <!-- Custom Range Panel (hidden until toggled) -->
+                <div class="custom-range-container" id="customRangeContainer">
+                    <span class="custom-range-label">From</span>
+                    <select class="range-dropdown" id="rangeFrom" onchange="handleCustomRangeChange()">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                    <span class="custom-range-label">to</span>
+                    <select class="range-dropdown" id="rangeTo" onchange="handleCustomRangeChange()">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11" selected>December</option>
+                    </select>
+                    <span class="range-error" id="rangeError">From must be before To</span>
                 </div>
 
-                <!-- 5. Compare vs 2025 Checkbox (only visible for 2026) -->
-                <div class="compare-row" id="compareRow">
-                    <input type="checkbox" class="compare-checkbox-small" id="compareCheckbox" onchange="toggleCompareWith2025()">
-                    <label class="compare-label-small" for="compareCheckbox">Compare vs 2025 Actual</label>
-                </div>
-
-                <!-- 6. Global Apply / Reset -->
-                <div class="global-actions-row">
-                    <button class="global-apply-btn" id="globalApplyBtn" onclick="applyAllFilters()">Apply Filters</button>
-                    <button class="global-reset-btn" id="globalResetBtn" onclick="resetAllFilters()">Reset</button>
-                </div>
-
-                <!-- 7. Status Display (info style) -->
-                <div class="status-display" id="statusDisplay">
-                    Showing: <strong id="statusPeriod">Year to Date 2025</strong>
-                    <span class="status-scenario" id="statusScenario">
-                        <span class="status-separator">|</span>
-                        Scenario: <span class="scenario-value" id="statusScenarioValue">Conservative</span>
-                    </span>
-                    <span class="custom-range-active" id="customRangeActive">Custom Range Active</span>
-                </div>
+                <!-- Hidden for backward compat (referenced by JS) -->
+                <span id="statusPeriod" style="display:none;"></span>
+                <span id="statusDisplay" style="display:none;"></span>
+                <span id="statusScenario" style="display:none;"><span id="statusScenarioValue"></span></span>
+                <span id="customRangeActive" style="display:none;"></span>
+                <span id="globalApplyBtn" style="display:none;"></span>
             </div>
         </div>
 
@@ -5345,6 +5458,29 @@
             setTimeout(() => {
                 btn.textContent = 'Reset';
             }, 1200);
+        }
+
+        /**
+         * Called when either the From or To dropdown changes.
+         * Validates, then auto-applies the custom range without needing a separate Apply button.
+         */
+        function handleCustomRangeChange() {
+            if (!validateRange()) return;
+
+            const fromVal = parseInt(document.getElementById('rangeFrom').value);
+            const toVal = parseInt(document.getElementById('rangeTo').value);
+            customRangeFrom = fromVal;
+            customRangeTo = toVal;
+            customRangeActive = true;
+
+            // Deactivate granularity buttons (visual indicator)
+            document.querySelectorAll('.granularity-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('customRangeToggle').classList.add('active');
+
+            updatePeriodIndicator();
+            updateAllChartsAndKPIs();
         }
 
         function getCustomRangeMonths() {
