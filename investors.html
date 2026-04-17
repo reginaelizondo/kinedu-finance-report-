@@ -388,9 +388,82 @@
             .section { margin-bottom: 16px; }
             .footer { padding: 16px 14px; font-size: 11px; }
         }
+
+        /* ===== Password Gate ===== */
+        #passwordGate {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+        #passwordGate .gate-card {
+            background: white; padding: 40px 44px; border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%; max-width: 380px; text-align: center;
+        }
+        #passwordGate img { height: 44px; margin-bottom: 20px; }
+        #passwordGate h2 { color: #1e3a5f; font-size: 20px; margin-bottom: 6px; font-weight: 700; }
+        #passwordGate p { color: #64748b; font-size: 13px; margin-bottom: 22px; }
+        #passwordGate input {
+            width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0;
+            border-radius: 10px; font-size: 14px; outline: none;
+            transition: border-color 0.2s;
+        }
+        #passwordGate input:focus { border-color: #2c5282; }
+        #passwordGate button {
+            width: 100%; padding: 12px; margin-top: 12px;
+            background: #1e3a5f; color: white; border: none;
+            border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: background 0.2s;
+        }
+        #passwordGate button:hover { background: #2c5282; }
+        #passwordGate .gate-error { color: #ef4444; font-size: 12px; margin-top: 10px; min-height: 16px; }
+
+        /* ===== Tab Navigation ===== */
+        .tab-nav {
+            display: flex; gap: 4px; padding: 0 48px;
+            background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            padding: 14px 20px; background: transparent; border: none;
+            border-bottom: 3px solid transparent; color: #64748b;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; white-space: nowrap; margin-bottom: -1px;
+        }
+        .tab-btn:hover { color: #1e3a5f; }
+        .tab-btn.active { color: #1e3a5f; border-bottom-color: #1e3a5f; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        /* ===== Iframe wrapper ===== */
+        .iframe-wrap {
+            width: 100%; height: calc(100vh - 220px);
+            min-height: 720px; background: #F2F2F4;
+        }
+        .iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        @media (max-width: 768px) {
+            .tab-nav { padding: 0 16px; }
+            .tab-btn { padding: 12px 14px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>
+    <!-- Password Gate -->
+    <div id="passwordGate">
+        <div class="gate-card">
+            <img src="logo kinedu.png" alt="Kinedu">
+            <h2>Investor Access</h2>
+            <p>Please enter the access password to continue</p>
+            <form onsubmit="return checkPassword(event)">
+                <input type="password" id="passwordInput" placeholder="Password" autocomplete="off" autofocus>
+                <button type="submit">Unlock</button>
+                <div class="gate-error" id="gateError"></div>
+            </form>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Hero Header -->
         <div class="hero">
@@ -423,6 +496,37 @@
             </div>
         </div>
 
+        <!-- Tabs -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="finance" onclick="switchTab('finance')">Finanzas</button>
+            <button class="tab-btn" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+            <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')">Breakdown</button>
+            <button class="tab-btn" data-tab="churn" onclick="switchTab('churn')">Churn</button>
+            <button class="tab-btn" data-tab="nps" onclick="switchTab('nps')">NPS</button>
+        </div>
+
+        <!-- Tab: Overview (MRR Dashboard) -->
+        <div class="tab-pane" id="tab-overview">
+            <div class="iframe-wrap"><iframe data-route="/embed/overview" loading="lazy"></iframe></div>
+        </div>
+
+        <!-- Tab: Breakdown (MRR Dashboard) -->
+        <div class="tab-pane" id="tab-breakdown">
+            <div class="iframe-wrap"><iframe data-route="/embed/breakdown" loading="lazy"></iframe></div>
+        </div>
+
+        <!-- Tab: Churn (MRR Dashboard) -->
+        <div class="tab-pane" id="tab-churn">
+            <div class="iframe-wrap"><iframe data-route="/embed/churn" loading="lazy"></iframe></div>
+        </div>
+
+        <!-- Tab: NPS (MRR Dashboard) -->
+        <div class="tab-pane" id="tab-nps">
+            <div class="iframe-wrap"><iframe data-route="/embed/nps" loading="lazy"></iframe></div>
+        </div>
+
+        <!-- Tab: Finanzas (existing content) -->
+        <div class="tab-pane active" id="tab-finance">
         <!-- Content -->
         <div class="content">
             <!-- Revenue Chart -->
@@ -531,6 +635,8 @@
                 </div>
             </div>
         </div>
+        </div>
+        <!-- /tab-finance -->
 
         <!-- Footer -->
         <div class="footer">
@@ -540,6 +646,61 @@
     </div>
 
 <script>
+// ============================================
+// AUTH GATE & TABS
+// ============================================
+const ACCESS_PASSWORD = 'kinedu';
+const MRR_BASE_URL    = 'https://mrr-dashboard-phi.vercel.app';
+const EMBED_TOKEN     = 'kinedu-investors-2026-7Q9pK4xR';
+
+function checkPassword(e) {
+    e.preventDefault();
+    const val = document.getElementById('passwordInput').value;
+    const err = document.getElementById('gateError');
+    if (val === ACCESS_PASSWORD) {
+        localStorage.setItem('investor_unlocked', '1');
+        document.getElementById('passwordGate').style.display = 'none';
+        err.textContent = '';
+    } else {
+        err.textContent = 'Incorrect password';
+    }
+    return false;
+}
+
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.tab === name)
+    );
+    document.querySelectorAll('.tab-pane').forEach(p =>
+        p.classList.toggle('active', p.id === `tab-${name}`)
+    );
+
+    // Lazy-load iframe on first activation
+    const pane = document.getElementById(`tab-${name}`);
+    const iframe = pane && pane.querySelector('iframe[data-route]');
+    if (iframe && !iframe.src) {
+        const route = iframe.getAttribute('data-route');
+        iframe.src = `${MRR_BASE_URL}${route}?embed_token=${encodeURIComponent(EMBED_TOKEN)}`;
+    }
+
+    // Hide finance-only hero controls/KPIs on non-finance tabs
+    const isFinance = name === 'finance';
+    const controls = document.querySelector('.hero .controls');
+    const kpiGrid  = document.getElementById('kpiGrid');
+    const status   = document.querySelector('.hero .status-pill');
+    if (controls) controls.style.display = isFinance ? '' : 'none';
+    if (kpiGrid)  kpiGrid.style.display  = isFinance ? '' : 'none';
+    if (status)   status.style.display   = isFinance ? '' : 'none';
+}
+
+// Unlock on load if previously authenticated
+if (localStorage.getItem('investor_unlocked') === '1') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const gate = document.getElementById('passwordGate');
+        if (gate) gate.style.display = 'none';
+    });
+}
+
 // ============================================
 // DATA CONSTANTS
 // ============================================
