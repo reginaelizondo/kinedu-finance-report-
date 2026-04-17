@@ -496,34 +496,13 @@
             </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="tab-nav">
+        <!-- Tabs (Finanzas + dynamically loaded tabs from MRR dashboard) -->
+        <div class="tab-nav" id="tabNav">
             <button class="tab-btn active" data-tab="finance" onclick="switchTab('finance')">Finanzas</button>
-            <button class="tab-btn" data-tab="overview" onclick="switchTab('overview')">Overview</button>
-            <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')">Breakdown</button>
-            <button class="tab-btn" data-tab="churn" onclick="switchTab('churn')">Churn</button>
-            <button class="tab-btn" data-tab="nps" onclick="switchTab('nps')">NPS</button>
         </div>
 
-        <!-- Tab: Overview (MRR Dashboard) -->
-        <div class="tab-pane" id="tab-overview">
-            <div class="iframe-wrap"><iframe data-route="/embed/overview" loading="lazy"></iframe></div>
-        </div>
-
-        <!-- Tab: Breakdown (MRR Dashboard) -->
-        <div class="tab-pane" id="tab-breakdown">
-            <div class="iframe-wrap"><iframe data-route="/embed/breakdown" loading="lazy"></iframe></div>
-        </div>
-
-        <!-- Tab: Churn (MRR Dashboard) -->
-        <div class="tab-pane" id="tab-churn">
-            <div class="iframe-wrap"><iframe data-route="/embed/churn" loading="lazy"></iframe></div>
-        </div>
-
-        <!-- Tab: NPS (MRR Dashboard) -->
-        <div class="tab-pane" id="tab-nps">
-            <div class="iframe-wrap"><iframe data-route="/embed/nps" loading="lazy"></iframe></div>
-        </div>
+        <!-- Dynamic tab panes from MRR dashboard get inserted here -->
+        <div id="dynamicPanes"></div>
 
         <!-- Tab: Finanzas (existing content) -->
         <div class="tab-pane active" id="tab-finance">
@@ -693,13 +672,50 @@ function switchTab(name) {
     if (status)   status.style.display   = isFinance ? '' : 'none';
 }
 
+// Fetch the list of investor-facing tabs from the MRR dashboard and render them.
+// This makes label/order/count changes in the MRR nav-config propagate automatically.
+async function loadDynamicTabs() {
+    const nav = document.getElementById('tabNav');
+    const panes = document.getElementById('dynamicPanes');
+    if (!nav || !panes) return;
+
+    let tabs = [];
+    try {
+        const url = `${MRR_BASE_URL}/api/embed/tabs?embed_token=${encodeURIComponent(EMBED_TOKEN)}`;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        tabs = Array.isArray(data.tabs) ? data.tabs : [];
+    } catch (err) {
+        console.error('Failed to load MRR tabs:', err);
+        return;
+    }
+
+    for (const t of tabs) {
+        if (!t.slug || !t.label) continue;
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn';
+        btn.dataset.tab = t.slug;
+        btn.textContent = t.label;
+        btn.onclick = () => switchTab(t.slug);
+        nav.appendChild(btn);
+
+        const pane = document.createElement('div');
+        pane.className = 'tab-pane';
+        pane.id = `tab-${t.slug}`;
+        pane.innerHTML = `<div class="iframe-wrap"><iframe data-route="/embed/${t.slug}" loading="lazy"></iframe></div>`;
+        panes.appendChild(pane);
+    }
+}
+
 // Unlock on load if previously authenticated
-if (localStorage.getItem('investor_unlocked') === '1') {
-    document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('investor_unlocked') === '1') {
         const gate = document.getElementById('passwordGate');
         if (gate) gate.style.display = 'none';
-    });
-}
+    }
+    loadDynamicTabs();
+});
 
 // ============================================
 // DATA CONSTANTS
