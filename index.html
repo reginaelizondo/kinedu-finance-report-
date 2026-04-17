@@ -1603,12 +1603,13 @@
         }
 
         .opex-chart-section {
-            padding: 24px;
+            padding: 32px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             background: #fafbfc;
+            min-height: 420px;
         }
 
         .opex-chart-title {
@@ -1622,6 +1623,7 @@
         .opex-chart-wrapper {
             width: 100%;
             max-width: 360px;
+            height: 360px;
             position: relative;
         }
 
@@ -6386,10 +6388,12 @@
                                    + Math.abs(parsed[50] ? parseNumber(parsed[50][colIdx]) : 0)   // Leadership Payroll
                                    + Math.abs(parsed[51] ? parseNumber(parsed[51][colIdx]) : 0);  // Bizops Payroll
 
-                    // Professional services / external (S&M + Content + G&A)
+                    // Professional services / external (S&M + Content + G&A + Legal + Accounting)
                     const extServices = Math.abs(parsed[29] ? parseNumber(parsed[29][colIdx]) : 0)   // Prof. Services (S&M)
                                       + Math.abs(parsed[44] ? parseNumber(parsed[44][colIdx]) : 0)   // Prof. Services Content
-                                      + Math.abs(parsed[52] ? parseNumber(parsed[52][colIdx]) : 0);  // Prof. Services (G&A)
+                                      + Math.abs(parsed[52] ? parseNumber(parsed[52][colIdx]) : 0)   // Prof. Services (G&A)
+                                      + Math.abs(parsed[53] ? parseNumber(parsed[53][colIdx]) : 0)   // Legal Fees
+                                      + Math.abs(parsed[54] ? parseNumber(parsed[54][colIdx]) : 0); // Accounting & Audit
 
                     const travel = Math.abs(parsed[59] ? parseNumber(parsed[59][colIdx]) : 0);       // Travel & Expenses (G&A)
 
@@ -6401,17 +6405,17 @@
                                    + Math.abs(parsed[57] ? parseNumber(parsed[57][colIdx]) : 0)   // AI Tools
                                    + Math.abs(parsed[58] ? parseNumber(parsed[58][colIdx]) : 0);  // Corporate Tools
 
-                    // Other = everything else in G&A + sales commissions + events + content other + taxes
+                    // Other = small discretionary/misc items only
+                    // Excluded from Other:
+                    //   - Legal Fees & Accounting moved to External Services (professional services)
+                    //   - Payroll Taxes + Tax Payments excluded entirely (below EBITDA, already in NET OPERATING CF)
                     const other = Math.abs(parsed[30] ? parseNumber(parsed[30][colIdx]) : 0)   // Sales Commissions
                                 + Math.abs(parsed[32] ? parseNumber(parsed[32][colIdx]) : 0)   // Events
                                 + Math.abs(parsed[46] ? parseNumber(parsed[46][colIdx]) : 0)   // Content Other Expenses
-                                + Math.abs(parsed[53] ? parseNumber(parsed[53][colIdx]) : 0)   // Legal Fees
-                                + Math.abs(parsed[54] ? parseNumber(parsed[54][colIdx]) : 0)   // Accounting & Audit
                                 + Math.abs(parsed[55] ? parseNumber(parsed[55][colIdx]) : 0)   // Office & Facilities
                                 + Math.abs(parsed[56] ? parseNumber(parsed[56][colIdx]) : 0)   // Insurance
                                 + Math.abs(parsed[60] ? parseNumber(parsed[60][colIdx]) : 0)   // Financial Expense
-                                + Math.abs(parsed[61] ? parseNumber(parsed[61][colIdx]) : 0)   // Other Expenses
-                                + taxesTotal;                                                  // Payroll + SAT/IRS taxes
+                                + Math.abs(parsed[61] ? parseNumber(parsed[61][colIdx]) : 0); // Other Expenses
 
                     const capex = 0;  // Not broken out in cash flow statement
 
