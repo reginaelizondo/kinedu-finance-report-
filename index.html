@@ -6380,13 +6380,16 @@
                     const gaTotal      = Math.abs(parsed[62] ? parseNumber(parsed[62][colIdx]) : 0);  // Total G&A
                     const taxesTotal   = Math.abs(parsed[67] ? parseNumber(parsed[67][colIdx]) : 0);  // Total Taxes
 
-                    // Payroll sum (S&M + Product + Tech + Content + Bizops + Leadership)
+                    // Salaries = all payrolls + payroll-related taxes
+                    // (S&M + Product + Tech + Content + Leadership + Bizops + Payroll Taxes + Tax Payments)
                     const salaries = Math.abs(parsed[28] ? parseNumber(parsed[28][colIdx]) : 0)   // S&M Payroll
                                    + Math.abs(parsed[36] ? parseNumber(parsed[36][colIdx]) : 0)   // Product Payroll
                                    + Math.abs(parsed[37] ? parseNumber(parsed[37][colIdx]) : 0)   // Tech Payroll
                                    + Math.abs(parsed[43] ? parseNumber(parsed[43][colIdx]) : 0)   // Content Payroll
                                    + Math.abs(parsed[50] ? parseNumber(parsed[50][colIdx]) : 0)   // Leadership Payroll
-                                   + Math.abs(parsed[51] ? parseNumber(parsed[51][colIdx]) : 0);  // Bizops Payroll
+                                   + Math.abs(parsed[51] ? parseNumber(parsed[51][colIdx]) : 0)   // Bizops Payroll
+                                   + Math.abs(parsed[65] ? parseNumber(parsed[65][colIdx]) : 0)   // Payroll Taxes (ISN/SIPARE)
+                                   + Math.abs(parsed[66] ? parseNumber(parsed[66][colIdx]) : 0); // Tax Payments (SAT/IRS)
 
                     // Professional services / external (S&M + Content + G&A + Legal + Accounting)
                     const extServices = Math.abs(parsed[29] ? parseNumber(parsed[29][colIdx]) : 0)   // Prof. Services (S&M)
@@ -6405,10 +6408,10 @@
                                    + Math.abs(parsed[57] ? parseNumber(parsed[57][colIdx]) : 0)   // AI Tools
                                    + Math.abs(parsed[58] ? parseNumber(parsed[58][colIdx]) : 0);  // Corporate Tools
 
-                    // Other = small discretionary/misc items only
+                    // Other = discretionary/misc G&A items
                     // Excluded from Other:
-                    //   - Legal Fees & Accounting moved to External Services (professional services)
-                    //   - Payroll Taxes + Tax Payments excluded entirely (below EBITDA, already in NET OPERATING CF)
+                    //   - Legal Fees & Accounting → External Services (professional services)
+                    //   - Payroll Taxes + Tax Payments → Salaries (payroll-related)
                     const other = Math.abs(parsed[30] ? parseNumber(parsed[30][colIdx]) : 0)   // Sales Commissions
                                 + Math.abs(parsed[32] ? parseNumber(parsed[32][colIdx]) : 0)   // Events
                                 + Math.abs(parsed[46] ? parseNumber(parsed[46][colIdx]) : 0)   // Content Other Expenses
