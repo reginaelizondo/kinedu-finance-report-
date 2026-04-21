@@ -6320,105 +6320,107 @@
                 if (scenario === 'actual') {
                     // P&L_2026_CASH source = Consolidated Cash Flow (USD) — row indices 0-based
                     // Row 3 (idx 2): header "Jan 2026, Feb 2026, ..." → months start at idx 1
-                    // Row 5 (idx 4): Opening Balance
-                    // Row 9 (idx 8):  Subscriptions from Customers
-                    // Row 10 (idx 9): Partnerships
-                    // Row 11 (idx 10): Other Revenue
-                    // Row 12 (idx 11): (-) Refunds
-                    // Row 13 (idx 12): (-) Disputes
-                    // Row 14 (idx 13): Net Cash Receipts
-                    // Row 18 (idx 17): Hosting & Cloud Infrastructure
-                    // Row 19 (idx 18): Third-party Software / APIs
-                    // Row 20 (idx 19): Transaction Fees Stripe
-                    // Row 21 (idx 20): Total Cost of Revenue
-                    // Row 24 (idx 23): Paid Acquisition
-                    // Row 25 (idx 24): UGC's
-                    // Row 26 (idx 25): Total CAC
-                    // Row 29-34 (idx 28-33): S&M breakdown (29 payroll, 33 total)
-                    // Row 37-41 (idx 36-40): R&D breakdown (41 total)
-                    // Row 44-48 (idx 43-47): Content breakdown (48 total)
-                    // Row 51-63 (idx 50-62): G&A breakdown (63 total)
-                    // Row 66-68 (idx 65-67): Taxes (68 total)
-                    // Row 70 (idx 69): NET OPERATING CASH FLOW
-                    // Row 88 (idx 87): Closing Balance
-                    // Row 95 (idx 94): Runway (months)
-                    // Row 96 (idx 95): Gross Burn Rate
-                    // Row 97 (idx 96): Net Burn Rate
+                    // Row 9  (idx 8):  Apple         (iOS subs)
+                    // Row 10 (idx 9):  Google        (aOS subs)
+                    // Row 11 (idx 10): Stripe        (web subs)
+                    // Row 12 (idx 11): PayPal        (web subs)
+                    // Row 13 (idx 12): Subscriptions from Customers (subtotal)
+                    // Row 14 (idx 13): Partnerships
+                    // Row 15 (idx 14): Other Revenue
+                    // Row 16 (idx 15): (-) Refunds
+                    // Row 17 (idx 16): (-) Disputes
+                    // Row 18 (idx 17): Net Cash Receipts
+                    // Row 22 (idx 21): Hosting & Cloud Infrastructure
+                    // Row 23 (idx 22): Third-party Software / APIs
+                    // Row 24 (idx 23): Transaction Fees Stripe
+                    // Row 25 (idx 24): Total Cost of Revenue
+                    // Row 28 (idx 27): Paid Acquisition
+                    // Row 29 (idx 28): UGC's
+                    // Row 30 (idx 29): Total CAC
+                    // Row 33-38 (idx 32-37): S&M breakdown
+                    // Row 41-45 (idx 40-44): R&D breakdown
+                    // Row 48-52 (idx 47-51): Content breakdown
+                    // Row 55-67 (idx 54-66): G&A breakdown
+                    // Row 70-72 (idx 69-71): Taxes
+                    // Row 74 (idx 73): NET OPERATING CASH FLOW
+                    // Row 99 (idx 98): Runway (months)
 
-                    // Revenue (cash-basis)
-                    const subsTotal = parsed[8]  ? parseNumber(parsed[8][colIdx])  : 0;  // Subscriptions from Customers
-                    const subsIOS = 0;                                                   // No breakdown in cash flow
-                    const subsAOS = 0;
-                    const offApp = 0;                                                    // No off-app row in cash flow
-                    const partnershipAmt = parsed[9]  ? parseNumber(parsed[9][colIdx])  : 0;  // Partnerships
-                    const otherRev       = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0;  // Other Revenue
-                    const partnership    = partnershipAmt + otherRev;                         // Combined other revenue
-                    const refunds        = parsed[11] ? parseNumber(parsed[11][colIdx]) : 0;  // Refunds (positive in CSV)
-                    const disputes       = parsed[12] ? parseNumber(parsed[12][colIdx]) : 0;  // Disputes
-                    const netCashReceipts= parsed[13] ? parseNumber(parsed[13][colIdx]) : 0;  // Net Cash Receipts
+                    // Revenue (cash-basis) — platforms split out by row in new format
+                    const subsIOS        = parsed[8]  ? parseNumber(parsed[8][colIdx])  : 0;  // Apple
+                    const subsAOS        = parsed[9]  ? parseNumber(parsed[9][colIdx])  : 0;  // Google
+                    const subsStripe     = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0;  // Stripe (web)
+                    const subsPayPal     = parsed[11] ? parseNumber(parsed[11][colIdx]) : 0;  // PayPal (web)
+                    const subsTotal      = parsed[12] ? parseNumber(parsed[12][colIdx]) : 0;  // Subscriptions from Customers (subtotal)
+                    const offApp         = subsStripe + subsPayPal;                            // Web subs → off-app bucket
+                    const partnershipAmt = parsed[13] ? parseNumber(parsed[13][colIdx]) : 0;  // Partnerships
+                    const otherRev       = parsed[14] ? parseNumber(parsed[14][colIdx]) : 0;  // Other Revenue
+                    const partnership    = partnershipAmt + otherRev;                          // Combined other revenue
+                    const refunds        = parsed[15] ? parseNumber(parsed[15][colIdx]) : 0;  // Refunds (positive in CSV)
+                    const disputes       = parsed[16] ? parseNumber(parsed[16][colIdx]) : 0;  // Disputes
+                    const netCashReceipts= parsed[17] ? parseNumber(parsed[17][colIdx]) : 0;  // Net Cash Receipts
 
                     // Gross Revenue = sum of gross receipts before deductions
                     const grossRevenue = subsTotal + partnershipAmt + otherRev;
 
                     // Cost of Revenue breakdown
-                    const hosting       = Math.abs(parsed[17] ? parseNumber(parsed[17][colIdx]) : 0);  // Hosting & Cloud
-                    const thirdParty    = Math.abs(parsed[18] ? parseNumber(parsed[18][colIdx]) : 0);  // Third-party software
-                    const stripeFees    = Math.abs(parsed[19] ? parseNumber(parsed[19][colIdx]) : 0);  // Transaction Fees (Stripe)
-                    const totalCostRev  = Math.abs(parsed[20] ? parseNumber(parsed[20][colIdx]) : 0);  // Total Cost of Revenue
+                    const hosting       = Math.abs(parsed[21] ? parseNumber(parsed[21][colIdx]) : 0);  // Hosting & Cloud
+                    const thirdParty    = Math.abs(parsed[22] ? parseNumber(parsed[22][colIdx]) : 0);  // Third-party software
+                    const stripeFees    = Math.abs(parsed[23] ? parseNumber(parsed[23][colIdx]) : 0);  // Transaction Fees (Stripe)
+                    const totalCostRev  = Math.abs(parsed[24] ? parseNumber(parsed[24][colIdx]) : 0);  // Total Cost of Revenue
 
                     const netRevenue = netCashReceipts - totalCostRev;    // Cash after COGS
 
                     // Marketing / CAC
-                    const mktMeta  = Math.abs(parsed[23] ? parseNumber(parsed[23][colIdx]) : 0);  // Paid Acquisition
-                    const mktOthers= Math.abs(parsed[24] ? parseNumber(parsed[24][colIdx]) : 0);  // UGC's
-                    const totalCAC = Math.abs(parsed[25] ? parseNumber(parsed[25][colIdx]) : 0);  // Total CAC
+                    const mktMeta  = Math.abs(parsed[27] ? parseNumber(parsed[27][colIdx]) : 0);  // Paid Acquisition
+                    const mktOthers= Math.abs(parsed[28] ? parseNumber(parsed[28][colIdx]) : 0);  // UGC's
+                    const totalCAC = Math.abs(parsed[29] ? parseNumber(parsed[29][colIdx]) : 0);  // Total CAC
 
                     // Operating expense totals (by category block)
-                    const smTotal      = Math.abs(parsed[33] ? parseNumber(parsed[33][colIdx]) : 0);  // Total S&M (excl CAC)
-                    const rdTotal      = Math.abs(parsed[40] ? parseNumber(parsed[40][colIdx]) : 0);  // Total R&D
-                    const contentTotal = Math.abs(parsed[47] ? parseNumber(parsed[47][colIdx]) : 0);  // Total Content
-                    const gaTotal      = Math.abs(parsed[62] ? parseNumber(parsed[62][colIdx]) : 0);  // Total G&A
-                    const taxesTotal   = Math.abs(parsed[67] ? parseNumber(parsed[67][colIdx]) : 0);  // Total Taxes
+                    const smTotal      = Math.abs(parsed[37] ? parseNumber(parsed[37][colIdx]) : 0);  // Total S&M (excl CAC)
+                    const rdTotal      = Math.abs(parsed[44] ? parseNumber(parsed[44][colIdx]) : 0);  // Total R&D
+                    const contentTotal = Math.abs(parsed[51] ? parseNumber(parsed[51][colIdx]) : 0);  // Total Content
+                    const gaTotal      = Math.abs(parsed[66] ? parseNumber(parsed[66][colIdx]) : 0);  // Total G&A
+                    const taxesTotal   = Math.abs(parsed[71] ? parseNumber(parsed[71][colIdx]) : 0);  // Total Taxes
 
                     // Salaries = all payrolls + payroll-related taxes
                     // (S&M + Product + Tech + Content + Leadership + Bizops + Payroll Taxes + Tax Payments)
-                    const salaries = Math.abs(parsed[28] ? parseNumber(parsed[28][colIdx]) : 0)   // S&M Payroll
-                                   + Math.abs(parsed[36] ? parseNumber(parsed[36][colIdx]) : 0)   // Product Payroll
-                                   + Math.abs(parsed[37] ? parseNumber(parsed[37][colIdx]) : 0)   // Tech Payroll
-                                   + Math.abs(parsed[43] ? parseNumber(parsed[43][colIdx]) : 0)   // Content Payroll
-                                   + Math.abs(parsed[50] ? parseNumber(parsed[50][colIdx]) : 0)   // Leadership Payroll
-                                   + Math.abs(parsed[51] ? parseNumber(parsed[51][colIdx]) : 0)   // Bizops Payroll
-                                   + Math.abs(parsed[65] ? parseNumber(parsed[65][colIdx]) : 0)   // Payroll Taxes (ISN/SIPARE)
-                                   + Math.abs(parsed[66] ? parseNumber(parsed[66][colIdx]) : 0); // Tax Payments (SAT/IRS)
+                    const salaries = Math.abs(parsed[32] ? parseNumber(parsed[32][colIdx]) : 0)   // S&M Payroll
+                                   + Math.abs(parsed[40] ? parseNumber(parsed[40][colIdx]) : 0)   // Product Payroll
+                                   + Math.abs(parsed[41] ? parseNumber(parsed[41][colIdx]) : 0)   // Tech Payroll
+                                   + Math.abs(parsed[47] ? parseNumber(parsed[47][colIdx]) : 0)   // Content Payroll
+                                   + Math.abs(parsed[54] ? parseNumber(parsed[54][colIdx]) : 0)   // Leadership Payroll
+                                   + Math.abs(parsed[55] ? parseNumber(parsed[55][colIdx]) : 0)   // Bizops Payroll
+                                   + Math.abs(parsed[69] ? parseNumber(parsed[69][colIdx]) : 0)   // Payroll Taxes (ISN/SIPARE)
+                                   + Math.abs(parsed[70] ? parseNumber(parsed[70][colIdx]) : 0); // Tax Payments (SAT/IRS)
 
                     // Professional services / external (S&M + Content + G&A + Legal + Accounting)
-                    const extServices = Math.abs(parsed[29] ? parseNumber(parsed[29][colIdx]) : 0)   // Prof. Services (S&M)
-                                      + Math.abs(parsed[44] ? parseNumber(parsed[44][colIdx]) : 0)   // Prof. Services Content
-                                      + Math.abs(parsed[52] ? parseNumber(parsed[52][colIdx]) : 0)   // Prof. Services (G&A)
-                                      + Math.abs(parsed[53] ? parseNumber(parsed[53][colIdx]) : 0)   // Legal Fees
-                                      + Math.abs(parsed[54] ? parseNumber(parsed[54][colIdx]) : 0); // Accounting & Audit
+                    const extServices = Math.abs(parsed[33] ? parseNumber(parsed[33][colIdx]) : 0)   // Prof. Services (S&M)
+                                      + Math.abs(parsed[48] ? parseNumber(parsed[48][colIdx]) : 0)   // Prof. Services Content
+                                      + Math.abs(parsed[56] ? parseNumber(parsed[56][colIdx]) : 0)   // Prof. Services (G&A)
+                                      + Math.abs(parsed[57] ? parseNumber(parsed[57][colIdx]) : 0)   // Legal Fees
+                                      + Math.abs(parsed[58] ? parseNumber(parsed[58][colIdx]) : 0); // Accounting & Audit
 
-                    const travel = Math.abs(parsed[59] ? parseNumber(parsed[59][colIdx]) : 0);       // Travel & Expenses (G&A)
+                    const travel = Math.abs(parsed[63] ? parseNumber(parsed[63][colIdx]) : 0);       // Travel & Expenses (G&A)
 
                     // Tools / services buckets
-                    const services = Math.abs(parsed[31] ? parseNumber(parsed[31][colIdx]) : 0)   // Sales Tools & CRM
-                                   + Math.abs(parsed[38] ? parseNumber(parsed[38][colIdx]) : 0)   // Product Tools
-                                   + Math.abs(parsed[39] ? parseNumber(parsed[39][colIdx]) : 0)   // Engineering Tools
-                                   + Math.abs(parsed[45] ? parseNumber(parsed[45][colIdx]) : 0)   // Content Tools
-                                   + Math.abs(parsed[57] ? parseNumber(parsed[57][colIdx]) : 0)   // AI Tools
-                                   + Math.abs(parsed[58] ? parseNumber(parsed[58][colIdx]) : 0);  // Corporate Tools
+                    const services = Math.abs(parsed[35] ? parseNumber(parsed[35][colIdx]) : 0)   // Sales Tools & CRM
+                                   + Math.abs(parsed[42] ? parseNumber(parsed[42][colIdx]) : 0)   // Product Tools
+                                   + Math.abs(parsed[43] ? parseNumber(parsed[43][colIdx]) : 0)   // Engineering Tools
+                                   + Math.abs(parsed[49] ? parseNumber(parsed[49][colIdx]) : 0)   // Content Tools
+                                   + Math.abs(parsed[61] ? parseNumber(parsed[61][colIdx]) : 0)   // AI Tools
+                                   + Math.abs(parsed[62] ? parseNumber(parsed[62][colIdx]) : 0);  // Corporate Tools
 
                     // Other = discretionary/misc G&A items
                     // Excluded from Other:
                     //   - Legal Fees & Accounting → External Services (professional services)
                     //   - Payroll Taxes + Tax Payments → Salaries (payroll-related)
-                    const other = Math.abs(parsed[30] ? parseNumber(parsed[30][colIdx]) : 0)   // Sales Commissions
-                                + Math.abs(parsed[32] ? parseNumber(parsed[32][colIdx]) : 0)   // Events
-                                + Math.abs(parsed[46] ? parseNumber(parsed[46][colIdx]) : 0)   // Content Other Expenses
-                                + Math.abs(parsed[55] ? parseNumber(parsed[55][colIdx]) : 0)   // Office & Facilities
-                                + Math.abs(parsed[56] ? parseNumber(parsed[56][colIdx]) : 0)   // Insurance
-                                + Math.abs(parsed[60] ? parseNumber(parsed[60][colIdx]) : 0)   // Financial Expense
-                                + Math.abs(parsed[61] ? parseNumber(parsed[61][colIdx]) : 0); // Other Expenses
+                    const other = Math.abs(parsed[34] ? parseNumber(parsed[34][colIdx]) : 0)   // Sales Commissions
+                                + Math.abs(parsed[36] ? parseNumber(parsed[36][colIdx]) : 0)   // Events
+                                + Math.abs(parsed[50] ? parseNumber(parsed[50][colIdx]) : 0)   // Content Other Expenses
+                                + Math.abs(parsed[59] ? parseNumber(parsed[59][colIdx]) : 0)   // Office & Facilities
+                                + Math.abs(parsed[60] ? parseNumber(parsed[60][colIdx]) : 0)   // Insurance
+                                + Math.abs(parsed[64] ? parseNumber(parsed[64][colIdx]) : 0)   // Financial Expense
+                                + Math.abs(parsed[65] ? parseNumber(parsed[65][colIdx]) : 0); // Other Expenses
 
                     const capex = 0;  // Not broken out in cash flow statement
 
@@ -6430,7 +6432,7 @@
                     const contributionMargin = netCashReceipts - totalCostRev - totalCAC;
 
                     // Profit (Cash Flow proxies)
-                    const ebitda = parsed[69] ? parseNumber(parsed[69][colIdx]) : 0;   // NET OPERATING CASH FLOW
+                    const ebitda = parsed[73] ? parseNumber(parsed[73][colIdx]) : 0;   // NET OPERATING CASH FLOW
                     const operatingProfit = ebitda;                                     // No D&A in cash flow
                     const cashFlow = ebitda;                                            // Same as net operating cash flow
 
