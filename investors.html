@@ -204,6 +204,26 @@
             border-radius: 3px;
             background: linear-gradient(180deg, #3b82f6, #1e3a5f);
         }
+        .chart-legend {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-left: auto;
+        }
+        .chart-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+        .chart-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
         .chart-wrapper {
             padding: 16px 28px 28px;
             height: 380px;
@@ -798,6 +818,10 @@
                 <div class="section-card">
                     <div class="section-header">
                         <div class="section-title">Margin Analysis (%)</div>
+                        <div class="chart-legend" id="marginChartLegend">
+                            <span class="chart-legend-item"><span class="chart-legend-dot" style="background:#3b82f6"></span>Gross Margin %</span>
+                            <span class="chart-legend-item"><span class="chart-legend-dot" style="background:#f59e0b"></span>Contribution Margin %</span>
+                        </div>
                     </div>
                     <div class="chart-wrapper"><canvas id="marginChart"></canvas></div>
                 </div>
@@ -1203,7 +1227,15 @@ function fmtTableVal(v, isZeroMonth) {
     if (v === 0) return '$0';
     const cls = v < 0 ? 'val-negative' : '';
     const abs = Math.abs(v);
-    const formatted = abs >= 1000 ? '$' + Math.round(abs / 1000).toLocaleString() + 'K' : '$' + Math.round(abs);
+    let formatted;
+    if (abs >= 1000000) {
+        const m = abs / 1000000;
+        formatted = '$' + (m >= 100 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+    } else if (abs >= 1000) {
+        formatted = '$' + Math.round(abs / 1000) + 'K';
+    } else {
+        formatted = '$' + Math.round(abs);
+    }
     return `<span class="${cls}">${v < 0 ? '-' : ''}${formatted}</span>`;
 }
 
@@ -1297,6 +1329,22 @@ function destroyCharts() {
     Object.keys(charts).forEach(k => { if (charts[k]) { charts[k].destroy(); delete charts[k]; }});
 }
 
+// Format a value expressed in thousands (K) into a readable K/M string.
+// Input 142 -> "$142K" · 1422 -> "$1.4M" · 10500 -> "$10.5M"
+function fmtKOrM(kValue, opts) {
+    if (kValue == null || isNaN(kValue)) return '';
+    const neg = kValue < 0;
+    const abs = Math.abs(kValue);
+    let str;
+    if (abs >= 1000) {
+        const m = abs / 1000;
+        str = (m >= 100 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+    } else {
+        str = Math.round(abs) + 'K';
+    }
+    return (neg ? '-$' : '$') + str;
+}
+
 // Dynamic bar width based on how many data points are showing.
 function barThickness() {
     if (currentGrouping === 'Y') return 120;
@@ -1347,7 +1395,7 @@ function chartDefaults() {
                     color: '#94a3b8',
                     font: { size: 11, weight: '500' },
                     padding: 10,
-                    callback: v => '$' + v + 'K'
+                    callback: v => fmtKOrM(v)
                 }
             },
             x: {
@@ -1392,7 +1440,7 @@ function createRevenueChart() {
                 ...chartDefaults().plugins,
                 tooltip: {
                     ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => ` Revenue: $${ctx.parsed.y?.toFixed(0)}K` }
+                    callbacks: { label: ctx => ` Revenue: ${fmtKOrM(ctx.parsed.y)}` }
                 }
             },
             scales: {
@@ -1440,7 +1488,7 @@ function createEbitdaChart() {
                 ...chartDefaults().plugins,
                 tooltip: {
                     ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => ` EBITDA: $${ctx.parsed.y?.toFixed(0)}K` }
+                    callbacks: { label: ctx => ` EBITDA: ${fmtKOrM(ctx.parsed.y)}` }
                 }
             }
         }
@@ -1484,7 +1532,7 @@ function createContribChart() {
                 ...chartDefaults().plugins,
                 tooltip: {
                     ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => ` Contribution: $${ctx.parsed.y?.toFixed(0)}K` }
+                    callbacks: { label: ctx => ` Contribution: ${fmtKOrM(ctx.parsed.y)}` }
                 }
             }
         }
@@ -1501,12 +1549,8 @@ function createMarginChart() {
     const opts = chartDefaults();
     opts.scales.y.ticks.callback = v => v + '%';
     opts.scales.y.beginAtZero = false;
-    opts.plugins.legend = {
-        display: true,
-        position: 'top',
-        align: 'end',
-        labels: { color: '#475569', font: { size: 12, weight: '600' }, usePointStyle: true, pointStyle: 'circle', padding: 16, boxWidth: 8, boxHeight: 8 }
-    };
+    // Legend is rendered in the section header (right-aligned) instead of inside the canvas
+    opts.plugins.legend = { display: false };
 
     const makeAreaGradient = (color) => (c) => {
         if (!c.chart.chartArea) return color + '1a';
