@@ -260,6 +260,16 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: none;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .pl-table .section-label .section-sticky {
+            position: sticky;
+            left: 0;
+            display: inline-block;
+            padding: 0 14px;
+            background: white;
+            z-index: 2;
         }
         .pl-table .ebitda-row td {
             font-weight: 800;
@@ -1304,81 +1314,6 @@ function renderPLTable() {
     }
 }
 
-function buildPLTable(year) {
-    const source = getSource(year, currentMethod);
-    const dataArr = monthNames.map(m => source[m]);
-    const activeMonths = dataArr.filter(hasData);
-
-    const plRows = currentMethod === 'cash' ? [
-        { label: 'Cash Inflows', isSection: true },
-        { label: 'Subscriptions from Customers', field: 'mrr' },
-        { label: 'Partnerships & Other Revenue', field: 'partnerships' },
-        { label: 'Gross Revenue', field: 'grossRevenue', isSubtotal: true },
-        { label: 'Refunds, Disputes & Fees', field: 'commissions' },
-        { label: 'Net Cash Receipts', field: 'netCashReceipts', isSubtotal: true },
-        { label: 'Cost of Revenue', isSection: true },
-        { label: 'Total Cost of Revenue', field: 'totalCostRev', negate: true },
-        { label: 'Gross Margin', field: 'grossProfit', isSubtotal: true },
-        { label: 'Customer Acquisition', isSection: true },
-        { label: 'Total CAC (Paid + UGC)', field: 'totalCAC', negate: true },
-        { label: 'Contribution Margin', field: 'contributionProfit', isSubtotal: true },
-        { label: 'Operating Expenses', isSection: true },
-        { label: 'Total OpEx', field: 'totalOpex', negate: true },
-        { label: 'Net Operating Cash Flow', field: 'ebitda', isSubtotal: true, isEbitda: true }
-    ] : [
-        { label: 'Revenue', isSection: true },
-        { label: 'Subscriptions (MRR)', field: 'mrr' },
-        { label: 'Partnerships', field: 'partnerships' },
-        { label: 'Gross Revenue', field: 'grossRevenue', isSubtotal: true },
-        { label: 'Cost of Revenue', isSection: true },
-        { label: 'Commissions', field: 'commissions' },
-        { label: 'Servers', field: 'servers', negate: true },
-        { label: 'Gross Margin', field: 'grossProfit', isSubtotal: true },
-        { label: 'Customer Acquisition', isSection: true },
-        { label: 'Acquisition Spend', field: 'totalCAC', negate: true },
-        { label: 'Contribution Margin', field: 'contributionProfit', isSubtotal: true },
-        { label: 'Operating Expenses', isSection: true },
-        { label: 'Total OpEx', field: 'totalOpex', negate: true },
-        { label: 'EBITDA', field: 'ebitda', isSubtotal: true, isEbitda: true }
-    ];
-
-    // Header
-    let html = '<div class="pl-table-wrapper"><table class="pl-table"><thead><tr>';
-    html += '<th class="row-label"></th>';
-    monthShort.forEach(m => { html += `<th>${m}</th>`; });
-    html += '<th><strong>YTD</strong></th>';
-    html += '</tr></thead><tbody>';
-
-    plRows.forEach(row => {
-        if (row.isSection) {
-            html += `<tr class="section-label"><td colspan="${14}">${row.label}</td></tr>`;
-            return;
-        }
-        const cls = row.isSubtotal ? (row.isEbitda ? 'ebitda-row subtotal' : 'subtotal') : '';
-        html += `<tr class="${cls}">`;
-        html += `<td class="row-label">${row.label}</td>`;
-        let ytd = 0;
-        dataArr.forEach(d => {
-            const isZero = !hasData(d);
-            let val = d[row.field] || 0;
-            if (row.negate && val > 0) val = -val;
-            if (!isZero) ytd += val;
-            html += `<td>${fmtTableVal(val, isZero)}</td>`;
-        });
-        // YTD
-        const ytdCls = row.isEbitda ? (ytd >= 0 ? 'val-positive' : 'val-negative') : (ytd < 0 ? 'val-negative' : '');
-        const ytdAbs = Math.abs(ytd);
-        const ytdFmt = ytdAbs >= 1000000
-            ? '$' + (ytdAbs / 1000000).toFixed(1) + 'M'
-            : '$' + Math.round(ytdAbs / 1000) + 'K';
-        html += `<td><strong class="${ytdCls}">${ytd < 0 ? '-' : ''}${ytdFmt}</strong></td>`;
-        html += '</tr>';
-    });
-
-    html += '</tbody></table></div>';
-    return html;
-}
-
 function buildPLTableFromEntries(entries) {
     const dataArr = entries.map(e => e.data);
     const labels = entries.map(e => e.label);
@@ -1425,7 +1360,7 @@ function buildPLTableFromEntries(entries) {
 
     plRows.forEach(row => {
         if (row.isSection) {
-            html += `<tr class="section-label"><td colspan="${colCount}">${row.label}</td></tr>`;
+            html += `<tr class="section-label"><td colspan="${colCount}"><span class="section-sticky">${row.label}</span></td></tr>`;
             return;
         }
         const cls = row.isSubtotal ? (row.isEbitda ? 'ebitda-row subtotal' : 'subtotal') : '';
