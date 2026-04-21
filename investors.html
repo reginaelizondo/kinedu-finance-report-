@@ -286,38 +286,116 @@
             padding: 20px 28px 8px;
         }
         .exec-summary {
-            padding: 16px 28px 28px;
-            display: grid;
-            gap: 12px;
+            padding: 20px 28px 28px;
         }
         .exec-summary .exec-header {
             font-size: 13px;
             color: #64748b;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f1f5f9;
-            margin-bottom: 4px;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1e3a5f;
         }
         .exec-summary .exec-header strong { color: #1e3a5f; }
-        .exec-insight {
+        .exec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .exec-col {
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            background: white;
             display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .exec-col::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+        }
+        .exec-col-head {
+            display: flex;
+            align-items: center;
             gap: 12px;
-            padding: 12px 14px;
-            border-radius: 10px;
-            background: #f8fafc;
-            border-left: 3px solid #cbd5e1;
+            padding: 18px 20px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .exec-col-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+        }
+        .exec-col-body {
+            padding: 14px 20px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .exec-col.strengths     { background: linear-gradient(180deg, #f0fdf4 0%, #f0fdf4 68px, #fff 68px); }
+        .exec-col.strengths::before { background: #22c55e; }
+        .exec-col.strengths .exec-col-head { color: #166534; }
+        .exec-col.strengths .exec-col-icon { background: #22c55e; }
+        .exec-col.watch         { background: linear-gradient(180deg, #fffbeb 0%, #fffbeb 68px, #fff 68px); }
+        .exec-col.watch::before { background: #f59e0b; }
+        .exec-col.watch .exec-col-head { color: #b45309; }
+        .exec-col.watch .exec-col-icon { background: #f59e0b; }
+        .exec-col.critical      { background: linear-gradient(180deg, #fef2f2 0%, #fef2f2 68px, #fff 68px); }
+        .exec-col.critical::before { background: #ef4444; }
+        .exec-col.critical .exec-col-head { color: #991b1b; }
+        .exec-col.critical .exec-col-icon { background: #ef4444; }
+        .exec-item {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.45;
             color: #334155;
         }
-        .exec-insight.positive { background: #f0fdf4; border-left-color: #22c55e; }
-        .exec-insight.negative { background: #fef2f2; border-left-color: #ef4444; }
-        .exec-insight.neutral  { background: #eff6ff; border-left-color: #3b82f6; }
-        .exec-insight.warning  { background: #fffbeb; border-left-color: #f59e0b; }
-        .exec-insight .exec-icon { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
-        .exec-insight strong { color: #1e3a5f; }
+        .exec-item-arrow {
+            font-weight: 700;
+            margin-right: 2px;
+        }
+        .exec-col.strengths .exec-item-arrow { color: #22c55e; }
+        .exec-col.watch .exec-item-arrow     { color: #f59e0b; }
+        .exec-col.critical .exec-item-arrow  { color: #ef4444; }
+        .exec-item strong { color: #1e3a5f; font-weight: 700; }
+        .exec-badge {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .exec-badge-value-green { background: #166534; color: white; }
+        .exec-badge-value-amber { background: #b45309; color: white; }
+        .exec-badge-value-red   { background: #991b1b; color: white; }
+        .exec-badge-delta-green { background: #dcfce7; color: #166534; }
+        .exec-badge-delta-amber { background: #fef3c7; color: #b45309; }
+        .exec-badge-delta-red   { background: #fee2e2; color: #991b1b; }
+        .exec-empty {
+            color: #94a3b8;
+            font-size: 13px;
+            font-style: italic;
+            padding: 8px 0;
+        }
+        @media (max-width: 1100px) {
+            .exec-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
-            .exec-summary { padding: 12px 16px 16px; }
-            .exec-insight { font-size: 13px; }
+            .exec-summary { padding: 16px; }
+            .exec-grid { gap: 14px; }
+            .exec-item { font-size: 13px; }
         }
         .pl-slide-nav {
             display: flex;
@@ -1810,18 +1888,18 @@ function renderExecSummary() {
 
     const { data, labels } = getDataForView();
     const active = data.map((d, i) => ({ d, label: labels[i] })).filter(x => hasData(x.d));
-    if (!active.length) {
-        container.innerHTML = '<div class="exec-insight neutral"><span class="exec-icon">ℹ️</span><div>No data available for the selected period.</div></div>';
-        return;
-    }
 
     const methodLabel = currentMethod === 'cash' ? 'Cash' : 'Accrual';
     const viewLabel = currentView === 'combined' ? '2025 + 2026' : currentView;
+
+    if (!active.length) {
+        container.innerHTML = `<div class="exec-header">No data available for <strong>${viewLabel}</strong> · <strong>${methodLabel}</strong> accounting.</div>`;
+        return;
+    }
+
     const periodLabel = `${active[0].label} – ${active[active.length - 1].label}`;
     const n = active.length;
-
     const sum = (field) => active.reduce((s, x) => s + (x.d[field] || 0), 0);
-    const avg = (field) => sum(field) / n;
     const fmtMoney = (v) => {
         const a = Math.abs(v);
         const f = a >= 1000000 ? '$' + (a/1000000).toFixed(2) + 'M' : '$' + Math.round(a/1000) + 'K';
@@ -1829,12 +1907,9 @@ function renderExecSummary() {
     };
     const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
 
-    const ebitdaFld = currentMethod === 'cash' ? 'Net Operating Cash Flow' : 'EBITDA';
-    const netRevFld = currentMethod === 'cash' ? 'netCashReceipts' : 'netRevenue';
-    const netRevLabel = currentMethod === 'cash' ? 'Net Cash Receipts' : 'Net Revenue';
+    const ebitdaFld = currentMethod === 'cash' ? 'Net Op Cash Flow' : 'EBITDA';
 
     const totalGross = sum('grossRevenue');
-    const totalNetRev = sum(netRevFld);
     const totalEbitda = sum('ebitda');
     const totalCAC = Math.abs(sum('totalCAC'));
     const totalContrib = sum('contributionProfit');
@@ -1844,7 +1919,7 @@ function renderExecSummary() {
     const avgContribPct = active.reduce((s, x) => s + (x.d.contribMarginPctSheet || 0), 0) / n;
     const avgEbitdaPct = active.reduce((s, x) => s + (x.d.ebitdaMarginPctSheet || 0), 0) / n;
 
-    // Revenue trend (first half vs second half)
+    // First half vs second half revenue trend
     const half = Math.floor(n / 2);
     const firstHalf = active.slice(0, half);
     const secondHalf = active.slice(half);
@@ -1852,17 +1927,16 @@ function renderExecSummary() {
     const shRev = secondHalf.reduce((s, x) => s + (x.d.grossRevenue || 0), 0) / (secondHalf.length || 1);
     const revTrendPct = fhRev ? ((shRev - fhRev) / fhRev * 100) : 0;
 
-    // Best / worst months for revenue
+    // Best / worst months
     const byRev = [...active].sort((a, b) => (b.d.grossRevenue || 0) - (a.d.grossRevenue || 0));
     const bestRev = byRev[0];
     const worstRev = byRev[byRev.length - 1];
 
-    // Best / worst EBITDA months
     const byEbitda = [...active].sort((a, b) => (b.d.ebitda || 0) - (a.d.ebitda || 0));
     const bestEbitda = byEbitda[0];
     const worstEbitda = byEbitda[byEbitda.length - 1];
 
-    // ARPU/CAC (only where both present)
+    // ARPU/CAC
     const ratioMonths = active.filter(x => x.d.arpu && x.d.cac);
     const avgRatio = ratioMonths.length
         ? ratioMonths.reduce((s, x) => s + (x.d.arpu / x.d.cac), 0) / ratioMonths.length
@@ -1870,80 +1944,126 @@ function renderExecSummary() {
 
     // Profitable months
     const profitableMonths = active.filter(x => (x.d.ebitda || 0) > 0).length;
+    const profitableShare = profitableMonths / n * 100;
 
-    const insights = [];
+    const strengths = [];
+    const watch = [];
+    const critical = [];
 
-    insights.push({
-        type: 'neutral', icon: '💰',
-        html: `<strong>Total ${netRevLabel.toLowerCase()}:</strong> ${fmtMoney(totalNetRev)} from ${fmtMoney(totalGross)} gross revenue across ${n} active month${n === 1 ? '' : 's'}. Monthly average gross revenue: <strong>${fmtMoney(totalGross / n)}</strong>.`
-    });
-
-    if (Math.abs(revTrendPct) >= 5 && n >= 4) {
-        const type = revTrendPct >= 0 ? 'positive' : 'negative';
-        const icon = revTrendPct >= 0 ? '📈' : '📉';
-        const direction = revTrendPct >= 0 ? 'grew' : 'declined';
-        insights.push({
-            type, icon,
-            html: `<strong>Revenue ${direction} ${fmtPct(Math.abs(revTrendPct))}</strong> from the first half (${fmtMoney(fhRev)}/mo avg) to the second half (${fmtMoney(shRev)}/mo avg) of the period.`
-        });
+    // Gross margin health
+    if (avgGrossMargin >= 70) {
+        strengths.push(mkItem('Gross Margin', `${avgGrossMargin.toFixed(1)}%`, 'healthy', 'vs 70% benchmark', `+${(avgGrossMargin - 70).toFixed(1)}pp`, 'green'));
+    } else if (avgGrossMargin >= 60) {
+        watch.push(mkItem('Gross Margin', `${avgGrossMargin.toFixed(1)}%`, 'amber', 'vs 70% benchmark', `${(avgGrossMargin - 70).toFixed(1)}pp`, 'amber'));
+    } else if (avgGrossMargin > 0) {
+        critical.push(mkItem('Gross Margin', `${avgGrossMargin.toFixed(1)}%`, 'red', 'vs 70% benchmark', `${(avgGrossMargin - 70).toFixed(1)}pp`, 'red'));
     }
 
-    if (avgGrossMargin > 0) {
-        const gmType = avgGrossMargin >= 70 ? 'positive' : avgGrossMargin >= 60 ? 'neutral' : 'warning';
-        insights.push({
-            type: gmType, icon: '🧮',
-            html: `<strong>Gross margin averaged ${avgGrossMargin.toFixed(1)}%</strong> (${methodLabel} basis). Contribution margin: ${avgContribPct.toFixed(1)}% · EBITDA margin: ${avgEbitdaPct.toFixed(1)}%.`
-        });
+    // Revenue trend (first → second half)
+    if (n >= 4) {
+        if (revTrendPct >= 10) {
+            strengths.push(mkItem('Revenue Growth', fmtPct(revTrendPct), 'green', 'first vs second half', fmtMoney(shRev) + '/mo', 'green'));
+        } else if (revTrendPct >= 0) {
+            watch.push(mkItem('Revenue Growth', fmtPct(revTrendPct), 'amber', 'first vs second half', fmtMoney(shRev) + '/mo', 'amber'));
+        } else {
+            critical.push(mkItem('Revenue Decline', fmtPct(revTrendPct), 'red', 'first vs second half', fmtMoney(shRev) + '/mo', 'red'));
+        }
     }
 
-    if (totalContrib !== 0) {
-        const ctype = totalContrib > 0 ? 'positive' : 'negative';
-        const verb = totalContrib > 0 ? 'covered' : 'did not cover';
-        insights.push({
-            type: ctype, icon: totalContrib > 0 ? '✅' : '⚠️',
-            html: `<strong>${fmtMoney(totalCAC)} spent on customer acquisition</strong>; contribution margin ${verb} it, leaving ${fmtMoney(totalContrib)} before OpEx.`
-        });
-    }
-
-    if (profitableMonths > 0) {
-        const pct = Math.round(profitableMonths / n * 100);
-        const type = pct >= 50 ? 'positive' : 'warning';
-        insights.push({
-            type, icon: '📊',
-            html: `<strong>${profitableMonths} of ${n} month${n === 1 ? '' : 's'} (${pct}%)</strong> were ${ebitdaFld}-positive. Cumulative ${ebitdaFld}: ${fmtMoney(totalEbitda)}.`
-        });
-    } else {
-        insights.push({
-            type: 'negative', icon: '🔻',
-            html: `No ${ebitdaFld}-positive months in this period. Cumulative ${ebitdaFld}: <strong>${fmtMoney(totalEbitda)}</strong>. Monthly OpEx averaged ${fmtMoney(totalOpex / n)}.`
-        });
-    }
-
-    if (bestRev && worstRev && bestRev !== worstRev) {
-        insights.push({
-            type: 'neutral', icon: '🏆',
-            html: `<strong>Best revenue month:</strong> ${bestRev.label} (${fmtMoney(bestRev.d.grossRevenue)}). <strong>Weakest:</strong> ${worstRev.label} (${fmtMoney(worstRev.d.grossRevenue)}).`
-        });
-    }
-
-    if (bestEbitda && worstEbitda && bestEbitda !== worstEbitda) {
-        insights.push({
-            type: 'neutral', icon: '⚖️',
-            html: `<strong>Best ${ebitdaFld}:</strong> ${bestEbitda.label} (${fmtMoney(bestEbitda.d.ebitda)}). <strong>Worst:</strong> ${worstEbitda.label} (${fmtMoney(worstEbitda.d.ebitda)}).`
-        });
-    }
-
+    // ARPU / CAC
     if (avgRatio != null) {
-        const rtype = avgRatio >= 3 ? 'positive' : avgRatio >= 2 ? 'neutral' : 'warning';
-        insights.push({
-            type: rtype, icon: '🎯',
-            html: `<strong>ARPU / CAC ratio averaged ${avgRatio.toFixed(2)}x</strong> — ${avgRatio >= 3 ? 'healthy unit economics' : avgRatio >= 2 ? 'payback achievable' : 'acquisition costs pressuring margins'}.`
-        });
+        const ratioStr = avgRatio.toFixed(2) + 'x';
+        if (avgRatio >= 3) {
+            strengths.push(mkItem('ARPU / CAC', ratioStr, 'green', 'vs 3x target', `+${((avgRatio / 3 - 1) * 100).toFixed(1)}%`, 'green'));
+        } else if (avgRatio >= 2) {
+            watch.push(mkItem('ARPU / CAC', ratioStr, 'amber', 'vs 3x target', `${((avgRatio / 3 - 1) * 100).toFixed(1)}%`, 'amber'));
+        } else {
+            critical.push(mkItem('ARPU / CAC', ratioStr, 'red', 'vs 3x target', `${((avgRatio / 3 - 1) * 100).toFixed(1)}%`, 'red'));
+        }
+    }
+
+    // Contribution margin
+    if (totalContrib > 0) {
+        if (avgContribPct >= 25) {
+            strengths.push(mkItem('Contribution Margin', `${avgContribPct.toFixed(1)}%`, 'green', 'CAC fully covered', fmtMoney(totalContrib), 'green'));
+        } else {
+            watch.push(mkItem('Contribution Margin', `${avgContribPct.toFixed(1)}%`, 'amber', 'CAC covered, thin buffer', fmtMoney(totalContrib), 'amber'));
+        }
+    } else if (totalContrib < 0) {
+        critical.push(mkItem('Contribution Margin', `${avgContribPct.toFixed(1)}%`, 'red', 'CAC exceeds gross margin', fmtMoney(totalContrib), 'red'));
+    }
+
+    // Profitability
+    if (profitableShare >= 75) {
+        strengths.push(mkItem('Profitable Months', `${profitableMonths}/${n}`, 'green', `${ebitdaFld}-positive`, `${profitableShare.toFixed(0)}%`, 'green'));
+    } else if (profitableShare >= 25) {
+        watch.push(mkItem('Profitable Months', `${profitableMonths}/${n}`, 'amber', `${ebitdaFld}-positive`, `${profitableShare.toFixed(0)}%`, 'amber'));
+    } else {
+        critical.push(mkItem(`Cumulative ${ebitdaFld}`, fmtMoney(totalEbitda), 'red', `${profitableMonths}/${n} months profitable`, `${profitableShare.toFixed(0)}%`, 'red'));
+    }
+
+    // EBITDA margin
+    if (avgEbitdaPct >= 0) {
+        strengths.push(mkItem(`${ebitdaFld} Margin`, `${avgEbitdaPct.toFixed(1)}%`, 'green', 'period average', `+${avgEbitdaPct.toFixed(1)}pp`, 'green'));
+    } else if (avgEbitdaPct >= -20) {
+        watch.push(mkItem(`${ebitdaFld} Margin`, `${avgEbitdaPct.toFixed(1)}%`, 'amber', 'approaching breakeven', `${avgEbitdaPct.toFixed(1)}pp`, 'amber'));
+    } else {
+        critical.push(mkItem(`${ebitdaFld} Margin`, `${avgEbitdaPct.toFixed(1)}%`, 'red', 'heavy operating loss', `${avgEbitdaPct.toFixed(1)}pp`, 'red'));
+    }
+
+    // Best / worst callouts
+    if (bestRev && n >= 2) {
+        strengths.push(mkItem('Peak Revenue Month', fmtMoney(bestRev.d.grossRevenue), 'green', bestRev.label, 'high', 'green'));
+    }
+    if (worstRev && bestRev && worstRev !== bestRev) {
+        const gap = bestRev.d.grossRevenue - worstRev.d.grossRevenue;
+        const gapPct = bestRev.d.grossRevenue ? (gap / bestRev.d.grossRevenue * 100) : 0;
+        if (gapPct >= 50) {
+            watch.push(mkItem('Revenue Volatility', `${gapPct.toFixed(0)}% range`, 'amber', `${worstRev.label} low (${fmtMoney(worstRev.d.grossRevenue)})`, 'spread', 'amber'));
+        }
+    }
+    if (worstEbitda && (worstEbitda.d.ebitda || 0) < 0) {
+        const sev = worstEbitda.d.ebitda < -100000 ? 'red' : 'amber';
+        (sev === 'red' ? critical : watch).push(
+            mkItem(`Worst ${ebitdaFld}`, fmtMoney(worstEbitda.d.ebitda), sev, worstEbitda.label, 'trough', sev)
+        );
+    }
+
+    // OpEx check
+    const opexAvg = totalOpex / n;
+    const revAvg = totalGross / n;
+    if (revAvg && opexAvg / revAvg >= 0.5) {
+        const opexPct = (opexAvg / revAvg * 100);
+        critical.push(mkItem('OpEx Load', `${opexPct.toFixed(0)}% of revenue`, 'red', `${fmtMoney(opexAvg)}/mo avg`, 'high burn', 'red'));
     }
 
     const header = `<div class="exec-header">Auto-generated insights for <strong>${viewLabel}</strong> · <strong>${methodLabel}</strong> accounting · <strong>${periodLabel}</strong></div>`;
-    const body = insights.map(i => `<div class="exec-insight ${i.type}"><span class="exec-icon">${i.icon}</span><div>${i.html}</div></div>`).join('');
-    container.innerHTML = header + body;
+    const emptyMsg = '<div class="exec-empty">No items in this category.</div>';
+    container.innerHTML = header + `
+        <div class="exec-grid">
+            <div class="exec-col strengths">
+                <div class="exec-col-head"><span class="exec-col-icon">&#10003;</span>Strengths</div>
+                <div class="exec-col-body">${strengths.join('') || emptyMsg}</div>
+            </div>
+            <div class="exec-col watch">
+                <div class="exec-col-head"><span class="exec-col-icon">!</span>Watch Items</div>
+                <div class="exec-col-body">${watch.join('') || emptyMsg}</div>
+            </div>
+            <div class="exec-col critical">
+                <div class="exec-col-head"><span class="exec-col-icon">&#10005;</span>Critical Issues</div>
+                <div class="exec-col-body">${critical.join('') || emptyMsg}</div>
+            </div>
+        </div>`;
+}
+
+function mkItem(label, value, valueTone, context, delta, deltaTone) {
+    return `<div class="exec-item">
+        <span class="exec-item-arrow">&rarr;</span>
+        <strong>${label}</strong>
+        <span class="exec-badge exec-badge-value-${valueTone === 'healthy' ? 'green' : valueTone}">${value}</span>
+        <span>${context}</span>
+        <span class="exec-badge exec-badge-delta-${deltaTone}">${delta}</span>
+    </div>`;
 }
 
 // ============================================
