@@ -479,12 +479,12 @@
                     <div class="controls">
                         <div class="control-group">
                             <button class="ctrl-btn" id="btn2025" onclick="setView('2025')">2025</button>
-                            <button class="ctrl-btn active" id="btn2026" onclick="setView('2026')">2026</button>
-                            <button class="ctrl-btn" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
+                            <button class="ctrl-btn" id="btn2026" onclick="setView('2026')">2026</button>
+                            <button class="ctrl-btn active" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
                         </div>
                         <div class="control-group">
                             <button class="ctrl-btn active-cash" id="btnCash" onclick="setMethod('cash')">CASH</button>
-                            <button class="ctrl-btn active-acc" id="btnAcc" onclick="setMethod('acc')">ACC</button>
+                            <button class="ctrl-btn" id="btnAcc" onclick="setMethod('acc')">ACC</button>
                         </div>
                     </div>
                 </div>
@@ -783,8 +783,8 @@ const CASH_2026 = {
 // ============================================
 // STATE
 // ============================================
-let currentView = '2026';
-let currentMethod = 'acc';
+let currentView = 'combined';
+let currentMethod = 'cash';
 const charts = {};
 const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const monthShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
