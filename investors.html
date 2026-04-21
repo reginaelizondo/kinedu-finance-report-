@@ -585,7 +585,7 @@
                     </div>
                     <div class="chart-wrapper"><canvas id="metricChart"></canvas></div>
                     <div style="padding: 0 28px 20px; font-size: 11px; color: #94a3b8; font-style: italic; line-height: 1.5;">
-                        * In CASH mode, margin percentages are pulled directly from the P&L CASH 2025 & 2026 source sheets (rows 39-41 / 105-107).
+                        * Margin percentages are pulled directly from the source sheets — P&L CASH (rows 39-41 / 105-107) and P&L ACC (rows 39-41 / 82-84).
                     </div>
                 </div>
             </div>
@@ -873,7 +873,7 @@ let currentMethod = 'cash';
         March:    { netCashReceipts: 353128, totalCostRev: 10269 }
     };
     // Pre-computed margin % from P&L CASH 2025 (rows 39-41)
-    const margins2025 = {
+    const marginsCash2025 = {
         January:   { grossMarginPctSheet: 74.81, contribMarginPctSheet: 39.14,  ebitdaMarginPctSheet: -2.13   },
         February:  { grossMarginPctSheet: 77.59, contribMarginPctSheet: -63.62, ebitdaMarginPctSheet: -167.11 },
         March:     { grossMarginPctSheet: 71.98, contribMarginPctSheet: 12.82,  ebitdaMarginPctSheet: -30.49  },
@@ -888,22 +888,42 @@ let currentMethod = 'cash';
         December:  { grossMarginPctSheet: 75.40, contribMarginPctSheet: 29.39,  ebitdaMarginPctSheet: -9.38   }
     };
     // Pre-computed margin % from P&L CASH 2026 (rows 105-107)
-    const margins2026 = {
+    const marginsCash2026 = {
         January:  { grossMarginPctSheet: 67.99, contribMarginPctSheet: 73.56,  ebitdaMarginPctSheet: 17.16   },
         February: { grossMarginPctSheet: 62.95, contribMarginPctSheet: -57.74, ebitdaMarginPctSheet: -196.70 },
         March:    { grossMarginPctSheet: 67.22, contribMarginPctSheet: 55.17,  ebitdaMarginPctSheet: -1.75   }
     };
+    // Pre-computed margin % from P&L ACC 2025 (rows 39-41)
+    const marginsAcc2025 = {
+        January:   { grossMarginPctSheet: 71.07, contribMarginPctSheet: 17.63, ebitdaMarginPctSheet: -16.27 },
+        February:  { grossMarginPctSheet: 72.23, contribMarginPctSheet: 22.78, ebitdaMarginPctSheet: -16.70 },
+        March:     { grossMarginPctSheet: 70.94, contribMarginPctSheet: 21.48, ebitdaMarginPctSheet: -22.94 },
+        April:     { grossMarginPctSheet: 71.29, contribMarginPctSheet: 18.19, ebitdaMarginPctSheet: -29.43 },
+        May:       { grossMarginPctSheet: 70.16, contribMarginPctSheet: 20.08, ebitdaMarginPctSheet: -40.12 },
+        June:      { grossMarginPctSheet: 69.62, contribMarginPctSheet: 18.92, ebitdaMarginPctSheet: -25.68 },
+        July:      { grossMarginPctSheet: 69.73, contribMarginPctSheet: 22.13, ebitdaMarginPctSheet: -15.80 },
+        August:    { grossMarginPctSheet: 68.48, contribMarginPctSheet: 25.69, ebitdaMarginPctSheet: -8.23  },
+        September: { grossMarginPctSheet: 67.70, contribMarginPctSheet: 22.99, ebitdaMarginPctSheet: -8.86  },
+        October:   { grossMarginPctSheet: 67.02, contribMarginPctSheet: 21.61, ebitdaMarginPctSheet: -7.62  },
+        November:  { grossMarginPctSheet: 67.67, contribMarginPctSheet: 26.54, ebitdaMarginPctSheet: -3.97  },
+        December:  { grossMarginPctSheet: 68.79, contribMarginPctSheet: 19.35, ebitdaMarginPctSheet: -11.99 }
+    };
+    // Pre-computed margin % from P&L ACC 2026 (rows 82-84) — Jan-Feb closed so far
+    const marginsAcc2026 = {
+        January:  { grossMarginPctSheet: 73.73, contribMarginPctSheet: 32.00, ebitdaMarginPctSheet: -9.00 },
+        February: { grossMarginPctSheet: 73.63, contribMarginPctSheet: 38.00, ebitdaMarginPctSheet: -3.00 }
+    };
     // For CASH 2025 (no cash-flow CSV): approximate Net Cash Receipts ≈ netRevenue
     Object.keys(kpis2025).forEach(m => {
-        Object.assign(ACC_2025[m], kpis2025[m]);
+        Object.assign(ACC_2025[m], kpis2025[m], marginsAcc2025[m] || {});
         Object.assign(CASH_2025[m], kpis2025[m], {
             netCashReceipts: CASH_2025[m].netRevenue,
             totalCostRev: CASH_2025[m].servers
-        }, margins2025[m] || {});
+        }, marginsCash2025[m] || {});
     });
     Object.keys(kpis2026).forEach(m => {
-        if (ACC_2026[m])  Object.assign(ACC_2026[m],  kpis2026[m]);
-        if (CASH_2026[m]) Object.assign(CASH_2026[m], kpis2026[m], cashFlow2026[m] || {}, margins2026[m] || {});
+        if (ACC_2026[m])  Object.assign(ACC_2026[m],  kpis2026[m], marginsAcc2026[m] || {});
+        if (CASH_2026[m]) Object.assign(CASH_2026[m], kpis2026[m], cashFlow2026[m] || {}, marginsCash2026[m] || {});
     });
 })();
 const charts = {};
@@ -1377,30 +1397,15 @@ function inflatedCashRev(d) {
 const metricDefs = {
     grossMarginPct: {
         label: 'Gross Margin %', unit: '%', color: '#3b82f6',
-        calc: d => {
-            if (currentMethod === 'cash') {
-                return d.grossMarginPctSheet != null ? d.grossMarginPctSheet : null;
-            }
-            return d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null;
-        }
+        calc: d => d.grossMarginPctSheet != null ? d.grossMarginPctSheet : null
     },
     contribMarginPct: {
         label: 'Contribution Margin %', unit: '%', color: '#8b5cf6',
-        calc: d => {
-            if (currentMethod === 'cash') {
-                return d.contribMarginPctSheet != null ? d.contribMarginPctSheet : null;
-            }
-            return d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null;
-        }
+        calc: d => d.contribMarginPctSheet != null ? d.contribMarginPctSheet : null
     },
     ebitdaMarginPct: {
         label: 'EBITDA Margin %', unit: '%', color: '#ef4444',
-        calc: d => {
-            if (currentMethod === 'cash') {
-                return d.ebitdaMarginPctSheet != null ? d.ebitdaMarginPctSheet : null;
-            }
-            return d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null;
-        }
+        calc: d => d.ebitdaMarginPctSheet != null ? d.ebitdaMarginPctSheet : null
     },
     arpuCacRatio: {
         label: 'ARPU / CAC Ratio', unit: 'x', color: '#f59e0b',
