@@ -767,8 +767,8 @@
                         <button class="ctrl-btn active" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
                     </div>
                     <div class="control-group">
-                        <button class="ctrl-btn active-cash" id="btnCash" onclick="setMethod('cash')">CASH</button>
-                        <button class="ctrl-btn" id="btnAcc" onclick="setMethod('acc')">ACC</button>
+                        <button class="ctrl-btn" id="btnCash" onclick="setMethod('cash')">CASH</button>
+                        <button class="ctrl-btn active-acc" id="btnAcc" onclick="setMethod('acc')">ACC</button>
                     </div>
                     <div class="control-group control-group-grouping" id="groupingControls">
                         <button class="ctrl-btn-grp active" id="btnGrpM" onclick="setGrouping('M')" title="Monthly">M</button>
@@ -1083,7 +1083,7 @@ const CASH_2026 = {
 // STATE
 // ============================================
 let currentView = 'combined';
-let currentMethod = 'cash';
+let currentMethod = 'acc';
 let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yearly
 
 // ============================================
