@@ -989,9 +989,11 @@ const CASH_2025 = {
 };
 
 const CASH_2026 = {
-    January:     { mrr: 527077, partnerships: 15832, grossRevenue: 542909, commissions: -11795, netRevenue: 531114, servers: 8383, grossProfit: 522731, paidAcquisition: 182402, mktOthers: 10116, totalCAC: 192518, contributionProfit: 330213, totalOpex: 198258, ebitda: 131955 },
-    February:    { mrr: 91149, partnerships: 13380, grossRevenue: 104529, commissions: -5621, netRevenue: 98908, servers: 8517, grossProfit: 90391, paidAcquisition: 213921, mktOthers: 2111, totalCAC: 216032, contributionProfit: -125641, totalOpex: 156799, ebitda: -282440 },
-    March:       { mrr: 355882, partnerships: 1644, grossRevenue: 357526, commissions: -6007, netRevenue: 351519, servers: 8659, grossProfit: 342860, paidAcquisition: 216646, mktOthers: 1723, totalCAC: 218369, contributionProfit: 124491, totalOpex: 133410, ebitda: -8919 },
+    // 2026 Jan-Mar: Subscriptions (mrr) + Gross Revenue pulled from P&L CASH rows 109-112
+    // (gross sales before store commissions). "commissions" now bridges Gross Rev → Net Cash Receipts.
+    January:     { mrr: 752967, partnerships: 15832, grossRevenue: 768799, commissions: -235295, netRevenue: 533504, servers: 8383, grossProfit: 522733, paidAcquisition: 182402, mktOthers: 10116, totalCAC: 192518, contributionProfit: 330215, totalOpex: 198258, ebitda: 131955 },
+    February:    { mrr: 130213, partnerships: 13380, grossRevenue: 143593, commissions: -42729, netRevenue: 100864, servers: 8517, grossProfit: 90391, paidAcquisition: 213921, mktOthers: 2111, totalCAC: 216032, contributionProfit: -125641, totalOpex: 156799, ebitda: -282440 },
+    March:       { mrr: 508403, partnerships: 1644, grossRevenue: 510047, commissions: -156919, netRevenue: 353128, servers: 8659, grossProfit: 342859, paidAcquisition: 216646, mktOthers: 1723, totalCAC: 218369, contributionProfit: 124490, totalOpex: 133410, ebitda: -8919 },
     April:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     May:         { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     June:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
@@ -1614,7 +1616,7 @@ function buildPLTableFromEntries(entries) {
         { label: 'Subscriptions from Customers', field: 'mrr' },
         { label: 'Partnerships & Other Revenue', field: 'partnerships' },
         { label: 'Gross Revenue', field: 'grossRevenue', isSubtotal: true },
-        { label: 'Refunds, Disputes & Fees', field: 'commissions' },
+        { label: 'Store Fees, Refunds & Disputes', field: 'commissions' },
         { label: 'Net Cash Receipts', field: 'netCashReceipts', isSubtotal: true },
         { label: 'Cost of Revenue', isSection: true },
         { label: 'Total Cost of Revenue', field: 'totalCostRev', negate: true },
