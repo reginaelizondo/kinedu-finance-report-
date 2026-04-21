@@ -172,12 +172,16 @@
         .section-card {
             background: white;
             border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 30px rgba(15, 23, 42, 0.05);
             border: 1px solid #e2e8f0;
             overflow: hidden;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .section-card:hover {
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05), 0 16px 40px rgba(15, 23, 42, 0.07);
         }
         .section-header {
-            padding: 24px 28px 0;
+            padding: 24px 28px 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -185,8 +189,20 @@
         .section-title {
             font-size: 18px;
             font-weight: 700;
-            color: #1e3a5f;
-            letter-spacing: -0.3px;
+            color: #0f172a;
+            letter-spacing: -0.4px;
+            position: relative;
+            padding-left: 14px;
+        }
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 4px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #3b82f6, #1e3a5f);
         }
         .chart-wrapper {
             padding: 16px 28px 28px;
@@ -1271,34 +1287,67 @@ function destroyCharts() {
     Object.keys(charts).forEach(k => { if (charts[k]) { charts[k].destroy(); delete charts[k]; }});
 }
 
+// Dynamic bar width based on how many data points are showing.
+function barThickness() {
+    if (currentGrouping === 'Y') return 120;
+    if (currentGrouping === 'S') return 80;
+    if (currentGrouping === 'Q') return 56;
+    // Monthly
+    return currentView === 'combined' ? 26 : 42;
+}
+
+function makeVGradient(ctx, chartArea, fromColor, toColor) {
+    if (!chartArea) return fromColor;
+    const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+    g.addColorStop(0, fromColor);
+    g.addColorStop(1, toColor);
+    return g;
+}
+
 function chartDefaults() {
+    const fewPoints = (currentGrouping === 'Y' || currentGrouping === 'S');
     return {
         responsive: true,
         maintainAspectRatio: false,
+        layout: { padding: { top: 10, right: 8, bottom: 0, left: 0 } },
+        animation: { duration: 600, easing: 'easeOutQuart' },
         plugins: {
             legend: { display: false },
             tooltip: {
-                backgroundColor: 'rgba(30, 58, 95, 0.95)',
-                padding: 12,
-                titleFont: { size: 13, weight: '600' },
-                bodyFont: { size: 12 },
-                cornerRadius: 8,
+                backgroundColor: 'rgba(15, 23, 42, 0.96)',
+                titleColor: '#f8fafc',
+                bodyColor: '#e2e8f0',
+                padding: 14,
+                boxPadding: 6,
+                titleFont: { size: 13, weight: '700' },
+                bodyFont: { size: 13, weight: '500' },
+                cornerRadius: 10,
+                displayColors: true,
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 1,
+                caretSize: 6,
             }
         },
         scales: {
             y: {
                 beginAtZero: false,
-                grid: { color: '#f1f5f9', drawBorder: false },
+                grid: { color: 'rgba(148, 163, 184, 0.15)', drawBorder: false, drawTicks: false, lineWidth: 1 },
                 border: { display: false },
-                ticks: { color: '#94a3b8', font: { size: 11 }, callback: v => '$' + v + 'K' }
+                ticks: {
+                    color: '#94a3b8',
+                    font: { size: 11, weight: '500' },
+                    padding: 10,
+                    callback: v => '$' + v + 'K'
+                }
             },
             x: {
                 grid: { display: false },
                 border: { display: false },
                 ticks: {
-                    color: '#94a3b8',
-                    font: { size: currentView === 'combined' ? 9 : 11 },
-                    maxRotation: currentView === 'combined' ? 45 : 0
+                    color: '#64748b',
+                    font: { size: fewPoints ? 13 : (currentView === 'combined' ? 10 : 12), weight: '600' },
+                    padding: 8,
+                    maxRotation: (currentView === 'combined' && currentGrouping === 'M') ? 45 : 0
                 }
             }
         }
@@ -1317,9 +1366,13 @@ function createRevenueChart() {
             datasets: [{
                 label: 'Gross Revenue',
                 data: values,
-                backgroundColor: '#1e3a5f',
-                borderRadius: 6,
-                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                backgroundColor: (c) => makeVGradient(c.chart.ctx, c.chart.chartArea, '#3b82f6', '#1e3a5f'),
+                hoverBackgroundColor: (c) => makeVGradient(c.chart.ctx, c.chart.chartArea, '#60a5fa', '#1e3a5f'),
+                borderRadius: 10,
+                borderSkipped: false,
+                maxBarThickness: barThickness(),
+                categoryPercentage: 0.82,
+                barPercentage: 0.9,
                 skipNull: true
             }]
         },
@@ -1329,7 +1382,7 @@ function createRevenueChart() {
                 ...chartDefaults().plugins,
                 tooltip: {
                     ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => `Revenue: $${ctx.parsed.y?.toFixed(0)}K` }
+                    callbacks: { label: ctx => ` Revenue: $${ctx.parsed.y?.toFixed(0)}K` }
                 }
             },
             scales: {
@@ -1344,6 +1397,15 @@ function createEbitdaChart() {
     const { labels, data } = getDataForView();
     const ctx = document.getElementById('ebitdaChart').getContext('2d');
     const values = data.map(d => hasData(d) ? d.ebitda / 1000 : null);
+    const bgFn = (c) => {
+        const area = c.chart.chartArea;
+        return values.map(v => {
+            if (v === null) return 'transparent';
+            return v >= 0
+                ? makeVGradient(c.chart.ctx, area, '#4ade80', '#16a34a')
+                : makeVGradient(c.chart.ctx, area, '#fca5a5', '#dc2626');
+        });
+    };
 
     charts.ebitda = new Chart(ctx, {
         type: 'bar',
@@ -1352,9 +1414,13 @@ function createEbitdaChart() {
             datasets: [{
                 label: 'EBITDA',
                 data: values,
-                backgroundColor: values.map(v => v !== null ? (v >= 0 ? '#22c55e' : '#ef4444') : 'transparent'),
-                borderRadius: 6,
-                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                backgroundColor: bgFn,
+                hoverBackgroundColor: bgFn,
+                borderRadius: 10,
+                borderSkipped: false,
+                maxBarThickness: barThickness(),
+                categoryPercentage: 0.82,
+                barPercentage: 0.9,
                 skipNull: true
             }]
         },
@@ -1364,7 +1430,7 @@ function createEbitdaChart() {
                 ...chartDefaults().plugins,
                 tooltip: {
                     ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => `EBITDA: $${ctx.parsed.y?.toFixed(0)}K` }
+                    callbacks: { label: ctx => ` EBITDA: $${ctx.parsed.y?.toFixed(0)}K` }
                 }
             }
         }
@@ -1375,6 +1441,15 @@ function createContribChart() {
     const { labels, data } = getDataForView();
     const ctx = document.getElementById('contribChart').getContext('2d');
     const values = data.map(d => hasData(d) ? d.contributionProfit / 1000 : null);
+    const bgFn = (c) => {
+        const area = c.chart.chartArea;
+        return values.map(v => {
+            if (v === null) return 'transparent';
+            return v >= 0
+                ? makeVGradient(c.chart.ctx, area, '#8b5cf6', '#4c1d95')
+                : makeVGradient(c.chart.ctx, area, '#fca5a5', '#dc2626');
+        });
+    };
 
     charts.contrib = new Chart(ctx, {
         type: 'bar',
@@ -1383,9 +1458,13 @@ function createContribChart() {
             datasets: [{
                 label: 'Contribution Margin',
                 data: values,
-                backgroundColor: values.map(v => v !== null ? (v >= 0 ? '#1e3a5f' : '#ef4444') : 'transparent'),
-                borderRadius: 6,
-                maxBarThickness: currentView === 'combined' ? 18 : 40,
+                backgroundColor: bgFn,
+                hoverBackgroundColor: bgFn,
+                borderRadius: 10,
+                borderSkipped: false,
+                maxBarThickness: barThickness(),
+                categoryPercentage: 0.82,
+                barPercentage: 0.9,
                 skipNull: true
             }]
         },
@@ -1395,7 +1474,7 @@ function createContribChart() {
                 ...chartDefaults().plugins,
                 tooltip: {
                     ...chartDefaults().plugins.tooltip,
-                    callbacks: { label: ctx => `Contrib. Margin: $${ctx.parsed.y?.toFixed(0)}K` }
+                    callbacks: { label: ctx => ` Contribution: $${ctx.parsed.y?.toFixed(0)}K` }
                 }
             }
         }
@@ -1407,6 +1486,7 @@ function createMarginChart() {
     const ctx = document.getElementById('marginChart').getContext('2d');
     const grossPct = data.map(d => hasData(d) ? (d.grossProfit / d.grossRevenue * 100) : null);
     const contribPct = data.map(d => hasData(d) ? (d.contributionProfit / d.grossRevenue * 100) : null);
+    const pointR = (currentGrouping === 'M' && currentView === 'combined') ? 3 : 5;
 
     const opts = chartDefaults();
     opts.scales.y.ticks.callback = v => v + '%';
@@ -1414,7 +1494,16 @@ function createMarginChart() {
     opts.plugins.legend = {
         display: true,
         position: 'top',
-        labels: { color: '#64748b', font: { size: 12, weight: '500' }, usePointStyle: true, pointStyle: 'circle', padding: 20 }
+        align: 'end',
+        labels: { color: '#475569', font: { size: 12, weight: '600' }, usePointStyle: true, pointStyle: 'circle', padding: 16, boxWidth: 8, boxHeight: 8 }
+    };
+
+    const makeAreaGradient = (color) => (c) => {
+        if (!c.chart.chartArea) return color + '1a';
+        const g = c.chart.ctx.createLinearGradient(0, c.chart.chartArea.top, 0, c.chart.chartArea.bottom);
+        g.addColorStop(0, color + '55');
+        g.addColorStop(1, color + '05');
+        return g;
     };
 
     charts.margin = new Chart(ctx, {
@@ -1426,11 +1515,14 @@ function createMarginChart() {
                     label: 'Gross Margin %',
                     data: grossPct,
                     borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.08)',
-                    borderWidth: 2.5,
-                    pointRadius: currentView === 'combined' ? 2 : 4,
-                    pointHoverRadius: 6,
-                    tension: 0.3,
+                    backgroundColor: makeAreaGradient('#3b82f6'),
+                    borderWidth: 3,
+                    pointRadius: pointR,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#3b82f6',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    tension: 0.35,
                     fill: true,
                     spanGaps: false
                 },
@@ -1438,11 +1530,14 @@ function createMarginChart() {
                     label: 'Contribution Margin %',
                     data: contribPct,
                     borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.08)',
-                    borderWidth: 2.5,
-                    pointRadius: currentView === 'combined' ? 2 : 4,
-                    pointHoverRadius: 6,
-                    tension: 0.3,
+                    backgroundColor: makeAreaGradient('#f59e0b'),
+                    borderWidth: 3,
+                    pointRadius: pointR,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#f59e0b',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    tension: 0.35,
                     fill: true,
                     spanGaps: false
                 }
@@ -1636,6 +1731,7 @@ function createMetricChart() {
     const def = metricDefs[currentMetric];
     const vals = data.map(d => hasData(d) ? def.calc(d) : null);
     const ctx = document.getElementById('metricChart').getContext('2d');
+    const pointR = (currentGrouping === 'M' && currentView === 'combined') ? 3 : 5;
 
     const opts = chartDefaults();
     opts.scales.y.beginAtZero = true;
@@ -1643,8 +1739,16 @@ function createMetricChart() {
     opts.plugins.tooltip.callbacks = {
         label: ctx => {
             const v = ctx.parsed.y;
-            return def.label + ': ' + (def.unit === '%' ? v.toFixed(1) + '%' : v.toFixed(2) + 'x');
+            return ' ' + def.label + ': ' + (def.unit === '%' ? v.toFixed(1) + '%' : v.toFixed(2) + 'x');
         }
+    };
+
+    const gradient = (c) => {
+        if (!c.chart.chartArea) return def.color + '22';
+        const g = c.chart.ctx.createLinearGradient(0, c.chart.chartArea.top, 0, c.chart.chartArea.bottom);
+        g.addColorStop(0, def.color + '55');
+        g.addColorStop(1, def.color + '05');
+        return g;
     };
 
     charts.metric = new Chart(ctx, {
@@ -1655,12 +1759,14 @@ function createMetricChart() {
                 label: def.label,
                 data: vals,
                 borderColor: def.color,
-                backgroundColor: def.color + '15',
-                borderWidth: 2.5,
-                pointRadius: currentView === 'combined' ? 3 : 5,
+                backgroundColor: gradient,
+                borderWidth: 3,
+                pointRadius: pointR,
                 pointBackgroundColor: def.color,
-                pointHoverRadius: 7,
-                tension: 0.3,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointHoverRadius: 8,
+                tension: 0.35,
                 fill: true,
                 spanGaps: false
             }]
