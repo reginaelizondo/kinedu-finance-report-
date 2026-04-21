@@ -528,10 +528,12 @@
                         <button class="ctrl-btn-metric active" onclick="setMetric('grossMarginPct')">Gross Margin %</button>
                         <button class="ctrl-btn-metric" onclick="setMetric('contribMarginPct')">Contribution %</button>
                         <button class="ctrl-btn-metric" onclick="setMetric('ebitdaMarginPct')">EBITDA Margin %</button>
-                        <button class="ctrl-btn-metric" onclick="setMetric('cacRatio')">Revenue / CAC</button>
-                        <button class="ctrl-btn-metric" onclick="setMetric('opexPct')">OpEx % of Rev</button>
+                        <button class="ctrl-btn-metric" onclick="setMetric('arpuCacRatio')">ARPU / CAC</button>
                     </div>
                     <div class="chart-wrapper"><canvas id="metricChart"></canvas></div>
+                    <div style="padding: 0 28px 20px; font-size: 11px; color: #94a3b8; font-style: italic; line-height: 1.5;">
+                        * For CASH accounting, gross subscription revenue is inflated by <strong>30%</strong> to approximate store/payment processor fees not captured in cash receipts. This is a temporary proxy while full fee data is being reconciled.
+                    </div>
                 </div>
             </div>
 
@@ -785,6 +787,51 @@ const CASH_2026 = {
 // ============================================
 let currentView = 'combined';
 let currentMethod = 'cash';
+
+// ============================================
+// ENRICH DATA with KPI fields (ARPU, CAC) + Cash Flow specifics
+// ============================================
+(function enrichData() {
+    // 2025 monthly ARPU / CAC from KPI sheet
+    const kpis2025 = {
+        January:   { arpu: 52, cac: 34.55 },
+        February:  { arpu: 53, cac: 32.51 },
+        March:     { arpu: 55, cac: 31.52 },
+        April:     { arpu: 54, cac: 34.80 },
+        May:       { arpu: 52, cac: 32.06 },
+        June:      { arpu: 54, cac: 32.03 },
+        July:      { arpu: 57, cac: 30.34 },
+        August:    { arpu: 53, cac: 23.58 },
+        September: { arpu: 55, cac: 24.33 },
+        October:   { arpu: 53, cac: 24.19 },
+        November:  { arpu: 54, cac: 22.83 },
+        December:  { arpu: 51, cac: 25.60 }
+    };
+    // 2026 monthly ARPU / CAC (only Jan-Mar so far)
+    const kpis2026 = {
+        January:   { arpu: 50, cac: 22.85 },
+        February:  { arpu: 54, cac: 24.09 },
+        March:     { arpu: 49, cac: 25.60 }
+    };
+    // Cash Flow fields for CASH 2026 (Net Cash Receipts row 18, Total Cost of Revenue row 25)
+    const cashFlow2026 = {
+        January:  { netCashReceipts: 533504, totalCostRev: 10771 },
+        February: { netCashReceipts: 100864, totalCostRev: 10473 },
+        March:    { netCashReceipts: 353128, totalCostRev: 10269 }
+    };
+    // For CASH 2025 (no cash-flow CSV): approximate Net Cash Receipts ≈ netRevenue
+    Object.keys(kpis2025).forEach(m => {
+        Object.assign(ACC_2025[m], kpis2025[m]);
+        Object.assign(CASH_2025[m], kpis2025[m], {
+            netCashReceipts: CASH_2025[m].netRevenue,
+            totalCostRev: CASH_2025[m].servers
+        });
+    });
+    Object.keys(kpis2026).forEach(m => {
+        if (ACC_2026[m])  Object.assign(ACC_2026[m],  kpis2026[m]);
+        if (CASH_2026[m]) Object.assign(CASH_2026[m], kpis2026[m], cashFlow2026[m] || {});
+    });
+})();
 const charts = {};
 const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const monthShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1210,12 +1257,52 @@ function buildPLTable(year) {
 // ============================================
 let currentMetric = 'grossMarginPct';
 
+// Helper: inflated gross revenue for CASH mode
+// = (Subscriptions from Customers × 1.30) + Partnerships + Other Revenue
+// (partnerships field already combines Partnerships + Other Revenue in CASH data)
+function inflatedCashRev(d) {
+    return (d.mrr || 0) * 1.30 + (d.partnerships || 0);
+}
+
 const metricDefs = {
-    grossMarginPct:    { label: 'Gross Margin %',        unit: '%', calc: d => d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null, color: '#3b82f6' },
-    contribMarginPct:  { label: 'Contribution Margin %', unit: '%', calc: d => d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null, color: '#8b5cf6' },
-    ebitdaMarginPct:   { label: 'EBITDA Margin %',       unit: '%', calc: d => d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null, color: '#ef4444' },
-    cacRatio:          { label: 'Revenue / CAC Ratio',    unit: 'x', calc: d => d.totalCAC ? (d.grossRevenue / Math.abs(d.totalCAC)) : null, color: '#f59e0b' },
-    opexPct:           { label: 'OpEx % of Revenue',      unit: '%', calc: d => d.grossRevenue ? (Math.abs(d.totalOpex) / d.grossRevenue * 100) : null, color: '#14b8a6' }
+    grossMarginPct: {
+        label: 'Gross Margin %', unit: '%', color: '#3b82f6',
+        calc: d => {
+            if (currentMethod === 'cash') {
+                // Gross Profit = Net Cash Receipts (row 18) / Inflated Gross Revenue
+                const inflated = inflatedCashRev(d);
+                return inflated ? ((d.netCashReceipts || 0) / inflated * 100) : null;
+            }
+            return d.grossRevenue ? (d.grossProfit / d.grossRevenue * 100) : null;
+        }
+    },
+    contribMarginPct: {
+        label: 'Contribution Margin %', unit: '%', color: '#8b5cf6',
+        calc: d => {
+            if (currentMethod === 'cash') {
+                // Contribution = (Net Cash Receipts - Total Cost of Revenue - CAC) / Inflated Gross Rev
+                const inflated = inflatedCashRev(d);
+                const contrib = (d.netCashReceipts || 0) - (d.totalCostRev || 0) - Math.abs(d.totalCAC || 0);
+                return inflated ? (contrib / inflated * 100) : null;
+            }
+            return d.grossRevenue ? (d.contributionProfit / d.grossRevenue * 100) : null;
+        }
+    },
+    ebitdaMarginPct: {
+        label: 'EBITDA Margin %', unit: '%', color: '#ef4444',
+        calc: d => {
+            if (currentMethod === 'cash') {
+                // NET OPERATING CASH FLOW (row 74) / Inflated Gross Revenue
+                const inflated = inflatedCashRev(d);
+                return inflated ? (d.ebitda / inflated * 100) : null;
+            }
+            return d.grossRevenue ? (d.ebitda / d.grossRevenue * 100) : null;
+        }
+    },
+    arpuCacRatio: {
+        label: 'ARPU / CAC Ratio', unit: 'x', color: '#f59e0b',
+        calc: d => (d.arpu && d.cac) ? (d.arpu / d.cac) : null
+    }
 };
 
 function setMetric(m) {
