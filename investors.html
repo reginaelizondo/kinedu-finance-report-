@@ -247,6 +247,31 @@
             color: #1e3a5f;
             padding: 20px 28px 8px;
         }
+        .pl-slide-nav {
+            display: flex;
+            gap: 8px;
+            padding: 16px 28px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .pl-slide-btn {
+            padding: 8px 18px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .pl-slide-btn:hover { background: #f1f5f9; color: #1e3a5f; }
+        .pl-slide-btn.active {
+            background: #1e3a5f;
+            color: white;
+            border-color: #1e3a5f;
+        }
+        .pl-slide-panel { animation: plSlideFade 0.2s ease; }
+        @keyframes plSlideFade { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: translateX(0); } }
 
         /* Footer */
         .footer {
@@ -1153,6 +1178,11 @@ function createMarginChart() {
 // ============================================
 // P&L TABLE
 // ============================================
+function setPLSlide(year) {
+    window.plSlideYear = year;
+    renderPLTable();
+}
+
 function renderPLTable() {
     const container = document.getElementById('plTableContainer');
 
@@ -1187,11 +1217,17 @@ function renderPLTable() {
                 </div>
             </div>`;
 
+        const activeYear = window.plSlideYear || '2025';
+        const slideNav = `
+            <div class="pl-slide-nav">
+                <button class="pl-slide-btn ${activeYear === '2025' ? 'active' : ''}" onclick="setPLSlide('2025')">2025 Full Year</button>
+                <button class="pl-slide-btn ${activeYear === '2026' ? 'active' : ''}" onclick="setPLSlide('2026')">2026 YTD</button>
+            </div>`;
         container.innerHTML =
-            '<div class="pl-year-header">2025 Full Year</div>' +
-            buildPLTable('2025') +
-            '<div class="pl-year-header" style="margin-top:16px;">2026 Year to Date</div>' +
-            buildPLTable('2026') +
+            slideNav +
+            '<div class="pl-slide-panel">' +
+                buildPLTable(activeYear) +
+            '</div>' +
             combinedSummary;
     } else {
         container.innerHTML = buildPLTable(currentView);
