@@ -6,6 +6,17 @@
     <title>Kinedu - Investor Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
+        :root {
+            /* Kinedu brand palette */
+            --brand-blue: #0086D8;
+            --brand-yellow: #F9BA48;
+            --brand-green: #45C94E;
+            --brand-pink: #DA4D7A;
+            --ink: #0E3687;
+            --ink-muted: #64748b;
+            --card: #ffffff;
+            --line: #e2e8f0;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -24,127 +35,140 @@
             overflow-x: hidden;
         }
 
-        /* Hero Header */
+        /* Compact top bar (always visible, above tabs) */
         .hero {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            background: linear-gradient(135deg, #0E3687 0%, var(--brand-blue) 100%);
             color: white;
-            padding: 48px 48px 40px;
+            padding: 20px 48px;
             position: relative;
             overflow: hidden;
         }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
-            pointer-events: none;
-        }
         .hero-content { position: relative; z-index: 1; }
-        .hero-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
         .hero-branding { display: flex; align-items: center; gap: 16px; }
-        .hero-logo { height: 48px; }
+        .hero-logo { height: 38px; }
         .hero-title-group {}
         .hero-title {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
         }
         .hero-subtitle {
-            font-size: 13px;
-            color: #94a3b8;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
             font-weight: 500;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
-        /* Controls */
+        /* Finance tab filter bar (light bg, lives inside Finanzas tab) */
+        .finance-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px 48px 0;
+        }
+        .finance-status-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            padding: 14px 48px 0;
+        }
+        .comparison-note {
+            font-size: 12px;
+            color: var(--ink-muted);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .comparison-note strong { color: var(--ink); font-weight: 700; }
+        .comparison-note::before {
+            content: 'ⓘ';
+            color: var(--brand-blue);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Controls (inside Finanzas tab on light bg) */
         .controls {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
             flex-wrap: wrap;
         }
         .control-group {
             display: flex;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card);
             border-radius: 10px;
             padding: 3px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--line);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
         .ctrl-btn {
-            padding: 8px 18px;
+            padding: 7px 16px;
             border: none;
             background: transparent;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--ink-muted);
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             white-space: nowrap;
         }
-        .ctrl-btn:hover { color: white; background: rgba(255, 255, 255, 0.1); }
+        .ctrl-btn:hover { color: var(--ink); background: #f1f5f9; }
         .ctrl-btn-grp {
-            padding: 8px 14px;
+            padding: 7px 12px;
             border: none;
             background: transparent;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--ink-muted);
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.2s ease;
-            min-width: 38px;
+            transition: all 0.15s ease;
+            min-width: 36px;
         }
-        .ctrl-btn-grp:hover { color: white; background: rgba(255, 255, 255, 0.1); }
-        .ctrl-btn-grp.active { background: #3b82f6; color: white; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35); }
+        .ctrl-btn-grp:hover { color: var(--ink); background: #f1f5f9; }
+        .ctrl-btn-grp.active { background: var(--brand-blue); color: white; box-shadow: 0 1px 3px rgba(0, 134, 216, 0.3); }
         .ctrl-btn.active {
-            background: white;
-            color: #1e3a5f;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            background: var(--ink);
+            color: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
         }
         .ctrl-btn.active-acc {
-            background: #f59e0b;
-            color: #1e3a5f;
+            background: var(--brand-yellow);
+            color: var(--ink);
         }
         .ctrl-btn.active-cash {
-            background: #22c55e;
+            background: var(--brand-green);
             color: white;
         }
 
-        /* KPI Grid */
+        /* KPI Grid (inside Finanzas tab on light bg) */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
-            margin-top: 32px;
+            padding: 20px 48px 0;
         }
         .kpi-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: var(--card);
+            border: 1px solid var(--line);
             border-radius: 14px;
-            padding: 20px 18px;
-            transition: all 0.3s ease;
+            padding: 20px 20px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
         .kpi-card:hover {
-            background: rgba(255, 255, 255, 0.16);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 54, 135, 0.08);
+            border-color: var(--brand-blue);
         }
         .kpi-label {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            color: #cbd5e1;
+            color: var(--ink-muted);
             margin-bottom: 6px;
             font-weight: 600;
         }
@@ -152,7 +176,7 @@
             font-size: 26px;
             font-weight: 700;
             margin-bottom: 6px;
-            color: white;
+            color: var(--ink);
             letter-spacing: -0.5px;
         }
         .kpi-trend {
@@ -161,10 +185,11 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            color: var(--ink-muted);
         }
-        .kpi-trend.positive { color: #4ade80; }
-        .kpi-trend.negative { color: #fca5a5; }
-        .kpi-trend.neutral { color: #94a3b8; }
+        .kpi-trend.positive { color: var(--brand-green); }
+        .kpi-trend.negative { color: #ef4444; }
+        .kpi-trend.neutral { color: var(--ink-muted); }
 
         /* Content Sections */
         .content { padding: 32px 48px 48px; }
@@ -202,7 +227,7 @@
             bottom: 4px;
             width: 4px;
             border-radius: 3px;
-            background: linear-gradient(180deg, #3b82f6, #1e3a5f);
+            background: var(--brand-blue);
         }
         .chart-legend {
             display: flex;
@@ -493,7 +518,8 @@
             color: #94a3b8;
             font-size: 13px;
         }
-        .footer a { color: #3b82f6; text-decoration: none; }
+        .footer a { color: var(--brand-blue); text-decoration: none; font-weight: 600; }
+        .footer a:hover { text-decoration: underline; }
 
         /* Metric buttons */
         .ctrl-btn-metric {
@@ -544,7 +570,7 @@
         }
         .inv-reset-btn:hover { background: #f1f5f9; color: #64748b; }
 
-        /* Status pill */
+        /* Status pill (inside Finanzas tab on light bg) */
         .status-pill {
             display: inline-flex;
             align-items: center;
@@ -553,14 +579,14 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.1);
-            color: #94a3b8;
-            margin-top: 16px;
+            background: var(--card);
+            color: var(--ink-muted);
+            border: 1px solid var(--line);
         }
         .status-dot {
             width: 6px; height: 6px;
             border-radius: 50%;
-            background: #4ade80;
+            background: var(--brand-green);
         }
 
         /* Responsive */
@@ -662,17 +688,19 @@
         /* ===== Tab Navigation ===== */
         .tab-nav {
             display: flex; gap: 4px; padding: 0 48px;
-            background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+            background: var(--card); border-bottom: 1px solid var(--line);
             overflow-x: auto;
+            position: sticky; top: 0; z-index: 20;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.03);
         }
         .tab-btn {
-            padding: 14px 20px; background: transparent; border: none;
-            border-bottom: 3px solid transparent; color: #64748b;
+            padding: 16px 22px; background: transparent; border: none;
+            border-bottom: 3px solid transparent; color: var(--ink-muted);
             font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; white-space: nowrap; margin-bottom: -1px;
+            transition: all 0.15s; white-space: nowrap; margin-bottom: -1px;
         }
-        .tab-btn:hover { color: #1e3a5f; }
-        .tab-btn.active { color: #1e3a5f; border-bottom-color: #1e3a5f; }
+        .tab-btn:hover { color: var(--brand-blue); }
+        .tab-btn.active { color: var(--brand-blue); border-bottom-color: var(--brand-blue); }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
 
@@ -706,43 +734,20 @@
 
     <div class="container">
         <!-- Hero Header -->
+        <!-- Compact top bar (always visible) -->
         <div class="hero">
             <div class="hero-content">
-                <div class="hero-top">
-                    <div class="hero-branding">
-                        <img class="hero-logo" src="logo kinedu.png" alt="Kinedu">
-                        <div class="hero-title-group">
-                            <div class="hero-title">Investor Dashboard</div>
-                            <div class="hero-subtitle" id="heroSubtitle">Accrual (ACC) Accounting | 2026</div>
-                        </div>
+                <div class="hero-branding">
+                    <img class="hero-logo" src="logo kinedu.png" alt="Kinedu">
+                    <div class="hero-title-group">
+                        <div class="hero-title">Investor Dashboard</div>
+                        <div class="hero-subtitle" id="heroSubtitle">Kinedu · Investor Reporting</div>
                     </div>
-                    <div class="controls">
-                        <div class="control-group">
-                            <button class="ctrl-btn" id="btn2025" onclick="setView('2025')">2025</button>
-                            <button class="ctrl-btn" id="btn2026" onclick="setView('2026')">2026</button>
-                            <button class="ctrl-btn active" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
-                        </div>
-                        <div class="control-group">
-                            <button class="ctrl-btn active-cash" id="btnCash" onclick="setMethod('cash')">CASH</button>
-                            <button class="ctrl-btn" id="btnAcc" onclick="setMethod('acc')">ACC</button>
-                        </div>
-                        <div class="control-group control-group-grouping" id="groupingControls">
-                            <button class="ctrl-btn-grp active" id="btnGrpM" onclick="setGrouping('M')" title="Monthly">M</button>
-                            <button class="ctrl-btn-grp" id="btnGrpQ" onclick="setGrouping('Q')" title="Quarterly">Q</button>
-                            <button class="ctrl-btn-grp" id="btnGrpS" onclick="setGrouping('S')" title="Semester">S</button>
-                            <button class="ctrl-btn-grp" id="btnGrpY" onclick="setGrouping('Y')" title="Yearly">Y</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="kpi-grid" id="kpiGrid"></div>
-                <div class="status-pill">
-                    <span class="status-dot"></span>
-                    <span id="statusText">Showing: 2026 ACC</span>
                 </div>
             </div>
         </div>
 
-        <!-- Tabs (Finanzas + dynamically loaded tabs from MRR dashboard) -->
+        <!-- Tabs (primary navigation, sticky) -->
         <div class="tab-nav" id="tabNav">
             <button class="tab-btn active" data-tab="finance" onclick="switchTab('finance')">Finanzas</button>
         </div>
@@ -750,10 +755,46 @@
         <!-- Dynamic tab panes from MRR dashboard get inserted here -->
         <div id="dynamicPanes"></div>
 
-        <!-- Tab: Finanzas (existing content) -->
+        <!-- Tab: Finanzas -->
         <div class="tab-pane active" id="tab-finance">
-        <!-- Content -->
-        <div class="content">
+
+            <!-- Filters (Year + Method + Grouping) -->
+            <div class="finance-bar">
+                <div class="controls">
+                    <div class="control-group">
+                        <button class="ctrl-btn" id="btn2025" onclick="setView('2025')">2025</button>
+                        <button class="ctrl-btn" id="btn2026" onclick="setView('2026')">2026</button>
+                        <button class="ctrl-btn active" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
+                    </div>
+                    <div class="control-group">
+                        <button class="ctrl-btn active-cash" id="btnCash" onclick="setMethod('cash')">CASH</button>
+                        <button class="ctrl-btn" id="btnAcc" onclick="setMethod('acc')">ACC</button>
+                    </div>
+                    <div class="control-group control-group-grouping" id="groupingControls">
+                        <button class="ctrl-btn-grp active" id="btnGrpM" onclick="setGrouping('M')" title="Monthly">M</button>
+                        <button class="ctrl-btn-grp" id="btnGrpQ" onclick="setGrouping('Q')" title="Quarterly">Q</button>
+                        <button class="ctrl-btn-grp" id="btnGrpS" onclick="setGrouping('S')" title="Semester">S</button>
+                        <button class="ctrl-btn-grp" id="btnGrpY" onclick="setGrouping('Y')" title="Yearly">Y</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status + comparison basis -->
+            <div class="finance-status-row">
+                <span class="status-pill">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Showing: 2026 ACC</span>
+                </span>
+                <span class="comparison-note" id="comparisonNote">
+                    KPIs compare <strong>current month vs. previous month</strong>
+                </span>
+            </div>
+
+            <!-- KPIs -->
+            <div class="kpi-grid" id="kpiGrid"></div>
+
+            <!-- Content -->
+            <div class="content">
             <!-- Revenue Chart -->
             <div class="section">
                 <div class="section-card">
@@ -819,8 +860,8 @@
                     <div class="section-header">
                         <div class="section-title">Margin Analysis (%)</div>
                         <div class="chart-legend" id="marginChartLegend">
-                            <span class="chart-legend-item"><span class="chart-legend-dot" style="background:#3b82f6"></span>Gross Margin %</span>
-                            <span class="chart-legend-item"><span class="chart-legend-dot" style="background:#f59e0b"></span>Contribution Margin %</span>
+                            <span class="chart-legend-item"><span class="chart-legend-dot" style="background:#0086D8"></span>Gross Margin %</span>
+                            <span class="chart-legend-item"><span class="chart-legend-dot" style="background:#F9BA48"></span>Contribution Margin %</span>
                         </div>
                     </div>
                     <div class="chart-wrapper"><canvas id="marginChart"></canvas></div>
@@ -834,12 +875,12 @@
                     </div>
                     <div class="inv-toggle-bar" id="toggles-marketing">
                         <div class="inv-toggle-group">
-                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="newUsers" style="--tc:#3B82F6;"><span class="inv-toggle-dot" style="background:#3B82F6;"></span>New Users</button>
+                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="newUsers" style="--tc:#0086D8;"><span class="inv-toggle-dot" style="background:#0086D8;"></span>New Users</button>
                             <button class="inv-toggle-btn" data-chart="marketing" data-metric="newUsersBudget" style="--tc:#9CA3AF;"><span class="inv-toggle-dot" style="background:#9CA3AF;"></span>New Users Budget</button>
-                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="marketingSpend" style="--tc:#F59E0B;"><span class="inv-toggle-dot" style="background:#F59E0B;"></span>Marketing Spend</button>
+                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="marketingSpend" style="--tc:#F9BA48;"><span class="inv-toggle-dot" style="background:#F9BA48;"></span>Marketing Spend</button>
                             <button class="inv-toggle-btn" data-chart="marketing" data-metric="spendBudget" style="--tc:#D1D5DB;"><span class="inv-toggle-dot" style="background:#D1D5DB;"></span>Spend Budget</button>
-                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="cpnu" style="--tc:#8B5CF6;"><span class="inv-toggle-dot" style="background:#8B5CF6;"></span>CPNU</button>
-                            <button class="inv-toggle-btn" data-chart="marketing" data-metric="cpnuBudget" style="--tc:#A78BFA;"><span class="inv-toggle-dot" style="background:#A78BFA;"></span>CPNU Budget</button>
+                            <button class="inv-toggle-btn active" data-chart="marketing" data-metric="cpnu" style="--tc:#DA4D7A;"><span class="inv-toggle-dot" style="background:#DA4D7A;"></span>CPNU</button>
+                            <button class="inv-toggle-btn" data-chart="marketing" data-metric="cpnuBudget" style="--tc:#DA4D7A;"><span class="inv-toggle-dot" style="background:#DA4D7A;"></span>CPNU Budget</button>
                         </div>
                         <button class="inv-reset-btn" onclick="resetInvToggles('marketing')">Reset</button>
                     </div>
@@ -855,10 +896,10 @@
                     </div>
                     <div class="inv-toggle-bar" id="toggles-subscribers">
                         <div class="inv-toggle-group">
-                            <button class="inv-toggle-btn active" data-chart="subscribers" data-metric="actualSubs" style="--tc:#1E40AF;"><span class="inv-toggle-dot" style="background:#1E40AF;"></span>New Subscribers</button>
+                            <button class="inv-toggle-btn active" data-chart="subscribers" data-metric="actualSubs" style="--tc:#0086D8;"><span class="inv-toggle-dot" style="background:#0086D8;"></span>New Subscribers</button>
                             <button class="inv-toggle-btn" data-chart="subscribers" data-metric="budgetSubs" style="--tc:#9CA3AF;"><span class="inv-toggle-dot" style="background:#9CA3AF;"></span>Budget Subscribers</button>
-                            <button class="inv-toggle-btn active" data-chart="subscribers" data-metric="conversionRate" style="--tc:#10B981;"><span class="inv-toggle-dot" style="background:#10B981;"></span>Conversion Rate</button>
-                            <button class="inv-toggle-btn" data-chart="subscribers" data-metric="conversionRateBudget" style="--tc:#34D399;"><span class="inv-toggle-dot" style="background:#34D399;"></span>Conv. Rate Budget</button>
+                            <button class="inv-toggle-btn active" data-chart="subscribers" data-metric="conversionRate" style="--tc:#45C94E;"><span class="inv-toggle-dot" style="background:#45C94E;"></span>Conversion Rate</button>
+                            <button class="inv-toggle-btn" data-chart="subscribers" data-metric="conversionRateBudget" style="--tc:#45C94E;"><span class="inv-toggle-dot" style="background:#45C94E;"></span>Conv. Rate Budget</button>
                         </div>
                         <button class="inv-reset-btn" onclick="resetInvToggles('subscribers')">Reset</button>
                     </div>
@@ -924,14 +965,8 @@ function switchTab(name) {
         iframe.src = `${MRR_BASE_URL}${route}?embed_token=${encodeURIComponent(EMBED_TOKEN)}`;
     }
 
-    // Hide finance-only hero controls/KPIs on non-finance tabs
-    const isFinance = name === 'finance';
-    const controls = document.querySelector('.hero .controls');
-    const kpiGrid  = document.getElementById('kpiGrid');
-    const status   = document.querySelector('.hero .status-pill');
-    if (controls) controls.style.display = isFinance ? '' : 'none';
-    if (kpiGrid)  kpiGrid.style.display  = isFinance ? '' : 'none';
-    if (status)   status.style.display   = isFinance ? '' : 'none';
+    // Finance controls/KPIs now live inside the Finanzas tab pane, so
+    // tab-switching naturally hides/shows them via .tab-pane.active.
 }
 
 // Fetch the list of investor-facing tabs from the MRR dashboard and render them.
@@ -1271,8 +1306,17 @@ function setGrouping(g) {
 function updateSubtitle() {
     const methodLabel = currentMethod === 'acc' ? 'Accrual (ACC)' : 'Cash (CASH)';
     const viewLabel = currentView === 'combined' ? '2025 + 2026' : currentView;
-    document.getElementById('heroSubtitle').textContent = `${methodLabel} Accounting | ${viewLabel}`;
-    document.getElementById('statusText').textContent = `Showing: ${viewLabel} ${currentMethod.toUpperCase()}`;
+    // Hero subtitle stays brand-neutral so it makes sense on every tab.
+    const statusEl = document.getElementById('statusText');
+    if (statusEl) statusEl.textContent = `${methodLabel} · ${viewLabel}`;
+
+    // Comparison note reflects the active grouping so investors know the basis.
+    const noteEl = document.getElementById('comparisonNote');
+    if (noteEl) {
+        const period = { M: 'month', Q: 'quarter', S: 'semester', Y: 'year' }[currentGrouping] || 'period';
+        const tag    = { M: 'MoM', Q: 'QoQ', S: 'HoH', Y: 'YoY' }[currentGrouping] || 'vs prior';
+        noteEl.innerHTML = `KPIs compare <strong>current ${period} vs. previous ${period} (${tag})</strong>`;
+    }
 }
 
 // ============================================
@@ -1310,7 +1354,7 @@ function renderKPIs() {
         const t = trend(kpi.field);
         const trendClass = kpi.invertTrend ? (t.dir === 'positive' ? 'negative' : t.dir === 'negative' ? 'positive' : 'neutral') : t.dir;
         const arrow = t.dir === 'positive' ? '&#9650;' : t.dir === 'negative' ? '&#9660;' : '';
-        const ebitdaColor = kpi.field === 'ebitda' ? (kpi.value >= 0 ? 'color: #4ade80;' : 'color: #fca5a5;') : '';
+        const ebitdaColor = kpi.field === 'ebitda' ? (kpi.value >= 0 ? 'color: #45C94E;' : 'color: #ef4444;') : '';
         return `
             <div class="kpi-card">
                 <div class="kpi-label">${kpi.label}</div>
@@ -1424,9 +1468,9 @@ function createRevenueChart() {
             datasets: [{
                 label: 'Gross Revenue',
                 data: values,
-                backgroundColor: (c) => makeVGradient(c.chart.ctx, c.chart.chartArea, '#3b82f6', '#1e3a5f'),
-                hoverBackgroundColor: (c) => makeVGradient(c.chart.ctx, c.chart.chartArea, '#60a5fa', '#1e3a5f'),
-                borderRadius: 10,
+                backgroundColor: '#0086D8',
+                hoverBackgroundColor: '#0E3687',
+                borderRadius: 4,
                 borderSkipped: false,
                 maxBarThickness: barThickness(),
                 categoryPercentage: 0.82,
@@ -1455,15 +1499,7 @@ function createEbitdaChart() {
     const { labels, data } = getDataForView();
     const ctx = document.getElementById('ebitdaChart').getContext('2d');
     const values = data.map(d => hasData(d) ? d.ebitda / 1000 : null);
-    const bgFn = (c) => {
-        const area = c.chart.chartArea;
-        return values.map(v => {
-            if (v === null) return 'transparent';
-            return v >= 0
-                ? makeVGradient(c.chart.ctx, area, '#4ade80', '#16a34a')
-                : makeVGradient(c.chart.ctx, area, '#fca5a5', '#dc2626');
-        });
-    };
+    const bgFn = () => values.map(v => v === null ? 'transparent' : (v >= 0 ? '#45C94E' : '#ef4444'));
 
     charts.ebitda = new Chart(ctx, {
         type: 'bar',
@@ -1474,7 +1510,7 @@ function createEbitdaChart() {
                 data: values,
                 backgroundColor: bgFn,
                 hoverBackgroundColor: bgFn,
-                borderRadius: 10,
+                borderRadius: 4,
                 borderSkipped: false,
                 maxBarThickness: barThickness(),
                 categoryPercentage: 0.82,
@@ -1499,15 +1535,7 @@ function createContribChart() {
     const { labels, data } = getDataForView();
     const ctx = document.getElementById('contribChart').getContext('2d');
     const values = data.map(d => hasData(d) ? d.contributionProfit / 1000 : null);
-    const bgFn = (c) => {
-        const area = c.chart.chartArea;
-        return values.map(v => {
-            if (v === null) return 'transparent';
-            return v >= 0
-                ? makeVGradient(c.chart.ctx, area, '#8b5cf6', '#4c1d95')
-                : makeVGradient(c.chart.ctx, area, '#fca5a5', '#dc2626');
-        });
-    };
+    const bgFn = () => values.map(v => v === null ? 'transparent' : (v >= 0 ? '#DA4D7A' : '#ef4444'));
 
     charts.contrib = new Chart(ctx, {
         type: 'bar',
@@ -1518,7 +1546,7 @@ function createContribChart() {
                 data: values,
                 backgroundColor: bgFn,
                 hoverBackgroundColor: bgFn,
-                borderRadius: 10,
+                borderRadius: 4,
                 borderSkipped: false,
                 maxBarThickness: barThickness(),
                 categoryPercentage: 0.82,
@@ -1568,8 +1596,8 @@ function createMarginChart() {
                 {
                     label: 'Gross Margin %',
                     data: grossPct,
-                    borderColor: '#3b82f6',
-                    backgroundColor: makeAreaGradient('#3b82f6'),
+                    borderColor: '#0086D8',
+                    backgroundColor: makeAreaGradient('#0086D8'),
                     borderWidth: 3,
                     pointRadius: pointR,
                     pointHoverRadius: 8,
@@ -1583,8 +1611,8 @@ function createMarginChart() {
                 {
                     label: 'Contribution Margin %',
                     data: contribPct,
-                    borderColor: '#f59e0b',
-                    backgroundColor: makeAreaGradient('#f59e0b'),
+                    borderColor: '#F9BA48',
+                    backgroundColor: makeAreaGradient('#F9BA48'),
                     borderWidth: 3,
                     pointRadius: pointR,
                     pointHoverRadius: 8,
@@ -1755,11 +1783,11 @@ function inflatedCashRev(d) {
 
 const metricDefs = {
     grossMarginPct: {
-        label: 'Gross Margin %', unit: '%', color: '#3b82f6',
+        label: 'Gross Margin %', unit: '%', color: '#0086D8',
         calc: d => d.grossMarginPctSheet != null ? d.grossMarginPctSheet : null
     },
     contribMarginPct: {
-        label: 'Contribution Margin %', unit: '%', color: '#8b5cf6',
+        label: 'Contribution Margin %', unit: '%', color: '#DA4D7A',
         calc: d => d.contribMarginPctSheet != null ? d.contribMarginPctSheet : null
     },
     ebitdaMarginPct: {
@@ -1767,7 +1795,7 @@ const metricDefs = {
         calc: d => d.ebitdaMarginPctSheet != null ? d.ebitdaMarginPctSheet : null
     },
     arpuCacRatio: {
-        label: 'ARPU / CAC Ratio', unit: 'x', color: '#f59e0b',
+        label: 'ARPU / CAC Ratio', unit: 'x', color: '#F9BA48',
         calc: d => (d.arpu && d.cac) ? (d.arpu / d.cac) : null
     }
 };
@@ -1942,12 +1970,12 @@ function createMarketingChart() {
     const cpnuBudget    = budget.map(d => d.cpnu > 0 ? d.cpnu : null);
 
     const metricMap = {
-        newUsers:        { label: 'New Users (K)', data: signupsActual, type: 'bar', color: '#3B82F6', yAxis: 'y' },
+        newUsers:        { label: 'New Users (K)', data: signupsActual, type: 'bar', color: '#0086D8', yAxis: 'y' },
         newUsersBudget:  { label: 'New Users Budget (K)', data: signupsBudget, type: 'bar', color: '#9CA3AF', yAxis: 'y' },
-        marketingSpend:  { label: 'Marketing Spend ($K)', data: spendActual, type: 'bar', color: '#F59E0B', yAxis: 'y' },
+        marketingSpend:  { label: 'Marketing Spend ($K)', data: spendActual, type: 'bar', color: '#F9BA48', yAxis: 'y' },
         spendBudget:     { label: 'Spend Budget ($K)', data: spendBudget, type: 'bar', color: '#D1D5DB', yAxis: 'y' },
-        cpnu:            { label: 'CPNU ($)', data: cpnuActual, type: 'line', color: '#8B5CF6', yAxis: 'y1' },
-        cpnuBudget:      { label: 'CPNU Budget ($)', data: cpnuBudget, type: 'line', color: '#A78BFA', yAxis: 'y1', dash: [5,5] }
+        cpnu:            { label: 'CPNU ($)', data: cpnuActual, type: 'line', color: '#DA4D7A', yAxis: 'y1' },
+        cpnuBudget:      { label: 'CPNU Budget ($)', data: cpnuBudget, type: 'line', color: '#DA4D7A', yAxis: 'y1', dash: [5,5] }
     };
 
     const needsCpnuAxis = activeKeys.some(k => k === 'cpnu' || k === 'cpnuBudget');
@@ -1987,8 +2015,8 @@ function createMarketingChart() {
     if (needsCpnuAxis) {
         opts.scales.y1 = {
             position: 'right', grid: { display: false }, beginAtZero: true,
-            ticks: { color: '#8B5CF6', font: { size: 11 }, callback: v => '$' + v.toFixed(2) },
-            title: { display: true, text: 'CPNU ($)', color: '#8B5CF6', font: { size: 11, weight: '600' } }
+            ticks: { color: '#DA4D7A', font: { size: 11 }, callback: v => '$' + v.toFixed(2) },
+            title: { display: true, text: 'CPNU ($)', color: '#DA4D7A', font: { size: 11, weight: '600' } }
         };
     }
 
@@ -2008,10 +2036,10 @@ function createSubscribersChart() {
     const convBudget  = budget.map(d => d.conversion > 0 ? d.conversion : null);
 
     const metricMap = {
-        actualSubs:           { label: 'New Subscribers', data: subsActual, type: 'bar', color: '#1E40AF', yAxis: 'y' },
+        actualSubs:           { label: 'New Subscribers', data: subsActual, type: 'bar', color: '#0086D8', yAxis: 'y' },
         budgetSubs:           { label: 'Budget Subscribers', data: subsBudget, type: 'bar', color: '#9CA3AF', yAxis: 'y' },
-        conversionRate:       { label: 'Conversion Rate', data: convActual, type: 'line', color: '#10B981', yAxis: 'y1' },
-        conversionRateBudget: { label: 'Conv. Rate Budget', data: convBudget, type: 'line', color: '#34D399', yAxis: 'y1', dash: [5,5] }
+        conversionRate:       { label: 'Conversion Rate', data: convActual, type: 'line', color: '#45C94E', yAxis: 'y1' },
+        conversionRateBudget: { label: 'Conv. Rate Budget', data: convBudget, type: 'line', color: '#45C94E', yAxis: 'y1', dash: [5,5] }
     };
 
     const needsConvAxis = activeKeys.some(k => k === 'conversionRate' || k === 'conversionRateBudget');
@@ -2051,8 +2079,8 @@ function createSubscribersChart() {
     if (needsConvAxis) {
         opts.scales.y1 = {
             position: 'right', grid: { display: false }, beginAtZero: false,
-            ticks: { color: '#10B981', font: { size: 11 }, callback: v => v.toFixed(1) + '%' },
-            title: { display: true, text: 'Conversion Rate', color: '#10B981', font: { size: 11, weight: '600' } }
+            ticks: { color: '#45C94E', font: { size: 11 }, callback: v => v.toFixed(1) + '%' },
+            title: { display: true, text: 'Conversion Rate', color: '#45C94E', font: { size: 11, weight: '600' } }
         };
     }
 
