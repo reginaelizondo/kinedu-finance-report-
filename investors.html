@@ -285,6 +285,40 @@
             color: #1e3a5f;
             padding: 20px 28px 8px;
         }
+        .exec-summary {
+            padding: 16px 28px 28px;
+            display: grid;
+            gap: 12px;
+        }
+        .exec-summary .exec-header {
+            font-size: 13px;
+            color: #64748b;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 4px;
+        }
+        .exec-summary .exec-header strong { color: #1e3a5f; }
+        .exec-insight {
+            display: flex;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #334155;
+        }
+        .exec-insight.positive { background: #f0fdf4; border-left-color: #22c55e; }
+        .exec-insight.negative { background: #fef2f2; border-left-color: #ef4444; }
+        .exec-insight.neutral  { background: #eff6ff; border-left-color: #3b82f6; }
+        .exec-insight.warning  { background: #fffbeb; border-left-color: #f59e0b; }
+        .exec-insight .exec-icon { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
+        .exec-insight strong { color: #1e3a5f; }
+        @media (max-width: 768px) {
+            .exec-summary { padding: 12px 16px 16px; }
+            .exec-insight { font-size: 13px; }
+        }
         .pl-slide-nav {
             display: flex;
             gap: 8px;
@@ -676,6 +710,16 @@
                         <button class="inv-reset-btn" onclick="resetInvToggles('subscribers')">Reset</button>
                     </div>
                     <div class="chart-wrapper" style="height:420px;"><canvas id="subscribersChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Executive Summary (auto-generated) -->
+            <div class="section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-title">Executive Summary</div>
+                    </div>
+                    <div id="execSummary" class="exec-summary"></div>
                 </div>
             </div>
         </div>
@@ -1754,6 +1798,149 @@ function updateAll() {
     createMarketingChart();
     createSubscribersChart();
     renderPLTable();
+    renderExecSummary();
+}
+
+function renderExecSummary() {
+    const container = document.getElementById('execSummary');
+    if (!container) return;
+
+    const { data, labels } = getDataForView();
+    const active = data.map((d, i) => ({ d, label: labels[i] })).filter(x => hasData(x.d));
+    if (!active.length) {
+        container.innerHTML = '<div class="exec-insight neutral"><span class="exec-icon">ℹ️</span><div>No data available for the selected period.</div></div>';
+        return;
+    }
+
+    const methodLabel = currentMethod === 'cash' ? 'Cash' : 'Accrual';
+    const viewLabel = currentView === 'combined' ? '2025 + 2026' : currentView;
+    const periodLabel = `${active[0].label} – ${active[active.length - 1].label}`;
+    const n = active.length;
+
+    const sum = (field) => active.reduce((s, x) => s + (x.d[field] || 0), 0);
+    const avg = (field) => sum(field) / n;
+    const fmtMoney = (v) => {
+        const a = Math.abs(v);
+        const f = a >= 1000000 ? '$' + (a/1000000).toFixed(2) + 'M' : '$' + Math.round(a/1000) + 'K';
+        return (v < 0 ? '-' : '') + f;
+    };
+    const fmtPct = (v) => (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+
+    const ebitdaFld = currentMethod === 'cash' ? 'Net Operating Cash Flow' : 'EBITDA';
+    const netRevFld = currentMethod === 'cash' ? 'netCashReceipts' : 'netRevenue';
+    const netRevLabel = currentMethod === 'cash' ? 'Net Cash Receipts' : 'Net Revenue';
+
+    const totalGross = sum('grossRevenue');
+    const totalNetRev = sum(netRevFld);
+    const totalEbitda = sum('ebitda');
+    const totalCAC = Math.abs(sum('totalCAC'));
+    const totalContrib = sum('contributionProfit');
+    const totalOpex = Math.abs(sum('totalOpex'));
+
+    const avgGrossMargin = active.reduce((s, x) => s + (x.d.grossMarginPctSheet || 0), 0) / n;
+    const avgContribPct = active.reduce((s, x) => s + (x.d.contribMarginPctSheet || 0), 0) / n;
+    const avgEbitdaPct = active.reduce((s, x) => s + (x.d.ebitdaMarginPctSheet || 0), 0) / n;
+
+    // Revenue trend (first half vs second half)
+    const half = Math.floor(n / 2);
+    const firstHalf = active.slice(0, half);
+    const secondHalf = active.slice(half);
+    const fhRev = firstHalf.reduce((s, x) => s + (x.d.grossRevenue || 0), 0) / (firstHalf.length || 1);
+    const shRev = secondHalf.reduce((s, x) => s + (x.d.grossRevenue || 0), 0) / (secondHalf.length || 1);
+    const revTrendPct = fhRev ? ((shRev - fhRev) / fhRev * 100) : 0;
+
+    // Best / worst months for revenue
+    const byRev = [...active].sort((a, b) => (b.d.grossRevenue || 0) - (a.d.grossRevenue || 0));
+    const bestRev = byRev[0];
+    const worstRev = byRev[byRev.length - 1];
+
+    // Best / worst EBITDA months
+    const byEbitda = [...active].sort((a, b) => (b.d.ebitda || 0) - (a.d.ebitda || 0));
+    const bestEbitda = byEbitda[0];
+    const worstEbitda = byEbitda[byEbitda.length - 1];
+
+    // ARPU/CAC (only where both present)
+    const ratioMonths = active.filter(x => x.d.arpu && x.d.cac);
+    const avgRatio = ratioMonths.length
+        ? ratioMonths.reduce((s, x) => s + (x.d.arpu / x.d.cac), 0) / ratioMonths.length
+        : null;
+
+    // Profitable months
+    const profitableMonths = active.filter(x => (x.d.ebitda || 0) > 0).length;
+
+    const insights = [];
+
+    insights.push({
+        type: 'neutral', icon: '💰',
+        html: `<strong>Total ${netRevLabel.toLowerCase()}:</strong> ${fmtMoney(totalNetRev)} from ${fmtMoney(totalGross)} gross revenue across ${n} active month${n === 1 ? '' : 's'}. Monthly average gross revenue: <strong>${fmtMoney(totalGross / n)}</strong>.`
+    });
+
+    if (Math.abs(revTrendPct) >= 5 && n >= 4) {
+        const type = revTrendPct >= 0 ? 'positive' : 'negative';
+        const icon = revTrendPct >= 0 ? '📈' : '📉';
+        const direction = revTrendPct >= 0 ? 'grew' : 'declined';
+        insights.push({
+            type, icon,
+            html: `<strong>Revenue ${direction} ${fmtPct(Math.abs(revTrendPct))}</strong> from the first half (${fmtMoney(fhRev)}/mo avg) to the second half (${fmtMoney(shRev)}/mo avg) of the period.`
+        });
+    }
+
+    if (avgGrossMargin > 0) {
+        const gmType = avgGrossMargin >= 70 ? 'positive' : avgGrossMargin >= 60 ? 'neutral' : 'warning';
+        insights.push({
+            type: gmType, icon: '🧮',
+            html: `<strong>Gross margin averaged ${avgGrossMargin.toFixed(1)}%</strong> (${methodLabel} basis). Contribution margin: ${avgContribPct.toFixed(1)}% · EBITDA margin: ${avgEbitdaPct.toFixed(1)}%.`
+        });
+    }
+
+    if (totalContrib !== 0) {
+        const ctype = totalContrib > 0 ? 'positive' : 'negative';
+        const verb = totalContrib > 0 ? 'covered' : 'did not cover';
+        insights.push({
+            type: ctype, icon: totalContrib > 0 ? '✅' : '⚠️',
+            html: `<strong>${fmtMoney(totalCAC)} spent on customer acquisition</strong>; contribution margin ${verb} it, leaving ${fmtMoney(totalContrib)} before OpEx.`
+        });
+    }
+
+    if (profitableMonths > 0) {
+        const pct = Math.round(profitableMonths / n * 100);
+        const type = pct >= 50 ? 'positive' : 'warning';
+        insights.push({
+            type, icon: '📊',
+            html: `<strong>${profitableMonths} of ${n} month${n === 1 ? '' : 's'} (${pct}%)</strong> were ${ebitdaFld}-positive. Cumulative ${ebitdaFld}: ${fmtMoney(totalEbitda)}.`
+        });
+    } else {
+        insights.push({
+            type: 'negative', icon: '🔻',
+            html: `No ${ebitdaFld}-positive months in this period. Cumulative ${ebitdaFld}: <strong>${fmtMoney(totalEbitda)}</strong>. Monthly OpEx averaged ${fmtMoney(totalOpex / n)}.`
+        });
+    }
+
+    if (bestRev && worstRev && bestRev !== worstRev) {
+        insights.push({
+            type: 'neutral', icon: '🏆',
+            html: `<strong>Best revenue month:</strong> ${bestRev.label} (${fmtMoney(bestRev.d.grossRevenue)}). <strong>Weakest:</strong> ${worstRev.label} (${fmtMoney(worstRev.d.grossRevenue)}).`
+        });
+    }
+
+    if (bestEbitda && worstEbitda && bestEbitda !== worstEbitda) {
+        insights.push({
+            type: 'neutral', icon: '⚖️',
+            html: `<strong>Best ${ebitdaFld}:</strong> ${bestEbitda.label} (${fmtMoney(bestEbitda.d.ebitda)}). <strong>Worst:</strong> ${worstEbitda.label} (${fmtMoney(worstEbitda.d.ebitda)}).`
+        });
+    }
+
+    if (avgRatio != null) {
+        const rtype = avgRatio >= 3 ? 'positive' : avgRatio >= 2 ? 'neutral' : 'warning';
+        insights.push({
+            type: rtype, icon: '🎯',
+            html: `<strong>ARPU / CAC ratio averaged ${avgRatio.toFixed(2)}x</strong> — ${avgRatio >= 3 ? 'healthy unit economics' : avgRatio >= 2 ? 'payback achievable' : 'acquisition costs pressuring margins'}.`
+        });
+    }
+
+    const header = `<div class="exec-header">Auto-generated insights for <strong>${viewLabel}</strong> · <strong>${methodLabel}</strong> accounting · <strong>${periodLabel}</strong></div>`;
+    const body = insights.map(i => `<div class="exec-insight ${i.type}"><span class="exec-icon">${i.icon}</span><div>${i.html}</div></div>`).join('');
+    container.innerHTML = header + body;
 }
 
 // ============================================
