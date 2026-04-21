@@ -1166,16 +1166,24 @@ function renderPLTable() {
             const fmt = a >= 1000000 ? '$' + (a/1000000).toFixed(1) + 'M' : '$' + Math.round(a/1000) + 'K';
             return v < 0 ? '-' + fmt : fmt;
         };
-        const combinedSummary = `
-            <div style="background:#1e3a5f;color:white;border-radius:12px;padding:20px 24px;margin-top:20px;">
-                <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Combined Total (2025 + 2026)</div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+        const isCash = currentMethod === 'cash';
+        const cards = isCash ? `
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Gross Revenue</div><div style="font-size:20px;font-weight:700;">${fK(sum('grossRevenue'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Net Cash Receipts</div><div style="font-size:20px;font-weight:700;">${fK(sum('netCashReceipts'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Gross Margin</div><div style="font-size:20px;font-weight:700;">${fK(sum('grossProfit'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Contribution</div><div style="font-size:20px;font-weight:700;">${fK(sum('contributionProfit'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Total OpEx</div><div style="font-size:20px;font-weight:700;">${fK(-Math.abs(sum('totalOpex')))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Net Op Cash Flow</div><div style="font-size:20px;font-weight:700;color:${sum('ebitda') >= 0 ? '#4ade80' : '#fca5a5'};">${fK(sum('ebitda'))}</div></div>` : `
                     <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Gross Revenue</div><div style="font-size:20px;font-weight:700;">${fK(sum('grossRevenue'))}</div></div>
                     <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Net Revenue</div><div style="font-size:20px;font-weight:700;">${fK(sum('netRevenue'))}</div></div>
                     <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Gross Margin</div><div style="font-size:20px;font-weight:700;">${fK(sum('grossProfit'))}</div></div>
                     <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Contribution</div><div style="font-size:20px;font-weight:700;">${fK(sum('contributionProfit'))}</div></div>
                     <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Total OpEx</div><div style="font-size:20px;font-weight:700;">${fK(-Math.abs(sum('totalOpex')))}</div></div>
-                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">EBITDA</div><div style="font-size:20px;font-weight:700;color:${sum('ebitda') >= 0 ? '#4ade80' : '#fca5a5'};">${fK(sum('ebitda'))}</div></div>
+                    <div><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">EBITDA</div><div style="font-size:20px;font-weight:700;color:${sum('ebitda') >= 0 ? '#4ade80' : '#fca5a5'};">${fK(sum('ebitda'))}</div></div>`;
+        const combinedSummary = `
+            <div style="background:#1e3a5f;color:white;border-radius:12px;padding:20px 24px;margin-top:20px;">
+                <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Combined Total (2025 + 2026)${isCash ? ' — Cash Flow' : ''}</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">${cards}
                 </div>
             </div>`;
 
@@ -1195,7 +1203,23 @@ function buildPLTable(year) {
     const dataArr = monthNames.map(m => source[m]);
     const activeMonths = dataArr.filter(hasData);
 
-    const plRows = [
+    const plRows = currentMethod === 'cash' ? [
+        { label: 'Cash Inflows', isSection: true },
+        { label: 'Subscriptions from Customers', field: 'mrr' },
+        { label: 'Partnerships & Other Revenue', field: 'partnerships' },
+        { label: 'Gross Revenue', field: 'grossRevenue', isSubtotal: true },
+        { label: 'Refunds, Disputes & Fees', field: 'commissions' },
+        { label: 'Net Cash Receipts', field: 'netCashReceipts', isSubtotal: true },
+        { label: 'Cost of Revenue', isSection: true },
+        { label: 'Total Cost of Revenue', field: 'totalCostRev', negate: true },
+        { label: 'Gross Margin', field: 'grossProfit', isSubtotal: true },
+        { label: 'Customer Acquisition', isSection: true },
+        { label: 'Total CAC (Paid + UGC)', field: 'totalCAC', negate: true },
+        { label: 'Contribution Margin', field: 'contributionProfit', isSubtotal: true },
+        { label: 'Operating Expenses', isSection: true },
+        { label: 'Total OpEx', field: 'totalOpex', negate: true },
+        { label: 'Net Operating Cash Flow', field: 'ebitda', isSubtotal: true, isEbitda: true }
+    ] : [
         { label: 'Revenue', isSection: true },
         { label: 'Subscriptions (MRR)', field: 'mrr' },
         { label: 'Partnerships', field: 'partnerships' },
@@ -1320,7 +1344,7 @@ function createMetricChart() {
     const ctx = document.getElementById('metricChart').getContext('2d');
 
     const opts = chartDefaults();
-    opts.scales.y.beginAtZero = def.unit === '%' ? false : true;
+    opts.scales.y.beginAtZero = true;
     opts.scales.y.ticks.callback = v => def.unit === '%' ? v.toFixed(0) + '%' : v.toFixed(1) + 'x';
     opts.plugins.tooltip.callbacks = {
         label: ctx => {
