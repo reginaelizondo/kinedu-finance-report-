@@ -1235,22 +1235,15 @@ function renderKPIs() {
 
     const sum = (field) => withData.reduce((s, d) => s + (d[field] || 0), 0);
 
-    // Trend: latest period vs trailing avg (monthly smooths with 3mo baseline;
-    // Q/S/Y just compare to the immediately prior period).
+    // Trend: latest period vs immediately prior period.
+    // M=MoM · Q=QoQ · S=HoH · Y=YoY
     function trend(field) {
         if (withData.length < 2) return { pct: 0, dir: 'neutral', label: '' };
         const last = withData[withData.length - 1][field] || 0;
-        let baseline, label;
-        if (currentGrouping === 'M') {
-            baseline = withData.slice(Math.max(0, withData.length - 4), -1);
-            label = baseline.length === 1 ? 'MoM' : 'vs 3mo avg';
-        } else {
-            baseline = withData.slice(-2, -1);
-            label = { Q: 'QoQ', S: 'HoH', Y: 'YoY' }[currentGrouping] || 'vs prior';
-        }
-        const avgPrev = baseline.reduce((s, d) => s + (d[field] || 0), 0) / baseline.length;
-        if (avgPrev === 0) return { pct: 0, dir: 'neutral', label: '' };
-        const pct = ((last - avgPrev) / Math.abs(avgPrev) * 100);
+        const prev = withData[withData.length - 2][field] || 0;
+        const label = { M: 'MoM', Q: 'QoQ', S: 'HoH', Y: 'YoY' }[currentGrouping] || 'vs prior';
+        if (prev === 0) return { pct: 0, dir: 'neutral', label };
+        const pct = ((last - prev) / Math.abs(prev) * 100);
         return { pct, dir: pct >= 0 ? 'positive' : 'negative', label };
     }
 
