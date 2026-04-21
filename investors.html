@@ -92,6 +92,20 @@
             white-space: nowrap;
         }
         .ctrl-btn:hover { color: white; background: rgba(255, 255, 255, 0.1); }
+        .ctrl-btn-grp {
+            padding: 8px 14px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            min-width: 38px;
+        }
+        .ctrl-btn-grp:hover { color: white; background: rgba(255, 255, 255, 0.1); }
+        .ctrl-btn-grp.active { background: #3b82f6; color: white; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35); }
         .ctrl-btn.active {
             background: white;
             color: #1e3a5f;
@@ -183,13 +197,13 @@
             height: 100%;
             position: relative;
         }
-        body.view-combined .chart-wrapper {
+        body.view-combined.grp-M .chart-wrapper {
             overflow-x: auto;
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
         }
-        body.view-combined .chart-wrapper .chart-inner {
+        body.view-combined.grp-M .chart-wrapper .chart-inner {
             min-width: 1680px;
         }
         body.view-combined .chart-wrapper::-webkit-scrollbar {
@@ -661,6 +675,12 @@
                             <button class="ctrl-btn active-cash" id="btnCash" onclick="setMethod('cash')">CASH</button>
                             <button class="ctrl-btn" id="btnAcc" onclick="setMethod('acc')">ACC</button>
                         </div>
+                        <div class="control-group control-group-grouping" id="groupingControls">
+                            <button class="ctrl-btn-grp active" id="btnGrpM" onclick="setGrouping('M')" title="Monthly">M</button>
+                            <button class="ctrl-btn-grp" id="btnGrpQ" onclick="setGrouping('Q')" title="Quarterly">Q</button>
+                            <button class="ctrl-btn-grp" id="btnGrpS" onclick="setGrouping('S')" title="Semester">S</button>
+                            <button class="ctrl-btn-grp" id="btnGrpY" onclick="setGrouping('Y')" title="Yearly">Y</button>
+                        </div>
                     </div>
                 </div>
                 <div class="kpi-grid" id="kpiGrid"></div>
@@ -972,6 +992,7 @@ const CASH_2026 = {
 // ============================================
 let currentView = 'combined';
 let currentMethod = 'cash';
+let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yearly
 
 // ============================================
 // ENRICH DATA with KPI fields (ARPU, CAC) + Cash Flow specifics
@@ -1070,20 +1091,66 @@ function getSource(year, method) {
     return year === '2025' ? CASH_2025 : CASH_2026;
 }
 
-function getDataForView() {
-    let labels = [], data = [];
-    if (currentView === '2025') {
-        labels = [...monthShort];
-        data = monthNames.map(m => getSource('2025', currentMethod)[m]);
-    } else if (currentView === '2026') {
-        labels = [...monthShort];
-        data = monthNames.map(m => getSource('2026', currentMethod)[m]);
-    } else {
-        labels = monthShort.map(m => m + " '25").concat(monthShort.map(m => m + " '26"));
-        data = monthNames.map(m => getSource('2025', currentMethod)[m])
-               .concat(monthNames.map(m => getSource('2026', currentMethod)[m]));
+// Fields that sum when aggregating months; everything else averages.
+const SUM_FIELDS = new Set([
+    'mrr', 'partnerships', 'grossRevenue', 'commissions', 'netRevenue',
+    'servers', 'grossProfit', 'paidAcquisition', 'mktOthers', 'totalCAC',
+    'contributionProfit', 'totalOpex', 'ebitda',
+    'netCashReceipts', 'totalCostRev'
+]);
+
+function aggregateMonths(months) {
+    const active = months.filter(hasData);
+    if (!active.length) {
+        // Empty period — return zero-filled object so charts/tables show "—"
+        return { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0,
+                 servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0,
+                 contributionProfit: 0, totalOpex: 0, ebitda: 0,
+                 netCashReceipts: 0, totalCostRev: 0 };
     }
-    return { labels, data };
+    const result = {};
+    const keys = new Set();
+    active.forEach(m => Object.keys(m).forEach(k => keys.add(k)));
+    keys.forEach(k => {
+        if (SUM_FIELDS.has(k)) {
+            result[k] = active.reduce((s, m) => s + (m[k] || 0), 0);
+        } else {
+            const vals = active.map(m => m[k]).filter(v => v != null && !isNaN(v));
+            if (vals.length) result[k] = vals.reduce((s, v) => s + v, 0) / vals.length;
+        }
+    });
+    return result;
+}
+
+function buildGroupedSeries(year, method) {
+    const src = getSource(year, method);
+    const months = monthNames.map(m => src[m]);
+    const yy = year.slice(2);
+    if (currentGrouping === 'M') {
+        return { labels: monthShort.map(l => l + " '" + yy), data: months };
+    }
+    if (currentGrouping === 'Q') {
+        return {
+            labels: ['Q1 \'' + yy, 'Q2 \'' + yy, 'Q3 \'' + yy, 'Q4 \'' + yy],
+            data: [0, 3, 6, 9].map(i => aggregateMonths(months.slice(i, i + 3)))
+        };
+    }
+    if (currentGrouping === 'S') {
+        return {
+            labels: ['H1 \'' + yy, 'H2 \'' + yy],
+            data: [0, 6].map(i => aggregateMonths(months.slice(i, i + 6)))
+        };
+    }
+    // Y
+    return { labels: [year], data: [aggregateMonths(months)] };
+}
+
+function getDataForView() {
+    if (currentView === '2025') return buildGroupedSeries('2025', currentMethod);
+    if (currentView === '2026') return buildGroupedSeries('2026', currentMethod);
+    const a = buildGroupedSeries('2025', currentMethod);
+    const b = buildGroupedSeries('2026', currentMethod);
+    return { labels: a.labels.concat(b.labels), data: a.data.concat(b.data) };
 }
 
 function hasData(d) { return d && d.grossRevenue !== 0; }
@@ -1126,6 +1193,16 @@ function setMethod(method) {
     updateAll();
 }
 
+function setGrouping(g) {
+    currentGrouping = g;
+    ['M','Q','S','Y'].forEach(k => {
+        const btn = document.getElementById('btnGrp' + k);
+        if (btn) btn.className = 'ctrl-btn-grp' + (k === g ? ' active' : '');
+        document.body.classList.toggle('grp-' + k, k === g);
+    });
+    updateAll();
+}
+
 function updateSubtitle() {
     const methodLabel = currentMethod === 'acc' ? 'Accrual (ACC)' : 'Cash (CASH)';
     const viewLabel = currentView === 'combined' ? '2025 + 2026' : currentView;
@@ -1142,16 +1219,22 @@ function renderKPIs() {
 
     const sum = (field) => withData.reduce((s, d) => s + (d[field] || 0), 0);
 
-    // Trend: latest month vs trailing 3-month average (excluding the latest).
-    // Falls back to MoM when fewer than 4 months are available.
+    // Trend: latest period vs trailing avg (monthly smooths with 3mo baseline;
+    // Q/S/Y just compare to the immediately prior period).
     function trend(field) {
         if (withData.length < 2) return { pct: 0, dir: 'neutral', label: '' };
         const last = withData[withData.length - 1][field] || 0;
-        const baseline = withData.slice(Math.max(0, withData.length - 4), -1);
+        let baseline, label;
+        if (currentGrouping === 'M') {
+            baseline = withData.slice(Math.max(0, withData.length - 4), -1);
+            label = baseline.length === 1 ? 'MoM' : 'vs 3mo avg';
+        } else {
+            baseline = withData.slice(-2, -1);
+            label = { Q: 'QoQ', S: 'HoH', Y: 'YoY' }[currentGrouping] || 'vs prior';
+        }
         const avgPrev = baseline.reduce((s, d) => s + (d[field] || 0), 0) / baseline.length;
         if (avgPrev === 0) return { pct: 0, dir: 'neutral', label: '' };
         const pct = ((last - avgPrev) / Math.abs(avgPrev) * 100);
-        const label = baseline.length === 1 ? 'MoM' : 'vs 3mo avg';
         return { pct, dir: pct >= 0 ? 'positive' : 'negative', label };
     }
 
@@ -1392,8 +1475,7 @@ function renderPLTable() {
     const container = document.getElementById('plTableContainer');
 
     if (currentView === 'combined') {
-        // Build combined summary row
-        const { data } = getDataForView();
+        const { labels, data } = getDataForView();
         const withData = data.filter(hasData);
         const sum = (field) => withData.reduce((s, d) => s + (d[field] || 0), 0);
         const fK = (v) => {
@@ -1422,19 +1504,14 @@ function renderPLTable() {
                 </div>
             </div>`;
 
-        // Continuous 24-month timeline: Jan '25 → Dec '26 (scrollable)
-        const src25 = getSource('2025', currentMethod);
-        const src26 = getSource('2026', currentMethod);
-        const entries = [
-            ...monthNames.map((m, i) => ({ label: monthShort[i] + " '25", data: src25[m] })),
-            ...monthNames.map((m, i) => ({ label: monthShort[i] + " '26", data: src26[m] }))
-        ];
+        // Use grouped data (M/Q/S/Y) so table respects the grouping toggle
+        const entries = labels.map((l, i) => ({ label: l, data: data[i] }));
         container.innerHTML =
             buildPLTableFromEntries(entries) +
             combinedSummary;
     } else {
-        const src = getSource(currentView, currentMethod);
-        const entries = monthNames.map((m, i) => ({ label: monthShort[i], data: src[m] }));
+        const { labels, data } = getDataForView();
+        const entries = labels.map((l, i) => ({ label: l, data: data[i] }));
         container.innerHTML = buildPLTableFromEntries(entries);
     }
 }
@@ -2070,6 +2147,7 @@ function mkItem(label, value, valueTone, context, delta, deltaTone) {
 // INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('grp-M');
     updateAll();
 });
 </script>
