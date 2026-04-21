@@ -178,6 +178,34 @@
             padding: 16px 28px 28px;
             height: 380px;
         }
+        .chart-wrapper .chart-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        body.view-combined .chart-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        body.view-combined .chart-wrapper .chart-inner {
+            min-width: 1680px;
+        }
+        body.view-combined .chart-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        body.view-combined .chart-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        body.view-combined .chart-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        body.view-combined .chart-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
 
         /* P&L Table */
         .pl-table-wrapper {
@@ -914,6 +942,7 @@ function setView(view) {
     document.getElementById('btn2025').className = 'ctrl-btn' + (view === '2025' ? ' active' : '');
     document.getElementById('btn2026').className = 'ctrl-btn' + (view === '2026' ? ' active' : '');
     document.getElementById('btnCombined').className = 'ctrl-btn' + (view === 'combined' ? ' active' : '');
+    document.body.classList.toggle('view-combined', view === 'combined');
     updateAll();
 }
 
@@ -1673,7 +1702,20 @@ function resetInvToggles(chartId) {
     rebuildInvChart(chartId);
 }
 
+function ensureChartWraps() {
+    document.querySelectorAll('.chart-wrapper').forEach(w => {
+        const canvas = w.querySelector(':scope > canvas');
+        if (!canvas) return;
+        const inner = document.createElement('div');
+        inner.className = 'chart-inner';
+        w.insertBefore(inner, canvas);
+        inner.appendChild(canvas);
+    });
+}
+
 function updateAll() {
+    ensureChartWraps();
+    document.body.classList.toggle('view-combined', currentView === 'combined');
     updateSubtitle();
     renderKPIs();
     destroyCharts();
