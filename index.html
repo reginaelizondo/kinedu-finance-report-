@@ -3320,9 +3320,82 @@
         .last-updated strong {
             color: #22c55e;
         }
+
+        /* ===== Password Gate ===== */
+        #passwordGate {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #1e3a5f 100%);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000;
+        }
+        #passwordGate .gate-card {
+            background: white; padding: 40px 44px; border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%; max-width: 380px; text-align: center;
+        }
+        #passwordGate img { height: 44px; margin-bottom: 20px; }
+        #passwordGate h2 { color: #1e3a5f; font-size: 20px; margin-bottom: 6px; font-weight: 700; }
+        #passwordGate p { color: #64748b; font-size: 13px; margin-bottom: 22px; }
+        #passwordGate input {
+            width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0;
+            border-radius: 10px; font-size: 14px; outline: none;
+            transition: border-color 0.2s;
+        }
+        #passwordGate input:focus { border-color: #2c5282; }
+        #passwordGate button {
+            width: 100%; padding: 12px; margin-top: 12px;
+            background: #1e3a5f; color: white; border: none;
+            border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: background 0.2s;
+        }
+        #passwordGate button:hover { background: #2c5282; }
+        #passwordGate .gate-error { color: #ef4444; font-size: 12px; margin-top: 10px; min-height: 16px; }
+        @media (max-width: 480px) {
+            #passwordGate .gate-card { padding: 28px 22px; max-width: calc(100vw - 32px); }
+            #passwordGate h2 { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
+    <!-- Password Gate -->
+    <div id="passwordGate">
+        <div class="gate-card">
+            <img src="logo kinedu.png" alt="Kinedu" onerror="this.style.display='none'">
+            <h2>Investor Access</h2>
+            <p>Please enter the access password to continue</p>
+            <form onsubmit="return checkPasswordGate(event)">
+                <input type="password" id="passwordInput" placeholder="Password" autocomplete="off" autofocus>
+                <button type="submit">Unlock</button>
+                <div class="gate-error" id="gateError"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Password gate — shares the 'investor_unlocked' localStorage flag with
+        // investors.html, so unlocking either page unlocks both.
+        (function() {
+            var ACCESS_PASSWORD = 'kinedu';
+            var alreadyUnlocked = false;
+            try { alreadyUnlocked = localStorage.getItem('investor_unlocked') === '1'; } catch (e) {}
+            if (alreadyUnlocked) {
+                var gate = document.getElementById('passwordGate');
+                if (gate) gate.style.display = 'none';
+            }
+            window.checkPasswordGate = function(e) {
+                e.preventDefault();
+                var val = document.getElementById('passwordInput').value;
+                var err = document.getElementById('gateError');
+                if (val === ACCESS_PASSWORD) {
+                    try { localStorage.setItem('investor_unlocked', '1'); } catch (e) {}
+                    document.getElementById('passwordGate').style.display = 'none';
+                    err.textContent = '';
+                } else {
+                    err.textContent = 'Incorrect password';
+                }
+                return false;
+            };
+        })();
+    </script>
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
