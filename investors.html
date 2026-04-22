@@ -210,6 +210,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
         .section-title {
             font-size: 18px;
@@ -234,6 +236,7 @@
             gap: 16px;
             align-items: center;
             margin-left: auto;
+            flex-wrap: wrap;
         }
         .chart-legend-item {
             display: inline-flex;
@@ -594,6 +597,7 @@
             .hero { padding: 32px 24px; }
             .content { padding: 24px; }
             .hero-top { flex-direction: column; align-items: flex-start; }
+            .controls { width: 100%; }
             .chart-wrapper { height: 320px; }
         }
         @media (max-width: 768px) {
@@ -604,17 +608,23 @@
             .hero-logo { height: 36px; }
             .hero-title { font-size: 22px; }
             .hero-subtitle { font-size: 12px; }
-            .controls { gap: 8px; width: 100%; }
-            .control-group { min-width: 0; }
-            .ctrl-btn { padding: 7px 14px; font-size: 12px; }
+            .controls { gap: 8px; width: 100%; flex-wrap: wrap; }
+            .control-group { min-width: 0; flex: 1 1 auto; }
+            .ctrl-btn { padding: 7px 10px; font-size: 12px; }
+            .ctrl-btn-grp { padding: 7px 10px; font-size: 12px; min-width: 34px; }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
             .kpi-card { padding: 16px 14px; }
             .kpi-label { font-size: 10px; letter-spacing: 0.4px; }
             .kpi-value { font-size: 24px; }
             .kpi-trend { font-size: 11px; }
             .chart-wrapper { height: 280px; padding: 12px 12px 20px; }
+            /* On mobile, charts in combined+monthly still scroll but with tighter min width */
+            body.view-combined.grp-M .chart-wrapper .chart-inner { min-width: 1100px; }
             .section-header { padding: 16px 16px 0; }
-            .section-title { font-size: 16px; }
+            .section-title { font-size: 16px; padding-left: 12px; }
+            .section-title::before { width: 3px; }
+            .chart-legend { gap: 12px; width: 100%; justify-content: flex-start; margin-left: 0; }
+            .chart-legend-item { font-size: 11px; }
             .pl-table-wrapper { padding: 0 0 16px 0; }
             .pl-table { font-size: 12px; }
             .pl-table th, .pl-table td { padding: 8px 10px; }
@@ -625,6 +635,16 @@
             .footer { padding: 20px 16px; font-size: 12px; }
             .status-pill { font-size: 11px; padding: 5px 12px; }
             .section { margin-bottom: 24px; }
+            /* Executive Summary: single column below 1100px already set; tighten spacing */
+            .exec-col-head { padding: 14px 16px; font-size: 14px; }
+            .exec-col-body { padding: 12px 16px 16px; }
+            .exec-item { font-size: 12.5px; }
+            .exec-badge { padding: 2px 8px; font-size: 11px; }
+            /* Metric buttons: allow wrapping */
+            .ctrl-btn-metric { font-size: 11px; padding: 5px 10px; }
+            /* Interactive toggle bar: compact */
+            .inv-toggle-bar { padding: 10px 16px; gap: 6px; }
+            .inv-toggle-btn { font-size: 11px; padding: 5px 10px; }
         }
         @media (max-width: 480px) {
             .hero { padding: 18px 14px; }
@@ -632,17 +652,22 @@
             .hero-logo { height: 32px; }
             .hero-title { font-size: 19px; }
             .hero-subtitle { font-size: 11px; }
-            .controls { flex-direction: column; gap: 6px; }
+            .controls { flex-direction: column; gap: 6px; align-items: stretch; }
             .control-group { width: 100%; justify-content: center; }
             .ctrl-btn { padding: 8px 10px; font-size: 12px; flex: 1; text-align: center; }
+            .ctrl-btn-grp { padding: 8px 6px; font-size: 12px; flex: 1; min-width: 0; }
             .kpi-grid { gap: 8px; margin-top: 14px; }
             .kpi-card { padding: 14px 12px; border-radius: 10px; }
             .kpi-label { font-size: 9px; letter-spacing: 0.3px; margin-bottom: 3px; }
             .kpi-value { font-size: 20px; margin-bottom: 3px; }
             .kpi-trend { font-size: 10px; }
             .chart-wrapper { height: 240px; padding: 8px 8px 16px; }
+            body.view-combined.grp-M .chart-wrapper .chart-inner { min-width: 900px; }
             .section-header { padding: 12px 12px 0; }
-            .section-title { font-size: 15px; }
+            .section-title { font-size: 15px; padding-left: 10px; }
+            .chart-legend { gap: 10px; }
+            .chart-legend-item { font-size: 10.5px; }
+            .chart-legend-dot { width: 8px; height: 8px; }
             .pl-table-wrapper { padding: 0 0 12px 0; }
             .pl-table { font-size: 11px; }
             .pl-table th, .pl-table td { padding: 6px 8px; }
@@ -653,6 +678,11 @@
             .section-card { border-radius: 12px; }
             .section { margin-bottom: 16px; }
             .footer { padding: 16px 14px; font-size: 11px; }
+            /* Executive Summary: slightly smaller items for xs */
+            .exec-item { font-size: 12px; gap: 6px; }
+            .exec-badge { padding: 2px 7px; font-size: 10.5px; }
+            /* Hide status pill on xs to save vertical room */
+            .status-pill { font-size: 10px; padding: 4px 10px; margin-top: 10px; }
         }
 
         /* ===== Password Gate ===== */
