@@ -6320,11 +6320,11 @@
                 if (scenario === 'actual') {
                     // P&L_2026_CASH source = Consolidated Cash Flow (USD) — row indices 0-based
                     // Row 3 (idx 2): header "Jan 2026, Feb 2026, ..." → months start at idx 1
-                    // Row 9  (idx 8):  Apple         (iOS subs)
-                    // Row 10 (idx 9):  Google        (aOS subs)
-                    // Row 11 (idx 10): Stripe        (web subs)
-                    // Row 12 (idx 11): PayPal        (web subs)
-                    // Row 13 (idx 12): Subscriptions from Customers (subtotal)
+                    // Row 9  (idx 8):  iOS                 (Apple)
+                    // Row 10 (idx 9):  aOS                 (Google)
+                    // Row 11 (idx 10): Stripe sales pt 1   (Stripe)
+                    // Row 12 (idx 11): Stripe sales pt 2   (PayPal)  — combined with row 11 as "Stripe sales"
+                    // Row 13 (idx 12): Subscriptions from Customers (subtotal of rows 9-12)
                     // Row 14 (idx 13): Partnerships
                     // Row 15 (idx 14): Other Revenue
                     // Row 16 (idx 15): (-) Refunds
@@ -6345,15 +6345,17 @@
                     // Row 74 (idx 73): NET OPERATING CASH FLOW
                     // Row 99 (idx 98): Runway (months)
 
-                    // Revenue (cash-basis) — platforms split out by row in new format
-                    const subsIOS        = parsed[8]  ? parseNumber(parsed[8][colIdx])  : 0;  // Apple
-                    const subsAOS        = parsed[9]  ? parseNumber(parsed[9][colIdx])  : 0;  // Google
-                    const subsStripe     = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0;  // Stripe (web)
-                    const subsPayPal     = parsed[11] ? parseNumber(parsed[11][colIdx]) : 0;  // PayPal (web)
-                    const subsTotal      = parsed[12] ? parseNumber(parsed[12][colIdx]) : 0;  // Subscriptions from Customers (subtotal)
-                    const offApp         = subsStripe + subsPayPal;                            // Web subs → off-app bucket
-                    const partnershipAmt = parsed[13] ? parseNumber(parsed[13][colIdx]) : 0;  // Partnerships
-                    const otherRev       = parsed[14] ? parseNumber(parsed[14][colIdx]) : 0;  // Other Revenue
+                    // Revenue (cash-basis) — platform rows per user mapping:
+                    //   row 9 iOS, row 10 aOS, rows 11+12 Stripe sales, row 14 Partnerships
+                    const subsIOS        = parsed[8]  ? parseNumber(parsed[8][colIdx])  : 0;  // row 9  → iOS
+                    const subsAOS        = parsed[9]  ? parseNumber(parsed[9][colIdx])  : 0;  // row 10 → aOS
+                    const stripePart1    = parsed[10] ? parseNumber(parsed[10][colIdx]) : 0;  // row 11 → Stripe sales pt 1
+                    const stripePart2    = parsed[11] ? parseNumber(parsed[11][colIdx]) : 0;  // row 12 → Stripe sales pt 2
+                    const stripeSales    = stripePart1 + stripePart2;                           // rows 11+12 combined = Stripe sales
+                    const subsTotal      = parsed[12] ? parseNumber(parsed[12][colIdx]) : 0;  // row 13 → Subscriptions subtotal
+                    const offApp         = stripeSales;                                         // "Stripe sales" bucket in UI
+                    const partnershipAmt = parsed[13] ? parseNumber(parsed[13][colIdx]) : 0;  // row 14 → Partnerships
+                    const otherRev       = parsed[14] ? parseNumber(parsed[14][colIdx]) : 0;  // row 15 → Other Revenue
                     const partnership    = partnershipAmt + otherRev;                          // Combined other revenue
                     const refunds        = parsed[15] ? parseNumber(parsed[15][colIdx]) : 0;  // Refunds (positive in CSV)
                     const disputes       = parsed[16] ? parseNumber(parsed[16][colIdx]) : 0;  // Disputes
