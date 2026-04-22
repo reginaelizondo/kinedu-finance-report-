@@ -608,23 +608,32 @@
             .hero-logo { height: 36px; }
             .hero-title { font-size: 22px; }
             .hero-subtitle { font-size: 12px; }
-            .controls { gap: 8px; width: 100%; flex-wrap: wrap; }
-            .control-group { min-width: 0; flex: 1 1 auto; }
-            .ctrl-btn { padding: 7px 10px; font-size: 12px; }
-            .ctrl-btn-grp { padding: 7px 10px; font-size: 12px; min-width: 34px; }
+
+            /* Controls: each group becomes a full-width row on mobile so filters
+               are obvious and tappable; buttons within a group share width equally. */
+            .controls { gap: 8px; width: 100%; flex-direction: column; align-items: stretch; }
+            .control-group { width: 100%; justify-content: stretch; padding: 4px; }
+            .ctrl-btn { padding: 9px 10px; font-size: 12.5px; flex: 1; text-align: center; min-height: 38px; }
+            .ctrl-btn-grp { padding: 9px 6px; font-size: 13px; flex: 1; min-width: 0; min-height: 38px; }
+
             .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
             .kpi-card { padding: 16px 14px; }
             .kpi-label { font-size: 10px; letter-spacing: 0.4px; }
             .kpi-value { font-size: 24px; }
-            .kpi-trend { font-size: 11px; }
+            .kpi-trend { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
             .chart-wrapper { height: 280px; padding: 12px 12px 20px; }
-            /* On mobile, charts in combined+monthly still scroll but with tighter min width */
             body.view-combined.grp-M .chart-wrapper .chart-inner { min-width: 1100px; }
-            .section-header { padding: 16px 16px 0; }
+            /* Always show a thin scrollbar on scrollable chart areas so mobile users
+               see there's more data horizontally */
+            body.view-combined .chart-wrapper::-webkit-scrollbar { height: 6px; }
+
+            .section-header { padding: 16px 16px 4px; }
             .section-title { font-size: 16px; padding-left: 12px; }
             .section-title::before { width: 3px; }
             .chart-legend { gap: 12px; width: 100%; justify-content: flex-start; margin-left: 0; }
             .chart-legend-item { font-size: 11px; }
+
             .pl-table-wrapper { padding: 0 0 16px 0; }
             .pl-table { font-size: 12px; }
             .pl-table th, .pl-table td { padding: 8px 10px; }
@@ -632,57 +641,92 @@
             .pl-table .row-label { min-width: 140px; font-size: 12px; padding-left: 16px; }
             .pl-table .section-label .section-sticky { padding-left: 16px; }
             .pl-year-header { padding: 16px 16px 6px; font-size: 14px; }
+
             .footer { padding: 20px 16px; font-size: 12px; }
             .status-pill { font-size: 11px; padding: 5px 12px; }
             .section { margin-bottom: 24px; }
-            /* Executive Summary: single column below 1100px already set; tighten spacing */
+
+            /* Executive Summary: items get vertical breathing room when text wraps */
+            .exec-summary { padding: 16px; }
             .exec-col-head { padding: 14px 16px; font-size: 14px; }
-            .exec-col-body { padding: 12px 16px 16px; }
+            .exec-col-body { padding: 12px 16px 16px; gap: 8px; }
             .exec-item { font-size: 12.5px; }
             .exec-badge { padding: 2px 8px; font-size: 11px; }
-            /* Metric buttons: allow wrapping */
-            .ctrl-btn-metric { font-size: 11px; padding: 5px 10px; }
-            /* Interactive toggle bar: compact */
+
+            .ctrl-btn-metric { font-size: 11px; padding: 6px 12px; min-height: 32px; }
+            #metricBtns { gap: 6px !important; }
+
             .inv-toggle-bar { padding: 10px 16px; gap: 6px; }
-            .inv-toggle-btn { font-size: 11px; padding: 5px 10px; }
+            .inv-toggle-btn { font-size: 11px; padding: 6px 12px; }
+
+            /* Tab navigation: compact + smooth scroll on mobile */
+            .tab-nav { padding: 0 12px; }
+            .tab-btn { padding: 12px 14px; font-size: 13px; }
+            .tab-nav::-webkit-scrollbar { display: none; }
+            .tab-nav { scrollbar-width: none; }
+
+            /* Iframe container: adapt to smaller mobile viewport */
+            .iframe-wrap { height: calc(100vh - 180px); min-height: 480px; }
         }
         @media (max-width: 480px) {
             .hero { padding: 18px 14px; }
-            .content { padding: 10px; }
+            .content { padding: 12px 10px; }
             .hero-logo { height: 32px; }
             .hero-title { font-size: 19px; }
             .hero-subtitle { font-size: 11px; }
-            .controls { flex-direction: column; gap: 6px; align-items: stretch; }
-            .control-group { width: 100%; justify-content: center; }
-            .ctrl-btn { padding: 8px 10px; font-size: 12px; flex: 1; text-align: center; }
-            .ctrl-btn-grp { padding: 8px 6px; font-size: 12px; flex: 1; min-width: 0; }
+            .hero-top { gap: 10px; margin-bottom: 14px; }
+
+            .controls { gap: 6px; }
+            .ctrl-btn { padding: 9px 8px; font-size: 11.5px; }
+            .ctrl-btn-grp { padding: 9px 4px; font-size: 12px; }
+
             .kpi-grid { gap: 8px; margin-top: 14px; }
             .kpi-card { padding: 14px 12px; border-radius: 10px; }
             .kpi-label { font-size: 9px; letter-spacing: 0.3px; margin-bottom: 3px; }
             .kpi-value { font-size: 20px; margin-bottom: 3px; }
             .kpi-trend { font-size: 10px; }
-            .chart-wrapper { height: 240px; padding: 8px 8px 16px; }
+
+            .chart-wrapper { height: 260px; padding: 8px 8px 16px; }
             body.view-combined.grp-M .chart-wrapper .chart-inner { min-width: 900px; }
-            .section-header { padding: 12px 12px 0; }
+
+            .section-header { padding: 14px 14px 2px; }
             .section-title { font-size: 15px; padding-left: 10px; }
             .chart-legend { gap: 10px; }
             .chart-legend-item { font-size: 10.5px; }
             .chart-legend-dot { width: 8px; height: 8px; }
+
             .pl-table-wrapper { padding: 0 0 12px 0; }
             .pl-table { font-size: 11px; }
-            .pl-table th, .pl-table td { padding: 6px 8px; }
-            .pl-table th:last-child, .pl-table td:last-child { padding-right: 12px; }
-            .pl-table .row-label { min-width: 120px; font-size: 11px; padding-left: 12px; }
-            .pl-table .section-label .section-sticky { padding-left: 12px; }
+            .pl-table th, .pl-table td { padding: 7px 8px; }
+            .pl-table th:last-child, .pl-table td:last-child { padding-right: 14px; }
+            .pl-table .row-label { min-width: 130px; font-size: 11px; padding-left: 14px; }
+            .pl-table .section-label .section-sticky { padding-left: 14px; }
             .pl-year-header { padding: 12px 12px 4px; font-size: 13px; }
+
             .section-card { border-radius: 12px; }
             .section { margin-bottom: 16px; }
             .footer { padding: 16px 14px; font-size: 11px; }
-            /* Executive Summary: slightly smaller items for xs */
+
+            /* Exec Summary: stack value/context/delta on separate lines when narrow so
+               nothing truncates */
+            .exec-summary { padding: 14px; }
             .exec-item { font-size: 12px; gap: 6px; }
             .exec-badge { padding: 2px 7px; font-size: 10.5px; }
-            /* Hide status pill on xs to save vertical room */
+
             .status-pill { font-size: 10px; padding: 4px 10px; margin-top: 10px; }
+
+            /* Password gate: fit small viewports */
+            #passwordGate .gate-card { padding: 28px 22px; max-width: calc(100vw - 32px); }
+            #passwordGate h2 { font-size: 18px; }
+        }
+        @media (max-width: 360px) {
+            /* Extra-narrow phones: single-column KPI grid so values don't truncate */
+            .kpi-grid { grid-template-columns: 1fr; }
+            .kpi-value { font-size: 22px; }
+            .ctrl-btn { font-size: 11px; padding: 8px 6px; }
+            .ctrl-btn-grp { font-size: 11.5px; padding: 8px 2px; }
+            body.view-combined.grp-M .chart-wrapper .chart-inner { min-width: 720px; }
+            .pl-table .row-label { min-width: 110px; padding-left: 12px; }
         }
 
         /* ===== Password Gate ===== */
@@ -1438,26 +1482,32 @@ function makeVGradient(ctx, chartArea, fromColor, toColor) {
 
 function chartDefaults() {
     const fewPoints = (currentGrouping === 'Y' || currentGrouping === 'S');
+    const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
     return {
         responsive: true,
         maintainAspectRatio: false,
         layout: { padding: { top: 10, right: 8, bottom: 0, left: 0 } },
         animation: { duration: 600, easing: 'easeOutQuart' },
+        // On touch devices, "nearest + false" makes tapping feel responsive
+        // (no need to hit the bar/point exactly) and helps tooltips track the finger.
+        interaction: { mode: 'nearest', intersect: false, axis: 'x' },
         plugins: {
             legend: { display: false },
             tooltip: {
                 backgroundColor: 'rgba(15, 23, 42, 0.96)',
                 titleColor: '#f8fafc',
                 bodyColor: '#e2e8f0',
-                padding: 14,
+                padding: isMobile ? 10 : 14,
                 boxPadding: 6,
-                titleFont: { size: 13, weight: '700' },
-                bodyFont: { size: 13, weight: '500' },
+                titleFont: { size: isMobile ? 12 : 13, weight: '700' },
+                bodyFont:  { size: isMobile ? 12 : 13, weight: '500' },
                 cornerRadius: 10,
                 displayColors: true,
                 borderColor: 'rgba(255, 255, 255, 0.1)',
                 borderWidth: 1,
                 caretSize: 6,
+                // Keep tooltip inside the chart bounds on mobile so values stay readable
+                position: 'nearest',
             }
         },
         scales: {
