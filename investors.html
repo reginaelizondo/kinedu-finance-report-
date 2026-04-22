@@ -1014,7 +1014,7 @@ function checkPassword(e) {
     const val = document.getElementById('passwordInput').value;
     const err = document.getElementById('gateError');
     if (val === ACCESS_PASSWORD) {
-        localStorage.setItem('investor_unlocked', '1');
+        localStorage.setItem('investors_page_unlocked', '1');
         document.getElementById('passwordGate').style.display = 'none';
         err.textContent = '';
     } else {
@@ -1081,7 +1081,7 @@ async function loadDynamicTabs() {
 
 // Unlock on load if previously authenticated
 document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('investor_unlocked') === '1') {
+    if (localStorage.getItem('investors_page_unlocked') === '1') {
         const gate = document.getElementById('passwordGate');
         if (gate) gate.style.display = 'none';
     }
