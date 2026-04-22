@@ -9972,8 +9972,9 @@
                 totalActual += item.actual;
             });
 
-            // ACC mode: redesigned layout with gauge
-            if (currentAccountingMethod === 'acc') {
+            // Total-vs-Budget layout with gauge (used for BOTH ACC and CASH now —
+            // user asked for CASH to match ACC's single-total view).
+            if (currentAccountingMethod === 'acc' || currentAccountingMethod === 'cash') {
                 const item = periodData[0];
                 const budgetUsedPct = item.budget > 0 ? (item.actual / item.budget * 100) : 0;
                 const isUnder = item.actual <= item.budget;
@@ -10235,47 +10236,19 @@
                 }
             }
 
-            // Initialize OpEx categories based on accounting method
-            const isACC = currentAccountingMethod === 'acc';
-            const opexCategories = isACC ? {
+            // Operating Expenses: both ACC and CASH now show a single "Total Operating Expenses"
+            // category comparing actual vs budget. (Earlier, CASH broke out 7 buckets; the user
+            // asked to mirror the ACC view.)
+            const opexCategories = {
                 'Total Operating Expenses': { actual: 0, budget: 0 }
-            } : {
-                'Servers': { actual: 0, budget: 0 },
-                'Salaries & Wages': { actual: 0, budget: 0 },
-                'External Services': { actual: 0, budget: 0 },
-                'Travel': { actual: 0, budget: 0 },
-                'Services': { actual: 0, budget: 0 },
-                'Other': { actual: 0, budget: 0 },
-                'CAPEX': { actual: 0, budget: 0 }
             };
 
             // Sum values from monthlyData (Actual) and monthlyBudget (Budget) for selected months
             monthsIncluded.forEach(month => {
                 const mData = monthlyData?.[month] || {};
                 const mBudget = monthlyBudget?.[month] || {};
-
-                if (isACC) {
-                    // ACC mode: single Total Operating Expenses
-                    opexCategories['Total Operating Expenses'].actual += Math.abs(mData.totalOpex || 0);
-                    opexCategories['Total Operating Expenses'].budget += Math.abs(mBudget.totalOpex || 0);
-                } else {
-                    // CASH mode: use CASH OpEx categories
-                    opexCategories['Servers'].actual += Math.abs(mData.servers || 0);
-                    opexCategories['Salaries & Wages'].actual += Math.abs(mData.salaries || 0);
-                    opexCategories['External Services'].actual += Math.abs(mData.externalServices || 0);
-                    opexCategories['Travel'].actual += Math.abs(mData.travel || 0);
-                    opexCategories['Services'].actual += Math.abs(mData.services || 0);
-                    opexCategories['Other'].actual += Math.abs(mData.otherOpex || 0);
-                    opexCategories['CAPEX'].actual += Math.abs(mData.capex || 0);
-
-                    opexCategories['Servers'].budget += Math.abs(mBudget.servers || 0);
-                    opexCategories['Salaries & Wages'].budget += Math.abs(mBudget.salaries || 0);
-                    opexCategories['External Services'].budget += Math.abs(mBudget.externalServices || 0);
-                    opexCategories['Travel'].budget += Math.abs(mBudget.travel || 0);
-                    opexCategories['Services'].budget += Math.abs(mBudget.services || 0);
-                    opexCategories['Other'].budget += Math.abs(mBudget.otherOpex || 0);
-                    opexCategories['CAPEX'].budget += Math.abs(mBudget.capex || 0);
-                }
+                opexCategories['Total Operating Expenses'].actual += Math.abs(mData.totalOpex || 0);
+                opexCategories['Total Operating Expenses'].budget += Math.abs(mBudget.totalOpex || 0);
             });
 
             // Convert to array format for the chart/table
@@ -10376,24 +10349,8 @@
         }
 
         function updateOpexDonutChart() {
-            // ACC mode: gauge is handled by createOpexTable
-            if (currentAccountingMethod === 'acc') {
-                createOpexTable();
-                return;
-            }
-
-            if (!charts.opexDonut) return;
-
-            const periodData = getOpexDataForPeriod();
-
-            // Update chart labels and data
-            charts.opexDonut.data.labels = periodData.map(item => item.category);
-            charts.opexDonut.data.datasets[0].data = periodData.map(item => item.actual);
-            const donutColors = ['#3B82F6', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899', '#6B7280', '#F97316'];
-            charts.opexDonut.data.datasets[0].backgroundColor = donutColors;
-            charts.opexDonut.update();
-
-            // Update the list view as well
+            // Both ACC and CASH now use the gauge + Actual/Budget cards rendered
+            // inside createOpexTable(); no donut needed.
             createOpexTable();
         }
 
