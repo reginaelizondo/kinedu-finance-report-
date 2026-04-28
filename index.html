@@ -5252,8 +5252,10 @@
                         <option value="November">November ${year}</option>
                         <option value="December">December ${year}</option>
                     `;
-                    // For 2026, default to January (limited data available)
-                    currentPeriod = year === 2026 ? 'January' : 'December';
+                    // For 2026, default to previous calendar month (latest with actuals)
+                    currentPeriod = year === 2026
+                        ? monthNames[Math.max(0, new Date().getMonth() - 1)]
+                        : 'December';
                     break;
                 case 'quarterly':
                     options = `
@@ -6142,6 +6144,13 @@
 
                 // Apply 2026 data to current view
                 applyYearData();
+
+                // First-load default: switch to ACC after CASH data is fully populated
+                // (so the cashDataBackup captures real 2026 CASH numbers, not empty state).
+                if (!window._initialAccSwitchDone) {
+                    window._initialAccSwitchDone = true;
+                    setAccountingMethod('acc');
+                }
 
             } catch (error) {
                 console.error('Error loading 2026 data:', error);
@@ -7217,14 +7226,6 @@
                 </div>
 
                 <!-- Row 2 -->
-                ${currentAccountingMethod === 'cash' ? `
-                <div class="kpi-card-new">
-                    <div class="kpi-card-label">Estimated Runway</div>
-                    <div class="kpi-card-value">${getRunwayDisplay()}</div>
-                    <div class="kpi-card-comparison neutral">
-                        ${getRunwayDescription()}
-                    </div>
-                </div>` : ''}
                 <div class="kpi-card-new">
                     <div class="kpi-card-label">EBITDA</div>
                     <div class="kpi-card-value">${formatCurrency(real.ebitda)}</div>
