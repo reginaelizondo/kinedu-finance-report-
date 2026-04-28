@@ -10328,12 +10328,19 @@
                 'Total Operating Expenses': { actual: 0, budget: 0 }
             };
 
-            // Sum values from monthlyData (Actual) and monthlyBudget (Budget) for selected months
+            // Sum values from monthlyData (Actual) and monthlyBudget (Budget) for selected months.
+            // ACC stores a single `totalOpex`; CASH only stores per-bucket fields, so we sum them.
+            const sumOpex = (m) => {
+                if (!m) return 0;
+                if (typeof m.totalOpex === 'number' && m.totalOpex !== 0) return Math.abs(m.totalOpex);
+                return Math.abs(
+                    (m.salaries || 0) + (m.externalServices || 0) + (m.travel || 0) +
+                    (m.services || 0) + (m.otherOpex || 0) + (m.capex || 0) + (m.servers || 0)
+                );
+            };
             monthsIncluded.forEach(month => {
-                const mData = monthlyData?.[month] || {};
-                const mBudget = monthlyBudget?.[month] || {};
-                opexCategories['Total Operating Expenses'].actual += Math.abs(mData.totalOpex || 0);
-                opexCategories['Total Operating Expenses'].budget += Math.abs(mBudget.totalOpex || 0);
+                opexCategories['Total Operating Expenses'].actual += sumOpex(monthlyData?.[month]);
+                opexCategories['Total Operating Expenses'].budget += sumOpex(monthlyBudget?.[month]);
             });
 
             // Convert to array format for the chart/table
