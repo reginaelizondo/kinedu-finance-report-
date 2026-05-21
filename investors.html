@@ -1262,7 +1262,8 @@ function parseAccMoneyCell(raw) {
     const s = String(raw).trim();
     if (!s || s === '-' || s === '$' || s === '$-' || s === '$ -') return 0;
     const negative = s.startsWith('-');
-    const n = parseFloat(s.replace(/[\$,\s]/g, '').replace(/^-/, ''));
+    // Strip $, comma, %, whitespace — handles "$1,234", "-$1,234", "7.83%", "120,890"
+    const n = parseFloat(s.replace(/[\$,%\s]/g, '').replace(/^-/, ''));
     return isNaN(n) ? 0 : (negative ? -n : n);
 }
 
@@ -1339,6 +1340,48 @@ function mergeAccActualInto(target, src) {
         monthsTouched++;
     });
     return monthsTouched;
+}
+
+// ============================================
+// KPI ACTUAL (marketing + subscribers) — fetch from Google Sheet
+// Same pattern as ACC: overrides KPI_ACTUAL_2026 with live sheet values.
+// ============================================
+const KPI_ACTUAL_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ptCjNZlmwUkSupP5uQlXtS3SMZjpciBQv893oCkkdVA/export?format=csv&gid=82873067';
+
+async function fetchKpiActualFromSheet() {
+    const LABEL_MAP = {
+        'Spend': 'spend',
+        'Signups': 'signups',
+        'CPNU (Without Retargeting)': 'cpnu',
+        'New Subscriptions': 'subs',
+        'Conversion Rate': 'conversion'
+    };
+    try {
+        const csv = await fetch(KPI_ACTUAL_SHEET_URL, { cache: 'no-store' }).then(r => r.text());
+        const rows = parseAccCsvRows(csv);
+        const out = {};
+        monthNames.forEach(m => { out[m] = {}; });
+        let matched = 0;
+        rows.forEach(r => {
+            const label = (r[0] || '').trim();
+            const field = LABEL_MAP[label];
+            if (!field) return;
+            matched++;
+            // KPI sheet has months in cols 1..12 (no blank gutter like the ACC sheet)
+            monthNames.forEach((m, idx) => {
+                out[m][field] = parseAccMoneyCell(r[idx + 1]);
+            });
+        });
+        if (matched === 0) {
+            console.warn('KPI sheet: no matching labels — keeping hardcoded values');
+            return null;
+        }
+        console.log(`KPI sheet: matched ${matched} rows`);
+        return out;
+    } catch (e) {
+        console.warn('KPI sheet fetch failed, falling back to hardcoded:', e);
+        return null;
+    }
 }
 
 // ============================================
@@ -2066,7 +2109,7 @@ const KPI_ACTUAL_2026 = {
     January:   { spend: 216357, signups: 120890, cpnu: 1.79, subs: 9469, conversion: 7.83 },
     February:  { spend: 169668, signups: 82828,  cpnu: 2.05, subs: 7042, conversion: 8.50 },
     March:     { spend: 209264, signups: 104528, cpnu: 2.00, subs: 8174, conversion: 7.82 },
-    April:     { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    April:     { spend: 187428, signups: 96013,  cpnu: 1.95, subs: 7557, conversion: 7.87 },
     May:       { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
     June:      { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
     July:      { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
@@ -2510,13 +2553,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.body.classList.add('grp-M');
     // Render once with hardcoded values so the page paints fast
     updateAll();
-    // Then refresh ACC 2026 actuals from the live Google Sheet
-    const sheetData = await fetchAccActualFromSheet();
-    const touched = mergeAccActualInto(ACC_2026, sheetData);
-    if (touched) {
-        console.log(`ACC 2026 refreshed from sheet (${touched} months)`);
-        updateAll();
-    }
+    // Refresh ACC + KPI 2026 actuals from the live Google Sheets in parallel
+    const [accSheet, kpiSheet] = await Promise.all([
+        fetchAccActualFromSheet(),
+        fetchKpiActualFromSheet()
+    ]);
+    const accTouched = mergeAccActualInto(ACC_2026, accSheet);
+    const kpiTouched = mergeAccActualInto(KPI_ACTUAL_2026, kpiSheet);
+    if (accTouched) console.log(`ACC 2026 refreshed from sheet (${accTouched} months)`);
+    if (kpiTouched) console.log(`KPI 2026 refreshed from sheet (${kpiTouched} months)`);
+    if (accTouched || kpiTouched) updateAll();
 });
 </script>
 </body>
