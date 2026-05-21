@@ -6080,7 +6080,8 @@
             const s = String(raw).trim();
             if (!s || s === '-' || s === '$' || s === '$-' || s === '$ -') return 0;
             const negative = s.startsWith('-');
-            const n = parseFloat(s.replace(/[\$,\s]/g, '').replace(/^-/, ''));
+            // Strip $, comma, %, whitespace — handles "$1,234", "-$1,234", "72.88%"
+            const n = parseFloat(s.replace(/[\$,%\s]/g, '').replace(/^-/, ''));
             return isNaN(n) ? 0 : (negative ? -n : n);
         }
 
@@ -6116,7 +6117,12 @@
                 'Total CAC': 'totalCAC',
                 'Contribution Profit': 'contributionProfit',
                 'Total Operating Expenses': 'totalOpex',
-                'EBITDA': 'ebitda'
+                'EBITDA': 'ebitda',
+                // Margin % rows — sourced from sheet rows 82-84 (last occurrence
+                // of each label wins, ignoring the earlier net-revenue-based rows).
+                'Gross Margin %': 'grossMarginPctSheet',
+                'Contribution margin %': 'contribMarginPctSheet',
+                'EBITDA margin %': 'ebitdaMarginPctSheet'
             };
             try {
                 const csv = await fetch(ACC_ACTUAL_SHEET_URL, { cache: 'no-store' }).then(r => r.text());

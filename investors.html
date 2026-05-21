@@ -1232,7 +1232,8 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
     const marginsAcc2026 = {
         January:  { grossMarginPctSheet: 73.73, contribMarginPctSheet: 32.00, ebitdaMarginPctSheet: -9.00 },
         February: { grossMarginPctSheet: 73.63, contribMarginPctSheet: 38.00, ebitdaMarginPctSheet: -3.00 },
-        March:    { grossMarginPctSheet: 72.66, contribMarginPctSheet: 37.00, ebitdaMarginPctSheet:  0.00 }
+        March:    { grossMarginPctSheet: 72.66, contribMarginPctSheet: 37.00, ebitdaMarginPctSheet:  0.00 },
+        April:    { grossMarginPctSheet: 72.88, contribMarginPctSheet: 52.00, ebitdaMarginPctSheet: 17.00 }
     };
     // For CASH 2025 (no cash-flow CSV): approximate Net Cash Receipts ≈ netRevenue
     Object.keys(kpis2025).forEach(m => {
@@ -1298,7 +1299,13 @@ async function fetchAccActualFromSheet() {
         'Total CAC': 'totalCAC',
         'Contribution Profit': 'contributionProfit',
         'Total Operating Expenses': 'totalOpex',
-        'EBITDA': 'ebitda'
+        'EBITDA': 'ebitda',
+        // Margin % rows for the Key Metrics chart. "Gross Margin %" appears twice
+        // in the sheet (row 21 = vs Net Rev, row 82 = vs Gross Rev). Last match
+        // wins, so we end up with the bottom row's values (matches hardcoded).
+        'Gross Margin %': 'grossMarginPctSheet',
+        'Contribution margin %': 'contribMarginPctSheet',
+        'EBITDA margin %': 'ebitdaMarginPctSheet'
     };
     try {
         const csv = await fetch(ACC_ACTUAL_SHEET_URL, { cache: 'no-store' }).then(r => r.text());
