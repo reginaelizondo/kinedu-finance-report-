@@ -6069,6 +6069,97 @@
             return 'conservative'; // fallback
         }
 
+        // ============================================
+        // ACC ACTUAL P&L — fetch from Google Sheet (overrides hardcoded ACC_ACTUAL_PL)
+        // Lets the dashboard pick up sheet edits without a code change.
+        // ============================================
+        const ACC_ACTUAL_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1R8KtpYwMHsBxAREwyMjp4T_lYE2GCBEW6ThXipdXhZQ/export?format=csv&gid=1030223001';
+
+        function parseAccMoneyCell(raw) {
+            if (raw == null) return 0;
+            const s = String(raw).trim();
+            if (!s || s === '-' || s === '$' || s === '$-' || s === '$ -') return 0;
+            const negative = s.startsWith('-');
+            const n = parseFloat(s.replace(/[\$,\s]/g, '').replace(/^-/, ''));
+            return isNaN(n) ? 0 : (negative ? -n : n);
+        }
+
+        function parseAccCsvRows(text) {
+            const rows = [];
+            for (const line of text.split(/\r?\n/)) {
+                const row = [];
+                let cur = '', inQ = false;
+                for (let i = 0; i < line.length; i++) {
+                    const c = line[i];
+                    if (c === '"') { inQ = !inQ; continue; }
+                    if (c === ',' && !inQ) { row.push(cur); cur = ''; continue; }
+                    cur += c;
+                }
+                row.push(cur);
+                rows.push(row);
+            }
+            return rows;
+        }
+
+        async function fetchAccActualFromSheet() {
+            const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const LABEL_MAP = {
+                'MRR': 'mrr',
+                'Partnerships': 'partnerships',
+                'Gross Revenue': 'grossRevenue',
+                '-Comisiones(Google,Apple,Stripe)': 'commissions',
+                'Net Revenue': 'netRevenue',
+                'Hosting & Cloud Infrastructure': 'servers',
+                'Gross Profit': 'grossProfit',
+                'Paid Acquisition (Ads, SEO, etc.)': 'paidAcquisition',
+                'UGC´s': 'mktOthers',
+                'Total CAC': 'totalCAC',
+                'Contribution Profit': 'contributionProfit',
+                'Total Operating Expenses': 'totalOpex',
+                'EBITDA': 'ebitda'
+            };
+            try {
+                const csv = await fetch(ACC_ACTUAL_SHEET_URL, { cache: 'no-store' }).then(r => r.text());
+                const rows = parseAccCsvRows(csv);
+                const out = {};
+                MONTHS.forEach(m => { out[m] = {}; });
+                let matched = 0;
+                rows.forEach(r => {
+                    const label = (r[0] || '').trim();
+                    const field = LABEL_MAP[label];
+                    if (!field) return;
+                    matched++;
+                    MONTHS.forEach((m, idx) => {
+                        out[m][field] = parseAccMoneyCell(r[idx + 2]);
+                    });
+                });
+                if (matched === 0) {
+                    console.warn('ACC sheet: no matching labels — keeping hardcoded values');
+                    return null;
+                }
+                console.log(`ACC sheet: matched ${matched} rows`);
+                return out;
+            } catch (e) {
+                console.warn('ACC sheet fetch failed, falling back to hardcoded:', e);
+                return null;
+            }
+        }
+
+        function mergeAccActualInto(target, src) {
+            if (!src || !target) return 0;
+            let monthsTouched = 0;
+            Object.keys(src).forEach(month => {
+                if (!target[month]) return;
+                // Only overwrite if the sheet row had a non-zero value somewhere — protects
+                // against blank months blanking out hardcoded fallbacks.
+                const hasAny = Object.values(src[month]).some(v => v !== 0);
+                if (!hasAny) return;
+                Object.assign(target[month], src[month]);
+                monthsTouched++;
+            });
+            return monthsTouched;
+        }
+
         /**
          * Load 2026 data from Google Sheets
          */
@@ -6144,6 +6235,12 @@
 
                 // Apply 2026 data to current view
                 applyYearData();
+
+                // Refresh ACC 2026 actuals from the live Google Sheet (overrides
+                // ACC_ACTUAL_PL constants). Failures keep the hardcoded fallback.
+                const accSheet = await fetchAccActualFromSheet();
+                const touched = mergeAccActualInto(ACC_ACTUAL_PL, accSheet);
+                if (touched) console.log(`ACC_ACTUAL_PL refreshed from sheet (${touched} months)`);
 
                 // First-load default: switch to ACC after CASH data is fully populated
                 // (so the cashDataBackup captures real 2026 CASH numbers, not empty state).
