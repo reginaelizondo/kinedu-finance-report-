@@ -144,6 +144,65 @@
             color: white;
         }
 
+        /* Period dropdown — replaces the year toggle buttons with a menu of presets */
+        .period-dropdown { position: relative; }
+        .period-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: all 0.15s ease;
+            min-width: 200px;
+            justify-content: space-between;
+            white-space: nowrap;
+        }
+        .period-trigger:hover { background: #f8fafc; }
+        .period-trigger .period-icon { color: var(--ink-muted); }
+        .period-trigger .period-chevron {
+            color: var(--ink-muted);
+            font-size: 10px;
+            transition: transform 0.15s ease;
+        }
+        .period-dropdown.is-open .period-trigger .period-chevron { transform: rotate(180deg); }
+        .period-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            min-width: 220px;
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            padding: 6px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+        .period-menu[hidden] { display: none; }
+        .period-item {
+            text-align: left;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.1s ease;
+        }
+        .period-item:hover { background: #f1f5f9; }
+        .period-item.active { background: #e0f2fe; color: var(--brand-blue); font-weight: 600; }
+        .period-sep { height: 1px; background: var(--line); margin: 4px 8px; }
+
         /* KPI Grid (inside Finanzas tab on light bg) */
         .kpi-grid {
             display: grid;
@@ -835,11 +894,23 @@
             <!-- Filters (Year + Method + Grouping) -->
             <div class="finance-bar">
                 <div class="controls">
-                    <div class="control-group">
-                        <button class="ctrl-btn" id="btn2025" onclick="setView('2025')">2025</button>
-                        <button class="ctrl-btn" id="btn2026" onclick="setView('2026')">2026</button>
-                        <button class="ctrl-btn active" id="btnCombined" onclick="setView('combined')">2025 + 2026</button>
-                        <button class="ctrl-btn" id="btnLast12" onclick="setView('last12')" title="12 months ending at the previous calendar month">Last 12M</button>
+                    <div class="period-dropdown" id="periodDropdown">
+                        <button class="period-trigger" type="button" onclick="togglePeriodMenu(event)">
+                            <span class="period-icon">📅</span>
+                            <span class="period-label" id="periodLabel">2025 + 2026</span>
+                            <span class="period-chevron">▾</span>
+                        </button>
+                        <div class="period-menu" id="periodMenu" hidden>
+                            <button class="period-item" data-view="lastMonth" onclick="setView('lastMonth')">Last Month</button>
+                            <button class="period-item" data-view="last3"     onclick="setView('last3')">Last 3 Months</button>
+                            <button class="period-item" data-view="last6"     onclick="setView('last6')">Last 6 Months</button>
+                            <button class="period-item" data-view="last12"    onclick="setView('last12')">Last 12 Months</button>
+                            <button class="period-item" data-view="ytd"       onclick="setView('ytd')">Year to Date</button>
+                            <div class="period-sep"></div>
+                            <button class="period-item" data-view="2025"      onclick="setView('2025')">2025</button>
+                            <button class="period-item" data-view="2026"      onclick="setView('2026')">2026</button>
+                            <button class="period-item active" data-view="combined" onclick="setView('combined')">All Time (2025 + 2026)</button>
+                        </div>
                     </div>
                     <div class="control-group">
                         <button class="ctrl-btn" id="btnCash" onclick="setMethod('cash')">CASH</button>
@@ -1454,61 +1525,86 @@ function buildGroupedSeries(year, method) {
     return { labels: [year], data: [aggregateMonths(months)] };
 }
 
-// Rolling window: 12 months ending at the previous calendar month.
+// Rolling window: N months ending at the previous calendar month.
 // Returns [{year, monthIdx}, ...] in chronological order (oldest → newest).
-function getLast12Months() {
+function getLastNMonths(n) {
     const today = new Date();
     const out = [];
-    for (let i = 11; i >= 0; i--) {
+    for (let i = n - 1; i >= 0; i--) {
         const d = new Date(today.getFullYear(), today.getMonth() - 1 - i, 1);
         out.push({ year: d.getFullYear(), monthIdx: d.getMonth() });
     }
     return out;
 }
 
-function buildLast12Series(method) {
-    const months = getLast12Months();
+// Jan through the previous calendar month of the current year.
+function getYtdMonths() {
+    const today = new Date();
+    const endIdx = Math.max(0, today.getMonth() - 1);
+    const out = [];
+    for (let m = 0; m <= endIdx; m++) {
+        out.push({ year: today.getFullYear(), monthIdx: m });
+    }
+    return out;
+}
+
+// Build a series from an arbitrary [{year, monthIdx}] window.
+function buildSeriesFromMonths(months, method, aggregateLabel) {
     const data = months.map(({year, monthIdx}) => {
         const src = getSource(String(year), method);
         return src ? src[monthNames[monthIdx]] : null;
     });
     const monthLabel = ({year, monthIdx}) =>
         monthShort[monthIdx] + " '" + String(year).slice(2);
+
     if (currentGrouping === 'M') {
         return { labels: months.map(monthLabel), data };
     }
-    if (currentGrouping === 'Q') {
-        // 4 rolling 3-month buckets — labeled by their range, e.g. "May–Jul '25"
-        return {
-            labels: [0, 3, 6, 9].map(i => {
-                const start = months[i], end = months[i + 2];
-                return monthShort[start.monthIdx] + '–' + monthShort[end.monthIdx] + " '" + String(end.year).slice(2);
-            }),
-            data: [0, 3, 6, 9].map(i => aggregateMonths(data.slice(i, i + 3)))
-        };
+    if (currentGrouping === 'Q' && months.length >= 3 && months.length % 3 === 0) {
+        const labels = [], buckets = [];
+        for (let i = 0; i < months.length; i += 3) {
+            const s = months[i], e = months[i + 2];
+            labels.push(monthShort[s.monthIdx] + '–' + monthShort[e.monthIdx] + " '" + String(e.year).slice(2));
+            buckets.push(aggregateMonths(data.slice(i, i + 3)));
+        }
+        return { labels, data: buckets };
     }
-    if (currentGrouping === 'S') {
-        // 2 rolling 6-month buckets
-        return {
-            labels: [0, 6].map(i => {
-                const start = months[i], end = months[i + 5];
-                const startYy = String(start.year).slice(2);
-                const endYy = String(end.year).slice(2);
-                return startYy === endYy
-                    ? monthShort[start.monthIdx] + '–' + monthShort[end.monthIdx] + " '" + endYy
-                    : monthShort[start.monthIdx] + " '" + startYy + '–' + monthShort[end.monthIdx] + " '" + endYy;
-            }),
-            data: [0, 6].map(i => aggregateMonths(data.slice(i, i + 6)))
-        };
+    if (currentGrouping === 'S' && months.length >= 6 && months.length % 6 === 0) {
+        const labels = [], buckets = [];
+        for (let i = 0; i < months.length; i += 6) {
+            const s = months[i], e = months[i + 5];
+            const sYy = String(s.year).slice(2), eYy = String(e.year).slice(2);
+            labels.push(sYy === eYy
+                ? monthShort[s.monthIdx] + '–' + monthShort[e.monthIdx] + " '" + eYy
+                : monthShort[s.monthIdx] + " '" + sYy + '–' + monthShort[e.monthIdx] + " '" + eYy);
+            buckets.push(aggregateMonths(data.slice(i, i + 6)));
+        }
+        return { labels, data: buckets };
     }
-    // Y — single aggregate
-    return { labels: ['Last 12M'], data: [aggregateMonths(data)] };
+    // Y — or fallback when Q/S grouping doesn't divide evenly into the window
+    return { labels: [aggregateLabel || 'Total'], data: [aggregateMonths(data)] };
 }
+
+// View → labels for the dropdown trigger
+const VIEW_LABELS = {
+    'lastMonth': 'Last Month',
+    'last3':     'Last 3 Months',
+    'last6':     'Last 6 Months',
+    'last12':    'Last 12 Months',
+    'ytd':       'Year to Date',
+    '2025':      '2025',
+    '2026':      '2026',
+    'combined':  'All Time (2025 + 2026)'
+};
 
 function getDataForView() {
     if (currentView === '2025') return buildGroupedSeries('2025', currentMethod);
     if (currentView === '2026') return buildGroupedSeries('2026', currentMethod);
-    if (currentView === 'last12') return buildLast12Series(currentMethod);
+    if (currentView === 'lastMonth') return buildSeriesFromMonths(getLastNMonths(1),  currentMethod, 'Last Month');
+    if (currentView === 'last3')     return buildSeriesFromMonths(getLastNMonths(3),  currentMethod, 'Last 3M');
+    if (currentView === 'last6')     return buildSeriesFromMonths(getLastNMonths(6),  currentMethod, 'Last 6M');
+    if (currentView === 'last12')    return buildSeriesFromMonths(getLastNMonths(12), currentMethod, 'Last 12M');
+    if (currentView === 'ytd')       return buildSeriesFromMonths(getYtdMonths(),     currentMethod, 'YTD');
     const a = buildGroupedSeries('2025', currentMethod);
     const b = buildGroupedSeries('2026', currentMethod);
     return { labels: a.labels.concat(b.labels), data: a.data.concat(b.data) };
@@ -1548,14 +1644,40 @@ function fmtTableVal(v, isZeroMonth) {
 // ============================================
 function setView(view) {
     currentView = view;
-    document.getElementById('btn2025').className = 'ctrl-btn' + (view === '2025' ? ' active' : '');
-    document.getElementById('btn2026').className = 'ctrl-btn' + (view === '2026' ? ' active' : '');
-    document.getElementById('btnCombined').className = 'ctrl-btn' + (view === 'combined' ? ' active' : '');
-    const btnL12 = document.getElementById('btnLast12');
-    if (btnL12) btnL12.className = 'ctrl-btn' + (view === 'last12' ? ' active' : '');
+    // Sync dropdown label + active item
+    const label = document.getElementById('periodLabel');
+    if (label) label.textContent = VIEW_LABELS[view] || view;
+    document.querySelectorAll('.period-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.view === view);
+    });
+    closePeriodMenu();
     document.body.classList.toggle('view-combined', view === 'combined');
     updateAll();
 }
+
+function togglePeriodMenu(event) {
+    if (event) event.stopPropagation();
+    const wrap = document.getElementById('periodDropdown');
+    const menu = document.getElementById('periodMenu');
+    if (!wrap || !menu) return;
+    const open = !menu.hasAttribute('hidden');
+    if (open) closePeriodMenu();
+    else {
+        menu.removeAttribute('hidden');
+        wrap.classList.add('is-open');
+    }
+}
+function closePeriodMenu() {
+    const wrap = document.getElementById('periodDropdown');
+    const menu = document.getElementById('periodMenu');
+    if (menu) menu.setAttribute('hidden', '');
+    if (wrap) wrap.classList.remove('is-open');
+}
+// Click outside closes the dropdown
+document.addEventListener('click', (e) => {
+    const wrap = document.getElementById('periodDropdown');
+    if (wrap && !wrap.contains(e.target)) closePeriodMenu();
+});
 
 function setMethod(method) {
     currentMethod = method;
@@ -1576,9 +1698,7 @@ function setGrouping(g) {
 
 function updateSubtitle() {
     const methodLabel = currentMethod === 'acc' ? 'Accrual (ACC)' : 'Cash (CASH)';
-    const viewLabel = currentView === 'combined' ? '2025 + 2026'
-                    : currentView === 'last12'   ? 'Last 12M'
-                    : currentView;
+    const viewLabel = VIEW_LABELS[currentView] || currentView;
     // Hero subtitle stays brand-neutral so it makes sense on every tab.
     const statusEl = document.getElementById('statusText');
     if (statusEl) statusEl.textContent = `${methodLabel} · ${viewLabel}`;
@@ -2219,14 +2339,18 @@ function getKPIDataForView() {
             budget: [...monthNames.map(m => KPI_BUDGET_2025[m]), ...monthNames.map(m => KPI_BUDGET_2026[m])]
         };
     }
-    if (currentView === 'last12') {
-        const months = getLast12Months();
+    // Rolling windows + YTD: build month list dynamically
+    const rollingMap = { lastMonth: 1, last3: 3, last6: 6, last12: 12 };
+    let rollingMonths = null;
+    if (rollingMap[currentView]) rollingMonths = getLastNMonths(rollingMap[currentView]);
+    else if (currentView === 'ytd') rollingMonths = getYtdMonths();
+    if (rollingMonths) {
         const actualSrc = (y) => y === 2025 ? KPI_ACTUAL_2025 : KPI_ACTUAL_2026;
         const budgetSrc = (y) => y === 2025 ? KPI_BUDGET_2025 : KPI_BUDGET_2026;
         return {
-            labels: months.map(({year, monthIdx}) => monthShort[monthIdx] + " '" + String(year).slice(2)),
-            actual: months.map(({year, monthIdx}) => actualSrc(year)[monthNames[monthIdx]]),
-            budget: months.map(({year, monthIdx}) => budgetSrc(year)[monthNames[monthIdx]])
+            labels: rollingMonths.map(({year, monthIdx}) => monthShort[monthIdx] + " '" + String(year).slice(2)),
+            actual: rollingMonths.map(({year, monthIdx}) => actualSrc(year)[monthNames[monthIdx]]),
+            budget: rollingMonths.map(({year, monthIdx}) => budgetSrc(year)[monthNames[monthIdx]])
         };
     }
     return {
@@ -2444,9 +2568,7 @@ function renderExecSummary() {
     const active = data.map((d, i) => ({ d, label: labels[i] })).filter(x => hasData(x.d));
 
     const methodLabel = currentMethod === 'cash' ? 'Cash' : 'Accrual';
-    const viewLabel = currentView === 'combined' ? '2025 + 2026'
-                    : currentView === 'last12'   ? 'Last 12M'
-                    : currentView;
+    const viewLabel = VIEW_LABELS[currentView] || currentView;
 
     if (!active.length) {
         container.innerHTML = `<div class="exec-header">No data available for <strong>${viewLabel}</strong> · <strong>${methodLabel}</strong> accounting.</div>`;
@@ -2627,6 +2749,8 @@ function mkItem(label, value, valueTone, context, delta, deltaTone) {
 // ============================================
 document.addEventListener('DOMContentLoaded', async function() {
     document.body.classList.add('grp-M');
+    // Sync dropdown label + active item with the initial currentView
+    setView(currentView);
     // Render once with hardcoded values so the page paints fast
     updateAll();
     // Refresh ACC + KPI 2026 actuals from the live Google Sheets in parallel
