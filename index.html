@@ -117,6 +117,37 @@
             flex-wrap: wrap;
         }
 
+        /* Floating filter bar — after scrolling past the header, the main
+           filter row pins to the top so Year/Method/Period stay reachable
+           anywhere on the page (it's ~6,700px tall). */
+        .time-filters-container.floating {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 600;
+            margin: 0;
+            padding: 10px 16px;
+            background: rgba(20, 42, 69, 0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+            animation: filters-drop-in 0.25s ease;
+        }
+        .time-filters-container.floating .filters-secondary-row,
+        .time-filters-container.floating .custom-range-container {
+            display: none;
+        }
+        .time-filters-container.floating .filters-main-row {
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        @keyframes filters-drop-in {
+            from { transform: translateY(-100%); }
+            to   { transform: translateY(0); }
+        }
+
         .inline-label {
             font-size: 10px;
             font-weight: 700;
@@ -720,42 +751,74 @@
 
         .kpi-grid-8 {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
+            gap: 16px;
         }
 
         .kpi-card-new {
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 24px;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            border-radius: 14px;
+            padding: 22px 22px 18px;
+            transition: all 0.25s ease;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .kpi-card-new:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(30, 58, 95, 0.12);
-            border-color: #1e3a5f;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(30, 58, 95, 0.10);
+            border-color: #c7d6ea;
         }
 
         .kpi-card-label {
-            font-size: 12px;
-            color: #6b7280;
-            font-weight: 600;
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
+            letter-spacing: 0.8px;
         }
 
         .kpi-card-value {
-            font-size: 32px;
-            font-weight: 700;
+            font-size: 30px;
+            font-weight: 800;
             color: #1e3a5f;
-            margin-bottom: 8px;
             line-height: 1;
+            letter-spacing: -0.5px;
+        }
+        .kpi-card-value.is-negative { color: #dc2626; }
+        .kpi-card-value.is-positive { color: #16a34a; }
+
+        /* Variance chip + budget reference line */
+        .kpi-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            margin-top: auto;
+        }
+        .kpi-delta {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .kpi-delta.positive { background: #ecfdf5; color: #047857; }
+        .kpi-delta.negative { background: #fef2f2; color: #b91c1c; }
+        .kpi-delta.neutral  { background: #f1f5f9; color: #64748b; }
+        .kpi-budget-line {
+            font-size: 11.5px;
+            color: #94a3b8;
+            font-weight: 500;
         }
 
+        /* Legacy comparison row (still used by quarter drill-down) */
         .kpi-card-comparison {
             display: flex;
             align-items: center;
@@ -902,12 +965,13 @@
         }
 
         .section-title {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: #1e3a5f;
-            margin-bottom: 32px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid #1e3a5f;
+            margin-bottom: 28px;
+            padding-left: 14px;
+            border-left: 4px solid #0086D8;
+            line-height: 1.2;
         }
 
         /* Charts */
@@ -2218,7 +2282,7 @@
         /* Responsive */
         @media (max-width: 1400px) {
             .kpi-grid-8 {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -3304,22 +3368,47 @@
             transform: translateY(-2px);
         }
 
-        /* Last Updated Badge */
+        /* Live-data badge (bottom-right) */
         .last-updated {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
             padding: 8px 16px;
             border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
             font-size: 12px;
-            color: #6b7280;
+            font-weight: 600;
+            color: #047857;
             z-index: 100;
         }
-
-        .last-updated strong {
-            color: #22c55e;
+        .last-updated .live-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            position: relative;
+        }
+        .last-updated .live-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 2px solid #10b981;
+            opacity: 0;
+            animation: live-ping 2.4s ease-out infinite;
+        }
+        @keyframes live-ping {
+            0%   { transform: scale(0.6); opacity: 0.8; }
+            70%  { transform: scale(1.5); opacity: 0; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .last-updated .live-time {
+            font-weight: 500;
+            opacity: 0.75;
         }
 
         /* ===== Password Gate ===== */
@@ -4707,10 +4796,17 @@
         }
 
         function addLastUpdatedBadge() {
-            const badge = document.createElement('div');
-            badge.className = 'last-updated';
-            badge.innerHTML = `Datos actualizados: <strong>${dataLoadedTime.toLocaleString('es-MX')}</strong>`;
-            document.body.appendChild(badge);
+            let badge = document.querySelector('.last-updated');
+            if (!badge) {
+                badge = document.createElement('div');
+                badge.className = 'last-updated';
+                document.body.appendChild(badge);
+            }
+            const time = (dataLoadedTime || new Date()).toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit' });
+            const label = (window.KineduData && KineduData.freshness.live)
+                ? KineduData.freshnessLabel()
+                : 'Datos cargados';
+            badge.innerHTML = `<span class="live-dot"></span>${label}<span class="live-time">· ${time}</span>`;
         }
 
         function initializeDashboard() {
@@ -5195,6 +5291,29 @@
         window.onload = function() {
             loadAllData();
         };
+
+        // Floating filter bar: pin the main filters to the top once the header
+        // scrolls out of view. Padding compensation on .header keeps the page
+        // from jumping when the bar leaves/re-enters normal flow.
+        (function initFloatingFilters() {
+            const bar = document.querySelector('.time-filters-container');
+            const header = document.querySelector('.header');
+            if (!bar || !header) return;
+            let floating = false;
+            window.addEventListener('scroll', () => {
+                const should = window.scrollY > 420;
+                if (should === floating) return;
+                floating = should;
+                if (should) {
+                    header.style.paddingBottom =
+                        (parseFloat(getComputedStyle(header).paddingBottom) + bar.offsetHeight) + 'px';
+                    bar.classList.add('floating');
+                } else {
+                    header.style.paddingBottom = '';
+                    bar.classList.remove('floating');
+                }
+            }, { passive: true });
+        })();
 
         // ============================================
         // GRANULARITY AND PERIOD SELECTION
@@ -6155,6 +6274,7 @@
                 // ACC_ACTUAL_PL constants). Failures keep the hardcoded fallback.
                 const { accTouched } = await KineduData.refreshActuals({ accTarget: ACC_ACTUAL_PL });
                 if (accTouched) console.log(`ACC_ACTUAL_PL refreshed from sheet (${accTouched} months)`);
+                addLastUpdatedBadge(); // re-render badge now that freshness is known
 
                 // Snap the default month back to the latest month that has actuals.
                 // (The calendar-based default can point at a month the sheet hasn't
@@ -7221,59 +7341,64 @@
                 return (variance >= 0 ? '+' : '') + variance.toFixed(1) + '%';
             };
 
-            kpiGrid.innerHTML = `
-                <!-- Row 1 -->
+            // One template per card: big value + variance chip + muted budget line.
+            // (The old pipe-string "Actual X | Budget Y | Var: Z" repeated the
+            // value and was unreadable at 11px.)
+            const kpiCard = ({ label, value, valueClass = '', deltaClass, deltaText, budgetText }) => `
                 <div class="kpi-card-new">
-                    <div class="kpi-card-label">Total Revenue</div>
-                    <div class="kpi-card-value">${formatCurrency(real.revenue)}</div>
-                    <div class="kpi-card-comparison ${getComparisonClass(revenueVar)}">
-                        <span class="kpi-arrow">${getArrow(revenueVar)}</span>
-                        Actual ${formatCurrency(real.revenue)} | Budget ${formatCurrency(budget.revenue)} | Var: ${formatVariance(revenueVar)}
+                    <div class="kpi-card-label">${label}</div>
+                    <div class="kpi-card-value ${valueClass}">${value}</div>
+                    <div class="kpi-meta">
+                        <span class="kpi-delta ${deltaClass}">${deltaText}</span>
+                        <span class="kpi-budget-line">${budgetText}</span>
                     </div>
-                </div>
-                <div class="kpi-card-new">
-                    <div class="kpi-card-label">Total New Subscribers</div>
-                    <div class="kpi-card-value">${real.subs.toLocaleString()}</div>
-                    <div class="kpi-card-comparison ${getComparisonClass(subsVar)}">
-                        <span class="kpi-arrow">${getArrow(subsVar)}</span>
-                        Actual ${real.subs.toLocaleString()} | Budget ${budget.subs.toLocaleString()} | Var: ${formatVariance(subsVar)}
-                    </div>
-                </div>
-                <div class="kpi-card-new">
-                    <div class="kpi-card-label">Monthly Burn Rate</div>
-                    <div class="kpi-card-value">${formatCurrency(real.burnRate)}</div>
-                    <div class="kpi-card-comparison ${getComparisonClass(burnRateVar, true)}">
-                        <span class="kpi-arrow">${getArrow(burnRateVar, true)}</span>
-                        Actual ${formatCurrency(real.burnRate)} | Budget ${formatCurrency(Math.abs(budget.burnRate))} | Var: ${formatVariance(burnRateVar)}
-                    </div>
-                </div>
+                </div>`;
 
-                <!-- Row 2 -->
-                <div class="kpi-card-new">
-                    <div class="kpi-card-label">EBITDA</div>
-                    <div class="kpi-card-value">${formatCurrency(real.ebitda)}</div>
-                    <div class="kpi-card-comparison ${getComparisonClass(ebitdaVar)}">
-                        <span class="kpi-arrow">${getArrow(ebitdaVar)}</span>
-                        Actual ${formatCurrency(real.ebitda)} | Budget ${formatCurrency(budget.ebitda)} | Var: ${formatCurrency(ebitdaVar)}
-                    </div>
-                </div>
-                <div class="kpi-card-new">
-                    <div class="kpi-card-label">CAC</div>
-                    <div class="kpi-card-value">$${real.cac.toFixed(2)}</div>
-                    <div class="kpi-card-comparison ${getComparisonClass(cacVar, true)}">
-                        <span class="kpi-arrow">${getArrow(cacVar, true)}</span>
-                        Actual $${real.cac.toFixed(2)} | Budget $${budget.cac.toFixed(2)} | Var: ${formatVariance(cacVar)}
-                    </div>
-                </div>
-                <div class="kpi-card-new">
-                    <div class="kpi-card-label">ARPU</div>
-                    <div class="kpi-card-value">$${real.arpu.toFixed(2)}</div>
-                    <div class="kpi-card-comparison ${getComparisonClass(arpuVar)}">
-                        <span class="kpi-arrow">${getArrow(arpuVar)}</span>
-                        Actual $${real.arpu.toFixed(2)} | Budget $${budget.arpu.toFixed(2)} | Var: ${formatVariance(arpuVar)}
-                    </div>
-                </div>
-            `;
+            kpiGrid.innerHTML = [
+                kpiCard({
+                    label: 'Total Revenue',
+                    value: formatCurrency(real.revenue),
+                    deltaClass: getComparisonClass(revenueVar),
+                    deltaText: `${getArrow(revenueVar)} ${formatVariance(revenueVar)} vs budget`,
+                    budgetText: `Budget ${formatCurrency(budget.revenue)}`
+                }),
+                kpiCard({
+                    label: 'Total New Subscribers',
+                    value: real.subs.toLocaleString(),
+                    deltaClass: getComparisonClass(subsVar),
+                    deltaText: `${getArrow(subsVar)} ${formatVariance(subsVar)} vs budget`,
+                    budgetText: `Budget ${budget.subs.toLocaleString()}`
+                }),
+                kpiCard({
+                    label: 'Monthly Burn Rate',
+                    value: formatCurrency(real.burnRate),
+                    deltaClass: getComparisonClass(burnRateVar, true),
+                    deltaText: `${getArrow(burnRateVar, true)} ${formatVariance(burnRateVar)} vs budget`,
+                    budgetText: `Budget ${formatCurrency(Math.abs(budget.burnRate))}`
+                }),
+                kpiCard({
+                    label: 'EBITDA',
+                    value: formatCurrency(real.ebitda),
+                    valueClass: real.ebitda >= 0 ? 'is-positive' : 'is-negative',
+                    deltaClass: getComparisonClass(ebitdaVar),
+                    deltaText: `${getArrow(ebitdaVar)} ${formatCurrency(ebitdaVar)} vs budget`,
+                    budgetText: `Budget ${formatCurrency(budget.ebitda)}`
+                }),
+                kpiCard({
+                    label: 'CAC',
+                    value: '$' + real.cac.toFixed(2),
+                    deltaClass: getComparisonClass(cacVar, true),
+                    deltaText: `${getArrow(cacVar, true)} ${formatVariance(cacVar)} vs budget`,
+                    budgetText: `Budget $${budget.cac.toFixed(2)}`
+                }),
+                kpiCard({
+                    label: 'ARPU',
+                    value: '$' + real.arpu.toFixed(2),
+                    deltaClass: getComparisonClass(arpuVar),
+                    deltaText: `${getArrow(arpuVar)} ${formatVariance(arpuVar)} vs budget`,
+                    budgetText: `Budget $${budget.arpu.toFixed(2)}`
+                })
+            ].join('');
         }
 
         // ============================================
