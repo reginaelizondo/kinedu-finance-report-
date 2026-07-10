@@ -4192,10 +4192,21 @@
         // ============================================
         // DATA LOADING FUNCTIONS
         // ============================================
-        async function fetchCSV(url) {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return await response.text();
+        async function fetchCSV(url, retries = 3) {
+            // Google's published-CSV endpoints throw transient 500s, especially
+            // right after the sheet is edited (mid-republish). Retry with backoff
+            // so a blip doesn't take down the whole dashboard.
+            for (let attempt = 0; ; attempt++) {
+                try {
+                    const response = await fetch(url, { cache: 'no-store' });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.text();
+                } catch (e) {
+                    if (attempt >= retries) throw e;
+                    console.warn(`fetchCSV retry ${attempt + 1}/${retries} after error:`, e.message);
+                    await new Promise(r => setTimeout(r, 900 * (attempt + 1)));
+                }
+            }
         }
 
         function updateLoadingStatus(message, progress) {
@@ -6228,14 +6239,14 @@
                     plConservativeData,
                     plPessimisticData
                 ] = await Promise.all([
-                    fetch(DATA_SOURCES_2026.kpiActual).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.kpiBudgetOptimistic).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.kpiBudgetConservative).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.kpiBudgetPessimistic).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plActual).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plBudgetOptimistic).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plBudgetConservative).then(r => r.text()),
-                    fetch(DATA_SOURCES_2026.plBudgetPessimistic).then(r => r.text())
+                    fetchCSV(DATA_SOURCES_2026.kpiActual),
+                    fetchCSV(DATA_SOURCES_2026.kpiBudgetOptimistic),
+                    fetchCSV(DATA_SOURCES_2026.kpiBudgetConservative),
+                    fetchCSV(DATA_SOURCES_2026.kpiBudgetPessimistic),
+                    fetchCSV(DATA_SOURCES_2026.plActual),
+                    fetchCSV(DATA_SOURCES_2026.plBudgetOptimistic),
+                    fetchCSV(DATA_SOURCES_2026.plBudgetConservative),
+                    fetchCSV(DATA_SOURCES_2026.plBudgetPessimistic)
                 ]);
 
                 console.log('Fetched KPI Actual data length:', kpiActualData ? kpiActualData.length : 'NULL');

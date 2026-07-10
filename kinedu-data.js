@@ -91,11 +91,27 @@
         return rows;
     }
 
+    // Fetch with retry — Google's CSV export throws transient 500s right
+    // after a sheet is edited (mid-republish); don't give up on the first one.
+    async function fetchWithRetry(url, retries = 3) {
+        for (let attempt = 0; ; attempt++) {
+            try {
+                const response = await fetch(url, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.text();
+            } catch (e) {
+                if (attempt >= retries) throw e;
+                console.warn(`Sheet fetch retry ${attempt + 1}/${retries}:`, e.message);
+                await new Promise(r => setTimeout(r, 900 * (attempt + 1)));
+            }
+        }
+    }
+
     // Generic fetcher: downloads a sheet CSV, matches rows by label and
     // returns { January: {field: value, ...}, ... } or null on failure.
     async function fetchSheetActuals({ url, labelMap, colOffset, name }) {
         try {
-            const csv = await fetch(url, { cache: 'no-store' }).then(r => r.text());
+            const csv = await fetchWithRetry(url);
             const rows = parseCsvRows(csv);
             const out = {};
             MONTHS.forEach(m => { out[m] = {}; });
