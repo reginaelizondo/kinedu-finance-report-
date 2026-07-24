@@ -1226,12 +1226,12 @@ const ACC_2025 = {
 };
 
 const ACC_2026 = {
-    January:     { mrr: 437842, partnerships: 17584, grossRevenue: 455969, commissions: -112566, netRevenue: 343403, servers: 7196, grossProfit: 336207, paidAcquisition: 216357, mktOthers: 10233, totalCAC: 226590, contributionProfit: 109617, totalOpex: 138932, ebitda: -29315 },
-    February:    { mrr: 461656, partnerships: 15656, grossRevenue: 477711, commissions: -118754, netRevenue: 358957, servers: 7197, grossProfit: 351760, paidAcquisition: 214210, mktOthers: 2105, totalCAC: 216315, contributionProfit: 135445, totalOpex: 146232, ebitda: -10787 },
-    March:       { mrr: 492737, partnerships: 5855, grossRevenue: 499140, commissions: -129997, netRevenue: 369143, servers: 6458, grossProfit: 362685, paidAcquisition: 225359, mktOthers: 1691, totalCAC: 227050, contributionProfit: 135635, totalOpex: 134315, ebitda: 1320 },
-    April:       { mrr: 512349, partnerships: 8656, grossRevenue: 521461, commissions: -135655, netRevenue: 385806, servers: 5754, grossProfit: 380052, paidAcquisition: 174056, mktOthers: 4421, totalCAC: 178477, contributionProfit: 201575, totalOpex: 135035, ebitda: 66541 },
-    May:         { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
-    June:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    January:     { mrr: 351270, partnerships: 17584, grossRevenue: 369398, commissions: -152876, netRevenue: 216522, servers: 7196, grossProfit: 209325, paidAcquisition: 216357, mktOthers: 10233, totalCAC: 226590, contributionProfit: -17265, totalOpex: 138932, ebitda: -156196 },
+    February:    { mrr: 355695, partnerships: 15656, grossRevenue: 371750, commissions: -136672, netRevenue: 235079, servers: 7197, grossProfit: 227882, paidAcquisition: 214210, mktOthers: 2105, totalCAC: 216315, contributionProfit: 11567, totalOpex: 146232, ebitda: -134665 },
+    March:       { mrr: 371882, partnerships: 5855, grossRevenue: 378285, commissions: -151471, netRevenue: 226813, servers: 6458, grossProfit: 220356, paidAcquisition: 225359, mktOthers: 1691, totalCAC: 227050, contributionProfit: -6694, totalOpex: 134315, ebitda: -141009 },
+    April:       { mrr: 383473, partnerships: 8656, grossRevenue: 392585, commissions: -119209, netRevenue: 273376, servers: 5754, grossProfit: 267621, paidAcquisition: 174056, mktOthers: 4421, totalCAC: 178477, contributionProfit: 89145, totalOpex: 135035, ebitda: -45890 },
+    May:         { mrr: 398829, partnerships: 17567, grossRevenue: 417025, commissions: -98869, netRevenue: 318156, servers: 7796, grossProfit: 310360, paidAcquisition: 201144, mktOthers: 3859, totalCAC: 205003, contributionProfit: 105357, totalOpex: 134999, ebitda: -29642 },
+    June:        { mrr: 404590, partnerships: 11610, grossRevenue: 416736, commissions: -101134, netRevenue: 315602, servers: 8799, grossProfit: 306804, paidAcquisition: 183930, mktOthers: 4531, totalCAC: 188462, contributionProfit: 118342, totalOpex: 134471, ebitda: -16128 },
     July:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     August:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     September:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
@@ -1349,10 +1349,12 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
     // Pre-computed margin % from P&L ACC 2026 — pulled directly from
     // rows 39-41 / 82-84 of the source sheet. Jan-Mar closed.
     const marginsAcc2026 = {
-        January:  { grossMarginPctSheet: 73.73, contribMarginPctSheet: 32.00, ebitdaMarginPctSheet: -9.00 },
-        February: { grossMarginPctSheet: 73.63, contribMarginPctSheet: 38.00, ebitdaMarginPctSheet: -3.00 },
-        March:    { grossMarginPctSheet: 72.66, contribMarginPctSheet: 37.00, ebitdaMarginPctSheet:  0.00 },
-        April:    { grossMarginPctSheet: 72.88, contribMarginPctSheet: 52.00, ebitdaMarginPctSheet: 17.00 }
+        January:  { grossMarginPctSheet: 56.67, contribMarginPctSheet:  -8.00, ebitdaMarginPctSheet: -72.00 },
+        February: { grossMarginPctSheet: 61.30, contribMarginPctSheet:   5.00, ebitdaMarginPctSheet: -57.00 },
+        March:    { grossMarginPctSheet: 58.25, contribMarginPctSheet:  -3.00, ebitdaMarginPctSheet: -62.00 },
+        April:    { grossMarginPctSheet: 68.17, contribMarginPctSheet:  33.00, ebitdaMarginPctSheet: -17.00 },
+        May:      { grossMarginPctSheet: 74.42, contribMarginPctSheet:  33.00, ebitdaMarginPctSheet:  -9.00 },
+        June:     { grossMarginPctSheet: 73.62, contribMarginPctSheet:  37.00, ebitdaMarginPctSheet:  -5.00 }
     };
     // For CASH 2025 (no cash-flow CSV): approximate Net Cash Receipts ≈ netRevenue
     Object.keys(kpis2025).forEach(m => {
