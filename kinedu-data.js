@@ -20,7 +20,9 @@
         // P&L ACC 2026 — Consolidated Income Statement
         acc: 'https://docs.google.com/spreadsheets/d/1R8KtpYwMHsBxAREwyMjp4T_lYE2GCBEW6ThXipdXhZQ/export?format=csv&gid=1030223001',
         // KPIs 2026 — marketing spend, signups, subscriptions, conversion
-        kpi: 'https://docs.google.com/spreadsheets/d/1ptCjNZlmwUkSupP5uQlXtS3SMZjpciBQv893oCkkdVA/export?format=csv&gid=82873067'
+        kpi: 'https://docs.google.com/spreadsheets/d/1ptCjNZlmwUkSupP5uQlXtS3SMZjpciBQv893oCkkdVA/export?format=csv&gid=82873067',
+        // CashFlow 2026 — Consolidado USD (published CSV, same source index.html reads)
+        cash: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMmpvi1XsOQeuArJC54QipxDuf9_xC6AFAO9g3ysw4lQu8BkhLmcoc7aMa0p6SKpX4UlLFrXdZlMan/pub?output=csv'
     };
 
     // Sheet row label → dashboard field. ACC months start at column 2
@@ -53,6 +55,31 @@
         'CPNU (Without Retargeting)': 'cpnu',
         'New Subscriptions': 'subs',
         'Conversion Rate': 'conversion'
+    };
+
+    // CashFlow sheet labels → investor-dashboard fields. Several labels appear
+    // twice ("Subscriptions from Customers" both as the receipts subtotal and
+    // as the gross-sales helper row at the bottom); last match wins, which is
+    // the bottom helper block — the one the investors CASH view is built on.
+    const CASH_LABEL_MAP = {
+        'Subscriptions from Customers': 'mrr',
+        'Partnerships': 'partnerships',
+        'Gross Revenue': 'grossRevenue',
+        'Net Cash Receipts': 'netRevenue',
+        'Hosting & Cloud Infrastructure': 'servers',
+        'Total Cost of Revenue': 'totalCostRev',
+        'Paid Acquisition': 'paidAcquisition',
+        "UGC's": 'mktOthers',
+        'Total CAC': 'totalCAC',
+        'Total Sales & Marketing': '_smTotal',
+        'Total R&D': '_rdTotal',
+        'Total Content': '_contentTotal',
+        'Total G&A': '_gaTotal',
+        'Total Taxes': '_taxesTotal',
+        'NET OPERATING CASH FLOW': 'ebitda',
+        'Gross Margin %': 'grossMarginPctSheet',
+        'Contribution margin %': 'contribMarginPctSheet',
+        'EBITDA margin %': 'ebitdaMarginPctSheet'
     };
 
     // Freshness metadata, consumed by the "Live data" indicator.
@@ -143,6 +170,31 @@
         url: SHEETS.kpi, labelMap: KPI_LABEL_MAP, colOffset: 1, name: 'KPI'
     });
 
+    // CASH: fetch raw label rows, then derive the P&L-style fields the
+    // investors view expects (commissions, grossProfit, contribution, OpEx).
+    // Mapping validated against the hardcoded Jan-Mar values (exact match).
+    async function fetchCashActuals() {
+        const raw = await fetchSheetActuals({
+            url: SHEETS.cash, labelMap: CASH_LABEL_MAP, colOffset: 1, name: 'CASH'
+        });
+        if (!raw) return null;
+        MONTHS.forEach(m => {
+            const d = raw[m];
+            const hasData = (d.netRevenue || 0) !== 0 || (d.ebitda || 0) !== 0;
+            if (!hasData) { raw[m] = {}; return; }
+            d.commissions = -Math.abs((d.grossRevenue || 0) - (d.netRevenue || 0));
+            d.grossProfit = (d.netRevenue || 0) - Math.abs(d.totalCostRev || 0);
+            d.contributionProfit = d.grossProfit - Math.abs(d.totalCAC || 0);
+            d.totalOpex = Math.abs(d._smTotal || 0) + Math.abs(d._rdTotal || 0) +
+                          Math.abs(d._contentTotal || 0) + Math.abs(d._gaTotal || 0) +
+                          Math.abs(d._taxesTotal || 0);
+            d.netCashReceipts = d.netRevenue;
+            delete d._smTotal; delete d._rdTotal; delete d._contentTotal;
+            delete d._gaTotal; delete d._taxesTotal;
+        });
+        return raw;
+    }
+
     // Merge sheet data into a hardcoded constant. Only overwrites months
     // where the sheet had a non-zero value somewhere — blank months never
     // blank out the hardcoded fallbacks. Returns # of months touched.
@@ -162,22 +214,25 @@
         return monthsTouched;
     }
 
-    // Fetch both sheets in parallel and merge into the given targets.
-    // Returns { accTouched, kpiTouched } and updates freshness metadata.
-    async function refreshActuals({ accTarget, kpiTarget }) {
-        const [accSheet, kpiSheet] = await Promise.all([
+    // Fetch the sheets in parallel and merge into the given targets.
+    // Returns { accTouched, kpiTouched, cashTouched } and updates freshness.
+    async function refreshActuals({ accTarget, kpiTarget, cashTarget }) {
+        const [accSheet, kpiSheet, cashSheet] = await Promise.all([
             accTarget ? fetchAccActuals() : null,
-            kpiTarget ? fetchKpiActuals() : null
+            kpiTarget ? fetchKpiActuals() : null,
+            cashTarget ? fetchCashActuals() : null
         ]);
         const accTouched = accTarget ? mergeMonthly(accTarget, accSheet, { trackLatest: true }) : 0;
         const kpiTouched = kpiTarget ? mergeMonthly(kpiTarget, kpiSheet) : 0;
-        if (accTouched || kpiTouched) {
+        const cashTouched = cashTarget ? mergeMonthly(cashTarget, cashSheet) : 0;
+        if (accTouched || kpiTouched || cashTouched) {
             freshness.fetchedAt = new Date();
             freshness.accMonths = accTouched;
             freshness.kpiMonths = kpiTouched;
+            freshness.cashMonths = cashTouched;
             freshness.live = true;
         }
-        return { accTouched, kpiTouched };
+        return { accTouched, kpiTouched, cashTouched };
     }
 
     // Human label for the freshness pill, e.g. "Live · through Apr '26".
@@ -191,7 +246,7 @@
     window.KineduData = {
         MONTHS, MONTHS_SHORT, SHEETS,
         parseMoneyCell, parseCsvRows,
-        fetchSheetActuals, fetchAccActuals, fetchKpiActuals,
+        fetchSheetActuals, fetchAccActuals, fetchKpiActuals, fetchCashActuals,
         mergeMonthly, refreshActuals,
         freshness, freshnessLabel
     };

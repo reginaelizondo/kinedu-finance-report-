@@ -1261,9 +1261,9 @@ const CASH_2026 = {
     January:     { mrr: 752967, partnerships: 15832, grossRevenue: 768799, commissions: -235295, netRevenue: 533504, servers: 8383, grossProfit: 522733, paidAcquisition: 182402, mktOthers: 10116, totalCAC: 192518, contributionProfit: 330215, totalOpex: 198258, ebitda: 131955 },
     February:    { mrr: 130213, partnerships: 13380, grossRevenue: 143593, commissions: -42729, netRevenue: 100864, servers: 8517, grossProfit: 90391, paidAcquisition: 213921, mktOthers: 2111, totalCAC: 216032, contributionProfit: -125641, totalOpex: 156799, ebitda: -282440 },
     March:       { mrr: 508403, partnerships: 1644, grossRevenue: 510047, commissions: -156919, netRevenue: 353128, servers: 8659, grossProfit: 342859, paidAcquisition: 216646, mktOthers: 1723, totalCAC: 218369, contributionProfit: 124490, totalOpex: 133410, ebitda: -8919 },
-    April:       { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
-    May:         { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
-    June:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    April:       { mrr: 644324, partnerships: 5345, grossRevenue: 649669, commissions: -196790, netRevenue: 452879, servers: 8079, grossProfit: 443303, paidAcquisition: 179833, mktOthers: 4453, totalCAC: 184286, contributionProfit: 259017, totalOpex: 164955, ebitda: 94063 },
+    May:         { mrr: 92841, partnerships: 3771, grossRevenue: 96612, commissions: -31017, netRevenue: 65595, servers: 5754, grossProfit: 58588, paidAcquisition: 206044, mktOthers: 3879, totalCAC: 209923, contributionProfit: -151335, totalOpex: 134056, ebitda: -285392 },
+    June:        { mrr: 401286, partnerships: 24023, grossRevenue: 425309, commissions: -123357, netRevenue: 301952, servers: 7773, grossProfit: 292874, paidAcquisition: 184654, mktOthers: 4539, totalCAC: 189193, contributionProfit: 103681, totalOpex: 122056, ebitda: -18375 },
     July:        { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     August:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     September:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
@@ -1308,7 +1308,10 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
     const cashFlow2026 = {
         January:  { netCashReceipts: 533504, totalCostRev: 10771 },
         February: { netCashReceipts: 100864, totalCostRev: 10473 },
-        March:    { netCashReceipts: 353128, totalCostRev: 10269 }
+        March:    { netCashReceipts: 353128, totalCostRev: 10269 },
+        April:    { netCashReceipts: 452879, totalCostRev: 9576 },
+        May:      { netCashReceipts: 65595,  totalCostRev: 7007 },
+        June:     { netCashReceipts: 301952, totalCostRev: 9078 }
     };
     // Pre-computed margin % from P&L CASH 2025 (rows 39-41)
     const marginsCash2025 = {
@@ -1327,9 +1330,12 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
     };
     // Pre-computed margin % from P&L CASH 2026 (rows 105-107)
     const marginsCash2026 = {
-        January:  { grossMarginPctSheet: 67.99, contribMarginPctSheet: 73.56,  ebitdaMarginPctSheet: 17.16   },
-        February: { grossMarginPctSheet: 62.95, contribMarginPctSheet: -57.74, ebitdaMarginPctSheet: -196.70 },
-        March:    { grossMarginPctSheet: 67.22, contribMarginPctSheet: 55.17,  ebitdaMarginPctSheet: -1.75   }
+        January:  { grossMarginPctSheet: 67.99, contribMarginPctSheet: 73.56,   ebitdaMarginPctSheet: 17.16   },
+        February: { grossMarginPctSheet: 62.95, contribMarginPctSheet: -57.74,  ebitdaMarginPctSheet: -196.70 },
+        March:    { grossMarginPctSheet: 67.22, contribMarginPctSheet: 55.17,   ebitdaMarginPctSheet: -1.75   },
+        April:    { grossMarginPctSheet: 68.24, contribMarginPctSheet: 70.16,   ebitdaMarginPctSheet: 14.48   },
+        May:      { grossMarginPctSheet: 60.64, contribMarginPctSheet: -124.54, ebitdaMarginPctSheet: -295.40 },
+        June:     { grossMarginPctSheet: 68.86, contribMarginPctSheet: 53.38,   ebitdaMarginPctSheet: -4.32   }
     };
     // Pre-computed margin % from P&L ACC 2025 (rows 39-41)
     const marginsAcc2025 = {
@@ -2693,14 +2699,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     setView(currentView);
     // Render once with hardcoded values so the page paints fast
     updateAll();
-    // Refresh ACC + KPI 2026 actuals from the live Google Sheets in parallel
-    const { accTouched, kpiTouched } = await KineduData.refreshActuals({
+    // Refresh ACC + KPI + CASH 2026 actuals from the live Google Sheets in parallel
+    const { accTouched, kpiTouched, cashTouched } = await KineduData.refreshActuals({
         accTarget: ACC_2026,
-        kpiTarget: KPI_ACTUAL_2026
+        kpiTarget: KPI_ACTUAL_2026,
+        cashTarget: CASH_2026
     });
     if (accTouched) console.log(`ACC 2026 refreshed from sheet (${accTouched} months)`);
     if (kpiTouched) console.log(`KPI 2026 refreshed from sheet (${kpiTouched} months)`);
-    if (accTouched || kpiTouched) updateAll();
+    if (cashTouched) console.log(`CASH 2026 refreshed from sheet (${cashTouched} months)`);
+    if (accTouched || kpiTouched || cashTouched) updateAll();
     updateFreshnessUI();
 });
 </script>
