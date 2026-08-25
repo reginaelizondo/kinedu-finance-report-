@@ -8761,51 +8761,25 @@
             const selectedIndex = getSelectedPeriodIndex();
             if (selectedIndex < 0) return null;
 
-            // Next period index
-            const nextIndex = selectedIndex + 1;
+            const isValid = v => v !== null && v !== undefined && v !== 0;
 
-            // Check bounds
-            if (nextIndex >= dataArray.length) {
-                // If December/Q4/H2 selected, show previous to selected instead
-                if (selectedIndex > 0) {
-                    const prevIndex = selectedIndex - 1;
-                    const prevValue = dataArray[prevIndex];
-                    const selectedValue = dataArray[selectedIndex];
-
-                    if (prevValue === null || prevValue === undefined || prevValue === 0) return null;
-                    if (selectedValue === null || selectedValue === undefined || selectedValue === 0) return null;
-
-                    const rate = ((selectedValue - prevValue) / Math.abs(prevValue)) * 100;
-
-                    let label;
-                    switch(periodType) {
-                        case 'monthly': label = 'MoM'; break;
-                        case 'quarterly': label = 'QoQ'; break;
-                        case 'semester': label = 'SoS'; break;
-                        case 'yearly': label = 'YoY'; break;
-                        default: label = 'Growth';
-                    }
-
-                    return {
-                        rate: rate,
-                        label: label,
-                        selectedValue: prevValue,
-                        nextValue: selectedValue,
-                        selectedIndex: prevIndex,
-                        nextIndex: selectedIndex
-                    };
-                }
-                return null;
+            // Prefer selected → next period. When the next period has no data
+            // yet (a future month: the default period is the latest month with
+            // actuals, so "next" is usually empty) or is out of bounds, fall
+            // back to previous → selected.
+            let fromIndex = selectedIndex, toIndex = selectedIndex + 1;
+            if (toIndex >= dataArray.length || !isValid(dataArray[toIndex]) || !isValid(dataArray[fromIndex])) {
+                fromIndex = selectedIndex - 1;
+                toIndex = selectedIndex;
+                if (fromIndex < 0 || !isValid(dataArray[fromIndex]) || !isValid(dataArray[toIndex])) return null;
             }
 
-            const selectedValue = dataArray[selectedIndex];
-            const nextValue = dataArray[nextIndex];
+            const selectedValue = dataArray[fromIndex];
+            const nextValue = dataArray[toIndex];
+            const selectedIdxOut = fromIndex;
+            const nextIdxOut = toIndex;
 
-            // Need valid values for both periods
-            if (selectedValue === null || selectedValue === undefined || selectedValue === 0) return null;
-            if (nextValue === null || nextValue === undefined || nextValue === 0) return null;
-
-            // Calculate growth: (next / selected - 1) * 100
+            // Calculate growth: (to / from - 1) * 100
             const rate = ((nextValue - selectedValue) / Math.abs(selectedValue)) * 100;
 
             // Use correct terminology based on granularity
@@ -8832,8 +8806,8 @@
                 label: label,
                 selectedValue: selectedValue,
                 nextValue: nextValue,
-                selectedIndex: selectedIndex,
-                nextIndex: nextIndex
+                selectedIndex: selectedIdxOut,
+                nextIndex: nextIdxOut
             };
         }
 
