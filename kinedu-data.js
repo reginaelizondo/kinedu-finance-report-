@@ -178,6 +178,16 @@
             url: SHEETS.cash, labelMap: CASH_LABEL_MAP, colOffset: 1, name: 'CASH'
         });
         if (!raw) return null;
+        // Guard: the sheet's "Contribution margin %" formula broke once and
+        // returned a flat 100% for every month. If the row is degenerate
+        // (same value everywhere), drop it so fallbacks/derived values win.
+        const contribVals = MONTHS.map(m => raw[m].contribMarginPctSheet)
+            .filter(v => v !== undefined && v !== 0);
+        if (contribVals.length > 2 && contribVals.every(v => v === contribVals[0])) {
+            console.warn('CASH sheet: Contribution margin % row is degenerate ('
+                + contribVals[0] + '% flat) — ignoring it');
+            MONTHS.forEach(m => { delete raw[m].contribMarginPctSheet; });
+        }
         MONTHS.forEach(m => {
             const d = raw[m];
             const hasData = (d.netRevenue || 0) !== 0 || (d.ebitda || 0) !== 0;
@@ -189,6 +199,12 @@
                           Math.abs(d._contentTotal || 0) + Math.abs(d._gaTotal || 0) +
                           Math.abs(d._taxesTotal || 0);
             d.netCashReceipts = d.netRevenue;
+            // If the sheet's contribution-margin row was dropped (degenerate),
+            // derive it on the same base the sheet uses for EBITDA margin %
+            // (gross sales): contributionProfit / grossRevenue.
+            if (d.contribMarginPctSheet === undefined && d.grossRevenue) {
+                d.contribMarginPctSheet = Math.round(10000 * d.contributionProfit / d.grossRevenue) / 100;
+            }
             delete d._smTotal; delete d._rdTotal; delete d._contentTotal;
             delete d._gaTotal; delete d._taxesTotal;
         });
