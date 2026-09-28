@@ -1233,7 +1233,7 @@ const ACC_2026 = {
     May:         { mrr: 398829, partnerships: 17567, grossRevenue: 417025, commissions: -98869, netRevenue: 318156, servers: 7146, grossProfit: 311010, paidAcquisition: 201144, mktOthers: 3859, totalCAC: 205003, contributionProfit: 106007, totalOpex: 135649, ebitda: -29642 },
     June:        { mrr: 404590, partnerships: 11610, grossRevenue: 416736, commissions: -101134, netRevenue: 315602, servers: 7098, grossProfit: 308505, paidAcquisition: 183930, mktOthers: 4531, totalCAC: 188462, contributionProfit: 120043, totalOpex: 136171, ebitda: -16128 },
     July:        { mrr: 412053, partnerships: 23912, grossRevenue: 436506, commissions: -103490, netRevenue: 333016, servers: 6848, grossProfit: 326167, paidAcquisition: 181465, mktOthers: 4534, totalCAC: 185999, contributionProfit: 140168, totalOpex: 143522, ebitda: -3353 },
-    August:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    August:      { mrr: 418206, partnerships: 22225, grossRevenue: 440982, commissions: -123591, netRevenue: 317391, servers: 7717, grossProfit: 309674, paidAcquisition: 193371, mktOthers: 3601, totalCAC: 196971, contributionProfit: 112703, totalOpex: 167232, ebitda: -54529 },
     September:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     October:     { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     November:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
@@ -1265,7 +1265,7 @@ const CASH_2026 = {
     May:         { mrr: 92841, partnerships: 3771, grossRevenue: 96612, commissions: -30653, netRevenue: 65959, servers: 7979, grossProfit: 56727, paidAcquisition: 203819, mktOthers: 3879, totalCAC: 207698, contributionProfit: -150971, totalOpex: 134056, ebitda: -285028 },
     June:        { mrr: 401286, partnerships: 24023, grossRevenue: 425309, commissions: -123357, netRevenue: 301952, servers: 7773, grossProfit: 292874, paidAcquisition: 184654, mktOthers: 4539, totalCAC: 189193, contributionProfit: 103681, totalOpex: 122056, ebitda: -18375 },
     July:        { mrr: 578219, partnerships: 29302, grossRevenue: 607521, commissions: -178167, netRevenue: 429354, servers: 8800, grossProfit: 419096, paidAcquisition: 181458, mktOthers: 4504, totalCAC: 185963, contributionProfit: 233133, totalOpex: 145454, ebitda: 87680 },
-    August:      { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
+    August:      { mrr: 63923, partnerships: 10279, grossRevenue: 74202, commissions: -23104, netRevenue: 51098, servers: 8519, grossProfit: 40692, paidAcquisition: 193567, mktOthers: 3598, totalCAC: 197165, contributionProfit: -156473, totalOpex: 158846, ebitda: -315318 },
     September:   { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     October:     { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
     November:    { mrr: 0, partnerships: 0, grossRevenue: 0, commissions: 0, netRevenue: 0, servers: 0, grossProfit: 0, paidAcquisition: 0, mktOthers: 0, totalCAC: 0, contributionProfit: 0, totalOpex: 0, ebitda: 0 },
@@ -1312,7 +1312,8 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
         April:    { netCashReceipts: 452879, totalCostRev: 9576 },
         May:      { netCashReceipts: 65959,  totalCostRev: 9232 },
         June:     { netCashReceipts: 301952, totalCostRev: 9078 },
-        July:     { netCashReceipts: 429354, totalCostRev: 10258 }
+        July:     { netCashReceipts: 429354, totalCostRev: 10258 },
+        August:   { netCashReceipts: 51098,  totalCostRev: 10406 }
     };
     // Pre-computed margin % from P&L CASH 2025 (rows 39-41)
     const marginsCash2025 = {
@@ -1337,7 +1338,8 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
         April:    { grossMarginPctSheet: 69.71, contribMarginPctSheet:   70.16, ebitdaMarginPctSheet:   14.48 },
         May:      { grossMarginPctSheet: 68.27, contribMarginPctSheet: -124.54, ebitdaMarginPctSheet: -295.02 },
         June:     { grossMarginPctSheet: 71.00, contribMarginPctSheet:   53.38, ebitdaMarginPctSheet:   -4.32 },
-        July:     { grossMarginPctSheet: 70.67, contribMarginPctSheet:   67.70, ebitdaMarginPctSheet:   14.43 }
+        July:     { grossMarginPctSheet: 70.67, contribMarginPctSheet:   67.70, ebitdaMarginPctSheet:   14.43 },
+        August:   { grossMarginPctSheet: 68.86, contribMarginPctSheet: -179.74, ebitdaMarginPctSheet: -424.95 }
     };
     // Pre-computed margin % from P&L ACC 2025 (rows 39-41)
     const marginsAcc2025 = {
@@ -1363,7 +1365,8 @@ let currentGrouping = 'M';  // M = Monthly, Q = Quarterly, S = Semester, Y = Yea
         April:    { grossMarginPctSheet: 67.80, contribMarginPctSheet:  33.00, ebitdaMarginPctSheet: -17.00 },
         May:      { grossMarginPctSheet: 74.58, contribMarginPctSheet:  33.00, ebitdaMarginPctSheet:  -9.00 },
         June:     { grossMarginPctSheet: 74.03, contribMarginPctSheet:  38.00, ebitdaMarginPctSheet:  -5.00 },
-        July:     { grossMarginPctSheet: 74.72, contribMarginPctSheet:  42.00, ebitdaMarginPctSheet:  -1.00 }
+        July:     { grossMarginPctSheet: 74.72, contribMarginPctSheet:  42.00, ebitdaMarginPctSheet:  -1.00 },
+        August:   { grossMarginPctSheet: 70.22, contribMarginPctSheet:  36.00, ebitdaMarginPctSheet: -17.00 }
     };
     // For CASH 2025 (no cash-flow CSV): approximate Net Cash Receipts ≈ netRevenue
     Object.keys(kpis2025).forEach(m => {
@@ -2246,7 +2249,7 @@ const KPI_ACTUAL_2026 = {
     May:       { spend: 181031, signups: 99738,  cpnu: 1.82, subs: 7594, conversion: 7.61 },
     June:      { spend: 193158, signups: 107258, cpnu: 1.80, subs: 7988, conversion: 7.45 },
     July:      { spend: 209111, signups: 136090, cpnu: 1.53, subs: 8821, conversion: 6.48 },
-    August:    { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
+    August:    { spend: 190998, signups: 88904,  cpnu: 2.15, subs: 7687, conversion: 8.65 },
     September: { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
     October:   { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
     November:  { spend: 0, signups: 0, cpnu: 0, subs: 0, conversion: 0 },
